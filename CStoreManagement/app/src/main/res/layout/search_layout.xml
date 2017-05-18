@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="bottom"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom"
+        android:background="@color/touminghui"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="262dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/prompt2_qrcode"
+            android:textColor="@color/bg_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <EditText
+                android:id="@+id/search_edit"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/shap_line"
+                android:hint="@string/edit_cidorcname"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:textColor="@color/bg_color"
+                android:textColorHint="@color/cstore_white"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/search_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/shap_line"
+                android:text="@string/search"
+                android:textColor="@color/bg_color"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

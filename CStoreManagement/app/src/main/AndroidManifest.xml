@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.c_store.zhiyazhang.cstoremanagement">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:name=".utils.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/app_logo_sort"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_logo_sort"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <!--登录页-->
+        <activity
+            android:name=".view.activity.SignInActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!--hone主页-->
+        <activity
+            android:name=".view.activity.HomeTableActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--所有承包商品类别-->
+        <activity
+            android:name=".view.activity.ContractTypeActivity"
+            android:screenOrientation="portrait"/>
+        <!--某类所有商品-->
+        <activity
+            android:name=".view.activity.ContractActivity"
+            android:screenOrientation="portrait"/>
+        <!--某类所有商品-->
+        <activity
+            android:name=".view.activity.ContractActivity2"
+            android:screenOrientation="portrait"/>
+        <!--某一个商品详细页-->
+        <activity
+            android:name=".view.activity.ContractDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.SearchContractActivity"
+            android:screenOrientation="portrait"/>
+    </application>
+
+</manifest>

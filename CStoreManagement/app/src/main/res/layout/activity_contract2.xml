@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/loading_layout"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/mdtoolbar"/>
+
+        <com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh
+            android:id="@+id/my_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/swipe_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"/>
+
+        </com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh>
+
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/cstore_red"
+            android:elevation="1dp"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:text="@string/sure"
+            android:visibility="gone"
+            android:textColor="@color/cstore_white"
+            android:textSize="20sp"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/tSort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/todayCount"/>
+
+        <CheckBox
+            android:id="@+id/cIdSort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/commodifyIdShort"/>
+
+        <CheckBox
+            android:id="@+id/cNameSort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/commodifyNameShort"/>
+
+        <CheckBox
+            android:id="@+id/cMoneySort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/moneyShort"/>
+    </LinearLayout>
+<View
+    android:background="@color/line"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"/>
+
+</LinearLayout>

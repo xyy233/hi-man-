@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:actionMenuTextAppearance">@style/MyMenuTextStyle</item>
+    </style>
+
+    <!--全部最大-->
+    <style name="MatchMatch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!--顶部消失，layout顶到头-->
+    <style name="TransparencyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--底部操作栏透明-->
+        <!-- <item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="OverflowMenuStyle" parent="@style/ThemeOverlay.AppCompat">
+        <item name="overlapAnchor">false</item>
+        <item name="android:colorBackground">@color/cstore_white</item>
+    </style>
+
+    <style name="MyMenuTextStyle">
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>
