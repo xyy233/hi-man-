@@ -57,4 +57,8 @@
     <string name="done">完成</string>
     <string name="cancel">取消</string>
     <string name="update_contract_prompt">未进行修改，不能保存！</string>
+    <string name="noItent">网络有问题，请查看联网状态并尝试刷新</string>
+    <string name="nullhost">无host</string>
+    <string name="socketError">请求出错</string>
+    <string name="requestError">服务器连接超时，确定连在内网中，确定服务器正常</string>
 </resources>

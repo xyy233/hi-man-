@@ -53,6 +53,8 @@ public class ContractTypeBean implements Serializable {
     @SerializedName("max_qty")
     private int maxQty;
 
+    private boolean isChangeColor;
+
 
     public int getMinQty() {
         return minQty;
@@ -163,5 +165,13 @@ public class ContractTypeBean implements Serializable {
 
     public void setSugQty(int sugQty) {
         this.sugQty = sugQty;
+    }
+
+    public boolean isChangeColor() {
+        return isChangeColor;
+    }
+
+    public void setChangeColor(boolean changeColor) {
+        isChangeColor = changeColor;
     }
 }

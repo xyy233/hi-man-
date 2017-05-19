@@ -1,7 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.model.signin;
 
 import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
-import com.c_store.zhiyazhang.cstoremanagement.utils.url.AppUrl;
+import com.c_store.zhiyazhang.cstoremanagement.url.AppUrl;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 

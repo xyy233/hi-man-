@@ -4,9 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +26,7 @@ import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -51,6 +52,8 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     RecyclerView typeList;
     @BindView(R.id.retry)
     Button retry;
+    ContractTypeBean ctb;
+    ContractTypeAdapter adapter;
 
     ContractTypePresenter presenter = new ContractTypePresenter(this);
 
@@ -98,6 +101,7 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         }
         return super.onOptionsItemSelected(item);
     }
+
     //toolbar监听
     private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
@@ -120,6 +124,24 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     }
 
     @Override
+    protected void onStart() {
+        getPreviousType();
+        if (ctb != null && !ctb.getTypeId().equals("")) {
+            if (adapter != null) {
+                for (ContractTypeBean ct : adapter.ctbs) {
+                    if (Objects.equals(ct.getTypeId(), ctb.getTypeId())) {
+                        ct.setTodayStore(ctb.getTodayStore());
+                        ct.setTodayCount(ctb.getTodayCount());
+                        ct.setTodayGh(ctb.getTodayGh());
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+        super.onStart();
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_contract_type;
     }
@@ -137,14 +159,22 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     @Override
     public void toShortClick(View view, ContractTypeBean ctb) {
         if (colorView != null) {
-            colorView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.bg_color));
+            colorView.setBackgroundColor(Color.WHITE);
         }
-        view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+        for (ContractTypeBean ct:adapter.ctbs){
+            if (!Objects.equals(ct.getTypeId(), ctb.getTypeId())){
+                ct.setChangeColor(false);
+            }else {
+                ct.setChangeColor(true);
+                ctb.setChangeColor(true);
+            }
+        }
         colorView = view;
         Intent i = new Intent(this, ContractActivity2.class);
         i.putExtra("ctb", ctb);
         i.putExtra("is_search", false);
         startActivity(i);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -165,6 +195,7 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     @Override
     public void showView(ContractTypeAdapter adapter) {
         typeList.setAdapter(adapter);
+        this.adapter = adapter;
     }
 
     @Override
@@ -202,5 +233,19 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         if (EasyPermissions.somePermissionPermanentlyDenied(this, list)) {
             new AppSettingsDialog.Builder(this).build().show();
         }
+    }
+
+    private void getPreviousType() {
+        SharedPreferences preferences = getSharedPreferences("ct", Context.MODE_PRIVATE);
+        ctb = new ContractTypeBean();
+        ctb.setTypeId(preferences.getString("typeId", ""));
+        if (!ctb.getTypeId().equals("")) {
+            ctb.setTodayGh(preferences.getInt("todayGh", 0));
+            ctb.setTodayStore(preferences.getInt("todayStore", 0));
+            ctb.setTodayCount(preferences.getInt("todayCount", 0));
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
     }
 }

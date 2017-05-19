@@ -1,6 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.utils;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -15,6 +16,8 @@ import okhttp3.OkHttpClient;
  */
 
 public class MyApplication extends Application {
+    public static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,5 +27,10 @@ public class MyApplication extends Application {
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .build();
         OkHttpUtils.initClient(okHttpClient);
+        context = getApplicationContext();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

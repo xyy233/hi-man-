@@ -85,6 +85,8 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     LinearLayout typeDesc;
     @BindView(R.id.done)
     Button done;
+    @BindView(R.id.noMessage)
+    TextView noMessage;
     Intent i;
     ContractPresenter presenter = new ContractPresenter(this, this);
     private ContractTypeBean upCTB;
@@ -132,16 +134,19 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                 }
             }
         });
-        swipe.setDistanceToTriggerSync(200);
+        swipe.setProgressViewEndTarget(true, 100);
         swipe.autoRefresh();
     }
 
     @OnClick(R.id.done)
     void done() {
-        if (upCTB.getTodayCount() != total) {
-            presenter.updateAllContract();
-        } else {
-            Toast.makeText(ContractActivity2.this, getResources().getString(R.string.update_contract_prompt), Toast.LENGTH_SHORT).show();
+        for (ContractBean cb : adapter.getCbs()) {
+            if (cb.isChange()) {
+                presenter.updateAllContract();
+                break;
+            } else {
+                Toast.makeText(ContractActivity2.this, getResources().getString(R.string.update_contract_prompt), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -240,6 +245,9 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                 finish();
                 break;
             case R.id.edit_contract:
+                if (adapter == null || adapter.getCbs() == null || adapter.getCbs().size() == 0) {
+                    break;
+                }
                 if (this.item == null) {
                     this.item = item;
                 }
@@ -262,35 +270,33 @@ public class ContractActivity2 extends MyActivity implements ContractView {
 
     //判断用户是否有对订量修改，如果修改过要提示
     private void judgmentUpdate() {
-        if (upCTB.getTodayCount() != total) {
-            new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("您修改的订量尚未确认，是否放弃修改？")
-                    .setPositiveButton("保存", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            presenter.updateAllContract();
-                        }
-                    })
-                    .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            done.setVisibility(View.GONE);
-                            adapter.setIsEdit(false);
-                            item.setTitleCondensed(ContractActivity2.this.getResources().getString(R.string.edit));
-                            sort.setVisibility(View.VISIBLE);
-                            ispeople = true;
-                            swipe.autoRefresh();
-                        }
-                    })
-                    .show();
-        } else {
-            done.setVisibility(View.GONE);
-            adapter.setIsEdit(false);
-            item.setTitleCondensed(ContractActivity2.this.getResources().getString(R.string.edit));
-            adapter.notifyDataSetChanged();
-            sort.setVisibility(View.VISIBLE);
-            ispeople = true;
+        for (ContractBean cb : adapter.getCbs()) {
+            if (cb.isChange()) {
+                new AlertDialog.Builder(this)
+                        .setTitle("提示")
+                        .setMessage("您修改的订量尚未确认，是否放弃修改？")
+                        .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                presenter.updateAllContract();
+                            }
+                        })
+                        .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                updateDone();
+                            }
+                        })
+                        .show();
+                break;
+            } else {
+                done.setVisibility(View.GONE);
+                adapter.setIsEdit(false);
+                item.setTitleCondensed(ContractActivity2.this.getResources().getString(R.string.edit));
+                adapter.notifyDataSetChanged();
+                sort.setVisibility(View.VISIBLE);
+                ispeople = true;
+            }
         }
     }
 
@@ -376,6 +382,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     public void showView(final ContractAdapter adapter) {
         try {
             this.adapter = adapter;
+            //上拉加载监听
             recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -392,6 +399,9 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                 }
             });
+            if (adapter.getCbs() == null || adapter.getCbs().size() == 0) {
+                noMessage.setVisibility(View.VISIBLE);
+            }
             recycler.setAdapter(adapter);
         } catch (Exception ignored) {
             finish();
@@ -488,18 +498,11 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //更新数据完成
     @Override
     public void updateDone() {
-        /*ispeople = true;
-        swipe.setEnabled(true);
-        swipe.autoRefresh();
-        adapter.notifyDataSetChanged();
-        done.setVisibility(View.GONE);
-        adapter.setIsEdit(false);
-        item.setTitleCondensed(ContractActivity2.this.getResources().getString(R.string.edit));
-        sort.setVisibility(View.VISIBLE);*/
-        Intent intent=new Intent(this,ContractActivity2.class);
-        intent.putExtra("ctb",getContractType());
-        intent.putExtra("is_search",false);
+        Intent intent = new Intent(this, ContractActivity2.class);
+        intent.putExtra("ctb", getContractType());
+        intent.putExtra("is_search", false);
         startActivity(intent);
+        saveType();
         finish();
     }
 
@@ -669,6 +672,16 @@ public class ContractActivity2 extends MyActivity implements ContractView {
         } else {//停止长按开启所有滑动
             layoutManager.setScrollEnabled(true);
         }
+    }
+
+    private void saveType() {
+        SharedPreferences preferences = getSharedPreferences("ct", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("typeId", upCTB.getTypeId());
+        editor.putInt("todayGh", upCTB.getTodayGh());
+        editor.putInt("todayStore", upCTB.getTodayStore());
+        editor.putInt("todayCount", upCTB.getTodayCount());
+        editor.apply();
     }
 
 }

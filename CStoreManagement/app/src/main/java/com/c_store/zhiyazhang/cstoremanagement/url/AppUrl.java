@@ -1,4 +1,4 @@
-package com.c_store.zhiyazhang.cstoremanagement.utils.url;
+package com.c_store.zhiyazhang.cstoremanagement.url;
 
 /**
  * Created by zhiya.zhang

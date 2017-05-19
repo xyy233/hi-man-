@@ -5,8 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/loading_layout"/>
+    <TextView
+        android:id="@id/noMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/noMessage"
+        android:textSize="20sp"
+        android:visibility="gone"/>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -40,9 +46,10 @@
             android:foreground="@drawable/selector_foreground"
             android:stateListAnimator="@drawable/lift_on_touch"
             android:text="@string/sure"
-            android:visibility="gone"
             android:textColor="@color/cstore_white"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:visibility="gone"/>
 
     </android.support.design.widget.CoordinatorLayout>
+
 </FrameLayout>

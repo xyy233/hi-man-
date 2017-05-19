@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractDetail.ContractDetailInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractDetail.ContractDetailModel;
+import com.c_store.zhiyazhang.cstoremanagement.utils.ConnectionDetector;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractDetailView;
 
 /**
@@ -16,6 +17,7 @@ public class ContractDetailPresenter {
     private ContractDetailInterface anInterface;
     private ContractDetailView cView;
     private Handler mHandler = new Handler();
+    private ConnectionDetector cd = ConnectionDetector.getConnectionDetector();
 
     public ContractDetailPresenter(ContractDetailView cv) {
         this.cView = cv;
@@ -23,6 +25,10 @@ public class ContractDetailPresenter {
     }
 
     public void updateCB() {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
         cView.showLoading();
         anInterface.updateCB(cView.getUser(), cView.getNowContractBean(), new MyListener() {
             @Override

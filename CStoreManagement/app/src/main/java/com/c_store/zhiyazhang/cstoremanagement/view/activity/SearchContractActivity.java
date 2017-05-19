@@ -57,7 +57,7 @@ public class SearchContractActivity extends MyActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            Intent i = new Intent(SearchContractActivity.this, ContractActivity.class);
+            Intent i = new Intent(SearchContractActivity.this, ContractActivity2.class);
             i.putExtra("is_search", true);
             i.putExtra("search_message", result);
             startActivity(i);

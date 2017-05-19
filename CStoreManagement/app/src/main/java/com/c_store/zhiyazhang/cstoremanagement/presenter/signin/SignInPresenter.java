@@ -6,6 +6,7 @@ import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInModel;
+import com.c_store.zhiyazhang.cstoremanagement.utils.ConnectionDetector;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.SignInView;
 
 /**
@@ -17,12 +18,17 @@ public class SignInPresenter {
     private SignInInterface signInInterface;
     private SignInView signInView;
     private Handler mHandler=new Handler();
+    private ConnectionDetector cd = ConnectionDetector.getConnectionDetector();
     public SignInPresenter(SignInView signInView){
         this.signInView=signInView;
         this.signInInterface=new SignInModel();
     }
 
     public void login(){
+        if (!cd.isOnline()){
+            signInView.hideLoading();
+            return;
+        }
         signInView.showLoading();
         signInInterface.login(signInView.getUID(), signInView.getPassword(), new SignInListener() {
             @Override

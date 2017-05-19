@@ -1,5 +1,6 @@
 package com.c_store.zhiyazhang.cstoremanagement.presenter.contract;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,9 @@ import butterknife.ButterKnife;
  */
 
 public class ContractTypeAdapter extends RecyclerView.Adapter<ContractTypeAdapter.ViewHolder> {
-    private List<ContractTypeBean> ctbs;
+
+
+    public List<ContractTypeBean> ctbs;
     private RecyclerOnItemClickListener onClick;
 
     void setOnItemClickLitener(RecyclerOnItemClickListener onClick) {
@@ -32,6 +35,7 @@ public class ContractTypeAdapter extends RecyclerView.Adapter<ContractTypeAdapte
     ContractTypeAdapter(List<ContractTypeBean> ctbs) {
         this.ctbs = ctbs;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,6 +48,11 @@ public class ContractTypeAdapter extends RecyclerView.Adapter<ContractTypeAdapte
         holder.inventory.setText(Integer.toString(ctbs.get(position).getInventory()));
         holder.tonightCount.setText(Integer.toString(ctbs.get(position).getTonightCount()));
         holder.todayCount.setText(Integer.toString(ctbs.get(position).getTodayCount()));
+        if (ctbs.get(position).isChangeColor()){
+            holder.itemView.setBackgroundColor(Color.YELLOW);
+        }else {
+            holder.itemView.setBackgroundColor(Color.WHITE);
+        }
         if (onClick != null) {
             holder.contract_item.setOnClickListener(new View.OnClickListener() {
                 @Override

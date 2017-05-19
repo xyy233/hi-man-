@@ -10,6 +10,7 @@ import com.c_store.zhiyazhang.cstoremanagement.bean.ContractResult;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contract.ContractInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contract.ContractModel;
+import com.c_store.zhiyazhang.cstoremanagement.utils.ConnectionDetector;
 import com.c_store.zhiyazhang.cstoremanagement.utils.onclick.RecyclerOnItemClickListener;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractView;
 
@@ -23,6 +24,7 @@ public class ContractPresenter {
     private ContractView cView;
     private Handler mHandler = new Handler();
     private Context context;
+    private ConnectionDetector cd = ConnectionDetector.getConnectionDetector();
 
     public ContractPresenter(ContractView contractView, Context context) {
         this.context = context;
@@ -32,6 +34,10 @@ public class ContractPresenter {
 
     //正常获得数据
     public void getAllContract() {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
         cView.showLoading();
         anInterface.getAllContract(cView.getSort(), cView.getUser(), cView.getContractType(), new MyListener() {
             @Override
@@ -55,8 +61,14 @@ public class ContractPresenter {
             }
         });
     }
-//上拉加载获得数据
+
+    //上拉加载获得数据
     public void pullGetAllContract(final ContractAdapter adapter) {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
+
         anInterface.getAllContract(cView.getPage(), cView.getSort(), cView.getUser(), cView.getContractType(), new MyListener() {
             @Override
             public void contractSuccess() {
@@ -78,8 +90,14 @@ public class ContractPresenter {
             }
         });
     }
-//通过搜索获得数据的上拉加载
+
+    //通过搜索获得数据的上拉加载
     public void searchAllContract(final ContractAdapter adapter) {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
+
         anInterface.searchContract(cView.getPage(), cView.getSort(), cView.getSearchMessage(), cView.getUser(), new MyListener() {
             @Override
             public void contractSuccess() {
@@ -103,8 +121,14 @@ public class ContractPresenter {
 
 
     }
-//通过搜索获得数据
+
+    //通过搜索获得数据
     public void searchAllContract() {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
+
         cView.showLoading();
 
         anInterface.searchContract(cView.getSort(), cView.getSearchMessage(), cView.getUser(), new MyListener() {
@@ -130,7 +154,12 @@ public class ContractPresenter {
     }
 
     //提交更新数据
-    public void updateAllContract(){
+    public void updateAllContract() {
+        if (!cd.isOnline()){
+            cView.hideLoading();
+            return;
+        }
+
         cView.showLoading();
         anInterface.updateAllContract(cView.getContractList(), cView.getUser(), new MyListener() {
             @Override
@@ -150,7 +179,6 @@ public class ContractPresenter {
             }
         });
     }
-
 
 
     private class ContractRunnable implements Runnable {

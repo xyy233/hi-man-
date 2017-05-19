@@ -6,7 +6,7 @@ import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.utils.callback.MyStringCallBack;
-import com.c_store.zhiyazhang.cstoremanagement.utils.url.AppUrl;
+import com.c_store.zhiyazhang.cstoremanagement.url.AppUrl;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -14,8 +14,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
-
-import static com.zhy.http.okhttp.OkHttpUtils.postString;
 
 /**
  * Created by zhiya.zhang
@@ -26,7 +24,8 @@ public class ContractModel implements ContractInterface {
 
     @Override
     public void getAllContract(String ordType, UserBean user, ContractTypeBean ctb, final MyListener myListener) {
-        postString()
+        OkHttpUtils
+                .postString()
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.getTypeId() + "\",\"orderby\":\"" + ordType + "\",\"page\":1}")
                 .addHeader("Authorization", user.getUid())
@@ -53,7 +52,8 @@ public class ContractModel implements ContractInterface {
 
     @Override
     public void searchContract(String ordType, String searchMessage, UserBean user, final MyListener myListener) {
-        postString()
+        OkHttpUtils
+                .postString()
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":1}")
                 .addHeader("Authorization", user.getUid())
@@ -80,7 +80,8 @@ public class ContractModel implements ContractInterface {
 
     @Override
     public void getAllContract(int page, String ordType, UserBean user, ContractTypeBean ctb, final MyListener myListener) {
-        postString()
+        OkHttpUtils
+                .postString()
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.getTypeId() + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader("Authorization", user.getUid())
@@ -107,7 +108,8 @@ public class ContractModel implements ContractInterface {
 
     @Override
     public void searchContract(int page, String ordType, String searchMessage, UserBean user, final MyListener myListener) {
-        postString()
+        OkHttpUtils
+                .postString()
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader("Authorization", user.getUid())

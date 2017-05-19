@@ -9,6 +9,7 @@ import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeResult;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeModel;
+import com.c_store.zhiyazhang.cstoremanagement.utils.ConnectionDetector;
 import com.c_store.zhiyazhang.cstoremanagement.utils.onclick.RecyclerOnItemClickListener;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView;
 
@@ -21,12 +22,18 @@ public class ContractTypePresenter {
     private ContractTypeInterface anInterface;
     private ContractTypeView typeView;
     private Handler mHandler=new Handler();
+    private ConnectionDetector cd = ConnectionDetector.getConnectionDetector();
+
     public ContractTypePresenter(ContractTypeView contractTypeView){
         this.typeView=contractTypeView;
         this.anInterface=new ContractTypeModel();
     }
 
     public void getAllContractType(){
+        if (!cd.isOnline()){
+            typeView.hideLoading();
+            return;
+        }
         anInterface.getAllContractType(typeView.getUser(), new ContractTypeListener() {
             @Override
             public void contractSuccess(final Object object) {
