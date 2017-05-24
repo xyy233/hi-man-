@@ -47,8 +47,13 @@
         <activity
             android:name=".view.activity.ContractDetailActivity"
             android:screenOrientation="portrait"/>
+        <!--搜索商品-->
         <activity
             android:name=".view.activity.SearchContractActivity"
+            android:screenOrientation="portrait"/>
+        <!--语音识别-->
+        <activity
+            android:name=".view.activity.SpeechActivity"
             android:screenOrientation="portrait"/>
     </application>
 

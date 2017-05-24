@@ -10,6 +10,7 @@ import com.c_store.zhiyazhang.cstoremanagement.R;
 /**
  * Created by zhiya.zhang
  * on 2017/5/19 10:29.
+ * 检测网络工具类
  */
 
 public class ConnectionDetector {

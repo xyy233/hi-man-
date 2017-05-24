@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.utils.image.ImageSlideshow;
 import com.c_store.zhiyazhang.cstoremanagement.view.activity.ContractTypeActivity;
+import com.c_store.zhiyazhang.cstoremanagement.view.activity.SpeechActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +147,7 @@ public class BusinessFragment extends android.support.v4.app.Fragment {
                 Toast.makeText(this.getActivity(), "未完成", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.gg9:
-                Toast.makeText(this.getActivity(), "未完成", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(BusinessFragment.this.getActivity(), SpeechActivity.class));
                 break;
             default:
                 break;

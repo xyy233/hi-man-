@@ -3,8 +3,8 @@ package com.c_store.zhiyazhang.cstoremanagement.presenter.signin;
 import android.os.Handler;
 
 import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
+import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInInterface;
-import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.signin.SignInModel;
 import com.c_store.zhiyazhang.cstoremanagement.utils.ConnectionDetector;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.SignInView;
@@ -17,26 +17,32 @@ import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.SignInView;
 public class SignInPresenter {
     private SignInInterface signInInterface;
     private SignInView signInView;
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
     private ConnectionDetector cd = ConnectionDetector.getConnectionDetector();
-    public SignInPresenter(SignInView signInView){
-        this.signInView=signInView;
-        this.signInInterface=new SignInModel();
+
+    public SignInPresenter(SignInView signInView) {
+        this.signInView = signInView;
+        this.signInInterface = new SignInModel();
     }
 
-    public void login(){
-        if (!cd.isOnline()){
+    public void login() {
+        if (!cd.isOnline()) {
             signInView.hideLoading();
             return;
         }
         signInView.showLoading();
-        signInInterface.login(signInView.getUID(), signInView.getPassword(), new SignInListener() {
+        signInInterface.login(signInView.getUID(), signInView.getPassword(), new MyListener() {
             @Override
-            public void loginSuccess(final UserBean user) {
+            public void contractSuccess() {
+
+            }
+
+            @Override
+            public void contractSuccess(final Object object) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        signInView.toActivity(user);
+                        signInView.toActivity((UserBean) object);
                         signInView.saveUser();
                         signInView.hideLoading();
                     }
@@ -44,7 +50,7 @@ public class SignInPresenter {
             }
 
             @Override
-            public void loginFailed(final String errorMessage) {
+            public void contractFailed(final String errorMessage) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {

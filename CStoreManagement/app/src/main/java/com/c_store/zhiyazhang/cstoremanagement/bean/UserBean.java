@@ -10,19 +10,24 @@ import java.io.Serializable;
  */
 
 public class UserBean implements Serializable {
-    @SerializedName("user_id")
+    @SerializedName("storeid")
+    private String storeId;
+    @SerializedName("employeeid")
     private String uid;
+    @SerializedName("emppassword")
     private String password;
-    @SerializedName("user_name")
+    @SerializedName("employeename")
     private String uName;
-    @SerializedName("dept_id")
-    private String uEname;
-    @SerializedName("dept_name")
-    private String deptName;
-    @SerializedName("start_date")
-    private String startDate;
-    @SerializedName("end_date")
-    private String endDate;
+    @SerializedName("emptelphone")
+    private String telphone;
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
 
     public String getUid() {
         return uid;
@@ -48,46 +53,21 @@ public class UserBean implements Serializable {
         this.uName = uName;
     }
 
-    public String getuEname() {
-        return uEname;
+    public String getTelphone() {
+        return telphone;
     }
 
-    public void setuEname(String uEname) {
-        this.uEname = uEname;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public String getstartDate() {
-        return startDate;
-    }
-
-    public void setstartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getendDate() {
-        return endDate;
-    }
-
-    public void setendDate(String endDate) {
-        this.endDate = endDate;
+    public void setTelphone(String telphone) {
+        this.telphone = telphone;
     }
 
     @Override
     public String toString() {
-        return "{\"user_id\":\""
-                + uid + "\",\"user_name\":\""
-                + uName + "\",\"dept_id\":\""
-                + uEname + "\",\"dept_name\":\""
-                + deptName + "\",\"start_date\":\""
-                + startDate + "\",\"end_date\":\""
-                + endDate + "\"}";
+        return "{\"storeid\":\""
+                + storeId + "\",\"employeeid\":\""
+                + uid + "\",\"emppassword\":\""
+                + password + "\",\"employeename\":\""
+                + uName + "\",\"emptelphone\":\""
+                + telphone + "\"}";
     }
 }

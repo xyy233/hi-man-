@@ -58,7 +58,7 @@ public class HomeTableActivity extends MyActivity {
     }
 
     private void initView() {
-        toolbar.setTitle(this.getString(R.string.app_name));
+        toolbar.setTitle("门市门市门市门市：罡峰佳琦");//this.getString(R.string.app_name)
         toolbar.setLogo(R.mipmap.app_logo_sort);
         setSupportActionBar(toolbar);
     }
