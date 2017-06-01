@@ -16,8 +16,6 @@ import java.util.List;
  */
 
 public interface ContractView {
-    //得到用户信息
-    UserBean getUser();
 
     //得到是否是通过搜索查询
     boolean isSearch();

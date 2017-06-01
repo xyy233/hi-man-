@@ -65,8 +65,7 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.commodify_item, parent, false));
-            return viewHolder;
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.commodify_item, parent, false));
         } else if (viewType == TYPE_FOOTER) {
             return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footview, parent, false));
         }

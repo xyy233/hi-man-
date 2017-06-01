@@ -1,5 +1,6 @@
 package com.c_store.zhiyazhang.cstoremanagement.view.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +39,7 @@ public class SignInActivity extends MyActivity implements SignInView {
     Button login;
     SharedPreferences preferences;
     Context mContext = SignInActivity.this;
-    private SignInPresenter mSigninPresenter=new SignInPresenter(this);
+    private SignInPresenter mSigninPresenter = new SignInPresenter(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,24 +48,32 @@ public class SignInActivity extends MyActivity implements SignInView {
     }
 
     private void initView() {
-        preferences=getSharedPreferences("idpwd",Context.MODE_PRIVATE);
-        uid.setText(preferences.getString("id",""));
-        password.setText(preferences.getString("pwd",""));
-        if(!uid.getText().toString().equals("")){
+        final Button test = (Button) findViewById(R.id.test);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, HomeTableActivity.class);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(SignInActivity.this,test,"login").toBundle());
+            }
+        });
+        preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);
+        uid.setText(preferences.getString("id", ""));
+        password.setText(preferences.getString("pwd", ""));
+        if (!uid.getText().toString().equals("")) {
             saveId.setChecked(true);
-            if(!password.getText().toString().equals("")){
+            if (!password.getText().toString().equals("")) {
                 savePwd.setChecked(true);
             }
         }
-        if(!saveId.isChecked()){
+        if (!saveId.isChecked()) {
             savePwd.setEnabled(false);
         }
         saveId.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     savePwd.setEnabled(true);
-                }else {
+                } else {
                     savePwd.setChecked(false);
                     savePwd.setEnabled(false);
                 }
@@ -73,16 +82,21 @@ public class SignInActivity extends MyActivity implements SignInView {
     }
 
     @OnClick(R.id.login)
-    void login(){
-        if(getUID().equals("")||getPassword().equals("")){
-            Toast.makeText(mContext,getResources().getString(R.string.edit_idpwd),Toast.LENGTH_SHORT).show();
-        }else {
+    void login() {
+        if (getUID().equals("")) {
+            Toast.makeText(mContext, getResources().getString(R.string.please_edit_account), Toast.LENGTH_SHORT).show();
+        } else {
             mSigninPresenter.login();
             //将输入法隐藏
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -132,8 +146,8 @@ public class SignInActivity extends MyActivity implements SignInView {
     }
 
     @Override
-    public void saveUser() {
-        SharedPreferences.Editor editor=preferences.edit();
+    public void saveUser(UserBean user) {
+        SharedPreferences.Editor editor = preferences.edit();
         if (saveId.isChecked()) {
 
             editor.putString("id", uid.getText().toString());
@@ -147,5 +161,14 @@ public class SignInActivity extends MyActivity implements SignInView {
             editor.remove("pwd");
         }
         editor.apply();
+        SharedPreferences userShared = getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor ue = userShared.edit();
+        ue.putString("storeId", user.getStoreId());
+        ue.putString("uid", user.getUid());
+        ue.putString("uName", user.getuName());
+        ue.putString("telphone", user.getTelphone());
+        ue.putString("storeName", user.getStoreName());
+        ue.putString("address", user.getAddress());
+        ue.apply();
     }
 }

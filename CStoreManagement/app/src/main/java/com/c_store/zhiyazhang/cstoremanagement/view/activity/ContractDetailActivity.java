@@ -3,7 +3,6 @@ package com.c_store.zhiyazhang.cstoremanagement.view.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
-import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractDetailPresenter;
 import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractDetailView;
@@ -202,13 +200,6 @@ public class ContractDetailActivity extends MyActivity implements ContractDetail
         return R.layout.activity_contract_detail;
     }
 
-    @Override
-    public UserBean getUser() {
-        UserBean user = new UserBean();
-        SharedPreferences preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);
-        user.setUid(preferences.getString("id", ""));
-        return user;
-    }
 
     @Override
     public ContractBean getContractBean() {

@@ -29,7 +29,11 @@ public class ConnectionDetector {
 
     private static final Context context=MyApplication.getContext();
 
-    public static boolean isOnline() {
+    /**
+     * 检测是否有网络
+     * @return 是\否
+     */
+    public boolean isOnline() {
         ConnectivityManager connectivity = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -43,7 +47,7 @@ public class ConnectionDetector {
             }
         }
         Toast.makeText(context,
-                context.getResources().getString(R.string.noItent),
+                context.getResources().getString(R.string.noInternet),
                 Toast.LENGTH_LONG)
                 .show();
         return false;

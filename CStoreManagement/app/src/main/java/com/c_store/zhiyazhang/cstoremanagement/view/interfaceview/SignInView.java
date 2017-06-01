@@ -20,5 +20,5 @@ public interface SignInView {
 
     void showFailedError(String errorMessage);
 
-    void saveUser();
+    void saveUser(UserBean user);
 }

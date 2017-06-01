@@ -9,8 +9,6 @@ import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
  */
 
 public interface ContractDetailView {
-    //得到用户信息
-    UserBean getUser();
 
     //得到传递过来的商品信息
     ContractBean getContractBean();

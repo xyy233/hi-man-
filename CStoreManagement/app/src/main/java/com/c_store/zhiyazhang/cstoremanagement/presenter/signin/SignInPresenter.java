@@ -43,7 +43,7 @@ public class SignInPresenter {
                     @Override
                     public void run() {
                         signInView.toActivity((UserBean) object);
-                        signInView.saveUser();
+                        signInView.saveUser((UserBean) object);
                         signInView.hideLoading();
                     }
                 });

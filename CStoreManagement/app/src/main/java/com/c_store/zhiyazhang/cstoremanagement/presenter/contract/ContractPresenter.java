@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractResult;
+import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contract.ContractInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contract.ContractModel;
@@ -39,7 +40,7 @@ public class ContractPresenter {
             return;
         }
         cView.showLoading();
-        anInterface.getAllContract(cView.getSort(), cView.getUser(), cView.getContractType(), new MyListener() {
+        anInterface.getAllContract(cView.getSort(), UserBean.getUser(), cView.getContractType(), new MyListener() {
             @Override
             public void contractSuccess() {
 
@@ -69,7 +70,7 @@ public class ContractPresenter {
             return;
         }
 
-        anInterface.getAllContract(cView.getPage(), cView.getSort(), cView.getUser(), cView.getContractType(), new MyListener() {
+        anInterface.getAllContract(cView.getPage(), cView.getSort(), UserBean.getUser(), cView.getContractType(), new MyListener() {
             @Override
             public void contractSuccess() {
 
@@ -98,7 +99,7 @@ public class ContractPresenter {
             return;
         }
 
-        anInterface.searchContract(cView.getPage(), cView.getSort(), cView.getSearchMessage(), cView.getUser(), new MyListener() {
+        anInterface.searchContract(cView.getPage(), cView.getSort(), cView.getSearchMessage(), UserBean.getUser(), new MyListener() {
             @Override
             public void contractSuccess() {
 
@@ -131,7 +132,7 @@ public class ContractPresenter {
 
         cView.showLoading();
 
-        anInterface.searchContract(cView.getSort(), cView.getSearchMessage(), cView.getUser(), new MyListener() {
+        anInterface.searchContract(cView.getSort(), cView.getSearchMessage(), UserBean.getUser(), new MyListener() {
             @Override
             public void contractSuccess() {
 
@@ -161,7 +162,7 @@ public class ContractPresenter {
         }
 
         cView.showLoading();
-        anInterface.updateAllContract(cView.getContractList(), cView.getUser(), new MyListener() {
+        anInterface.updateAllContract(cView.getContractList(), UserBean.getUser(), new MyListener() {
             @Override
             public void contractSuccess() {
                 cView.updateDone();

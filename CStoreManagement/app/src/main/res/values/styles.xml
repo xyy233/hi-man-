@@ -9,6 +9,21 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextStyle</item>
+        <item name="android:windowEnterTransition">@transition/anim_duration</item>
+        <item name="android:windowExitTransition">@transition/anim_duration</item>
+        <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
+    </style>
+
+    <!-- 使用style方式定义activity切换动画 -->
+    <style name="activityAnim">
+        <!--打开新的Activity并进入新的Activity展示的动画-->
+        <item name="android:activityOpenEnterAnimation">@anim/open_activity_rightgolift</item>
+        <!--打开新的Activity并销毁之前的Activity展示的动画-->
+        <item name="android:activityOpenExitAnimation">@anim/open_activity_rightgolift</item>
+        <!--关闭当前Activity进入上一个Activity展示的动画-->
+        <item name="android:activityCloseEnterAnimation">@anim/open_activity_up</item>
+        <!--关闭当前Activity时展示的动画-->
+        <item name="android:activityCloseExitAnimation">@anim/open_activity_up</item>
     </style>
 
     <!--全部最大-->
@@ -29,6 +44,9 @@
         <item name="overlapAnchor">false</item>
         <item name="android:colorBackground">@color/cstore_white</item>
     </style>
+
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="MyMenuTextStyle">
         <item name="android:textSize">18sp</item>

@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
-import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractTypeAdapter;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractTypePresenter;
 import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
@@ -146,13 +145,6 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         return R.layout.activity_contract_type;
     }
 
-    @Override
-    public UserBean getUser() {
-        UserBean user = new UserBean();
-        SharedPreferences preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);
-        user.setUid(preferences.getString("id", ""));
-        return user;
-    }
 
     View colorView;
 
@@ -184,7 +176,9 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
 
     @Override
     public void hideLoading() {
-        contractLoding.setVisibility(View.GONE);
+        if (contractLoding!=null){
+            contractLoding.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.c_store.zhiyazhang.cstoremanagement.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
-import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter;
 import com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh;
@@ -214,13 +211,6 @@ public class ContractActivity extends MyActivity implements ContractView {
         return R.layout.activity_contract;
     }
 
-    @Override
-    public UserBean getUser() {
-        UserBean user = new UserBean();
-        SharedPreferences preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);
-        user.setUid(preferences.getString("id", ""));
-        return user;
-    }
 
     @Override
     public boolean isSearch() {

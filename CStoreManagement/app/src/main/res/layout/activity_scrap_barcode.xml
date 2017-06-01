@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/scrap_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/prompt_qrcode"
+        android:textColor="#f6f5ec"/>
+
+
+    <ToggleButton
+        android:id="@+id/scanBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="105dp"
+        android:background="@drawable/round_scan"
+        android:checked="true"
+        android:elevation="5dp"
+        android:enabled="false"
+        android:foreground="@drawable/selector_foreground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        android:textOff="@string/start_scan"
+        android:textOn="@string/onscan"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_gravity="bottom"
+        android:background="@color/bg_color"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/scrap_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="353dp"/>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/sure_btn"/>
+
+    <include
+        layout="@layout/loading_layout"/>
+
+
+</FrameLayout>

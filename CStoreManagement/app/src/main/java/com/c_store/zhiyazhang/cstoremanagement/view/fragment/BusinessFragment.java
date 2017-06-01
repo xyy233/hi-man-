@@ -1,5 +1,6 @@
 package com.c_store.zhiyazhang.cstoremanagement.view.fragment;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.utils.image.ImageSlideshow;
 import com.c_store.zhiyazhang.cstoremanagement.view.activity.ContractTypeActivity;
+import com.c_store.zhiyazhang.cstoremanagement.view.activity.ScrapSelectActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.activity.SpeechActivity;
 
 import java.util.ArrayList;
@@ -123,10 +125,12 @@ public class BusinessFragment extends android.support.v4.app.Fragment {
     public void Onclick(View view) {
         switch (view.getId()) {
             case R.id.gg1:
-                startActivity(new Intent(BusinessFragment.this.getActivity(), ContractTypeActivity.class));
+                startActivity(new Intent(BusinessFragment.this.getActivity(), ContractTypeActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation(BusinessFragment.this.getActivity(), gg1, "gg1").toBundle());
                 break;
             case R.id.gg2:
-                Toast.makeText(this.getActivity(), "未完成", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(BusinessFragment.this.getActivity(), ScrapSelectActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation(BusinessFragment.this.getActivity(), gg2, "gg2").toBundle());
                 break;
             case R.id.gg3:
                 Toast.makeText(this.getActivity(), "未完成", Toast.LENGTH_SHORT).show();

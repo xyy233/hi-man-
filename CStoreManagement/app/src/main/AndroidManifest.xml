@@ -50,10 +50,27 @@
         <!--搜索商品-->
         <activity
             android:name=".view.activity.SearchContractActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!--语音识别-->
         <activity
             android:name=".view.activity.SpeechActivity"
+            android:screenOrientation="portrait"/>
+        <!--选择是有条形码报废还是无条形码报废-->
+        <activity
+            android:name=".view.activity.ScrapSelectActivity"
+            android:screenOrientation="portrait"/>
+        <!--有条形码报废-->
+        <activity
+            android:name=".view.activity.BarCodeScrapActivity"
+            android:screenOrientation="portrait"/>
+        <!--无条形码报废，选类-->
+        <activity
+            android:name=".view.activity.NoCodeScrapActivity"
+            android:screenOrientation="portrait"/>
+        <!--无条形码报废，某类所有商品-->
+        <activity
+            android:name=".view.activity.NCScrapActivity"
             android:screenOrientation="portrait"/>
     </application>
 

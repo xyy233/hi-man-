@@ -319,14 +319,6 @@ public class ContractActivity2 extends MyActivity implements ContractView {
         finish();
     }
 
-    //得到用户信息
-    @Override
-    public UserBean getUser() {
-        UserBean user = new UserBean();
-        SharedPreferences preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);
-        user.setUid(preferences.getString("id", ""));
-        return user;
-    }
 
     //得到是否是从搜索页过来的
     @Override

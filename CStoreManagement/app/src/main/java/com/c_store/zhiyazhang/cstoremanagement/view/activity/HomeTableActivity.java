@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
+import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.fragment.BusinessFragment;
 import com.c_store.zhiyazhang.cstoremanagement.view.fragment.TestFragment;
@@ -58,7 +60,8 @@ public class HomeTableActivity extends MyActivity {
     }
 
     private void initView() {
-        toolbar.setTitle("门市门市门市门市：罡峰佳琦");//this.getString(R.string.app_name)
+        UserBean user = UserBean.getUser();
+        toolbar.setTitle(user.getStoreName() + ":" + user.getuName());
         toolbar.setLogo(R.mipmap.app_logo_sort);
         setSupportActionBar(toolbar);
     }
@@ -79,7 +82,7 @@ public class HomeTableActivity extends MyActivity {
             fragmentTabHost.addTab(tabSpec, tabItem.getFragmentClass(), null);
 
             //给Tab按钮设置背景
-            fragmentTabHost.getTabWidget().getChildAt(i).setBackgroundColor(getResources().getColor(R.color.cstore_red));
+            fragmentTabHost.getTabWidget().getChildAt(i).setBackgroundColor(ContextCompat.getColor(HomeTableActivity.this, R.color.cstore_red));
 
             //默认选中第一个tab
             if (i == 0) {
@@ -222,9 +225,9 @@ public class HomeTableActivity extends MyActivity {
             }
             if (textView != null && title != 0) {
                 if (isChecked) {
-                    textView.setTextColor(getResources().getColor(R.color.cstore_white));
+                    textView.setTextColor(ContextCompat.getColor(HomeTableActivity.this, R.color.cstore_white));
                 } else {
-                    textView.setTextColor(getResources().getColor(R.color.cstore_green));
+                    textView.setTextColor(ContextCompat.getColor(HomeTableActivity.this, R.color.cstore_green));
                 }
             }
         }

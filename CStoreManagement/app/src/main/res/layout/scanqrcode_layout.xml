@@ -12,7 +12,7 @@
     </FrameLayout>
 
     <TextView
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/prompt_qrcode"
         android:gravity="center"

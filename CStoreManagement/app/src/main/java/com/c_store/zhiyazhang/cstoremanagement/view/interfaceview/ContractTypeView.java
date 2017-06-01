@@ -12,8 +12,6 @@ import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractTypeAd
  */
 
 public interface ContractTypeView {
-    UserBean getUser();
-
     void toShortClick(View view, ContractTypeBean ctb);
 
     void toLongClick(View view);

@@ -38,7 +38,7 @@ public class SocketUtil {
     private volatile static SocketUtil socketUtil;
     private static final Context mContext = MyApplication.getContext();
     private static final String REQUEST_ERROR = "服务器连接超时，确定连在内网中，确定服务器正常";
-    private static final String SOCKET_ERROR = "请求出错";
+    private static final String SOCKET_ERROR = "服务器异常";
     private static final String NULL_HOST = "host为空";
     private static OutputStream os;
     private static BufferedWriter myBW;
@@ -111,7 +111,7 @@ public class SocketUtil {
 
     /**
      * 向服务器查询数据，且将服务器发回的字符串通过handler传回去
-     *
+     * 0==成功 1==超时 2==服务器异常
      * @param message  要传递给服务器的数据
      * @param mHandler 初始化时需传入发送的消息与用来响应返回数据的handler
      */

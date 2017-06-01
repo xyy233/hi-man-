@@ -6,6 +6,7 @@ import android.os.Message;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
+import com.c_store.zhiyazhang.cstoremanagement.sql.MySql;
 import com.c_store.zhiyazhang.cstoremanagement.utils.MyApplication;
 import com.c_store.zhiyazhang.cstoremanagement.utils.socket.SocketUtil;
 import com.google.gson.Gson;
@@ -51,15 +52,13 @@ public class SignInModel implements SignInInterface {
 
     @Override
     public void login(String uid, final String password, final MyListener myListener) {
-       /* String ip= MyUtils.getIP();
-        if (ip.equals(MyApplication.getContext().getResources().getString(R.string.notFindIP))){
+        String ip = MyApplication.getIP();
+        if (ip.equals(MyApplication.getContext().getResources().getString(R.string.notFindIP))) {
             myListener.contractFailed(ip);
             return;
-        }*/
-        String ip = "192.168.3.100";
-        String sql = "select * from employee where employeeid='" + uid + "'";//' and emppassword='" + password + "'";
+        }
 
-        SocketUtil.getSocketUtil(ip).inquire(sql, new Handler() {
+        SocketUtil.getSocketUtil(ip).inquire(MySql.SignIn(uid), new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -69,7 +68,8 @@ public class SignInModel implements SignInInterface {
                                 myListener.contractFailed(MyApplication.getContext().getResources().getString(R.string.idError));
                                 break;
                             }
-                            List<UserBean> users = new Gson().fromJson((String) msg.obj, new TypeToken<List<UserBean>>(){}.getType());
+                            List<UserBean> users = new Gson().fromJson((String) msg.obj, new TypeToken<List<UserBean>>() {
+                            }.getType());
                             if (!users.get(0).getPassword().equals(password)) {
                                 myListener.contractFailed(MyApplication.getContext().getResources().getString(R.string.pwdError));
                             } else {

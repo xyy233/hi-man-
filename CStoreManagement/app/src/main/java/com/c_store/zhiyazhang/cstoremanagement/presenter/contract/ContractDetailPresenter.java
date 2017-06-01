@@ -2,6 +2,7 @@ package com.c_store.zhiyazhang.cstoremanagement.presenter.contract;
 
 import android.os.Handler;
 
+import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.MyListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractDetail.ContractDetailInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractDetail.ContractDetailModel;
@@ -30,7 +31,7 @@ public class ContractDetailPresenter {
             return;
         }
         cView.showLoading();
-        anInterface.updateCB(cView.getUser(), cView.getNowContractBean(), new MyListener() {
+        anInterface.updateCB(UserBean.getUser(), cView.getNowContractBean(), new MyListener() {
             @Override
             public void contractSuccess() {
                 mHandler.post(new Runnable() {

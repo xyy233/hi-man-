@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeResult;
+import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeInterface;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeListener;
 import com.c_store.zhiyazhang.cstoremanagement.model.contractType.ContractTypeModel;
@@ -34,7 +35,7 @@ public class ContractTypePresenter {
             typeView.hideLoading();
             return;
         }
-        anInterface.getAllContractType(typeView.getUser(), new ContractTypeListener() {
+        anInterface.getAllContractType(UserBean.getUser(), new ContractTypeListener() {
             @Override
             public void contractSuccess(final Object object) {
                 mHandler.post(new Runnable() {
@@ -71,7 +72,6 @@ public class ContractTypePresenter {
             @Override
             public void contractFailed(String errorMessage) {
                 typeView.showFailedError(errorMessage);
-                typeView.hideLoading();
             }
         });
     }

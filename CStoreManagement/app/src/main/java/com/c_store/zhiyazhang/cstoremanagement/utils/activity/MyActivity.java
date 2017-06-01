@@ -23,11 +23,11 @@ import static com.c_store.zhiyazhang.cstoremanagement.utils.static_variable.MyVa
 public abstract class MyActivity extends AppCompatActivity {
     Unbinder mUnbinder;
 
-    private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(context!=null){
-                if(context instanceof AppCompatActivity){
+            if (context != null) {
+                if (context instanceof AppCompatActivity) {
                     ((AppCompatActivity) context).finish();
                 }
             }
@@ -39,17 +39,21 @@ public abstract class MyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IntentFilter filter=new IntentFilter();
+        //注册监听
+        IntentFilter filter = new IntentFilter();
         filter.addAction(EXIT_APP_ACTION);
-        registerReceiver(mBroadcastReceiver,filter);
+        registerReceiver(mBroadcastReceiver, filter);
+        //获得布局
         setContentView(getLayoutId());
-        mUnbinder= ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //释放布局
         mUnbinder.unbind();
+        //释放监听
         unregisterReceiver(mBroadcastReceiver);
     }
 }
