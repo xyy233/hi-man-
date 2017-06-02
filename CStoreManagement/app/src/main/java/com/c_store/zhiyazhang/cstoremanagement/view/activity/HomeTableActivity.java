@@ -53,7 +53,7 @@ public class HomeTableActivity extends MyActivity {
     private void initData() {
         mTableItemList = new ArrayList<>();
         //添加tab
-        mTableItemList.add(new TabItem(R.mipmap.icon_home2, R.mipmap.icon_home1, R.string.one, BusinessFragment.class));
+        mTableItemList.add(new TabItem(R.mipmap.icon_home2, R.mipmap.icon_home1, R.string.business, BusinessFragment.class));
         mTableItemList.add(new TabItem(R.mipmap.icon_computer2, R.mipmap.icon_computer1, R.string.two, TestFragment.class));
         mTableItemList.add(new TabItem(R.mipmap.icon_com2, R.mipmap.icon_com1, R.string.three, TestFragment.class));
         mTableItemList.add(new TabItem(R.mipmap.icon_setting2, R.mipmap.icon_setting1, R.string.four, TestFragment.class));

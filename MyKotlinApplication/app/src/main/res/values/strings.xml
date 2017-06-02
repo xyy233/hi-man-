@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <string name="account">账户</string>
@@ -68,7 +67,6 @@
     <string name="flashlight">手电筒：</string>
     <string name="noScrap">无此商品</string>
     <string name="delete">删除</string>
-
     <string name="startScan">开始扫描:</string>
     <string name="start">开始</string>
     <string name="stop">停止</string>
@@ -80,5 +78,4 @@
     <string name="submit_scrap">提交报废信息</string>
     <string name="store_mrk">商品报废</string>
     <string name="commodity">商品</string>
-
 </resources>

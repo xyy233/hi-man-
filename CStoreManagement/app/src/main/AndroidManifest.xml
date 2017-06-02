@@ -17,9 +17,9 @@
         android:roundIcon="@mipmap/app_logo_sort"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--登录页-->
+        <!--登录页  .view.activity.SignInActivity-->
         <activity
-            android:name=".view.activity.SignInActivity"
+            android:name=".TestActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

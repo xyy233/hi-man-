@@ -16,7 +16,7 @@ import static com.c_store.zhiyazhang.cstoremanagement.utils.static_variable.MyVa
 /**
  * Created by zhiya.zhang
  * on 2017/5/8 12:25.
- * 此activity承担ButtenKnife注入框架的setcontent和bind步骤
+ * 此activity承担ButterKnife注入框架的setcontent和bind步骤
  * 以及完整退出应用步骤，确认退出时发送广播通知所有注册的activity退出
  */
 
