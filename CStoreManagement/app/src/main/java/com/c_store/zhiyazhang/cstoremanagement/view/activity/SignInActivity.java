@@ -52,8 +52,8 @@ public class SignInActivity extends MyActivity implements SignInView {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, HomeTableActivity.class);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(SignInActivity.this,test,"login").toBundle());
+                Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(SignInActivity.this, test, "login").toBundle());
             }
         });
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE);

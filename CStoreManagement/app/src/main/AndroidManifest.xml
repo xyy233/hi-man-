@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
         <!--登录页  .view.activity.SignInActivity-->
         <activity
-            android:name=".TestActivity"
+            android:name=".view.activity.SignInActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,6 +29,11 @@
         <!--hone主页-->
         <activity
             android:name=".view.activity.HomeTableActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--新home页-->
+        <activity
+            android:name=".view.activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <!--所有承包商品类别-->

@@ -1,67 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"/>
     <LinearLayout
-        android:gravity="center"
-        android:background="@color/cstore_red"
+        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="55dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
 
         <TextView
-            android:textSize="16sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/white"
+            android:gravity="center"
             android:text="@string/type_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line"/>
+            android:textSize="14sp"/>
 
         <TextView
-            android:textSize="16sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.3"
+            android:background="@color/white"
+            android:gravity="center"
             android:text="@string/inventory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"/>
+            android:textSize="14sp"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line"/>
 
         <TextView
-            android:textSize="16sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.4"
+            android:background="@color/white"
+            android:gravity="center"
             android:text="@string/tonightCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"/>
+            android:textSize="14sp"/>
 
-        <View
-            android:layout_width="1dp"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/line"/>
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.4"
+            android:background="@color/white"
+            android:gravity="center|bottom"
+            android:orientation="vertical">
 
-        <TextView
-            android:textSize="16sp"
-            android:text="@string/todayCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/todayCount"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tomorrow_count"
+                android:textSize="9sp"
+                tools:ignore="SmallSp"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="15dp"
+                android:background="@color/blue"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>

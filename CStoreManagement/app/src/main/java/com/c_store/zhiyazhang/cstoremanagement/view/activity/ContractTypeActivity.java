@@ -10,11 +10,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
@@ -55,20 +60,39 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     ContractTypeAdapter adapter;
 
     ContractTypePresenter presenter = new ContractTypePresenter(this);
+    @BindView(R.id.search_edit)
+    EditText searchEdit;
+    @BindView(R.id.qrcode)
+    ImageView qrcode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+
+        searchEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Toast.makeText(mContext, "search" + v.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //将输入法隐藏
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+                }
+                return false;
+            }
+        });
     }
 
     private void initView() {
         showLoading();
         //标题栏
-        toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setTitle(getResources().getString(R.string.contract_buy));
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setTitle(getResources().getString(R.string.order));
         setSupportActionBar(toolbar);
-        toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
+
+        //toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
         //recycler列表
         typeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         retry.setOnClickListener(new View.OnClickListener() {
@@ -79,15 +103,25 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
                 presenter.getAllContractType();
             }
         });
+
+        qrcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (judgmentCarmer()) {
+                    startActivity(new Intent(mContext, SearchContractActivity.class));
+                }
+            }
+        });
+
         presenter.getAllContractType();
     }
 
-    //给toolbar创建菜单
+/*    //给toolbar创建菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_contract, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -100,22 +134,6 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         }
         return super.onOptionsItemSelected(item);
     }
-
-    //toolbar监听
-    private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_search:
-                    if (judgmentCarmer()) {
-                        startActivity(new Intent(mContext, SearchContractActivity.class));
-                    }
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
 
     @Override
     public void onBackPressed() {
@@ -153,10 +171,10 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         if (colorView != null) {
             colorView.setBackgroundColor(Color.WHITE);
         }
-        for (ContractTypeBean ct:adapter.ctbs){
-            if (!Objects.equals(ct.getTypeId(), ctb.getTypeId())){
+        for (ContractTypeBean ct : adapter.ctbs) {
+            if (!Objects.equals(ct.getTypeId(), ctb.getTypeId())) {
                 ct.setChangeColor(false);
-            }else {
+            } else {
                 ct.setChangeColor(true);
                 ctb.setChangeColor(true);
             }
@@ -176,7 +194,7 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
 
     @Override
     public void hideLoading() {
-        if (contractLoding!=null){
+        if (contractLoding != null) {
             contractLoding.setVisibility(View.GONE);
         }
     }

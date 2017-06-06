@@ -100,7 +100,7 @@ public class ContractActivity extends MyActivity implements ContractView {
             typeDesc.setVisibility(View.GONE);
         }
         //标题栏
-        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
 
         swipe.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.cstore_white));
@@ -279,6 +279,7 @@ public class ContractActivity extends MyActivity implements ContractView {
     @Override
     public void showFailedError(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+        hideLoading();
     }
 
     @Override

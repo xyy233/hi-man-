@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fffef9"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
@@ -12,72 +11,60 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="0dp"
-        android:src="@mipmap/c_store_logo"
-        app:layout_constraintBottom_toTopOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/app_logo_sort"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"/>
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="183dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="183dp"
-        android:src="@mipmap/logo_text"
-        app:layout_constraintBottom_toBottomOf="@+id/progress"
-        app:layout_constraintLeft_toLeftOf="@+id/imageView"
-        app:layout_constraintRight_toRightOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintTop_creator="1"/>
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="151dp"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:background="#ffffff"
+        android:layout_marginTop="30dp"
+        android:background="@color/touming"
         android:orientation="vertical"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:ignore="MissingConstraints"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#CACDD1"/>
+        tools:layout_constraintRight_creator="1"
+        tools:layout_editor_absoluteY="190dp">
 
         <LinearLayout
             android:id="@+id/userId_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="24dp"
-                android:layout_gravity="center|left"
-                android:layout_marginLeft="10dp"
+                android:layout_gravity="center|start"
+                android:layout_marginStart="10dp"
                 android:src="@mipmap/ico_id"/>
 
             <!-- android:ems="10"表示EditText内最多只显示10个字符，超出不显示 -->
@@ -93,9 +80,9 @@
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:textColorHint="#999999"
+                android:paddingEnd="15dp"
+                android:paddingStart="10dp"
+                android:textColorHint="@color/white"
                 android:textSize="16sp">
 
                 <requestFocus/>
@@ -107,7 +94,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#CACDD1"/>
+            android:background="@color/white"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,16 +118,16 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:textColorHint="#999999"
+                android:paddingEnd="15dp"
+                android:paddingStart="10dp"
+                android:textColorHint="@color/white"
                 android:textSize="16sp"/>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#CACDD1"/>
+            android:background="@color/white"/>
     </LinearLayout>
 
 
@@ -149,35 +136,15 @@
 
     <!-- 横线  -->
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#CACDD1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login"
-        app:layout_constraintVertical_bias="0.349"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"/>
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="记住帐号:"
         android:textSize="10sp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"/>
@@ -186,20 +153,21 @@
         android:id="@+id/save_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/textView"
         app:layout_constraintRight_toLeftOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/textView"/>
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.45"/>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginTop="27dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
         android:text="记住密码:"
         android:textSize="10sp"
         app:layout_constraintRight_toRightOf="@+id/linearLayout"
@@ -211,48 +179,32 @@
         android:id="@+id/save_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintLeft_toRightOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        />
+        app:layout_constraintTop_toTopOf="@+id/textView2"/>
 
 
     <Button
         android:id="@+id/login"
-        android:layout_width="0dp"
+        android:layout_width="290dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
-        android:background="@drawable/red_bg"
+        android:layout_marginTop="88dp"
+        android:background="@drawable/btn_line"
         android:elevation="1dp"
         android:foreground="@drawable/selector_foreground"
         android:stateListAnimator="@drawable/lift_on_touch"
         android:text="@string/login"
         android:textColor="#FFFFFF"
-        android:textSize="19sp"
+        android:textSize="26sp"
         android:transitionName="login"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"/>
-
-
-    <!--<Button-->
-    <!--android:layout_gravity="left"-->
-    <!--android:id="@+id/clear"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:background="@color/cstore_red"-->
-    <!--android:text="@string/clear"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:textSize="15sp"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_alignParentStart="true"/>-->
 
     <ProgressBar
         android:id="@+id/progress"
@@ -261,7 +213,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="-9dp"
+        android:layout_marginBottom="32dp"
         android:elevation="1dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -271,10 +223,10 @@
         tools:layout_constraintRight_creator="1"/>
 
     <Button
+        android:transitionName="test"
         android:id="@+id/test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test"
-        android:transitionName="login"/>
+        android:text="test"/>
 
 </android.support.constraint.ConstraintLayout>

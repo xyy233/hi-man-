@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
-import com.c_store.zhiyazhang.cstoremanagement.bean.UserBean;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter;
 import com.c_store.zhiyazhang.cstoremanagement.utils.MyLinearlayoutManager;
@@ -226,7 +225,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
             typeDesc.setVisibility(View.GONE);
         }
         //标题栏
-        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
     }
 
@@ -404,6 +403,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     @Override
     public void showFailedError(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+        hideLoading();
     }
 
     //长按加

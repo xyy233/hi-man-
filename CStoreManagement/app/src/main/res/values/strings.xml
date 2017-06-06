@@ -32,7 +32,7 @@
     <string name="commodifyNameShort">品名排序</string>
     <string name="money">零售价:￥</string>
     <string name="moneyShort">售价排序</string>
-    <string name="contract_buy">承包商品订货</string>
+    <string name="contract_buy">承包商品</string>
     <string name="writh_code">开发中</string>
     <string name="update_count">修改订量：</string>
     <string name="min_count">最小订量：</string>
@@ -80,5 +80,14 @@
     <string name="submit_scrap">提交报废信息</string>
     <string name="store_mrk">商品报废</string>
     <string name="commodity">商品</string>
+
+    <string name="store_photo">商形相机</string>
+    <string name="commerce">商业</string>
+    <string name="order">订货</string>
+    <string name="train">培训</string>
+    <string name="maintain">维修</string>
+    <string name="coi">成本投资</string>
+    <string name="idorname">品号/品名</string>
+    <string name="tomorrow_count">(明日到量)</string>
 
 </resources>

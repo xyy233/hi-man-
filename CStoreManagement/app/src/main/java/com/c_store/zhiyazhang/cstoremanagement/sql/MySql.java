@@ -1,5 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.sql;
 
+import android.support.annotation.NonNull;
+
 import com.c_store.zhiyazhang.cstoremanagement.bean.MRKBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ScrapContractBean;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ScrapSQLBean;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by zhiya.zhang
  * on 2017/5/24 11:40.
- * 得到sql语句然后用socket发送sql语句给服务器查询,这种做法吧。。。真的，活久见，很强很无敌
+ * 得到sql语句然后用socket发送sql语句给服务器查询,活久见，很强很无敌
  */
 
 public class MySql {
@@ -23,6 +25,7 @@ public class MySql {
      * @param uid 输入框内的帐号
      * @return 新的sql语句
      */
+    @NonNull
     public static String SignIn(String uid) {
         return "select * from app_user_view where employeeid='" + uid + "'";
     }
@@ -33,6 +36,7 @@ public class MySql {
      * @param data 扫码得到的数据
      * @return 新的sql语句
      */
+    @NonNull
     public static String getScrapByBarcode(String data) {
         return "select * from app_mrkitem_view where itemnumber = (select itemnumber from ITEMPLU where plunumber='" + data + "')";
     }
@@ -42,6 +46,7 @@ public class MySql {
      *
      * @return 新的sql语句
      */
+    @NonNull
     public static String getScrapCategory() {
         return "select distinct categorynumber, categoryname from cat where midcategorynumber=' ' and microcategorynumber=' ' and categorynumber in (select distinct categorynumber from app_mrkitem_view where barcode_yn = 'N')order by categorynumber";
     }
@@ -52,6 +57,7 @@ public class MySql {
      * @param categoryId 类的id
      * @return 新的sql语句
      */
+    @NonNull
     public static String getAllScrapByCategory(String categoryId) {
         return "select * from app_mrkitem_view where barcode_yn='N' and categorynumber='" + categoryId + "' order by mrk_date desc";
     }
@@ -63,6 +69,7 @@ public class MySql {
      * @param scbs 所有当前报废商品
      * @return 新的sql语句
      */
+    @NonNull
     public static String getScrapSql(UserBean user, ArrayList<ScrapContractBean> scbs) {
         ScrapSQLBean ssqlb = new ScrapSQLBean();
         ArrayList<MRKBean> mrkbs = new ArrayList<MRKBean>();

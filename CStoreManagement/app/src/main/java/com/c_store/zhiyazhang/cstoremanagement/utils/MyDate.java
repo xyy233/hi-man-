@@ -1,5 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.utils;
 
+import android.annotation.SuppressLint;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,6 +63,7 @@ public class MyDate {
      * @param day 添加的天数可以为负，既为减天数、加天数
      * @return Date格式时间
      */
+    @SuppressLint("WrongConstant")
     public MyDate addDay(int day) {
         //先把date转为calendar
         Calendar cal = getCalendarByDate(instance.date);
@@ -77,6 +80,7 @@ public class MyDate {
      * @param hour 添加的小时数可以为负，既为减小时数、加小时数
      * @return Date格式时间
      */
+    @SuppressLint("WrongConstant")
     public MyDate addHour(int hour) {
         //先把date转为calendar
         Calendar cal = getCalendarByDate(instance.date);
@@ -93,6 +97,7 @@ public class MyDate {
      * @param month 添加的月数可以为负，既为减月数、加月数
      * @return Date格式时间
      */
+    @SuppressLint("WrongConstant")
     public MyDate addMonth(int month) {
         //先把date转为calendar
         Calendar cal = getCalendarByDate(instance.date);
@@ -109,6 +114,7 @@ public class MyDate {
      * @param year 添加的年数可以为负，既为减年数、加年数
      * @return Date格式时间
      */
+    @SuppressLint("WrongConstant")
     public MyDate addYear(int year) {
         //先把date转为calendar
         Calendar cal = getCalendarByDate(instance.date);

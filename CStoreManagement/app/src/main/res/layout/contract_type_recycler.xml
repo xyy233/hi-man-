@@ -1,17 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <View
+
+    <LinearLayout
+        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"
-        />
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <include
-        layout="@layout/type_title_layout"/>
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/type_name"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.3"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/inventory"
+            android:textSize="14sp"/>
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.4"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/tonightCount"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="0.4"
+            android:background="@color/white"
+            android:gravity="center|bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/todayCount"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tomorrow_count"
+                android:textSize="9sp"
+                tools:ignore="SmallSp"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="15dp"
+                android:background="@color/blue"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/type_list"
@@ -20,8 +82,4 @@
         android:clickable="true"
         android:background="@color/bg_color"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"/>
 </LinearLayout>
