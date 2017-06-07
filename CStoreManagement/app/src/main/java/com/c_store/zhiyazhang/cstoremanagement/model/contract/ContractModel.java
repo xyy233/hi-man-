@@ -29,6 +29,7 @@ public class ContractModel implements ContractInterface {
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.getTypeId() + "\",\"orderby\":\"" + ordType + "\",\"page\":1}")
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {
@@ -57,6 +58,7 @@ public class ContractModel implements ContractInterface {
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":1}")
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {
@@ -85,6 +87,7 @@ public class ContractModel implements ContractInterface {
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.getTypeId() + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {
@@ -113,6 +116,7 @@ public class ContractModel implements ContractInterface {
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {
@@ -141,6 +145,7 @@ public class ContractModel implements ContractInterface {
                 .url(AppUrl.UPDATA_CONTRACTS_URL)
                 .content(new Gson().toJson(cbs))
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {

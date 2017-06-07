@@ -3,13 +3,17 @@
               android:id="@+id/contract_item"
               android:layout_width="match_parent"
               android:layout_height="50dp"
+              android:background="@color/windowBackground"
               android:foreground="@drawable/selector_foreground"
               android:orientation="vertical"
               android:stateListAnimator="@drawable/lift_on_touch">
 
 
     <LinearLayout
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
         android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

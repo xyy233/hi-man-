@@ -12,9 +12,9 @@
     <application
         android:name=".utils.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/app_logo_sort"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_logo_sort"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <!--登录页  .view.activity.SignInActivity-->

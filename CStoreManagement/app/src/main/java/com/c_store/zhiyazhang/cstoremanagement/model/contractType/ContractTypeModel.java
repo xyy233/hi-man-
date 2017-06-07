@@ -21,6 +21,7 @@ public class ContractTypeModel implements ContractTypeInterface {
                 .get()
                 .url(AppUrl.CONTRACT_TYPE_URL)
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .build()
                 .execute(new MyStringCallBack() {
                     @Override

@@ -49,7 +49,7 @@
                 android:background="@color/touming"
                 android:elevation="1dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/icon_less"/>
+                android:src="@mipmap/ic_less"/>
 
             <TextView
                 android:id="@+id/edit_scrap_count"
@@ -67,7 +67,7 @@
                 android:background="@color/touming"
                 android:elevation="1dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/icon_add"/>
+                android:src="@mipmap/ic_add"/>
 
         </LinearLayout>
 

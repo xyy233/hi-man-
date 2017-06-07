@@ -55,4 +55,5 @@ public abstract class MyStringCallBack extends Callback<String> {
             return "";
         }
     }
+
 }

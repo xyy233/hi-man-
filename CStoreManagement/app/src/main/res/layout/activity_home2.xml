@@ -37,7 +37,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -123,7 +123,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,7 +148,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -173,7 +173,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/app_logo_sort"/>
+                android:src="@mipmap/ic_logo"/>
 
             <TextView
                 android:layout_width="wrap_content"

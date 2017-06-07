@@ -2,9 +2,11 @@ package com.c_store.zhiyazhang.cstoremanagement.view.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +17,8 @@ import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.c_store.zhiyazhang.cstoremanagement.utils.static_variable.MyVariable.EXIT_APP_ACTION;
 
 /**
  * Created by zhiya.zhang
@@ -47,7 +51,7 @@ public class HomeActivity extends MyActivity {
 
     private void initView() {
         myToolbar.setTitle(getResources().getString(R.string.app_name));
-        myToolbar.setLogo(R.mipmap.app_logo_sort);
+        myToolbar.setLogo(R.mipmap.ic_logo);
         setSupportActionBar(myToolbar);
     }
 
@@ -77,6 +81,28 @@ public class HomeActivity extends MyActivity {
                 break;
         }
     }
+
+    /*
+* 截取返回键做退出
+* */
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("请确认退出系统？")
+                .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(EXIT_APP_ACTION);
+                        sendBroadcast(intent);//发送退出系统广播  每个接收器都会收到 调动finish（）关闭activity
+                        finish();
+                    }
+                })
+                .setNegativeButton("按错了", null)
+                .show();
+    }
+
 
     @Override
     protected int getLayoutId() {

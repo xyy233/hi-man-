@@ -26,7 +26,6 @@ public class UserBean implements Serializable {
     private String telphone;
     @SerializedName("storechinesename")
     private String storeName;
-    @SerializedName("address")
     private String address;
 
     public String getStoreId() {

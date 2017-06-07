@@ -1,5 +1,6 @@
 package com.c_store.zhiyazhang.cstoremanagement.presenter.contract;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -72,6 +73,7 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return null;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
@@ -79,7 +81,6 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ViewHolder) holder).cname.setText(cbs.get(position).getcName());
             ((ViewHolder) holder).cin.setText(Integer.toString(cbs.get(position).getInventory()));
             ((ViewHolder) holder).cnc.setText(Integer.toString(cbs.get(position).getTonightCount()));
-            ((ViewHolder) holder).cdc.setText(Integer.toString(cbs.get(position).getTodayCount()));
             ((ViewHolder) holder).cprice.setText(Double.toString(cbs.get(position).getcPrice()));
             ((ViewHolder) holder).editCdc.setText(Integer.toString(cbs.get(position).getTodayCount()));
             if (cbs.get(position).getTodayStore() > 0) {
@@ -118,10 +119,8 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             if (isEdit) {
                 ((ViewHolder) holder).img.setVisibility(View.GONE);
-                ((ViewHolder) holder).editItem.setVisibility(View.VISIBLE);
             } else {
                 ((ViewHolder) holder).img.setVisibility(View.VISIBLE);
-                ((ViewHolder) holder).editItem.setVisibility(View.GONE);
             }
         } else if (holder instanceof FooterViewHolder) {
             FooterViewHolder fHolder = (FooterViewHolder) holder;
@@ -173,16 +172,12 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView cin;
         @BindView(R.id.cnc)
         TextView cnc;
-        @BindView(R.id.cdc)
-        TextView cdc;
         @BindView(R.id.add)
         public ImageButton add;
         @BindView(R.id.less)
         public ImageButton less;
         @BindView(R.id.edit_cdc)
         public TextView editCdc;
-        @BindView(R.id.edit_contract)
-        LinearLayout editItem;
 
         ViewHolder(View itemView) {
             super(itemView);

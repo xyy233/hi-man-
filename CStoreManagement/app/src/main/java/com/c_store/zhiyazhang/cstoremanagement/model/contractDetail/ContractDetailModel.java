@@ -25,6 +25,7 @@ public class ContractDetailModel implements ContractDetailInterface {
                 .url(AppUrl.UPDATA_CONTRACT_URL)
                 .content(new Gson().toJson(cb))
                 .addHeader("Authorization", user.getUid())
+                .addHeader("store_id","091209")
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
                 .execute(new MyStringCallBack() {

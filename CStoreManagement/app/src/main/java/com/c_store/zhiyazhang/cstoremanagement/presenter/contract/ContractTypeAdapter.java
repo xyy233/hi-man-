@@ -1,6 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.presenter.contract;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
+import com.c_store.zhiyazhang.cstoremanagement.utils.MyApplication;
 import com.c_store.zhiyazhang.cstoremanagement.utils.onclick.RecyclerOnItemClickListener;
 
 import java.util.List;
@@ -51,7 +53,7 @@ public class ContractTypeAdapter extends RecyclerView.Adapter<ContractTypeAdapte
         if (ctbs.get(position).isChangeColor()){
             holder.itemView.setBackgroundColor(Color.YELLOW);
         }else {
-            holder.itemView.setBackgroundColor(Color.WHITE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(MyApplication.getContext(),R.color.windowBackground));
         }
         if (onClick != null) {
             holder.contract_item.setOnClickListener(new View.OnClickListener() {
