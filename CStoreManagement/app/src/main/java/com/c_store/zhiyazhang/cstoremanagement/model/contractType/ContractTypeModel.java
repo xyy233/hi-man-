@@ -30,8 +30,8 @@ public class ContractTypeModel implements ContractTypeInterface {
                         try {
                             contractTypeListener.contractFailed(myError());
                         } catch (Exception ignored) {
-                            if (e.getMessage().contains("failed to connect to")) {
-                                contractTypeListener.contractFailed("连接超时");
+                            if (e.getMessage().contains("Failed to connect to")) {
+                                contractTypeListener.contractFailed("连接超时,请检查网络");
                             } else {
                                 contractTypeListener.contractFailed(e.getMessage());
                             }

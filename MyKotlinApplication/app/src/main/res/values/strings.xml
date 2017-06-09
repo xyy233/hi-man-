@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">喜士多移动管理</string>
+    <string name="app_name">Kotlin学习之路</string>
     <string name="account">账户</string>
     <string name="please_edit_account">请输入账户</string>
     <string name="password">密码</string>

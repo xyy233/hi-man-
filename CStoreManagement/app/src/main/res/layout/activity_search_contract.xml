@@ -5,7 +5,5 @@
 
     <include
         layout="@layout/scanqrcode_layout"/>
-    <include
-        layout="@layout/search_layout"/>
 
 </FrameLayout>

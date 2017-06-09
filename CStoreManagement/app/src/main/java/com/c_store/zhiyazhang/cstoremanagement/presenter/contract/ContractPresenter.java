@@ -166,6 +166,7 @@ public class ContractPresenter {
             @Override
             public void contractSuccess() {
                 cView.updateDone();
+                cView.hideLoading();
             }
 
             @Override
@@ -195,6 +196,7 @@ public class ContractPresenter {
         public void run() {
             if (adapter == null) {
                 adapter = new ContractAdapter(cr, context);
+                adapter.setIsEdit(true);
             } else {
                 adapter.addItem(cr.getDetail());
                 adapter.changeMoreStatus(ContractAdapter.PULLUP_LOAD_MORE);

@@ -20,12 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractTypeAdapter;
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractTypePresenter;
+import com.c_store.zhiyazhang.cstoremanagement.utils.MyToast;
 import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView;
 
@@ -60,10 +60,12 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
     ContractTypeAdapter adapter;
 
     ContractTypePresenter presenter = new ContractTypePresenter(this);
-    @BindView(R.id.search_edit)
-    EditText searchEdit;
     @BindView(R.id.qrcode)
     ImageView qrcode;
+    @BindView(R.id.search_edit)
+    EditText searchEdit;
+    @BindView(R.id.search_btn)
+    ImageView searchBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,11 +76,15 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Toast.makeText(mContext, "search" + v.getText().toString(), Toast.LENGTH_SHORT).show();
-                    //将输入法隐藏
-                    InputMethodManager imm = (InputMethodManager) getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+                    if (!searchEdit.getText().toString().equals("")){
+                        searchStore();
+                        //将输入法隐藏
+                        InputMethodManager imm = (InputMethodManager) getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+                        searchEdit.setText("");
+                    }else
+                        MyToast.getShortToast(ContractTypeActivity.this,"请输入要搜索的品号或品名");
                 }
                 return false;
             }
@@ -91,6 +97,21 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setTitle(getResources().getString(R.string.order));
         setSupportActionBar(toolbar);
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!searchEdit.getText().toString().equals("")){
+                    searchStore();
+                    //将输入法隐藏
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+                    searchEdit.setText("");
+                }else
+                    MyToast.getShortToast(ContractTypeActivity.this,"请输入要搜索的品号或品名");
+            }
+        });
 
         //toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
         //recycler列表
@@ -114,6 +135,13 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         });
 
         presenter.getAllContractType();
+    }
+
+    private void searchStore(){
+        Intent i = new Intent(ContractTypeActivity.this, ContractActivity2.class);
+        i.putExtra("is_search", true);
+        i.putExtra("search_message", searchEdit.getText().toString());
+        startActivity(i);
     }
 
 /*    //给toolbar创建菜单
@@ -212,7 +240,7 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
 
     @Override
     public void showFailedError(String errorMessage) {
-        Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+        MyToast.getShortToast(mContext,errorMessage);
         hideLoading();
         retry.setVisibility(View.VISIBLE);
     }

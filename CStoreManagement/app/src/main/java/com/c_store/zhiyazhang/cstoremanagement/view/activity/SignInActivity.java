@@ -134,10 +134,9 @@ public class SignInActivity extends MyActivity implements SignInView {
     @Override
     public void toActivity(UserBean user) {
         Toast.makeText(mContext, user.getuName() + "您好,登陆成功", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(mContext, HomeTableActivity.class);
+        Intent intent = new Intent(mContext, HomeActivity.class);
         intent.putExtra("user", user);
-        startActivity(intent);
-        finish();
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(SignInActivity.this, login, "login").toBundle());
     }
 
     @Override

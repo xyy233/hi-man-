@@ -31,9 +31,13 @@
     <color name="cstore_red">#e1241f</color>
     <color name="cstore_green">#15833b</color>
     <color name="cstore_white">#feeeed</color>
-    <color name="yellow">#ffd400</color>
-    <color name="blue">#145b7d</color>
     <!--新桥色-->
     <color name="xinqiaose">#50b7c1</color>
     <color name="delete_red">#88ff0000</color>
+
+    <color name="yellow">#f8b62c</color>
+    <color name="blue">#5bc1d5</color>
+    <color name="gray2">#9f9fa0</color>
+    <color name="yello2">#f39700</color>
+
 </resources>

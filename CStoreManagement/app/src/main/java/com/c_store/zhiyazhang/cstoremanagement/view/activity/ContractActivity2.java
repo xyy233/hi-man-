@@ -16,17 +16,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractBean;
@@ -35,6 +32,7 @@ import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapte
 import com.c_store.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter;
 import com.c_store.zhiyazhang.cstoremanagement.utils.MyLinearlayoutManager;
 import com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh;
+import com.c_store.zhiyazhang.cstoremanagement.utils.MyToast;
 import com.c_store.zhiyazhang.cstoremanagement.utils.activity.MyActivity;
 import com.c_store.zhiyazhang.cstoremanagement.view.interfaceview.ContractView;
 
@@ -50,26 +48,26 @@ import butterknife.OnClick;
  */
 
 public class ContractActivity2 extends MyActivity implements ContractView {
-    @BindView(R.id.lw_sales)
-    TextView lwSales;
-    @BindView(R.id.lw2_sales)
-    TextView lw2Sales;
-    @BindView(R.id.lw3_sales)
-    TextView lw3Sales;
-    @BindView(R.id.exp_sales)
-    TextView expSales;
-    @BindView(R.id.sug_sales)
-    TextView sugSales;
-    @BindView(R.id.tonightCount2)
-    TextView tonightCount2;
-    @BindView(R.id.real_count)
-    TextView realCount;
-    @BindView(R.id.min_count)
-    TextView minCount;
-    @BindView(R.id.max_count)
-    TextView maxCount;
-    @BindView(R.id.inv)
-    TextView inv;
+    /* @BindView(R.id.lw_sales)
+     TextView lwSales;
+     @BindView(R.id.lw2_sales)
+     TextView lw2Sales;
+     @BindView(R.id.lw3_sales)
+     TextView lw3Sales;
+     @BindView(R.id.exp_sales)
+     TextView expSales;
+     @BindView(R.id.sug_sales)
+     TextView sugSales;
+     @BindView(R.id.tonightCount2)
+     TextView tonightCount2;
+     @BindView(R.id.real_count)
+     TextView realCount;
+     @BindView(R.id.min_count)
+     TextView minCount;
+     @BindView(R.id.max_count)
+     TextView maxCount;
+     @BindView(R.id.inv)
+     TextView inv;*/
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.mySpinner)
@@ -80,8 +78,8 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     RecyclerView recycler;
     @BindView(R.id.my_swipe)
     MySwipeRefresh swipe;
-    @BindView(R.id.typeDesc)
-    LinearLayout typeDesc;
+    /*@BindView(R.id.typeDesc)
+    LinearLayout typeDesc;*/
     @BindView(R.id.done)
     Button done;
     @BindView(R.id.noMessage)
@@ -137,17 +135,6 @@ public class ContractActivity2 extends MyActivity implements ContractView {
         swipe.autoRefresh();
     }
 
-    @OnClick(R.id.done)
-    void done() {
-        for (ContractBean cb : adapter.getCbs()) {
-            if (cb.isChange()) {
-                presenter.updateAllContract();
-                break;
-            } else {
-                Toast.makeText(ContractActivity2.this, getResources().getString(R.string.update_contract_prompt), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     //设置排序
     private void initSort() {
@@ -208,10 +195,11 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //查询是否是通过搜索进入的，然后根据结果给页面赋值数据或隐藏
     private void initIsSearch() {
         isSearch = isSearch();
+
         if (!isSearch) {
             upCTB = getContractType();
             toolbar.setTitle(upCTB.getTypeName());
-            lwSales.setText(Integer.toString(upCTB.getWk1Sqty()));
+/*            lwSales.setText(Integer.toString(upCTB.getWk1Sqty()));
             lw2Sales.setText(Integer.toString(upCTB.getWk2Sqty()));
             lw3Sales.setText(Integer.toString(upCTB.getWk3Sqty()));
             expSales.setText(Integer.toString(upCTB.getExpQty()));
@@ -220,30 +208,30 @@ public class ContractActivity2 extends MyActivity implements ContractView {
             tonightCount2.setText(Integer.toString(upCTB.getTonightCount()));
             realCount.setText(Integer.toString(upCTB.getTodayCount()));
             minCount.setText(Integer.toString(upCTB.getMinQty()));
-            maxCount.setText(Integer.toString(upCTB.getMaxQty()));
-        } else {
+            maxCount.setText(Integer.toString(upCTB.getMaxQty()));*/
+        } /*else {
             typeDesc.setVisibility(View.GONE);
-        }
+        }*/
         //标题栏
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
     }
 
-    //给toolbar创建菜单
+   /* //给toolbar创建菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
-    }
+    }*/
 
     //toolbar图标点击监听
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                judgmentUpdate();
                 break;
-            case R.id.edit_contract:
+/*            case R.id.edit_contract:
                 if (adapter == null || adapter.getCbs() == null || adapter.getCbs().size() == 0) {
                     break;
                 }
@@ -260,42 +248,75 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                     sort.setVisibility(View.GONE);
                     ispeople = false;
                 }
-                break;
+                break;*/
             default:
                 break;
         }
         return true;
     }
 
-    //判断用户是否有对订量修改，如果修改过要提示
-    private void judgmentUpdate() {
+
+    @OnClick(R.id.done)
+    void done() {
+        showLoading();
+        if (adapter == null) {
+            MyToast.getShortToast(ContractActivity2.this, getResources().getString(R.string.noMsg));
+            hideLoading();
+            return;
+        }
         for (ContractBean cb : adapter.getCbs()) {
             if (cb.isChange()) {
-                new AlertDialog.Builder(this)
-                        .setTitle("提示")
-                        .setMessage("您修改的订量尚未确认，是否放弃修改？")
-                        .setPositiveButton("保存", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                presenter.updateAllContract();
-                            }
-                        })
-                        .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                updateDone();
-                            }
-                        })
-                        .show();
+                presenter.updateAllContract();
                 break;
             } else {
+                MyToast.getShortToast(ContractActivity2.this, getResources().getString(R.string.isSave));
+                hideLoading();
+            }
+        }
+    }
+
+    private boolean is_back = false;
+
+    //判断用户是否有对订量修改，如果修改过要提示
+    private void judgmentUpdate() {
+        boolean mark = false;
+        if (adapter != null) {
+            for (ContractBean cb : adapter.getCbs()) {
+                if (cb.isChange()) {
+                    mark = true;
+                    new AlertDialog.Builder(this)
+                            .setTitle("提示")
+                            .setMessage("您修改的订量尚未确认，是否放弃修改？")
+                            .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    is_back = true;
+                                    presenter.updateAllContract();
+                                }
+                            })
+                            .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    //                                updateDone();
+                                }
+                            })
+                            .show();
+                    break;
+                }
+            /* else {
                 done.setVisibility(View.GONE);
                 adapter.setIsEdit(false);
                 item.setTitleCondensed(ContractActivity2.this.getResources().getString(R.string.edit));
                 adapter.notifyDataSetChanged();
                 sort.setVisibility(View.VISIBLE);
                 ispeople = true;
+            }*/
             }
+        }
+
+        if (!mark) {
+            finish();
         }
     }
 
@@ -315,7 +336,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //实体返回键
     @Override
     public void onBackPressed() {
-        finish();
+        judgmentUpdate();
     }
 
 
@@ -402,7 +423,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //土司错误信息
     @Override
     public void showFailedError(String errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+        MyToast.getShortToast(ContractActivity2.this, errorMessage);
         hideLoading();
     }
 
@@ -472,7 +493,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //显示无数据
     @Override
     public void showNoMessage() {
-        //noMessage.setVisibility(View.VISIBLE);
+        noMessage.setVisibility(View.VISIBLE);
     }
 
     //得到要更新的数据
@@ -490,12 +511,26 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     //更新数据完成
     @Override
     public void updateDone() {
-        Intent intent = new Intent(this, ContractActivity2.class);
+        if (!isSearch){
+            saveType();
+        }
+/*        Intent intent = new Intent(this, ContractActivity2.class);
         intent.putExtra("ctb", getContractType());
         intent.putExtra("is_search", false);
         startActivity(intent);
-        saveType();
-        finish();
+        finish();*/
+        for (ContractBean cb :
+                adapter.getCbs()) {
+            if (cb.isChange()) {
+                cb.setChange(false);
+            }
+        }
+        if (is_back) {
+            finish();
+        } else {
+            MyToast.getShortToast(ContractActivity2.this, "保存成功");
+            swipe.autoRefresh();
+        }
     }
 
     //butterknife得到布局
@@ -527,7 +562,9 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                 }
             }
         };
+
         if ("less".equals(methodName)) {
+
             if (eventAction == MotionEvent.ACTION_DOWN) {
                 mt = new Thread(new Runnable() {
                     @Override
@@ -556,6 +593,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                     runOrStopEdit();
                 }
             }
+
         } else if ("add".equals(methodName)) {
             if (eventAction == MotionEvent.ACTION_DOWN) {
                 pt = new Thread(new Runnable() {
@@ -581,9 +619,16 @@ public class ContractActivity2 extends MyActivity implements ContractView {
                 }
             } else if (eventAction == MotionEvent.ACTION_MOVE) {
                 //当前商品订量<(总类最大量-总类当前量)
-                if (pt != null && Integer.parseInt(view.editCdc.getText().toString()) < (upCTB.getMaxQty() - upCTB.getTodayCount())) {
-                    isOnLongClick = true;
-                    runOrStopEdit();
+                if (!isSearch) {
+                    if (pt != null && Integer.parseInt(view.editCdc.getText().toString()) < (upCTB.getMaxQty() - upCTB.getTodayCount())) {
+                        isOnLongClick = true;
+                        runOrStopEdit();
+                    }
+                } else {
+                    if (pt != null && cb.getTodayCount() < cb.getMaxQty() - cb.getTodayCount()) {
+                        isOnLongClick = true;
+                        runOrStopEdit();
+                    }
                 }
             }
         }
@@ -591,68 +636,100 @@ public class ContractActivity2 extends MyActivity implements ContractView {
 
     //增加按键
     private void addCount(ContractAdapter.ViewHolder view, ContractBean cb) {
-        if (Integer.parseInt(view.editCdc.getText().toString()) == upCTB.getMaxQty()) {
-            return;
-        }
-        int nowContractCount = Integer.parseInt(view.editCdc.getText().toString()) + cb.getStepQty();
-        int nowTypeAllCount = upCTB.getTodayCount() + cb.getStepQty();
-        if (nowTypeAllCount > upCTB.getMaxQty()) {
-            return;
+        if (!isSearch) {
+            if (Integer.parseInt(view.editCdc.getText().toString()) == upCTB.getMaxQty()) {
+                MyToast.getShortToast(this,"已到当前类别最大订量，不能添加");
+                return;
+            }
         } else {
-            cb.setTodayStore(nowContractCount);
-            cb.setTodayCount(nowContractCount);
-            cb.setChange(true);
-            upCTB.setTodayCount(upCTB.getTodayCount() + cb.getStepQty());
-            view.editCdc.setText(Integer.toString(nowContractCount));
-            if (!view.less.isEnabled()) {
-                view.less.setEnabled(true);
+            if (Integer.parseInt(view.editCdc.getText().toString()) == cb.getMaxQty()) {
+                MyToast.getShortToast(this,"已到当前商品最大订量，不能添加");
+                return;
             }
         }
+        int nowContractCount = Integer.parseInt(view.editCdc.getText().toString()) + cb.getStepQty();
 
-        if (cb.getTodayStore() > 0) {
+        //不是搜索的还需要去改类的属性
+        if (!isSearch) {
+            int nowTypeAllCount = upCTB.getTodayCount() + cb.getStepQty();
+            if (nowTypeAllCount > upCTB.getMaxQty()) {
+                return;
+            }
+            upCTB.setTodayCount(upCTB.getTodayCount() + cb.getStepQty());
+        }
+
+        cb.setTodayStore(cb.getTodayStore() + cb.getStepQty());
+        cb.setTodayCount(nowContractCount);
+        cb.setChange(true);
+        view.editCdc.setText(Integer.toString(nowContractCount));
+        if (!view.less.isEnabled()) {
+            view.less.setEnabled(true);
+        }
+
+        if (cb.getTodayStore() != 0) {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.xinqiaose));
         } else {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_color));
         }
 
-        if (nowContractCount >= upCTB.getMaxQty()) {
-            view.add.setEnabled(false);
-            isOnLongClick = false;
-            runOrStopEdit();
+        if (isSearch) {
+            if (nowContractCount >= cb.getMaxQty()) {
+                view.add.setEnabled(false);
+                isOnLongClick = false;
+                runOrStopEdit();
+            }
+        } else {
+            if (nowContractCount >= upCTB.getMaxQty()) {
+                view.add.setEnabled(false);
+                isOnLongClick = false;
+                runOrStopEdit();
+            }
         }
     }
 
     //减去按键
     private void lessCount(ContractAdapter.ViewHolder view, ContractBean cb) {
+
         if (Integer.parseInt(view.editCdc.getText().toString()) == 0) {
             return;
         }
         int nowContractCount = Integer.parseInt(view.editCdc.getText().toString()) - cb.getStepQty();
-        int nowTypeAllCount = upCTB.getTodayCount() + cb.getStepQty();
-        if (nowTypeAllCount < upCTB.getMinQty()) {
-            Toast.makeText(this, getResources().getString(R.string.errorMin), Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            cb.setTodayStore(nowContractCount);
-            cb.setTodayCount(nowContractCount);
-            cb.setChange(true);
-            upCTB.setTodayCount(upCTB.getTodayCount() - cb.getStepQty());
-            view.editCdc.setText(Integer.toString(nowContractCount));
-            if (!view.add.isEnabled()) {
-                view.add.setEnabled(true);
+        if (!isSearch) {
+            int nowTypeAllCount = upCTB.getTodayCount() + cb.getStepQty();
+            if (nowTypeAllCount < upCTB.getMinQty()) {
+                MyToast.getShortToast(ContractActivity2.this, getResources().getString(R.string.errorMin));
+                return;
             }
+            upCTB.setTodayCount(upCTB.getTodayCount() - cb.getStepQty());
         }
 
-        if (cb.getTodayStore() > 0) {
+        cb.setTodayStore(cb.getTodayStore() - cb.getStepQty());
+        cb.setTodayCount(nowContractCount);
+        cb.setChange(true);
+        view.editCdc.setText(Integer.toString(nowContractCount));
+        if (!view.add.isEnabled()) {
+            view.add.setEnabled(true);
+        }
+
+
+        if (cb.getTodayStore() != 0) {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.xinqiaose));
         } else {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_color));
         }
 
-        if (nowContractCount <= upCTB.getMinQty()) {
-            view.less.setEnabled(false);
-            isOnLongClick = false;
-            runOrStopEdit();
+        if (isSearch) {
+            if (nowContractCount <= 0) {
+                view.less.setEnabled(false);
+                isOnLongClick = false;
+                runOrStopEdit();
+            }
+        } else {
+            if (nowContractCount <= upCTB.getMinQty()) {
+                view.less.setEnabled(false);
+                isOnLongClick = false;
+                runOrStopEdit();
+            }
         }
     }
 

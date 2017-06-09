@@ -27,7 +27,7 @@
             android:layout_marginTop="5dp">
 
             <EditText
-                android:id="@+id/search_edit"
+                android:id="@+id/search_edit2"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -43,7 +43,7 @@
                 android:textSize="16sp"/>
 
             <Button
-                android:id="@+id/search_btn"
+                android:id="@+id/search_btn2"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:background="@drawable/shap_line"

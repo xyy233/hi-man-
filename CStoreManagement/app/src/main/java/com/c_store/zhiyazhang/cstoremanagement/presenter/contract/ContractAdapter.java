@@ -83,8 +83,8 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ViewHolder) holder).cnc.setText(Integer.toString(cbs.get(position).getTonightCount()));
             ((ViewHolder) holder).cprice.setText(Double.toString(cbs.get(position).getcPrice()));
             ((ViewHolder) holder).editCdc.setText(Integer.toString(cbs.get(position).getTodayCount()));
-            if (cbs.get(position).getTodayStore() > 0) {
-                ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.xinqiaose));
+            if (cbs.get(position).getTodayStore() != 0) {
+                ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
             } else {
                 ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.bg_color));
             }
@@ -117,11 +117,11 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
                 }
             }
-            if (isEdit) {
+            /*if (isEdit) {
                 ((ViewHolder) holder).img.setVisibility(View.GONE);
             } else {
                 ((ViewHolder) holder).img.setVisibility(View.VISIBLE);
-            }
+            }*/
         } else if (holder instanceof FooterViewHolder) {
             FooterViewHolder fHolder = (FooterViewHolder) holder;
             switch (load_more_status) {

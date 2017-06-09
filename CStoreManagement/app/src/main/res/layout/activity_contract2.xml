@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,47 +10,93 @@
         android:id="@id/noMessage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="0dp"
         android:gravity="center"
         android:text="@string/noMessage"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <android.support.design.widget.CoordinatorLayout
+
+    <android.support.design.widget.AppBarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <include
-            layout="@layout/mdtoolbar"/>
-
-        <com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh
-            android:id="@+id/my_swipe"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:layout_collapseMode="pin"/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:background="@color/gray"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/swipe_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"/>
+            <Spinner
+                android:id="@+id/mySpinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:entries="@array/mySort"/>
 
-        </com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh>
+        </LinearLayout>
 
 
-        <Button
-            android:id="@+id/done"
+    </android.support.design.widget.AppBarLayout>
+
+    <com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh
+        android:id="@+id/my_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@+id/done"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_conversion_absoluteHeight="517dp"
+        tools:layout_conversion_absoluteWidth="360dp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="280dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/swipe_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/cstore_red"
-            android:elevation="1dp"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:text="@string/sure"
-            android:textColor="@color/cstore_white"
-            android:textSize="20sp"
-            android:visibility="gone"/>
+            android:clickable="true"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.c_store.zhiyazhang.cstoremanagement.utils.MySwipeRefresh>
 
-</FrameLayout>
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yello2"
+        android:elevation="1dp"
+        android:foreground="@drawable/selector_foreground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        android:text="@string/sure"
+        android:textColor="@color/cstore_white"
+        android:textSize="20sp"
+        tools:layout_conversion_absoluteX="0dp"
+        tools:layout_conversion_absoluteY="519dp"
+        tools:layout_conversion_absoluteWidth="360dp"
+        tools:layout_conversion_absoluteHeight="48dp"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="0dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

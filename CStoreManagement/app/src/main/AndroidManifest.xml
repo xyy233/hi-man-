@@ -26,6 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.TestActivity"
+            android:screenOrientation="portrait"/>
+
         <!--hone主页-->
         <activity
             android:name=".view.activity.HomeTableActivity"
