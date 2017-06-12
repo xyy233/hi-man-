@@ -10,16 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
 import com.c_store.zhiyazhang.cstoremanagement.bean.ContractTypeBean;
@@ -72,23 +69,6 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         super.onCreate(savedInstanceState);
         initView();
 
-        searchEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!searchEdit.getText().toString().equals("")){
-                        searchStore();
-                        //将输入法隐藏
-                        InputMethodManager imm = (InputMethodManager) getSystemService(
-                                Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
-                        searchEdit.setText("");
-                    }else
-                        MyToast.getShortToast(ContractTypeActivity.this,"请输入要搜索的品号或品名");
-                }
-                return false;
-            }
-        });
     }
 
     private void initView() {
@@ -256,6 +236,7 @@ public class ContractTypeActivity extends MyActivity implements ContractTypeView
         return true;
     }
 
+    //请求权限结果
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);

@@ -88,7 +88,7 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else {
                 ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.bg_color));
             }
-            Glide.with(context).load(cbs.get(position).getImg_url()).placeholder(R.color.yingshu).error(R.color.cstore_red).crossFade().centerCrop().into(((ViewHolder) holder).img);
+            Glide.with(context).load(cbs.get(position).getImg_url()).placeholder(R.mipmap.loading).error(R.mipmap.load_error).crossFade().centerCrop().into(((ViewHolder) holder).img);
             if (onClick != null) {
                 //不知道为什么明明设置了限制，但是在编辑模式下点击card还是会执行监听事件，只能通过强行enabled强行禁止掉
                 if (isEdit) {

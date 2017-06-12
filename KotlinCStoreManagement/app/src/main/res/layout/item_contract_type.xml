@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/contract_item"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:background="@color/windowBackground"
+              android:foreground="@drawable/selector_foreground"
+              android:orientation="vertical"
+              android:stateListAnimator="@drawable/lift_on_touch">
+
+
+    <LinearLayout
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:background="@color/white"
+            android:id="@+id/type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:background="@color/white"
+            android:id="@+id/inventory"
+            android:layout_width="0dp"
+            android:layout_marginStart="3dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:background="@color/white"
+            android:id="@+id/tonightCount"
+            android:layout_width="0dp"
+            android:layout_marginStart="3dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:background="@color/white"
+            android:id="@+id/todayCount"
+            android:layout_width="0dp"
+            android:layout_marginStart="3dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:textStyle="bold"
+            android:textColor="@color/cstore_red"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

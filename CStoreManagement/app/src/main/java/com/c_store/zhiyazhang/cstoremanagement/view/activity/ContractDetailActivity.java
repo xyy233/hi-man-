@@ -114,7 +114,7 @@ public class ContractDetailActivity extends MyActivity implements ContractDetail
         maxCount.setText(Integer.toString(cb.getMaxQty()));
         eachAddCount.setText(Integer.toString(cb.getStepQty()));
         orderCount.setText(Integer.toString(cb.getTodayCount()));
-        Glide.with(this).load(cb.getImg_url()).placeholder(R.color.yingshu).error(R.color.cstore_red).crossFade().centerCrop().into(cimg);
+        Glide.with(this).load(cb.getImg_url()).placeholder(R.mipmap.loading).error(R.mipmap.load_error).crossFade().centerCrop().into(cimg);
         if (Integer.parseInt(orderCount.getText().toString()) <= cb.getMinQty()) {
             lessCount.setEnabled(false);
         }
