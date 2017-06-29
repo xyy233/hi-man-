@@ -108,8 +108,6 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     private int lastVisibleItem;
     ContractAdapter adapter;
     MyLinearlayoutManager layoutManager;
-    int total = 5201;
-    MenuItem item;
     boolean ispeople = true;
 
     @Override
@@ -359,9 +357,6 @@ public class ContractActivity2 extends MyActivity implements ContractView {
     public ContractTypeBean getContractType() {
         i = getIntent();
         ContractTypeBean ctb = (ContractTypeBean) i.getSerializableExtra("ctb");
-        if (total == 5201) {
-            total = ctb.getTodayCount();
-        }
         return ctb;
     }
 
@@ -620,7 +615,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
             } else if (eventAction == MotionEvent.ACTION_MOVE) {
                 //当前商品订量<(总类最大量-总类当前量)
                 if (!isSearch) {
-                    if (pt != null && Integer.parseInt(view.editCdc.getText().toString()) < (upCTB.getMaxQty() - upCTB.getTodayCount())) {
+                    if (pt != null && Integer.parseInt(view.editCdc.getText().toString()) < upCTB.getMaxQty() - upCTB.getTodayCount()) {
                         isOnLongClick = true;
                         runOrStopEdit();
                     }
@@ -667,7 +662,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
         }
 
         if (cb.getTodayStore() != 0) {
-            view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.xinqiaose));
+            view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.item_bg));
         } else {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_color));
         }
@@ -713,7 +708,7 @@ public class ContractActivity2 extends MyActivity implements ContractView {
 
 
         if (cb.getTodayStore() != 0) {
-            view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.xinqiaose));
+            view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.item_bg));
         } else {
             view.card.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_color));
         }

@@ -40,4 +40,9 @@
     <color name="gray2">#9f9fa0</color>
     <color name="yello2">#f39700</color>
 
+    <!--修改订量色-->
+    <color name="contract_bg">#d7ebf0</color>
+    <color name="item_bg">#b4b5b5</color>
+    <color name="contract_sure">#f8b62c</color>
+    <color name="add_less">#5bc1d5</color>
 </resources>

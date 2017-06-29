@@ -1,27 +1,32 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.contract
 
 import android.os.Handler
+import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
-import com.cstore.zhiyazhang.cstoremanagement.model.contractType.ContractTypeInterface
-import com.cstore.zhiyazhang.cstoremanagement.model.contractType.ContractTypeModel
+import com.cstore.zhiyazhang.cstoremanagement.model.contracttype.ContractTypeInterface
+import com.cstore.zhiyazhang.cstoremanagement.model.contracttype.ContractTypeModel
+import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
-import com.cstore.zhiyazhang.cstoremanagement.view.interface_view.ContractTypeView
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/6/12 16:13.
  */
-class ContractTypePresenter(val typeView: ContractTypeView) {
+class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView, val ctd: ContractTypeDao) {
     val anInterface: ContractTypeInterface = ContractTypeModel()
     val mHandler = Handler()
     fun getAllContractType() {
         if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            typeView.hideLoading()
+            gView.hideLoading()
+            gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterface.getAllContractType(User.getUser(), object : MyListener {
+        anInterface.getAllContractType(User.getUser(), tView.isJustLook, object : MyListener {
             //在这无用
             override fun contractSuccess() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -30,18 +35,19 @@ class ContractTypePresenter(val typeView: ContractTypeView) {
             override fun contractSuccess(`object`: Any) {
                 mHandler.post(Runnable {
                     kotlin.run {
-                        val adapter: ContractTypeAdapter = ContractTypeAdapter((`object` as ContractTypeResult).detail) {
-                            typeView.toActivity(it)
+                        val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allDate, tView.isJustLook, (`object` as ContractTypeResult).detail) {
+                            gView.requestSuccess(it)
                         }
-                        typeView.showView(adapter)
-                        typeView.hideLoading()
+                        gView.showView(adapter)
+                        gView.hideLoading()
                     }
                 })
             }
 
             override fun contractFailed(errorMessage: String) {
-                typeView.showFailedError(errorMessage)
-                typeView.hideLoading()
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
             }
 
         })

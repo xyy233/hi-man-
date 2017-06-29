@@ -19,6 +19,7 @@
     <string name="loadingError">加载失败</string>
     <string name="loadingUp">上拉加载更多</string>
     <string name="type_name">类名</string>
+    <string name="type_name2">类别：</string>
     <string name="inventory">库存</string>
     <string name="inventory2">库存：</string>
     <string name="tonightCount">今晚到量</string>
@@ -43,6 +44,7 @@
     <string name="errorMin">总量不能低于最小数</string>
     <string name="errorMax">总量不能高于最大数</string>
     <string name="prompt_qrcode">将二维码/条码放入框内，即可自动扫描</string>
+    <string name="prompt_code">扫描条形码请正对条形码扫描</string>
     <string name="prompt2_qrcode">可以通过上方扫描二维码或条形码查询商品，也可以通过下方手动输入查询商品</string>
     <string name="search">搜索</string>
     <string name="edit_cidorcname">在此输入品号或品名查询：</string>
@@ -52,7 +54,10 @@
     <string name="lw3_sales">上三周销量：</string>
     <string name="exp_sales">预测销量：</string>
     <string name="sug_sales">建议订量：</string>
+    <string name="original_sales">原始订量：</string>
     <string name="real_count">实际订量：</string>
+    <string name="original_sales2">原始订量</string>
+    <string name="real_count2">实际订量</string>
     <string name="edit">编辑</string>
     <string name="done">完成</string>
     <string name="cancel">取消</string>
@@ -91,6 +96,7 @@
     <string name="coi">成本投资</string>
     <string name="idorname">品号/品名</string>
     <string name="tomorrow_count">(明日到量)</string>
+    <string name="acquired_count">(后天到量)</string>
 
     <string name="other">其他</string>
     <string name="about">关于</string>
@@ -98,4 +104,16 @@
     <string name="savePassword">记住密码:</string>
     <string name="saveId">记住帐号:</string>
     <string name="please_edit_ctb">请输入要搜索的品号或品名</string>
+    <string name="system_error">系统错误，请联系开发人员</string>
+    <string name="maxNoAdd">已到最大订量，不能添加</string>
+    <string name="maxCNoAdd">已到当前商品最大订量，不能添加</string>
+    <string name="saveDone">保存成功</string>
+    <string name="noMsg">无数据</string>
+    <string name="isSave">已保存</string>
+    <string name="qrcode_nomessage">二维码扫描器找不到目标</string>
+    <string name="contract_order">承包商品订货</string>
+    <string name="store_order">门市订货</string>
+    <string name="contract_order_toview">承包商品修改一览表</string>
+    <string name="store_toview">门市订货查看</string>
+    <string name="edit_sky">修改sku\n/sku总量</string>
 </resources>

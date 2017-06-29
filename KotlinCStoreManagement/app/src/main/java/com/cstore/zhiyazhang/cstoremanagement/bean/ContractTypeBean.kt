@@ -66,9 +66,18 @@ data class ContractTypeBean(
          */
         @SerializedName("max_qty") val maxQty: Int,
         /**
+         * 此类商品总数
+         */
+        @SerializedName("sku") val sku:Int,
+        /**
+         * 已修改总数
+         */
+        @SerializedName("mod_sku") val modSku:Int,
+        /**
          * 在adapter中确认是否修改颜色
          */
-        var isChangeColor: Boolean
+        var isChangeColor: Boolean,
+        var createDay:Int
 ) : Serializable
 
 /**

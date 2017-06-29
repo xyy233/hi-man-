@@ -45,17 +45,15 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        //LeakCanary.install(this)
         instance = this
         ZXingLibrary.initDisplayOpinion(this)
-        val okhttp: OkHttpClient = OkHttpClient
+        val okHttp: OkHttpClient = OkHttpClient
                 .Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .build()
-        OkHttpUtils.initClient(okhttp)
+        OkHttpUtils.initClient(okHttp)
     }
-
-
-
 
 }

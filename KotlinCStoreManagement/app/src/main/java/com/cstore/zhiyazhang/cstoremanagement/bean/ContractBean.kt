@@ -18,6 +18,10 @@ data class ContractBean(
          */
         @SerializedName("item_name") val cName: String,
         /**
+         * 商品类别
+         */
+        @SerializedName("type_name") val cType: String,
+        /**
          * 库存
          */
         @SerializedName("inv_qty") val inventory: Int,
@@ -32,11 +36,11 @@ data class ContractBean(
         /**
          * 门店增减量
          */
-        @SerializedName("sord_qty") val todayStore: Int,
+        @SerializedName("sord_qty") var todayStore: Int,
         /**
          * 实际订量
          */
-        @SerializedName("act_ord_qty") val todayCount: Int,
+        @SerializedName("act_ord_qty") var todayCount: Int,
         /**
          * 每次增量数
          */
@@ -54,6 +58,10 @@ data class ContractBean(
          */
         @SerializedName("price") val cPrice: Double,
         /**
+         * 建议订量
+         */
+        @SerializedName("sug_qty") val cSug: Int,
+        /**
          * 图片url
          */
         @SerializedName("image_url") val img_url: String,
@@ -62,12 +70,16 @@ data class ContractBean(
          */
         @SerializedName("action") val action: String,
         /**
+         * 标记是第几天到
+         */
+        @SerializedName("arrive_date") val arriveDate: Int,
+        /**
          * 用于添加标记是否修改过
          */
-        val isChange: Boolean
+        var changeCount: Int
 ) : Serializable
 
 /**
  * 商品list
  */
-data class ContractResult(val total: Int, val page: Int, val detail: List<ContractBean>) : Serializable
+data class ContractResult(var total: Int, val page: Int, val detail: List<ContractBean>) : Serializable

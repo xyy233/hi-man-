@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           android:id="@+id/textViewCustom"
           android:layout_gravity="center"
           android:gravity="center|left"
@@ -10,4 +11,5 @@
           android:maxLines="1"
           android:textAlignment="inherit"
           android:textColor="@color/black"
-          android:textSize="15sp" />
+          android:textSize="15sp"
+          tools:ignore="EllipsizeMaxLines"/>

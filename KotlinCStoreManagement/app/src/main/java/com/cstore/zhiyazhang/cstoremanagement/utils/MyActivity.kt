@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity
 /**
  * Created by zhiya.zhang
  * on 2017/6/2 14:10.
- * 此activity承担ButterKnife注入框架的setcontent和bind步骤
+ * 此activity承担setContentView的工作
  * 以及完整退出应用步骤，确认退出时发送广播通知所有注册的activity退出
  */
 abstract class MyActivity : AppCompatActivity() {

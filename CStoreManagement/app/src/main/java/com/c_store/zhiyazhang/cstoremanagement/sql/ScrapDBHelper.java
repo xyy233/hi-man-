@@ -55,7 +55,7 @@ public class ScrapDBHelper extends SQLiteOpenHelper {
     private static final String SQLITE_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + SCRAP_TABLE_NAME;
 
-    public ScrapDBHelper(Context context) {
+    ScrapDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

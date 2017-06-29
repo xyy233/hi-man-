@@ -30,17 +30,40 @@
         </activity>
 
         <!--Home主页-->
-        <activity android:name=".view.HomeActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
+        <!--订货页-->
+        <activity
+            android:name=".view.contract.ContractOrder"
+            android:screenOrientation="portrait"/>
 
         <!--修改订量商品类选择-->
-        <activity android:name=".view.ContractTypeActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.contract.ContractTypeActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--修改订量页-->
+        <activity
+            android:name=".view.contract.ContractActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--商品二维码搜索-->
+        <activity
+            android:name=".view.contract.ContractSearchActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--显示图片页-->
+        <activity
+            android:name=".view.ImageActivity"
+            android:screenOrientation="portrait"/>
 
         <!--测试用-->
-        <activity android:name=".TestActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TestActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

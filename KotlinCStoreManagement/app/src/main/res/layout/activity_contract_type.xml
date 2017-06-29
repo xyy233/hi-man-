@@ -10,15 +10,21 @@
         android:layout_height="wrap_content"/>
 
     <LinearLayout
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
+        android:background="@color/windowBackground"
+        android:elevation="3dp"
         android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/bg_search_line"
             android:focusable="true"
             android:focusableInTouchMode="true">
@@ -61,6 +67,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            layout="@layout/contract_type_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <LinearLayout
             android:id="@+id/contract_loding"
             android:layout_width="match_parent"
@@ -89,12 +99,6 @@
             android:background="@color/colorPrimary"
             android:text="@string/retry"
             android:visibility="gone"/>
-
-        <include
-            layout="@layout/contract_type_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
     </FrameLayout>
 
 

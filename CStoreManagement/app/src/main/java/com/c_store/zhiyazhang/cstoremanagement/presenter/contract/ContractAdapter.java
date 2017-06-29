@@ -40,7 +40,7 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isEdit;
     private static final int TYPE_ITEM = 0;  //普通Item View
     private static final int TYPE_FOOTER = 1;  //顶部FootView
-    private int load_more_status = 0;//上拉加载更多状态-默认为0
+    private static int load_more_status = 0;//上拉加载更多状态-默认为0
     static final int PULLUP_LOAD_MORE = 0;//上拉加载更多
     public static final int LOADING_MORE = 1;//正在加载中
 
@@ -84,11 +84,11 @@ public class ContractAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ViewHolder) holder).cprice.setText(Double.toString(cbs.get(position).getcPrice()));
             ((ViewHolder) holder).editCdc.setText(Integer.toString(cbs.get(position).getTodayCount()));
             if (cbs.get(position).getTodayStore() != 0) {
-                ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
+                ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.item_bg));
             } else {
                 ((ViewHolder) holder).card.setBackgroundColor(ContextCompat.getColor(context, R.color.bg_color));
             }
-            Glide.with(context).load(cbs.get(position).getImg_url()).placeholder(R.mipmap.loading).error(R.mipmap.load_error).crossFade().centerCrop().into(((ViewHolder) holder).img);
+            Glide.with(context).load(cbs.get(position).getImg_url()).override(120,80).placeholder(R.mipmap.loading).error(R.mipmap.load_error).crossFade().centerCrop().into(((ViewHolder) holder).img);
             if (onClick != null) {
                 //不知道为什么明明设置了限制，但是在编辑模式下点击card还是会执行监听事件，只能通过强行enabled强行禁止掉
                 if (isEdit) {

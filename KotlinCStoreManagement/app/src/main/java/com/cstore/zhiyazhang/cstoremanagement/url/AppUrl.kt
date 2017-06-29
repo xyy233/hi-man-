@@ -6,10 +6,18 @@ package com.cstore.zhiyazhang.cstoremanagement.url
  */
 
 object AppUrl {
-    private val APPIP = "http://watchstore.rt-store.com:8081/api"
-    val CONTRACT_TYPE_URL = APPIP + "/order/getGroups.do"
-    val CONTRACT_URL = APPIP + "/order/getItemsByGroupId.do"
-    val UPDATA_CONTRACT_URL = APPIP + "/order/updateOrdQty.do"
-    val UPDATA_CONTRACTS_URL = APPIP + "/order/updateOrdQtys.do"
-    val SEARCH_CONTRACT_URL = APPIP + "/order/getItemsByVague.do"
+
+    val USER_HEADER = "Authorization"
+    val STORE_HEADER = "store_id"
+    val CONNECTION_HEADER = "Connection"
+    val CONNECTION_SWITCH = "close"
+    val IS_JUST_LOOK="is_just_look"
+
+    var appIp: String = "http://watchstore.rt-store.com:8086/api/"
+    val CONTRACT_TYPE_URL = appIp + "/order/getGroups.do"
+    val CONTRACT_URL = appIp + "/order/getItemsByGroupId.do"
+    val ALL_EDITT_CONTRACT = appIp + "/order/getUpdatedItems.do"
+    val UPDATA_CONTRACT_URL = appIp + "/order/updateOrdQty.do"
+    val UPDATA_CONTRACTS_URL = appIp + "/order/updateOrdQtys.do"
+    val SEARCH_CONTRACT_URL = appIp + "/order/getItemsByVague.do"
 }

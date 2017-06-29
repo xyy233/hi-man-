@@ -1,9 +1,13 @@
-package com.cstore.zhiyazhang.cstoremanagement.model.contractType
+package com.cstore.zhiyazhang.cstoremanagement.model.contracttype
 
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
+import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_HEADER
+import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_SWITCH
+import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.STORE_HEADER
+import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.USER_HEADER
 import com.google.gson.Gson
 import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
@@ -14,12 +18,14 @@ import com.zhy.http.okhttp.OkHttpUtils
  */
 class ContractTypeModel : ContractTypeInterface {
 
-    override fun getAllContractType(user: User, listener: MyListener) {
+    override fun getAllContractType(user: User, isJustLook: Boolean, listener: MyListener) {
         OkHttpUtils
                 .get()
                 .url(AppUrl.CONTRACT_TYPE_URL)
-                .addHeader("Authorization", user.uId)
-                .addHeader("store_id", "091209")
+                .addHeader(USER_HEADER, user.uId)
+                .addHeader(STORE_HEADER, "091209")
+                .addHeader(CONNECTION_HEADER, CONNECTION_SWITCH)
+                .addHeader("is_just_look", isJustLook.toString())
                 .build()
                 .execute(object : MyStringCallBack(listener) {
                     override fun onResponse(response: String, id: Int) {
@@ -30,5 +36,5 @@ class ContractTypeModel : ContractTypeInterface {
 }
 
 interface ContractTypeInterface {
-    fun getAllContractType(user: User, listener: MyListener)
+    fun getAllContractType(user: User, isJustLook: Boolean, listener: MyListener)
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.c_store.zhiyazhang.cstoremanagement.R;
+import com.squareup.leakcanary.LeakCanary;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -29,6 +30,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LeakCanary.install(this);
         ZXingLibrary.initDisplayOpinion(this);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)

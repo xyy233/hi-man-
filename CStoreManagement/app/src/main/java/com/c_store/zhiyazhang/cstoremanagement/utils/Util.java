@@ -1,5 +1,7 @@
 package com.c_store.zhiyazhang.cstoremanagement.utils;
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -77,6 +79,7 @@ public class Util {
      *
      * @return 获得当前日期的日
      */
+    @SuppressLint("WrongConstant")
     public static int getTodayDay() {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }

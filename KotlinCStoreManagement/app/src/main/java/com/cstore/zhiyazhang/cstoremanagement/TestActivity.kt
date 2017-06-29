@@ -13,6 +13,10 @@ import com.zhiyazhang.mykotlinapplication.utils.MyActivity
 class TestActivity(override val layoutId: Int = R.layout.app_bar_home) : MyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText(this@TestActivity, "test", Toast.LENGTH_SHORT).show()
+        val x="asdflksajer"
+        if("b" in x){
+            Toast.makeText(this@TestActivity, "有", Toast.LENGTH_SHORT).show()
+        }else
+            Toast.makeText(this@TestActivity, "没有", Toast.LENGTH_SHORT).show()
     }
 }

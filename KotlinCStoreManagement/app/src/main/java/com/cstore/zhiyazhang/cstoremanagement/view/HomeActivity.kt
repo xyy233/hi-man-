@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.contract.ContractOrder
 import com.zhiyazhang.mykotlinapplication.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
@@ -42,15 +43,15 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
     }
 
     private fun initListener() {
-        gg1.setOnClickListener { MyToast.getShortToast(this@HomeActivity, "未完成") }
-        gg2.setOnClickListener { MyToast.getShortToast(this@HomeActivity, "未完成") }
+        gg1.setOnClickListener { MyToast.getShortToast("未完成") }
+        gg2.setOnClickListener { MyToast.getShortToast("未完成") }
         gg3.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, ContractTypeActivity::class.java),
+            startActivity(Intent(this@HomeActivity, ContractOrder::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg3, "gg3").toBundle())
         }
-        gg4.setOnClickListener { MyToast.getShortToast(this@HomeActivity, "未完成") }
-        gg5.setOnClickListener { MyToast.getShortToast(this@HomeActivity, "未完成") }
-        gg6.setOnClickListener { MyToast.getShortToast(this@HomeActivity, "未完成") }
+        gg4.setOnClickListener { MyToast.getShortToast("未完成") }
+        gg5.setOnClickListener { MyToast.getShortToast("未完成") }
+        gg6.setOnClickListener { MyToast.getShortToast("未完成") }
     }
 
     override fun onBackPressed() {

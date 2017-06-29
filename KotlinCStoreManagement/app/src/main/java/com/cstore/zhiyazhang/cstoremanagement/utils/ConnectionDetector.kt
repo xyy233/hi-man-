@@ -34,7 +34,7 @@ class ConnectionDetector private constructor() {
             val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val info = connectivity.activeNetworkInfo
             if (info.isConnected) if (info.state == NetworkInfo.State.CONNECTED) return true
-            MyToast.getShortToast(context,context.getString(R.string.noInternet))
+            MyToast.getShortToast(context.getString(R.string.noInternet))
             return false
         }
 }
