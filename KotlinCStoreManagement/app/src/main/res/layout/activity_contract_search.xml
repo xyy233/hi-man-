@@ -6,4 +6,29 @@
     <include
         layout="@layout/layout_seach"/>
 
+    <Button
+        android:enabled="true"
+        android:visibility="gone"
+        android:id="@+id/qrcode"
+        android:text="二维码"
+        android:textColor="@color/white"
+        android:layout_gravity="bottom|start"
+        android:textSize="18sp"
+        android:background="@drawable/bg_btn_white_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:enabled="true"
+        android:visibility="gone"
+        android:id="@+id/barcode"
+        android:text="条形码"
+        android:textColor="@color/white"
+        android:layout_gravity="bottom|end"
+        android:textSize="18sp"
+        android:background="@drawable/bg_btn_white_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </FrameLayout>

@@ -1,11 +1,17 @@
 package com.zhiyazhang.mykotlinapplication.utils
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.hardware.Camera
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.EasyPermissions
 
 /**
  * Created by zhiya.zhang
@@ -34,6 +40,8 @@ abstract class MyActivity : AppCompatActivity() {
         val filter = IntentFilter()
         filter.addAction(EXIT_APP_ACTION)
         registerReceiver(mBroadcastReceiver, filter)
+
+
     }
 
     override fun onDestroy() {

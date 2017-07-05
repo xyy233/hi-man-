@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.contract.ContractOrder
 import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -25,8 +27,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         super.onCreate(savedInstanceState)
         initView()
         initListener()
+        this.startService(Intent(this,UpdateService::class.java))
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         toolbar.title = resources.getString(R.string.app_name)
         setSupportActionBar(toolbar)
@@ -40,6 +44,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         headerLayout.user_name.text = userShared.getString("uName", "")
         headerLayout.store_name.text = userShared.getString("storeName", "")
         headerLayout.store_address.text = userShared.getString("address", "")
+        headerLayout.app_version.text="v: ${MyApplication.getVersion()}"
     }
 
     private fun initListener() {
@@ -77,7 +82,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 Toast.makeText(this@HomeActivity, "开发中", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_about -> {
-                Toast.makeText(this@HomeActivity, "开发中", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "当前版本号："+ MyApplication.getVersion(), Toast.LENGTH_SHORT).show()
             }
             R.id.nav_declare -> {
                 Toast.makeText(this@HomeActivity, "开发中", Toast.LENGTH_SHORT).show()

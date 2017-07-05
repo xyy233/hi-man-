@@ -9,6 +9,7 @@ import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketTimeoutException
+import java.util.*
 
 /**
  * Created by zhiya.zhang
@@ -34,6 +35,7 @@ class SocketUtil private constructor(host: String) {
         private var myBW: BufferedWriter? = null
         private var `is`: InputStream? = null
         private var myBR: BufferedReader? = null
+        private val timer = Timer()
 
         /**
          * 单列模式,写入host
@@ -113,15 +115,18 @@ class SocketUtil private constructor(host: String) {
                     Toast.makeText(mContext, NULL_HOST, Toast.LENGTH_SHORT).show()
                     return@Runnable
                 }
-                //连接服务器 并设置连接超时为5秒
+                //连接服务器 并设置连接超时为5秒,设置读取信息为5秒
                 if (!mySocket!!.isConnected) {
                     mySocket!!.connect(InetSocketAddress(host, port), 5000)
+                    mySocket!!.soTimeout = 5000
                 }
                 //socket的输入流和输出流
                 val os = mySocket!!.getOutputStream()
                 val myBW = BufferedWriter(OutputStreamWriter(os))
                 val `is` = mySocket!!.getInputStream()
                 val myBR = BufferedReader(InputStreamReader(`is`))
+
+
                 //对socket进行读写
                 myBW.write(String(message.toByteArray(charset("utf-8"))))
                 myBW.flush()
@@ -129,15 +134,16 @@ class SocketUtil private constructor(host: String) {
 
                 var receive: String? = null
 
-                while (receive==null){
-                    receive=myBR.readLine()
+                while (receive == null) {
+                    receive = myBR.readLine()
                 }
 
                 //定义消息
                 val msg = Message()
                 msg.obj = receive
-                //把信息返回给Handler
                 msg.what = 0
+
+                //把信息返回给Handler
                 mHandler.sendMessage(msg)
             } catch (aa: SocketTimeoutException) {
                 val msg = Message()

@@ -197,7 +197,7 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     fun judgmentCarmer(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
-            EasyPermissions.requestPermissions(this, "扫描二维码需要打开权限", 1, *perms)
+            EasyPermissions.requestPermissions(this, "请打开权限以操作扫描更新", 1, *perms)
             return false
         }
         return true

@@ -23,7 +23,7 @@ class ContractTypeModel : ContractTypeInterface {
                 .get()
                 .url(AppUrl.CONTRACT_TYPE_URL)
                 .addHeader(USER_HEADER, user.uId)
-                .addHeader(STORE_HEADER, "091209")
+                .addHeader(STORE_HEADER, user.storeId)
                 .addHeader(CONNECTION_HEADER, CONNECTION_SWITCH)
                 .addHeader("is_just_look", isJustLook.toString())
                 .build()

@@ -10,6 +10,7 @@ import java.net.NetworkInterface
 import java.net.SocketException
 import java.util.concurrent.TimeUnit
 
+
 /**
  * Created by zhiya.zhang
  * on 2017/6/2 14:35.
@@ -41,6 +42,17 @@ class MyApplication : Application() {
             }
             return result
         }
+
+        fun getVersion(): String? {
+            try {
+                val manager = instance!!.packageManager
+                val info = manager.getPackageInfo(instance!!.packageName, 0)
+                return info.versionName
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return null
+        }
     }
 
     override fun onCreate() {
@@ -50,8 +62,9 @@ class MyApplication : Application() {
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient
                 .Builder()
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
                 .build()
         OkHttpUtils.initClient(okHttp)
     }

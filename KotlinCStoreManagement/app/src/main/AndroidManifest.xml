@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".view.UpdateService"/>
+
         <!--Home主页-->
         <activity
             android:name=".view.HomeActivity"

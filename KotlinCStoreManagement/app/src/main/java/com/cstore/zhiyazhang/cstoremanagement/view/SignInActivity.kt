@@ -1,42 +1,53 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
-import android.app.ActivityOptions
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.hardware.Camera
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 import com.zhiyazhang.mykotlinapplication.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_signin.*
+import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
 
 /**
  * Created by zhiya.zhang
  * on 2017/6/7 15:23.
  */
-class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, GenericView {
+class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, GenericView, EasyPermissions.PermissionCallbacks {
 
     var preferences: SharedPreferences? = null
-    val mSigninPresenter: SignInPresenter = SignInPresenter(this,this)
+    val mSigninPresenter: SignInPresenter = SignInPresenter(this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        //获得权限
+        getPermissions()
+
+
     }
 
     private fun initView() {
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
-        test.setOnClickListener({
+        /*test.setOnClickListener({
             val intent = Intent(this@SignInActivity, HomeActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
-        })
-        test2.setOnClickListener { startActivity(Intent(this@SignInActivity,ImageActivity::class.java)) }
+        })*/
+//        test2.setOnClickListener { MyApplication.instance().startService(Intent(MyApplication.instance().applicationContext, UpdateService::class.java)) }
         //如果获得了就直接输入否则为“”
         user_id.setText(preferences?.getString("id", ""))
         user_password.setText(preferences?.getString("pwd", ""))
@@ -86,19 +97,20 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
     override fun <T> requestSuccess(objects: T) {
         when (objects) {
-            is User ->{
+            is User -> {
                 showPrompt(objects.name + "您好,登陆成功")
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                 intent.putExtra("user", objects)
-                startActivity (intent)
-                finish ()
+                startActivity(intent)
+                finish()
             }
-            else->showPrompt(getString(R.string.system_error))
+            else -> showPrompt(getString(R.string.system_error))
         }
     }
 
     override fun <T> showView(adapter: T) {
     }
+
     override fun errorDealWith() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -126,5 +138,89 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         ue.putString("storeName", user.storeName)
         ue.putString("address", user.address)
         ue.apply()
+    }
+
+
+    private fun getPermissions() {
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (judgmentPermissions()) {
+                deleteDownload()
+            }
+        } else {
+            if (!cameraIsCanUse()) {
+                MyToast.getLongToast("您未开启相机权限，请开启相机权限！")
+                val intent = Intent()
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                intent.data = Uri.fromParts("package", this@SignInActivity.packageName, null)
+                this@SignInActivity.startActivity(intent)
+            }
+            deleteDownload()
+        }
+    }
+
+    /**
+     * 返回true 表示可以使用  返回false表示不可以使用
+     */
+    fun cameraIsCanUse(): Boolean {
+        var isCanUse = true
+        var mCamera: Camera? = null
+        try {
+            mCamera = Camera.open()
+            val mParameters = mCamera!!.parameters //针对魅族手机
+            mCamera.parameters = mParameters
+        } catch (e: Exception) {
+            isCanUse = false
+        }
+
+        if (mCamera != null) {
+            try {
+                mCamera.release()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return isCanUse
+            }
+
+        }
+        return isCanUse
+    }
+
+    //获得相机权限
+    @pub.devrel.easypermissions.AfterPermissionGranted(1)
+    fun judgmentPermissions(): Boolean {
+        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (!EasyPermissions.hasPermissions(this, *perms)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.openAu), 1, *perms)
+            return false
+        }
+        return true
+    }
+
+
+    //请求权限结果
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    //获取权限失败
+    override fun onPermissionsDenied(requestCode: Int, list: List<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, list)) {
+            AppSettingsDialog.Builder(this).build().show()
+        }
+    }
+
+    //获取权限成功
+    override fun onPermissionsGranted(requestCode: Int, list: List<String>) {
+        deleteDownload()
+    }
+
+    //检查删除安装包
+    private fun deleteDownload() {
+        val versionName = "CStoreManagement.apk"
+        val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
+        val f = File(downloadPath)
+        if (f.exists()) {
+            f.delete()
+        }
     }
 }

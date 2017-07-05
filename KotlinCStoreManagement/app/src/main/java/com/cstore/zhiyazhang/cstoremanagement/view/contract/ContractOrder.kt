@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -26,17 +25,12 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             startActivity(intent,
                     ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, order1, "order1").toBundle())
         }
-        order2.setOnClickListener { MyToast.getShortToast(getString(R.string.writh_code)) }
         order3.setOnClickListener {
-/*            val intent = Intent(this@ContractOrder, ContractActivity::class.java)
-            intent.putExtra("is_all", true)
-            intent.putExtra("is_search", false)*/
             val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
             intent.putExtra("is_just_look", true)
             startActivity(intent,
                     ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, order3, "order3").toBundle())
         }
-        order4.setOnClickListener { MyToast.getShortToast(getString(R.string.writh_code)) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
