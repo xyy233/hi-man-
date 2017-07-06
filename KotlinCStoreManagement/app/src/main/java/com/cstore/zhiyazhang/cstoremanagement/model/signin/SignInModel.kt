@@ -31,14 +31,15 @@ class SignInModel : SignInInterface {
                     0 -> try {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.idError))
-                        }
-                        val users = Gson().fromJson<List<User>>(msg.obj as String, object : TypeToken<List<User>>() {
+                        }else{
+                            val users = Gson().fromJson<List<User>>(msg.obj as String, object : TypeToken<List<User>>() {
 
-                        }.type)
-                        if (users[0].password != password) {
-                            myListener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.pwdError))
-                        } else {
-                            myListener.contractSuccess(users[0])
+                            }.type)
+                            if (users[0].password != password) {
+                                myListener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.pwdError))
+                            } else {
+                                myListener.contractSuccess(users[0])
+                            }
                         }
                     } catch (e: Exception) {
                         myListener.contractFailed(msg.obj as String)

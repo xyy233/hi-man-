@@ -6,7 +6,6 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_HEADER
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_SWITCH
-import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.STORE_HEADER
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.USER_HEADER
 import com.google.gson.Gson
 import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
@@ -23,7 +22,7 @@ class ContractTypeModel : ContractTypeInterface {
                 .get()
                 .url(AppUrl.CONTRACT_TYPE_URL)
                 .addHeader(USER_HEADER, user.uId)
-                .addHeader(STORE_HEADER, user.storeId)
+                .addHeader(AppUrl.STORE_HEADER, "091209")
                 .addHeader(CONNECTION_HEADER, CONNECTION_SWITCH)
                 .addHeader("is_just_look", isJustLook.toString())
                 .build()

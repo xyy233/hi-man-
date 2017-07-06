@@ -4,7 +4,6 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
 import okhttp3.Response
-import java.io.IOException
 
 /**
  * Created by zhiya.zhang
@@ -17,18 +16,6 @@ abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
     @Throws(Exception::class)
     override fun parseNetworkResponse(response: Response?, id: Int): String? {
         return response?.body()?.string()
-    }
-
-    override fun validateReponse(response: Response?, id: Int): Boolean {
-        code = response?.code()
-        if (code != 200) {
-            try {
-                string = response?.body()?.string()
-            } catch (e: IOException) {
-                return true
-            }
-        }
-        return true
     }
 
     override fun onError(call: Call, ex: java.lang.Exception, id: Int) {

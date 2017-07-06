@@ -119,7 +119,6 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
         anInterface.updateAllContract(cView.contractList, User.getUser(), object : MyListener {
             override fun contractSuccess() {
                 cView.updateDone()
-                gView.hideLoading()
             }
 
             override fun contractSuccess(`object`: Any) {

@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -17,6 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -36,10 +38,9 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         initView()
         //获得权限
         getPermissions()
-
-
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
@@ -77,6 +78,8 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                         .hideSoftInputFromWindow(user_password.windowToken, 0)
             }
         })
+        app_version.text = "v: ${MyApplication.getVersion()}"
+        localhost_ip.text = MyApplication.getIP()
     }
 
     override val uid: String

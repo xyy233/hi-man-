@@ -22,7 +22,7 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.typeId + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, user.storeId)
+                .addHeader(AppUrl.STORE_HEADER, "091209")
                 .addHeader(AppUrl.IS_JUST_LOOK, isJustLook.toString())
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
@@ -40,7 +40,7 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.ALL_EDITT_CONTRACT)
                 .content("{\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, user.storeId)
+                .addHeader(AppUrl.STORE_HEADER, "091209")
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
@@ -57,7 +57,7 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, user.storeId)
+                .addHeader(AppUrl.STORE_HEADER, "091209")
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
@@ -69,12 +69,13 @@ class ContractModel : ContractInterface {
     }
 
     override fun updateAllContract(cbs: List<ContractBean>, user: User, myListener: MyListener) {
+        val requestString=Gson().toJson(cbs)
         OkHttpUtils
                 .postString()
                 .url(AppUrl.UPDATA_CONTRACTS_URL)
-                .content(Gson().toJson(cbs))
+                .content(requestString)
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, user.storeId)
+                .addHeader(AppUrl.STORE_HEADER, "091209")
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()

@@ -115,17 +115,16 @@ class SocketUtil private constructor(host: String) {
                     Toast.makeText(mContext, NULL_HOST, Toast.LENGTH_SHORT).show()
                     return@Runnable
                 }
-                //连接服务器 并设置连接超时为5秒,设置读取信息为5秒
+                //连接服务器 并设置连接超时为10秒,设置读取信息为10秒
                 if (!mySocket!!.isConnected) {
-                    mySocket!!.connect(InetSocketAddress(host, port), 5000)
-                    mySocket!!.soTimeout = 5000
+                    mySocket!!.connect(InetSocketAddress(host, port), 10000)
+                    mySocket!!.soTimeout = 10000
                 }
                 //socket的输入流和输出流
                 val os = mySocket!!.getOutputStream()
                 val myBW = BufferedWriter(OutputStreamWriter(os))
                 val `is` = mySocket!!.getInputStream()
                 val myBR = BufferedReader(InputStreamReader(`is`))
-
 
                 //对socket进行读写
                 myBW.write(String(message.toByteArray(charset("utf-8"))))
@@ -153,6 +152,11 @@ class SocketUtil private constructor(host: String) {
             } catch (e: IOException) {
                 val msg = Message()
                 msg.obj = SOCKET_ERROR
+                msg.what = 2
+                mHandler.sendMessage(msg)
+            } catch (e: Exception) {
+                val msg = Message()
+                msg.obj = e.message
                 msg.what = 2
                 mHandler.sendMessage(msg)
             } finally {

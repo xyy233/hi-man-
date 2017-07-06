@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_contract.*
  * on 2017/6/15 12:00.
  */
 class ContractActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), ContractView, GenericView {
+
     override val contractType: ContractTypeBean
         get() = ctb!!
 
@@ -312,11 +313,15 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
      * 增加量
      */
     private fun addCount(view: ContractAdapter.ViewHolder, cb: ContractBean) {
+        //当前量增加后的量
         val nowContractCount = cb.todayCount + cb.stepQty
         if (!isSearch) {
+            //当前类的量增加后的量
             val nowTypeAllCount = ctb!!.todayCount + cb.stepQty
+            //如果今天量等于当今天类最大量 或 当前类的量大于最大量 或 当前增加商品量大于当前商品最大量
             if (cb.todayCount == ctb!!.maxQty ||
-                    nowTypeAllCount > ctb!!.maxQty) {
+                    nowTypeAllCount > ctb!!.maxQty ||
+                    nowContractCount > cb.maxQty) {
                 showPrompt(getString(com.cstore.zhiyazhang.cstoremanagement.R.string.maxNoAdd))
                 return
             }
@@ -439,9 +444,13 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
 
     override fun updateDone() {
         if (!isSearch) saveType()
+
         adapter!!.cr.detail.filter { it.changeCount != 0 }.forEach { it.changeCount = 0 }
+
         if (isBack) finish() else {
             showPrompt(getString(com.cstore.zhiyazhang.cstoremanagement.R.string.saveDone))
+
+            my_swipe.isRefreshing = false
             my_swipe.autoRefresh()
         }
     }

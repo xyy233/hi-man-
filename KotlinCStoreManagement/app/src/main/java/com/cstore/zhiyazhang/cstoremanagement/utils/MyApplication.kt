@@ -11,6 +11,8 @@ import java.net.SocketException
 import java.util.concurrent.TimeUnit
 
 
+
+
 /**
  * Created by zhiya.zhang
  * on 2017/6/2 14:35.
@@ -28,12 +30,16 @@ class MyApplication : Application() {
                 while (en.hasMoreElements()) {
                     val intf = en.nextElement()
                     val enumIpAddr = intf.inetAddresses
+                    val name = intf.displayName
                     while (enumIpAddr.hasMoreElements()) {
                         val inetAddress = enumIpAddr.nextElement()
                         if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
                             val ip = inetAddress.hostAddress
                             val ips = ip.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                             result = ips[0] + "." + ips[1] + "." + ips[2] + ".100"
+                            if (name.indexOf("wlan")!=-1&&result!=""){
+                                return result
+                            }
                         }
                     }
                 }
@@ -62,9 +68,8 @@ class MyApplication : Application() {
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient
                 .Builder()
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .build()
         OkHttpUtils.initClient(okHttp)
     }
