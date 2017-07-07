@@ -151,13 +151,13 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                     }
                 }, isJustLook)
                 gView.showView(adapter)
-                gView.hideLoading()
                 cView.setPage(cr.page)
+                gView.hideLoading()
             } else {
                 adapter!!.addItem(cr.detail)
                 adapter!!.changeMoreStatus(adapter!!.PULLUP_LOAD_MORE)
-                gView.hideLoading()
                 cView.setPage(cr.page)
+                gView.hideLoading()
             }
         }
 

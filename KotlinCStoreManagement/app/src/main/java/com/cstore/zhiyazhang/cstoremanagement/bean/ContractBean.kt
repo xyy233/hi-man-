@@ -68,7 +68,7 @@ data class ContractBean(
         /**
          * 告诉后台是更新还是创建的动作
          */
-        @SerializedName("action") val action: String,
+        @SerializedName("action") var action: String,
         /**
          * 标记是第几天到
          */

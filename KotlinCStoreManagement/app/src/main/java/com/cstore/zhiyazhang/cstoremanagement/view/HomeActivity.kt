@@ -27,6 +27,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         super.onCreate(savedInstanceState)
         initView()
         initListener()
+    }
+
+    override fun onStart() {
+        super.onStart()
         this.startService(Intent(this,UpdateService::class.java))
     }
 

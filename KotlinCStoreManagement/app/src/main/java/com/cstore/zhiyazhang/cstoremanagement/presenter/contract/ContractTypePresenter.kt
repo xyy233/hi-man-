@@ -39,6 +39,7 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
                             gView.requestSuccess(it)
                         }
                         gView.showView(adapter)
+                        if (adapter.ctbs.isEmpty())tView.showUsaTime(true)else tView.showUsaTime(false)
                         gView.hideLoading()
                     }
                 })

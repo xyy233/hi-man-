@@ -117,4 +117,9 @@
     <string name="contract_order_toview">承包商品修改一览表</string>
     <string name="store_toview">门市订货查看</string>
     <string name="edit_sky">修改sku\n/sku总量</string>
+    <string name="wifi_hints">请确定当前连接的wifi是cstorebp</string>
+    <string name="now_wifi">当前链接的wifi为：</string>
+    <string name="mobile_network">移动网络</string>
+    <string name="not_wifi_name">未获得wifi名</string>
+    <string name="usa_time">使用时间在每天14点到18点期间， \n如此时间内无数据请联系开发人员。</string>
 </resources>

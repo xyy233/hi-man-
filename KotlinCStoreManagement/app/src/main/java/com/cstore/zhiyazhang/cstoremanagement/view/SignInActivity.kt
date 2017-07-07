@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.hardware.Camera
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
+
 
 /**
  * Created by zhiya.zhang
@@ -79,7 +81,29 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             }
         })
         app_version.text = "v: ${MyApplication.getVersion()}"
+/*        // 获取WiFi服务
+        val wifiInfo = (application.getSystemService(WIFI_SERVICE) as WifiManager).connectionInfo
+        val ipAddress = wifiInfo.ipAddress
+        val ip = (ipAddress and 0xFF).toString() + "." +
+                (ipAddress shr 8 and 0xFF) + "." +
+                (ipAddress shr 16 and 0xFF) + "." +
+                (ipAddress shr 24 and 0xFF)*/
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //获得ip地址
         localhost_ip.text = MyApplication.getIP()
+        try {
+            //获得wifi名字
+            var wifiName = (application.getSystemService(WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
+            if (wifiName == null || wifiName == "") wifiName = getString(R.string.mobile_network)
+            @SuppressLint("WifiManagerLeak")
+            wifi_hints.text = "${getString(R.string.now_wifi)}$wifiName\n${getString(R.string.wifi_hints)}"
+        } catch(e: Exception) {
+            wifi_hints.text = getString(R.string.not_wifi_name)
+        }
     }
 
     override val uid: String
@@ -89,12 +113,14 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         get() = user_password.text.toString()
 
     override fun showLoading() {
+        wifi_hints.visibility = View.GONE
         progress.visibility = View.VISIBLE
         login.isEnabled = false
     }
 
     override fun hideLoading() {
         progress.visibility = View.GONE
+        wifi_hints.visibility = View.VISIBLE
         login.isEnabled = true
     }
 
@@ -105,7 +131,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                 intent.putExtra("user", objects)
                 startActivity(intent)
-                finish()
+                //finish()
             }
             else -> showPrompt(getString(R.string.system_error))
         }

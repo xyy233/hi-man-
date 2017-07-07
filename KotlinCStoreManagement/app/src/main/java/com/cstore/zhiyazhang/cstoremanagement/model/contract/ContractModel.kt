@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.contract
 
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
@@ -22,7 +23,8 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.CONTRACT_URL)
                 .content("{\"type_id\":\"" + ctb.typeId + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, "091209")
+//                .addHeader(AppUrl.STORE_HEADER,"091209")
+                .addHeader(AppUrl.STORE_HEADER, user.storeId)
                 .addHeader(AppUrl.IS_JUST_LOOK, isJustLook.toString())
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
@@ -40,7 +42,8 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.ALL_EDITT_CONTRACT)
                 .content("{\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, "091209")
+//                .addHeader(AppUrl.STORE_HEADER,"091209")
+                .addHeader(AppUrl.STORE_HEADER, user.storeId)
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
@@ -57,7 +60,8 @@ class ContractModel : ContractInterface {
                 .url(AppUrl.SEARCH_CONTRACT_URL)
                 .content("{\"vague\":\"" + searchMessage + "\",\"orderby\":\"" + ordType + "\",\"page\":" + (page + 1) + "}")
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, "091209")
+//                .addHeader(AppUrl.STORE_HEADER,"091209")
+                .addHeader(AppUrl.STORE_HEADER, user.storeId)
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()
@@ -69,13 +73,26 @@ class ContractModel : ContractInterface {
     }
 
     override fun updateAllContract(cbs: List<ContractBean>, user: User, myListener: MyListener) {
-        val requestString=Gson().toJson(cbs)
+        //防提交重复信息，相同品号的就删除,有可能导致anr，耗时操作，如出现就开线程去做
+        val nowList = cbs as ArrayList<ContractBean>//使用一个新的list
+        try {
+            if (nowList.size>1){
+                for (i in 0..nowList.size - 1) {//遍历list
+                    (nowList.size - 1 downTo i + 1)//遍历内部遍历一遍
+                            .filter { nowList[i].cId == nowList[it].cId }//查到品号相等的
+                            .forEach { nowList.removeAt(it) }//遍历删掉
+                }
+            }
+        }catch (e:Exception){
+            Log.e("防重复报错",e.message)
+        }
         OkHttpUtils
                 .postString()
                 .url(AppUrl.UPDATA_CONTRACTS_URL)
-                .content(requestString)
+                .content(Gson().toJson(nowList))
                 .addHeader(AppUrl.USER_HEADER, user.uId)
-                .addHeader(AppUrl.STORE_HEADER, "091209")
+//                .addHeader(AppUrl.STORE_HEADER,"091209")
+                .addHeader(AppUrl.STORE_HEADER, user.storeId)
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .build()

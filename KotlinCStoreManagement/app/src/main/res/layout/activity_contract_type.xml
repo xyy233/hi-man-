@@ -99,6 +99,16 @@
             android:background="@color/colorPrimary"
             android:text="@string/retry"
             android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/usa_time"
+            android:text="@string/usa_time"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </FrameLayout>
 
 

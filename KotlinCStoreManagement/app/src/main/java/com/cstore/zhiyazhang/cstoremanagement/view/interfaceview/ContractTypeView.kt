@@ -6,4 +6,9 @@ package com.cstore.zhiyazhang.cstoremanagement.view.interfaceview
  */
 interface ContractTypeView {
     val isJustLook:Boolean
+
+    /**
+     * 显示使用时间数据
+     */
+    fun showUsaTime(isShow:Boolean)
 }

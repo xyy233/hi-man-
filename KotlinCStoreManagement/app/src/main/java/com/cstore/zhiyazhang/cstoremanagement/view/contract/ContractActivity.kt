@@ -89,7 +89,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
                 if (adapter!!.cr.detail.filter { it.changeCount != 0 }.isNotEmpty())
                     presenter.updateAllContract()
                 else
-                    showPrompt(getString(com.cstore.zhiyazhang.cstoremanagement.R.string.isSave))
+                    showPrompt(getString(R.string.isSave))
             }
         } else {
             done.visibility = View.GONE
@@ -190,6 +190,8 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
 
     override fun showLoading() {
         my_swipe.isRefreshing = true
+        layoutManager.setScrollEnabled(false)
+        my_swipe.isEnabled = false
     }
 
     override val sort: String
@@ -215,6 +217,8 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
 
     override fun hideLoading() {
         my_swipe.isRefreshing = false
+        layoutManager.setScrollEnabled(true)
+        my_swipe.isEnabled = true
     }
 
     override fun clickImage(cb: ContractBean, position: Int) {
@@ -445,13 +449,15 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
     override fun updateDone() {
         if (!isSearch) saveType()
 
-        adapter!!.cr.detail.filter { it.changeCount != 0 }.forEach { it.changeCount = 0 }
+        //修改action为upd并且修改changeCount
+        adapter!!.cr.detail.filter { it.changeCount != 0 }.forEach {
+            it.action="upd"
+            it.changeCount = 0 }
 
+        hideLoading()
         if (isBack) finish() else {
             showPrompt(getString(com.cstore.zhiyazhang.cstoremanagement.R.string.saveDone))
-
             my_swipe.isRefreshing = false
-            my_swipe.autoRefresh()
         }
     }
 

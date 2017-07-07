@@ -34,6 +34,10 @@ import pub.devrel.easypermissions.EasyPermissions
  */
 class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contract_type) : MyActivity(), ContractTypeView, GenericView, EasyPermissions.PermissionCallbacks {
 
+    override fun showUsaTime(isShow: Boolean) {
+        usa_time.visibility=if (isShow)View.VISIBLE else View.GONE
+    }
+
     var adapter: ContractTypeAdapter? = null
     val ctd = ContractTypeDao(this)
     val presenter = ContractTypePresenter(this, this, ctd)
