@@ -18,7 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_contract_type.*
 import kotlinx.android.synthetic.main.contract_type_recycler.*
 import kotlinx.android.synthetic.main.toolbar_layout.*

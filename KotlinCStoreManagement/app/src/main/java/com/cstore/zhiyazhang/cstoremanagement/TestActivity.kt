@@ -3,7 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement
 import android.os.Bundle
 import android.widget.Toast
 
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 
 /**
  * Created by zhiya.zhang

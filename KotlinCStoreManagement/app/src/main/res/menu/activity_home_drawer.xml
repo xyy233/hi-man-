@@ -17,9 +17,10 @@
                 android:icon="@drawable/ic_menu_about"
                 android:title="@string/about"/>
             <item
-                android:id="@+id/nav_declare"
+                android:id="@+id/nav_update"
+                android:visible="true"
                 android:icon="@drawable/ic_menu_declare"
-                android:title="@string/declare"/>
+                android:title="@string/update"/>
         </menu>
     </item>
 

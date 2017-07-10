@@ -24,7 +24,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManag
 import com.cstore.zhiyazhang.cstoremanagement.view.ImageActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_contract.*
 
 /**

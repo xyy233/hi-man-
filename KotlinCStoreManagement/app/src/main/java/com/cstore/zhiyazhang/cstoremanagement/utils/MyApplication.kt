@@ -1,16 +1,25 @@
 package com.zhiyazhang.mykotlinapplication.utils
 
 import android.app.Application
+import android.os.Environment
+import android.os.Looper
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
+import java.io.File
+import java.io.FileOutputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.net.SocketException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
-
-
+import kotlin.concurrent.thread
 
 
 /**
@@ -72,6 +81,78 @@ class MyApplication : Application() {
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .build()
         OkHttpUtils.initClient(okHttp)
+        //全局错误信息收集先关闭
+        //Thread.setDefaultUncaughtExceptionHandler(GlobalException.instance)
     }
 
+}
+
+/**
+ * 全局错误信息收集
+ */
+class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
+    private val mDefaultHandler=Thread.getDefaultUncaughtExceptionHandler()
+    companion object {
+        @get:Synchronized val instance = GlobalException()
+    }
+
+    override fun uncaughtException(t: Thread?, ex: Throwable?) {
+        if (!handleException(ex)&&mDefaultHandler!=null){
+            //如果用户没有处理则让系统默认的异常处理器来处理
+            mDefaultHandler.uncaughtException(t,ex)
+        }else{
+            try {
+                Thread.sleep(3000)
+            } catch (e: InterruptedException) {
+                Log.e("GlobalException", "error : ", e)
+            }
+
+            //退出程序
+            android.os.Process.killProcess(android.os.Process.myPid())
+            System.exit(1)
+        }
+    }
+
+    fun handleException(ex:Throwable?):Boolean{
+        if (ex==null)return false
+        thread { kotlin.run {
+            Looper.prepare()
+            MyToast.getLongToast("很抱歉,程序出现异常,即将退出。")
+            Looper.loop()
+        } }.start()
+        saveCrashInfoFile(ex)
+        return true
+    }
+
+    /**
+     * 记录错误信息
+     */
+    private fun saveCrashInfoFile(ex: Throwable) {
+        val writer=StringWriter()
+        val printWriter=PrintWriter(writer)
+        ex.printStackTrace(printWriter)
+        var cause:Throwable?=ex.cause
+        while (cause!=null){
+            cause.printStackTrace(printWriter)
+            cause=cause.cause
+        }
+        printWriter.close()
+        val result:String=writer.toString()
+        try {
+            val timestamp = System.currentTimeMillis()
+            val formatter= SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
+            val time = formatter.format(Date())
+            val fileName = "crash-$time-$timestamp.log"
+            if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+                val path = "/cstore/crash/"
+                val dir = File(path)
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+                val fos = FileOutputStream(path + fileName)
+                fos.write(result.toByteArray())
+                fos.close()
+            }
+        }catch (e:Exception){}
+    }
 }

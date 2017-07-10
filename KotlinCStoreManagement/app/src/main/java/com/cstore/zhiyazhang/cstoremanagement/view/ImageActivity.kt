@@ -10,7 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.github.chrisbanes.photoview.PhotoView
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_image.*
 
 

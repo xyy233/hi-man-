@@ -49,11 +49,16 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
 
         override fun contractSuccess(`object`: Any) {
             downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
-
+            val intent = Intent("com.cstore.zhiyazhang.UPDATE")
             //如果版本名不同就去下载
             if ((`object` as UpdateBean).version != MyApplication.getVersion()) {
+                intent.putExtra("is_new", true)
+                sendBroadcast(intent)
                 versionUrl = `object`.downloadUrl
                 downloadAPK()
+            }else{
+                intent.putExtra("is_new",false)
+                sendBroadcast(intent)
             }
         }
 

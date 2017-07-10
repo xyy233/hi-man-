@@ -102,6 +102,7 @@
     <string name="other">其他</string>
     <string name="about">关于</string>
     <string name="declare">申明</string>
+    <string name="update">更新</string>
     <string name="savePassword">记住密码:</string>
     <string name="saveId">记住帐号:</string>
     <string name="please_edit_ctb">请输入要搜索的品号或品名</string>

@@ -9,7 +9,6 @@ import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketTimeoutException
-import java.util.*
 
 /**
  * Created by zhiya.zhang
@@ -35,7 +34,6 @@ class SocketUtil private constructor(host: String) {
         private var myBW: BufferedWriter? = null
         private var `is`: InputStream? = null
         private var myBR: BufferedReader? = null
-        private val timer = Timer()
 
         /**
          * 单列模式,写入host

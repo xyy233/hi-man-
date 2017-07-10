@@ -5,7 +5,7 @@ import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_contract_search.*
 
 /**

@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,7 +19,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -46,10 +47,10 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     private fun initView() {
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
-        /*test.setOnClickListener({
+        test.setOnClickListener({
             val intent = Intent(this@SignInActivity, HomeActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
-        })*/
+        })
 //        test2.setOnClickListener { MyApplication.instance().startService(Intent(MyApplication.instance().applicationContext, UpdateService::class.java)) }
         //如果获得了就直接输入否则为“”
         user_id.setText(preferences?.getString("id", ""))

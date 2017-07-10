@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.zhiyazhang.mykotlinapplication.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 

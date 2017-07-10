@@ -30,7 +30,7 @@ abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
                     listener.contractFailed(string!!)
                 }
             }catch (e:Exception){
-                listener.contractFailed("未知错误，请重试")
+                listener.contractFailed("请上报此错误信息：${e.message}")
             }
         }
     }
