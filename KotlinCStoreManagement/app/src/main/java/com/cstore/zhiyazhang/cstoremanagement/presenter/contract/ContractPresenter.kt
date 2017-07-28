@@ -1,4 +1,4 @@
-package com.csto
+package com.cstore.zhiyazhang.cstoremanagement.presenter.contract
 
 import android.content.Context
 import android.os.Handler
@@ -10,11 +10,13 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractModel
-import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
-import com.cstore.zhiyazhang.cstoremanagement.utils.onclick.RecyclerOnTouch
+import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.google.gson.Gson
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -41,6 +43,21 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                     cView.showNoMessage()
                     gView.hideLoading()
                     return
+                }
+                //检查数据是否正常
+                val maxDate = `object`.detail.filter { it.todayCount > it.maxQty }
+                val minDate = `object`.detail.filter { it.todayCount < it.minQty }
+                when {
+                    maxDate.isNotEmpty() -> {
+                        maxDate.forEach { it.isCanChange = false }
+                    }
+                    minDate.isNotEmpty() -> {
+                        maxDate.forEach { it.isCanChange = false }
+                    }
+                }
+                //数据异常就传递数据到服务器
+                if (maxDate.isNotEmpty() || minDate.isNotEmpty()) {
+                    ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
                 }
                 mHandler.post(object : ContractRunnable(`object`, adapter, cView.isJustLook) {})
             }
@@ -98,6 +115,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                     gView.hideLoading()
                     return
                 }
+
                 mHandler.post(object : ContractRunnable(`object`, adapter, false) {})
             }
 
@@ -138,16 +156,22 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
         override fun run() {
             if (adapter == null) {
                 adapter = ContractAdapter(cr, context, object : RecyclerOnTouch {
-                    override fun onClickImage(cb: ContractBean, position: Int) {
-                        cView.clickImage(cb, position)
+                    override fun <T> onClickImage(objects: T, position: Int) {
+                        when (objects) {
+                            is ContractBean -> cView.clickImage(objects, position)
+                        }
                     }
 
-                    override fun onTouchAddListener(cb: ContractBean, event: MotionEvent, position: Int) {
-                        cView.touchAdd(cb, event, position)
+                    override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
+                        when (objects) {
+                            is ContractBean -> cView.touchAdd(objects, event, position)
+                        }
                     }
 
-                    override fun onTouchLessListener(cb: ContractBean, event: MotionEvent, position: Int) {
-                        cView.touchLess(cb, event, position)
+                    override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
+                        when (objects) {
+                            is ContractBean -> cView.touchLess(objects, event, position)
+                        }
                     }
                 }, isJustLook)
                 gView.showView(adapter)

@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractResult
-import com.cstore.zhiyazhang.cstoremanagement.utils.onclick.RecyclerOnTouch
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import kotlinx.android.synthetic.main.item_loading.view.*
 
 /**

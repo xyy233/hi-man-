@@ -27,8 +27,8 @@ class SocketUtil private constructor(host: String) {
         private val port = 49999
         @Volatile private var socketUtil: SocketUtil? = null
         private val mContext = MyApplication.instance().applicationContext
-        private val REQUEST_ERROR = "服务器连接超时，确定连在内网中，确定服务器正常"
-        private val SOCKET_ERROR = "服务器异常"
+        private val REQUEST_ERROR = "服务器连接超时"
+        private val SOCKET_ERROR = "服务器异常，确定连在内网中，确定服务器正常"
         private val NULL_HOST = "host为空"
         private var os: OutputStream? = null
         private var myBW: BufferedWriter? = null
@@ -102,10 +102,10 @@ class SocketUtil private constructor(host: String) {
      * 向服务器查询数据，且将服务器发回的字符串通过handler传回去
      * 0==成功 1==超时 2==服务器异常
      * @param message  要传递给服务器的数据
-     * *
+     * @param loadingTime 链接超时秒数
      * @param mHandler 初始化时需传入发送的消息与用来响应返回数据的handler
      */
-    @Synchronized fun inquire(message: String, mHandler: Handler) {
+    @Synchronized fun inquire(message: String, loadingTime: Int, mHandler: Handler) {
         Thread(Runnable {
             try {
                 Looper.prepare()
@@ -113,10 +113,10 @@ class SocketUtil private constructor(host: String) {
                     Toast.makeText(mContext, NULL_HOST, Toast.LENGTH_SHORT).show()
                     return@Runnable
                 }
-                //连接服务器 并设置连接超时为10秒,设置读取信息为10秒
+                //连接服务器 并设置连接超时为 loadingTime * 1000
                 if (!mySocket!!.isConnected) {
-                    mySocket!!.connect(InetSocketAddress(host, port), 10000)
-                    mySocket!!.soTimeout = 10000
+                    mySocket!!.connect(InetSocketAddress(host, port), loadingTime * 1000)
+                    mySocket!!.soTimeout = loadingTime * 1000
                 }
                 //socket的输入流和输出流
                 val os = mySocket!!.getOutputStream()

@@ -26,7 +26,7 @@
     <!--半透明灰色-->
     <color name="touminghui">#88323232</color>
 
-    <color name="line">#6f6d85</color>
+    <color name="line">#dcdcdd</color>
     <color name="blackLine">#55000000</color>
 
     <color name="cstore_red">#e1241f</color>

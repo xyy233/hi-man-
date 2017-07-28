@@ -25,7 +25,7 @@ abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
         }catch (ignored:Exception){
             try{
                 if (string!!.contains("Failed to connect to")) {
-                    listener.contractFailed("连接超时,请检查网络")
+                    listener.contractFailed("连接异常,请检查网络")
                 } else {
                     listener.contractFailed(string!!)
                 }

@@ -40,27 +40,37 @@
 
         <!--订货页-->
         <activity
-            android:name=".view.contract.ContractOrder"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.ContractOrder"
             android:screenOrientation="portrait"/>
 
         <!--修改订量商品类选择-->
         <activity
-            android:name=".view.contract.ContractTypeActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity"
             android:screenOrientation="portrait"/>
 
         <!--修改订量页-->
         <activity
-            android:name=".view.contract.ContractActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractActivity"
             android:screenOrientation="portrait"/>
 
         <!--商品二维码搜索-->
         <activity
-            android:name=".view.contract.ContractSearchActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity"
             android:screenOrientation="portrait"/>
 
         <!--显示图片页-->
         <activity
             android:name=".view.ImageActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--大类订货页-->
+        <activity
+            android:name=".view.order.category.CategoryActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--大类下商品页-->
+        <activity
+            android:name=".view.order.category.CategoryItemActivity"
             android:screenOrientation="portrait"/>
 
         <!--测试用-->

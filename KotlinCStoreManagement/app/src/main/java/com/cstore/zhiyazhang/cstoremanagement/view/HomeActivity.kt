@@ -16,7 +16,6 @@ import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.view.contract.ContractOrder
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*

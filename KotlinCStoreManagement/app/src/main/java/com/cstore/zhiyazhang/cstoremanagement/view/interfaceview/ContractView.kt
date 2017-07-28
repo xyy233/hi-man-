@@ -17,7 +17,7 @@ interface ContractView {
     /**
      * 得到是否是得到所有改过的商品
      */
-    val isJustLook:Boolean
+    val isJustLook: Boolean
     /**
      * 得到搜索的关键字
      */
@@ -41,12 +41,12 @@ interface ContractView {
     /**
      * 订量修改加
      */
-    fun touchAdd(cb: ContractBean, event: MotionEvent, position:Int)
+    fun touchAdd(cb: ContractBean, event: MotionEvent, position: Int)
 
     /**
      * 订量修改减
      */
-    fun touchLess(cb: ContractBean, event: MotionEvent, position:Int)
+    fun touchLess(cb: ContractBean, event: MotionEvent, position: Int)
 
     /**
      * 上拉加载
@@ -63,11 +63,12 @@ interface ContractView {
      */
     val contractList: List<ContractBean>
 
+    fun removeChangeDate()
+
     /**
      * 更新成功
      */
     fun updateDone()
 
     fun clickImage(cb: ContractBean, position: Int)
-
 }

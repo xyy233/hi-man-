@@ -76,7 +76,11 @@ data class ContractBean(
         /**
          * 用于添加标记是否修改过
          */
-        var changeCount: Int
+        var changeCount: Int,
+        /**
+         * 是否能修改
+         */
+        var isCanChange: Boolean = true
 ) : Serializable
 
 /**

@@ -18,37 +18,33 @@ import java.lang.Exception
  * on 2017/6/7 17:22.
  */
 class SignInModel : SignInInterface {
-    override fun login(uid: String, password: String, myListener: MyListener) {
+    override fun login(uid: String, password: String, listener: MyListener) {
         val ip = MyApplication.getIP()
         if (ip == MyApplication.instance().getString(R.string.notFindIP)){
-            myListener.contractFailed(ip)
+            listener.contractFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.SignIn(uid), @SuppressLint("HandlerLeak")
+        SocketUtil.getSocketUtil(ip).inquire(MySql.SignIn(uid), 10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     0 -> try {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
-                            myListener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.idError))
+                            listener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.idError))
                         }else{
                             val users = Gson().fromJson<List<User>>(msg.obj as String, object : TypeToken<List<User>>() {
 
                             }.type)
                             if (users[0].password != password) {
-                                myListener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.pwdError))
+                                listener.contractFailed(MyApplication.instance().applicationContext.resources.getString(R.string.pwdError))
                             } else {
-                                myListener.contractSuccess(users[0])
+                                listener.contractSuccess(users[0])
                             }
                         }
                     } catch (e: Exception) {
-                        myListener.contractFailed(msg.obj as String)
+                        listener.contractFailed(msg.obj as String)
                     }
-
-                    1 -> myListener.contractFailed(msg.obj as String)
-                    2 -> myListener.contractFailed(msg.obj as String)
-                    else -> {
-                    }
+                    else->listener.contractFailed(msg.obj as String)
                 }
             }
         })
@@ -56,5 +52,5 @@ class SignInModel : SignInInterface {
 }
 
 interface SignInInterface {
-    fun login(uid: String, password: String, myListener: MyListener)
+    fun login(uid: String, password: String, listener: MyListener)
 }

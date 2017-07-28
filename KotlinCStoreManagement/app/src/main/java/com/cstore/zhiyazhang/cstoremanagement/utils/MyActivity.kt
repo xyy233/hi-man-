@@ -34,8 +34,6 @@ abstract class MyActivity : AppCompatActivity() {
         val filter = IntentFilter()
         filter.addAction(EXIT_APP_ACTION)
         registerReceiver(mBroadcastReceiver, filter)
-
-
     }
 
     override fun onDestroy() {

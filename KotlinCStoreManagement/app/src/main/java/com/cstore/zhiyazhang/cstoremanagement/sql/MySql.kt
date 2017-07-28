@@ -1,5 +1,8 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+
 /**
  * Created by zhiya.zhang
  * on 2017/5/24 11:40.
@@ -16,7 +19,7 @@ object MySql {
      * @return 新的sql语句
      */
     fun SignIn(uid: String): String {
-        return "select * from app_user_view where employeeid='$uid'"
+        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from app_user_view where employeeid='$uid'"
     }
 
     /**
@@ -48,6 +51,50 @@ object MySql {
     fun getAllScrapByCategory(categoryId: String): String {
         return "select * from app_mrkitem_view where barcode_yn='N' and categorynumber='$categoryId' order by mrk_date desc"
     }
+
+    /**
+     * 获得大类信息
+     */
+    fun getAllCategory(): String =
+            "select plu.categoryNumber,cat.categoryName,count(*) tot_sku," +
+                    "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku," +
+                    "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate " +
+                    "from cat,plu,ord,cat cat1 " +
+                    "WHERE cat.storeid='${User.getUser().storeId}' " +
+                    "AND trim(cat.categoryNumber) is not null " +
+                    "AND trim(cat.midcategoryNumber) is null " +
+                    "AND trim(cat.microcategoryNumber) is null " +
+                    "AND plu.storeID=cat.storeID " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "AND plu.storeID=ord.storeID " +
+                    "AND plu.itemNumber=ord.itemNumber " +
+                    "AND ord.orderDate=to_date('${MyTimeUtil.nowDate}','YYYY-MM-DD') " +
+                    "AND plu.storeID=cat1.storeID " +
+                    "AND plu.categoryNumber=cat1.categoryNumber " +
+                    "AND plu.midCategoryNumber=cat1.midCategoryNumber " +
+                    "AND trim(cat1.midCategoryNumber) is not null " +
+                    "AND trim(cat1.microCategoryNumber) is null " +
+                    "AND cat1.GROUP_YN='N' AND cat.categoryNumber<>'99' " +
+                    "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName " +
+                    "order by PLU.CATEGORYNUMBER"
+
+    /**
+     * 通过大类id获得商品
+     */
+    fun getItemByCategoryId(categoryId: String, sort: String): String =
+            "call scb02_new_p01('${MyTimeUtil.nowDate}','${MyTimeUtil.nowDate}','0')\u000c" +
+                    "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
+                    " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.minimaorderquantity,x.maximaorderquantity, " +
+                    "substr(p.signType,12,1) s_returntype," +
+                    "round(p.storeunitprice,2) storeunitprice " +
+                    "From ord_t2 x,plu p," +
+                    "(select itemnumber item_no from itemgondra where storeid='${User.getUser().storeId}' and gondranumber like '%' " +
+                    "group by itemnumber) y " +
+                    "where x.itemnumber= y.item_no(+) " +
+                    "and x.itemnumber = p.itemnumber(+) " +
+                    "and x.categorynumber like '$categoryId' " +
+                    "and x.midCategoryNumber like '%' " +
+                    "AND Fresh_YN='N' $sort"
 
     /*    */
     /**

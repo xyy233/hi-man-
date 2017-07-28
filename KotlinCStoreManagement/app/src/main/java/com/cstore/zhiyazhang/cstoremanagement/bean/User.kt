@@ -36,22 +36,27 @@ data class User(
         /**
          * 店地址
          */
-        @SerializedName("address") val address: String
-) : Serializable{
-        companion object{
-                fun getUser():User{
-                        val sp=MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
-                        return User(
-                                sp.getString("storeId", ""),
-                                sp.getString("uid", ""),
-                                "",//不保存密码
-                                sp.getString("uName", ""),
-                                sp.getString("telphone", ""),
-                                sp.getString("storeName", ""),
-                                sp.getString("address", "")
-                        )
-                }
+        @SerializedName("address") val address: String,
+        /**
+         * 0是非承包店，1是承包店
+         */
+        val cnt: Int
+) : Serializable {
+    companion object {
+        fun getUser(): User {
+            val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
+            return User(
+                    sp.getString("storeId", ""),
+                    sp.getString("uid", ""),
+                    "", //不保存密码
+                    sp.getString("uName", ""),
+                    sp.getString("telphone", ""),
+                    sp.getString("storeName", ""),
+                    sp.getString("address", ""),
+                    sp.getInt("cnt", 0)
+            )
         }
+    }
 }
 
 /**

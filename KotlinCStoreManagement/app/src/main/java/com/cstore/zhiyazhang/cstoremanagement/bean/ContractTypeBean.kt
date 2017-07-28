@@ -77,6 +77,9 @@ data class ContractTypeBean(
          * 在adapter中确认是否修改颜色
          */
         var isChangeColor: Boolean,
+        /**
+         * 用于数据库判断是否删除
+         */
         var createDay:Int
 ) : Serializable
 

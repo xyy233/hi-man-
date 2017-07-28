@@ -16,10 +16,10 @@ import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -51,8 +51,8 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             val intent = Intent(this@SignInActivity, HomeActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
         })
-//        test2.setOnClickListener { MyApplication.instance().startService(Intent(MyApplication.instance().applicationContext, UpdateService::class.java)) }
-        //如果获得了就直接输入否则为“”
+        //test2.setOnClickListener { ReportListener.report("storeId", "version", "测试错误信息", "测试错误数据") }
+        //如果获得了就直接输入否则为""
         user_id.setText(preferences?.getString("id", ""))
         user_password.setText(preferences?.getString("pwd", ""))
         //根据获得用户信息变更checkBox样式
@@ -82,14 +82,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             }
         })
         app_version.text = "v: ${MyApplication.getVersion()}"
-/*        // 获取WiFi服务
-        val wifiInfo = (application.getSystemService(WIFI_SERVICE) as WifiManager).connectionInfo
-        val ipAddress = wifiInfo.ipAddress
-        val ip = (ipAddress and 0xFF).toString() + "." +
-                (ipAddress shr 8 and 0xFF) + "." +
-                (ipAddress shr 16 and 0xFF) + "." +
-                (ipAddress shr 24 and 0xFF)*/
-
     }
 
     override fun onStart() {
@@ -167,6 +159,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         ue.putString("telphone", user.telphone)
         ue.putString("storeName", user.storeName)
         ue.putString("address", user.address)
+        ue.putInt("cnt", user.cnt)
         ue.apply()
     }
 

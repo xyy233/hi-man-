@@ -21,4 +21,5 @@ object AppUrl {
     val UPDATA_CONTRACTS_URL = appIp + "order/updateOrdQtys.do"
     val SEARCH_CONTRACT_URL = appIp + "order/getItemsByVague.do"
     val UPDATE_APP = appIp + "order/updateAPP.do"
+    val UPLOAD_ERROR = appIp + "asset/uploadError.do"
 }

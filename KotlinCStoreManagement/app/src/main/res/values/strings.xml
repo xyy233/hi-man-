@@ -42,8 +42,6 @@
     <string name="min_count">最小订量：</string>
     <string name="max_count">最大订量：</string>
     <string name="each_add_count">每次增量数</string>
-    <string name="errorMin">总量不能低于最小数</string>
-    <string name="errorMax">总量不能高于最大数</string>
     <string name="prompt_qrcode">将二维码/条码放入框内，即可自动扫描</string>
     <string name="prompt_code">扫描条形码请正对条形码扫描</string>
     <string name="prompt2_qrcode">可以通过上方扫描二维码或条形码查询商品，也可以通过下方手动输入查询商品</string>
@@ -107,15 +105,22 @@
     <string name="saveId">记住帐号:</string>
     <string name="please_edit_ctb">请输入要搜索的品号或品名</string>
     <string name="system_error">系统错误，请联系开发人员</string>
-    <string name="maxNoAdd">已到最大订量，不能添加</string>
+    <string name="maxTNoAdd">已到当前类别最大订量，不能添加</string>
     <string name="maxCNoAdd">已到当前商品最大订量，不能添加</string>
+    <string name="minTNoLess">已到当前类别最小订量，不能减少</string>
+    <string name="minCNoLess">已到当前商品最小订量，不能减少</string>
     <string name="saveDone">保存成功</string>
-    <string name="noMsg">无数据</string>
+    <string name="noEditMsg">无修改数据</string>
     <string name="isSave">已保存</string>
     <string name="qrcode_nomessage">二维码扫描器找不到目标</string>
     <string name="contract_order">承包商品订货</string>
-    <string name="store_order">门市订货</string>
     <string name="contract_order_toview">承包商品修改一览表</string>
+    <string name="category_order">大类订货</string>
+    <string name="shelf_order">货架订货</string>
+    <string name="unit_order">单品订货</string>
+    <string name="new_order">促销品及新品订货</string>
+    <string name="supplies_order">自用品订货</string>
+    <string name="store_order">门市订货</string>
     <string name="store_toview">门市订货查看</string>
     <string name="edit_sky">修改sku\n/sku总量</string>
     <string name="wifi_hints">请确定当前连接的wifi是cstorebp</string>
@@ -123,4 +128,12 @@
     <string name="mobile_network">移动网络</string>
     <string name="not_wifi_name">未获得wifi名</string>
     <string name="usa_time">使用时间在每天14点到18点期间， \n如此时间内无数据请联系开发人员。</string>
+    <string name="maxOrMinError">最大量或最小量数据异常</string>
+    <string name="duplicateData">存在重复数据</string>
+    <string name="all_sku">可订商品数</string>
+    <string name="ord_qty">已订商品数</string>
+    <string name="order_price">已订货金额</string>
+    <string name="expected_count">预计强配：</string>
+    <string name="on_the_way">在途：</string>
+    <string name="tomorrow">明日预测：</string>
 </resources>

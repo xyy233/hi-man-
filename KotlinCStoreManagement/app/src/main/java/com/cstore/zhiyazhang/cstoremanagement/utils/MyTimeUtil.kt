@@ -9,7 +9,7 @@ import java.util.*
  * Created by zhiya.zhang
  * on 2017/6/23 10:57.
  */
-object MyTimeUtil{
+object MyTimeUtil {
     /**
      * 时间转为Long
 
@@ -40,7 +40,11 @@ object MyTimeUtil{
      * @return string
      */
     fun getStringByDate(date: Date): String {
-        return SimpleDateFormat("MM/dd/yyy HH:mm:ss").format(date)
+        return SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(date)
+    }
+
+    fun getYMDStringByDate(date: Date): String {
+        return SimpleDateFormat("yyyy-MM-dd").format(date)
     }
 
     /**
@@ -54,7 +58,7 @@ object MyTimeUtil{
      */
     @Throws(ParseException::class)
     fun getDateByString(date: String): Date {
-        return SimpleDateFormat("MM/dd/yyy HH:mm:ss").parse(date)
+        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date)
     }
 
     /**
@@ -68,7 +72,7 @@ object MyTimeUtil{
      */
     @Throws(ParseException::class)
     fun getLongByString(date: String): Long {
-        return SimpleDateFormat("MM/dd/yyy HH:mm:ss").parse(date).time / 1000
+        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date).time / 1000
     }
 
     /**
@@ -89,4 +93,13 @@ object MyTimeUtil{
     val todayDay: Int
         @SuppressLint("WrongConstant")
         get() = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+
+    /**
+     * @return 获得当前时间
+     */
+    val nowTime: String
+        get() = getStringByDate(Date(System.currentTimeMillis()))
+
+    val nowDate: String
+        get() = getYMDStringByDate(Date(System.currentTimeMillis()))
 }

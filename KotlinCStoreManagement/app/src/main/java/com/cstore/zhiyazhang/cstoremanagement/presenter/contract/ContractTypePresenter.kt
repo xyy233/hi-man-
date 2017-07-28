@@ -33,7 +33,8 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
             }
 
             override fun contractSuccess(`object`: Any) {
-                mHandler.post(Runnable {
+                mHandler.post(
+                        Runnable {
                     kotlin.run {
                         val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allDate, tView.isJustLook, (`object` as ContractTypeResult).detail) {
                             gView.requestSuccess(it)
