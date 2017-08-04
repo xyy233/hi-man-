@@ -1,8 +1,11 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -15,10 +18,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -35,18 +42,6 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         setSupportActionBar(my_toolbar)
         val data = ArrayList<OrderData>()
         setData(data)
-/*        order1.setOnClickListener {
-            val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
-            intent.putExtra("is_just_look", false)
-            startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, order1, "order1").toBundle())
-        }
-        order3.setOnClickListener {
-            val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
-            intent.putExtra("is_just_look", true)
-            startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, order3, "order3").toBundle())
-        }*/
         orderRecycler.layoutManager = GridLayoutManager(this@ContractOrder, 3, GridLayoutManager.VERTICAL, false)
         orderRecycler.adapter = OrderAdapter(data, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
@@ -58,24 +53,30 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                     }
                     1 -> {
                         val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra("whereIsIt", "category")
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
                     }
                     2 -> {
-                        MyToast.getShortToast(getString(R.string.writh_code))
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra("whereIsIt", "shelf")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
                     }
                     3 -> {
-                        MyToast.getShortToast(getString(R.string.writh_code))
+                        val intent = Intent(this@ContractOrder, CategoryItemActivity::class.java)
+                        intent.putExtra("whereIsIt", "search")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
                     }
                     4 -> {
-                        MyToast.getShortToast(getString(R.string.writh_code))
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra("whereIsIt", "nop")//new or Promotion
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "ordrItem").toBundle())
                     }
                     5 -> {
-                        MyToast.getShortToast(getString(R.string.writh_code))
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra("whereIsIt", "self")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
                     }
                     6 -> {
-                        MyToast.getShortToast(getString(R.string.writh_code))
-                    }
-                    7 -> {
                         val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
                         intent.putExtra("is_just_look", true)
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
@@ -91,6 +92,25 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         })
         orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.VERTICAL))
         orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.HORIZONTAL))
+        orderLoading.setOnClickListener {
+            MyToast.getLongToast(getString(R.string.loadingCall))
+        }
+        orderLoading.visibility = View.VISIBLE
+        runOrdT2()
+        orderretry.setOnClickListener {
+            orderpro.visibility = View.VISIBLE
+            orderprotext.visibility = View.VISIBLE
+            orderretry.visibility = View.GONE
+            runOrdT2()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (orderLoading.visibility == View.GONE) {
+            super.onBackPressed()
+        } else {
+            MyToast.getLongToast(getString(R.string.loadingCall))
+        }
     }
 
     private fun setData(data: ArrayList<OrderData>) {
@@ -110,6 +130,15 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
             data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
         }
+
+/*      调试使用
+        data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+        data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
+        data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
+        data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
+        data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
+        data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
+        data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -117,6 +146,31 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             android.R.id.home -> finish()
         }
         return true
+    }
+
+    private fun runOrdT2() {
+        val ip = MyApplication.getIP()
+        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
+            MyToast.getShortToast(ip)
+            return
+        }
+        SocketUtil.getSocketUtil(ip).inquire(MySql.ordT2(), 180, @SuppressLint("HandlerLeak")
+        object : Handler() {
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    0 -> {
+                        //运行完成可以操作
+                        orderLoading.visibility = View.GONE
+                    }
+                    else -> {
+                        MyToast.getShortToast(msg.obj as String)
+                        orderpro.visibility = View.GONE
+                        orderprotext.visibility = View.GONE
+                        orderretry.visibility = View.VISIBLE
+                    }
+                }
+            }
+        })
     }
 
     data class OrderData(val img: Int, val msg: String, val position: Int)

@@ -9,59 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:background="@color/windowBackground"
-        android:elevation="3dp"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/bg_search_line"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <EditText
-
-                android:id="@+id/search_edit"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="25dp"
-                android:layout_marginStart="13dp"
-                android:imeOptions="actionSearch"
-                android:background="@null"
-                android:hint="@string/idorname"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColorHint="@color/white"
-                android:textSize="12sp"/>
-
-            <ImageView
-                android:id="@+id/search_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="end|center"
-                android:layout_margin="2dp"
-                android:src="@mipmap/ic_search"/>
-        </FrameLayout>
-
-        <ImageView
-            android:layout_gravity="center"
-            android:id="@+id/qrcode"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@mipmap/ic_ercode"/>
-
-    </LinearLayout>
+    <include
+        layout="@layout/layout_search_title"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -71,6 +20,7 @@
             layout="@layout/contract_type_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
         <LinearLayout
             android:id="@+id/contract_loding"
             android:layout_width="match_parent"
@@ -102,12 +52,12 @@
 
         <TextView
             android:id="@+id/usa_time"
-            android:text="@string/usa_time"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/usa_time"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

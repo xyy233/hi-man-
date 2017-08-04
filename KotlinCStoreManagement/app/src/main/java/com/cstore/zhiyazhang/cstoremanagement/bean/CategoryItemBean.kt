@@ -31,7 +31,7 @@ data class CategoryItemBean(
         /**
          * 我的加量
          */
-        @SerializedName("ordactualquantity") val orderQTY: Int,
+        @SerializedName("ordactualquantity") var orderQTY: Int,
         /**
          * 在途
          */
@@ -40,6 +40,10 @@ data class CategoryItemBean(
          * 明日预测
          */
         @SerializedName("d1_dfs") val itemTomorrow: Int,
+        /**
+         * 每次增加量
+         */
+        @SerializedName("increaseorderquantity") val stepQty: Int,
         /**
          * 最小订量
          */

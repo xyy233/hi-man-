@@ -28,12 +28,12 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
             gView.hideLoading()
             return
         }
-        mInterface.getAllItem(cView.category.categoryId, cView.sort, object : MyListener {
-            override fun contractSuccess() {
+        mInterface.getAllItemByCategory(cView.category.categoryId, cView.sort, object : MyListener {
+            override fun listenerSuccess() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 if ((`object` as ArrayList<*>).size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
@@ -42,7 +42,122 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 mHandler.post(object : CategoryRunnable(`object` as ArrayList<CategoryItemBean>, adapter) {})
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+            }
+        })
+    }
+
+    fun getAllShelf(adapter: CategoryItemAdapter?) {
+        gView.showLoading()
+        if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            gView.showPrompt(context.getString(R.string.noInternet))
+            gView.hideLoading()
+            return
+        }
+        mInterface.getAllItemByShelf(cView.shelf.shelfId, cView.sort, object : MyListener {
+            override fun listenerSuccess() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun listenerSuccess(`object`: Any) {
+                if ((`object` as ArrayList<*>).size == 0) {
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                    return
+                }
+                mHandler.post(object : CategoryRunnable(`object` as ArrayList<CategoryItemBean>, adapter) {})
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+            }
+        })
+    }
+
+    fun getAllSearch(adapter: CategoryItemAdapter?, keywords: String) {
+        gView.showLoading()
+        if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            gView.showPrompt(context.getString(R.string.noInternet))
+            gView.hideLoading()
+            return
+        }
+        mInterface.getUnitItemByKeywords(keywords, object : MyListener {
+            override fun listenerSuccess() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun listenerSuccess(`object`: Any) {
+                if ((`object` as ArrayList<*>).size == 0) {
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                    return
+                }
+                mHandler.post(object : CategoryRunnable(`object` as ArrayList<CategoryItemBean>, adapter) {})
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+            }
+        })
+    }
+
+
+    fun getAllSelf(adapter: CategoryItemAdapter?) {
+        gView.showLoading()
+        if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            gView.showPrompt(context.getString(R.string.noInternet))
+            gView.hideLoading()
+            return
+        }
+        mInterface.getAllItemBySelfId(cView.self.selfId, cView.sort, object : MyListener {
+            override fun listenerSuccess() {
+            }
+
+            override fun listenerSuccess(`object`: Any) {
+                if ((`object` as ArrayList<*>).size == 0) {
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                    return
+                }
+                mHandler.post(object : CategoryRunnable(`object` as ArrayList<CategoryItemBean>, adapter) {})
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+            }
+        })
+    }
+
+    fun  getAllNOP(adapter: CategoryItemAdapter?) {
+        gView.showLoading()
+        if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            gView.showPrompt(context.getString(R.string.noInternet))
+            gView.hideLoading()
+            return
+        }
+        mInterface.getNewItemById(cView.nop,cView.sort, object : MyListener {
+            override fun listenerSuccess() {
+            }
+
+            override fun listenerSuccess(`object`: Any) {
+                if ((`object` as ArrayList<*>).size == 0) {
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                    return
+                }
+                mHandler.post(object : CategoryRunnable(`object` as ArrayList<CategoryItemBean>, adapter) {})
+            }
+
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
@@ -51,7 +166,27 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
     }
 
     fun updateAllCategory() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        gView.showLoading()
+        if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            gView.showPrompt(context.getString(R.string.noInternet))
+            gView.hideLoading()
+            return
+        }
+        mInterface.updateAllCategory(cView.categoryList, object : MyListener {
+            override fun listenerSuccess() {
+                cView.updateDone()
+                gView.hideLoading()
+            }
+
+            override fun listenerSuccess(`object`: Any) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.hideLoading()
+            }
+        })
     }
 
     private open inner class CategoryRunnable internal constructor(internal val cbs: ArrayList<CategoryItemBean>, internal var adapter: CategoryItemAdapter?) : Runnable {

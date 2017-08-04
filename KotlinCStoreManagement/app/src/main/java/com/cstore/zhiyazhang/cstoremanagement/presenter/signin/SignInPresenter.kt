@@ -29,11 +29,11 @@ class SignInPresenter(private val signInView: SignInView, val genericView: Gener
         }
         genericView.showLoading()
         signInInterface.login(signInView.uid, signInView.password, object : MyListener {
-            override fun contractSuccess() {
+            override fun listenerSuccess() {
 
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 mHandler.post {
                     genericView.requestSuccess(`object` as User)
                     signInView.saveUser(`object`)
@@ -41,7 +41,7 @@ class SignInPresenter(private val signInView: SignInView, val genericView: Gener
                 }
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 mHandler.post {
                     genericView.showPrompt(errorMessage)
                     genericView.hideLoading()

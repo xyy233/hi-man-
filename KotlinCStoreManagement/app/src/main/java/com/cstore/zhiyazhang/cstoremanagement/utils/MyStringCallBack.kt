@@ -21,16 +21,16 @@ abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
     override fun onError(call: Call, ex: java.lang.Exception, id: Int) {
         try {
             string=ex.message
-            listener.contractFailed(myError())
+            listener.listenerFailed(myError())
         }catch (ignored:Exception){
             try{
                 if (string!!.contains("Failed to connect to")) {
-                    listener.contractFailed("连接异常,请检查网络")
+                    listener.listenerFailed("连接异常,请检查网络")
                 } else {
-                    listener.contractFailed(string!!)
+                    listener.listenerFailed(string!!)
                 }
             }catch (e:Exception){
-                listener.contractFailed("请上报此错误信息：${e.message}")
+                listener.listenerFailed("请上报此错误信息：${e.message}")
             }
         }
     }

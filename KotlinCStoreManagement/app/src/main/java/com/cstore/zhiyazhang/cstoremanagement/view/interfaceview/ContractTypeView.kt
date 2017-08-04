@@ -11,4 +11,6 @@ interface ContractTypeView {
      * 显示使用时间数据
      */
     fun showUsaTime(isShow:Boolean)
+
+    val whereIsIt:String
 }

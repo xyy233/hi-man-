@@ -343,24 +343,25 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
             ctb!!.todayCount = nowTypeAllCount
             ctb!!.todayStore += cb.stepQty
         }
-        cb.todayStore += cb.stepQty
+        val nowTodayStore = cb.todayStore + cb.stepQty
+        cb.todayStore = nowTodayStore
         cb.todayCount = nowContractCount
         cb.changeCount++
         view.editCdc.text = nowContractCount.toString()
 
         //检测数据
-        val searchDate = changeData.filter { it.cId == cb.cId }
-        if (searchDate.isNotEmpty()) {//不为空
+        val searchData = changeData.filter { it.cId == cb.cId }
+        if (searchData.isNotEmpty()) {//不为空
             //如果有重复数据
-            if (searchDate.size > 1) {
+            if (searchData.size > 1) {
                 //错误数据发送到服务器
                 ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, getString(R.string.duplicateData), Gson().toJson(adapter!!.cr.detail))
-                changeData.removeAll(searchDate)
-                changeData.add(cb.copy())
+                changeData.removeAll(searchData)
+                changeData.add(cb.copy(cType = ""))
             } else {
                 //修改商品数据
                 changeData.filter { it.cId == cb.cId }.forEach {
-                    it.todayStore += cb.stepQty
+                    it.todayStore = nowTodayStore
                     it.todayCount = nowContractCount
                     it.changeCount++
                 }

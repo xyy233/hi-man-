@@ -34,11 +34,11 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.getAllContract(cView.getPage(), cView.sort, User.getUser(), cView.contractType, cView.isJustLook, object : MyListener {
-            override fun contractSuccess() {
+            override fun listenerSuccess() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 if ((`object` as ContractResult).total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
@@ -62,7 +62,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                 mHandler.post(object : ContractRunnable(`object`, adapter, cView.isJustLook) {})
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
@@ -78,9 +78,9 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.getEditAllContract(cView.getPage(), User.getUser(), object : MyListener {
-            override fun contractSuccess() {}
+            override fun listenerSuccess() {}
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 if ((`object` as ContractResult).total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
@@ -89,7 +89,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                 mHandler.post(object : ContractRunnable(`object`, adapter, true) {})
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
@@ -105,11 +105,11 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.searchContract(cView.getPage(), cView.sort, cView.searchMsg, User.getUser(), object : MyListener {
-            override fun contractSuccess() {
+            override fun listenerSuccess() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 if ((`object` as ContractResult).total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
@@ -119,7 +119,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                 mHandler.post(object : ContractRunnable(`object`, adapter, false) {})
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
@@ -135,15 +135,15 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.updateAllContract(cView.contractList, User.getUser(), object : MyListener {
-            override fun contractSuccess() {
+            override fun listenerSuccess() {
                 cView.updateDone()
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()

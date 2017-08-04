@@ -48,6 +48,7 @@
     <string name="search">搜索</string>
     <string name="edit_cidorcname">在此输入品号或品名查询：</string>
     <string name="noMessage">未查询到内容</string>
+    <string name="loadingMessage">此页面耗时极长，\n请耐心等候一分钟左右</string>
     <string name="lw_sales">上一周销量：</string>
     <string name="lw2_sales">上两周销量：</string>
     <string name="lw3_sales">上三周销量：</string>
@@ -136,4 +137,11 @@
     <string name="expected_count">预计强配：</string>
     <string name="on_the_way">在途：</string>
     <string name="tomorrow">明日预测：</string>
+    <string name="shelf_name">货架名</string>
+    <string name="no_edit_msg">无修改数据</string>
+    <string name="self_value">自用品项目</string>
+    <string name="nop_value">促销品及新品项目</string>
+    <string name="promotion">促销品</string>
+    <string name="loadingCall">请耐心等候操作完成，预计时间2分钟</string>
+    <string name="with_loading">请耐心等候运行结束</string>
 </resources>

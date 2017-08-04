@@ -28,11 +28,11 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
         }
         anInterface.getAllContractType(User.getUser(), tView.isJustLook, object : MyListener {
             //在这无用
-            override fun contractSuccess() {
+            override fun listenerSuccess() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun contractSuccess(`object`: Any) {
+            override fun listenerSuccess(`object`: Any) {
                 mHandler.post(
                         Runnable {
                     kotlin.run {
@@ -46,7 +46,7 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
                 })
             }
 
-            override fun contractFailed(errorMessage: String) {
+            override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()

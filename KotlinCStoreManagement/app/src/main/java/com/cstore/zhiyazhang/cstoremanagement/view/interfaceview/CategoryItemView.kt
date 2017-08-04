@@ -1,9 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.interfaceview
 
 import android.view.MotionEvent
-import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.OrderCategoryBean
-import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemAdapter
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 
 /**
  * Created by zhiya.zhang
@@ -11,6 +9,12 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryIt
  */
 interface CategoryItemView {
     val category: OrderCategoryBean
+
+    val shelf: ShelfBean
+
+    val self: SelfBean
+
+    val nop:NOPBean
 
     val sort: String
 

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
@@ -21,6 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeVie
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_contract_type.*
 import kotlinx.android.synthetic.main.contract_type_recycler.*
+import kotlinx.android.synthetic.main.layout_search_title.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -33,6 +35,8 @@ import pub.devrel.easypermissions.EasyPermissions
  * on 2017/6/12 15:03.
  */
 class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contract_type) : MyActivity(), ContractTypeView, GenericView, EasyPermissions.PermissionCallbacks {
+    override val whereIsIt: String
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun showUsaTime(isShow: Boolean) {
         usa_time.visibility=if (isShow)View.VISIBLE else View.GONE
@@ -72,7 +76,7 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
                 search()
             }
             search_edit.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search()
                     true
                 } else
@@ -116,7 +120,7 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
 
     private fun search() {
         if (search_edit.text.toString() != "") {
-            val i = android.content.Intent(this@ContractTypeActivity, ContractActivity::class.java)
+            val i = Intent(this@ContractTypeActivity, ContractActivity::class.java)
             i.putExtra("is_search", true)
             i.putExtra("is_all", false)
             i.putExtra("search_message", search_edit.text.toString())
@@ -160,10 +164,6 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     override fun <T> requestSuccess(objects: T) {
         when (objects) {
             is ContractTypeBean -> {
-                //还原已被点击改过图片颜色的数据
-                //adapter?.ctbs?.filter { c -> c.isChangeColor }?.forEach { it.isChangeColor = false }
-                //objects.isChangeColor = true
-                //带着类数据跳转
                 objects.isChangeColor = true
 
                 if (!isJustLook) ctd.editSQL(objects, "insert")

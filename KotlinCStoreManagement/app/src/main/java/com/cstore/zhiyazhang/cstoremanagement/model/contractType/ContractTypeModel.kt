@@ -22,14 +22,14 @@ class ContractTypeModel : ContractTypeInterface {
                 .get()
                 .url(AppUrl.CONTRACT_TYPE_URL)
                 .addHeader(USER_HEADER, user.uId)
-//                .addHeader(AppUrl.STORE_HEADER,"161003")
+//                .addHeader(AppUrl.STORE_HEADER,"170514")
                 .addHeader(AppUrl.STORE_HEADER, user.storeId)
                 .addHeader(CONNECTION_HEADER, CONNECTION_SWITCH)
                 .addHeader("is_just_look", isJustLook.toString())
                 .build()
                 .execute(object : MyStringCallBack(listener) {
                     override fun onResponse(response: String, id: Int) {
-                        listener.contractSuccess(Gson().fromJson(response, ContractTypeResult::class.java))
+                        listener.listenerSuccess(Gson().fromJson(response, ContractTypeResult::class.java))
                     }
                 })
     }

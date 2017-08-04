@@ -1,11 +1,13 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.order.contract
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import kotlinx.android.synthetic.main.activity_contract_search.*
 
 /**
@@ -52,12 +54,23 @@ class ContractSearchActivity(override val layoutId: Int = R.layout.activity_cont
      */
     internal var analyzeCallback: CodeUtils.AnalyzeCallback = object : CodeUtils.AnalyzeCallback {
         override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
-            val i = android.content.Intent(this@ContractSearchActivity, ContractActivity::class.java)
-            i.putExtra("is_search", true)
-            i.putExtra("search_message", result)
-            i.putExtra("is_all", false)
-            startActivity(i)
-            finish()
+            when(intent.getStringExtra("whereIsIt")){
+                "unitord"->{
+                    val i = Intent(this@ContractSearchActivity, CategoryItemActivity::class.java)
+                    i.putExtra("whereIsIt", "unitord")
+                    i.putExtra("search_message", result)
+                    startActivity(i)
+                    finish()
+                }
+                else->{
+                    val i = Intent(this@ContractSearchActivity, ContractActivity::class.java)
+                    i.putExtra("is_search", true)
+                    i.putExtra("search_message", result)
+                    i.putExtra("is_all", false)
+                    startActivity(i)
+                    finish()
+                }
+            }
         }
 
         override fun onAnalyzeFailed() {

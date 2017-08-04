@@ -20,13 +20,13 @@ object ReportListener {
                 .addHeader("fileName", "$storeId/${MyTimeUtil.nowTime}.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
-                    override fun contractSuccess() {
+                    override fun listenerSuccess() {
                     }
 
-                    override fun contractSuccess(`object`: Any) {
+                    override fun listenerSuccess(`object`: Any) {
                     }
 
-                    override fun contractFailed(errorMessage: String) {
+                    override fun listenerFailed(errorMessage: String) {
                     }
                 }) {
                     override fun onResponse(p0: String?, p1: Int) {

@@ -8,15 +8,15 @@
     <shape
         android:shape="ring"
         android:innerRadiusRatio="3"
-        android:thicknessRatio="8"
+        android:thicknessRatio="10"
         android:useLevel="false">
         <gradient
             android:type="sweep"
             android:useLevel="false"
-            android:startColor="#6BD3FF"
-            android:centerColor="#FF7121"
-            android:centerY="0.50"
-            android:endColor="#FFFF00" />
+            android:startColor="@color/black"
+            android:centerColor="@color/white"
+            android:centerY="0.5"
+            android:endColor="@color/white" />
     </shape>
 
 </animated-rotate>
