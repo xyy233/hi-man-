@@ -19,7 +19,7 @@
         app:inner_corner_width="5dp"
         app:inner_height="300dp"
         app:inner_width="300dp"
-        app:inner_margintop="120dp"
+        app:inner_margintop="80dp"
         app:inner_scan_bitmap="@drawable/scan_icon_scanline"
         app:inner_scan_iscircle="true"
         app:inner_scan_speed="50"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:tools="http://schemas.android.com/tools"
                  android:id="@+id/checkedTextViewCustom"
                  style="?android:attr/spinnerDropDownItemStyle"
                  android:layout_width="match_parent"
@@ -9,4 +10,5 @@
                  android:background="@color/cstore_white"
                  android:textAlignment="inherit"
                  android:textColor="@color/black"
-                 android:textSize="15sp" />
+                 android:textSize="15sp"
+                 tools:ignore="EllipsizeMaxLines"/>
