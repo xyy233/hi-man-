@@ -4,7 +4,7 @@
              android:layout_height="match_parent">
 
     <include
-        layout="@layout/layout_seach"/>
+        layout="@layout/layout_camera_search"/>
 
     <Button
         android:enabled="true"

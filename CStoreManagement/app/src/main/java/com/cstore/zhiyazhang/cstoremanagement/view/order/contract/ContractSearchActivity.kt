@@ -32,7 +32,7 @@ class ContractSearchActivity(override val layoutId: Int = R.layout.activity_cont
         qrcode.setOnClickListener {
             if (nowLayout != 0) {
                 captureFragment = CaptureFragment()
-                CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera_qrcode)
+                CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera)
                 captureFragment.analyzeCallback = analyzeCallback
                 supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
                 nowLayout = 0

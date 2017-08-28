@@ -136,7 +136,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         if (isJustLook) {
             mySpinner.visibility = View.GONE
         } else {
-            val sortAdapter = ArrayAdapter(this, R.layout.custom_spiner_text_item, resources.getStringArray(R.array.mySort))
+            val sortAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySort))
             sortAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
             mySpinner.adapter = sortAdapter
             mySpinner.setSelection(3, false)

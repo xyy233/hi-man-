@@ -178,9 +178,9 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             else -> {
                 var sortAdapter: ArrayAdapter<String>? = null
                 if (whereIsIt == "self") {
-                    sortAdapter = ArrayAdapter(this, R.layout.custom_spiner_text_item, resources.getStringArray(R.array.mySort))
+                    sortAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySort))
                 } else {
-                    sortAdapter = ArrayAdapter(this, R.layout.custom_spiner_text_item, resources.getStringArray(R.array.mySortDMS))
+                    sortAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySortDMS))
                 }
                 sortAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
                 mySpinner.adapter = sortAdapter
