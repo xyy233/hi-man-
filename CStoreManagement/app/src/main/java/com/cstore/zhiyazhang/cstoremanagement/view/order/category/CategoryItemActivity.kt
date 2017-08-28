@@ -504,7 +504,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     private fun judgmentUpdate() {
         if (MyTimeUtil.nowHour>18){
-            finish()
+            super.onBackPressed()
             return
         }
         changeData.removeAll(changeData.filter { it.orderQTY == 0 })
@@ -516,11 +516,11 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                     presenter.updateAllCategory()
                 })
                 .setNegativeButton("放弃", { _, _ ->
-                    finish()
+                    super.onBackPressed()
                 })
                 .show()
         else
-            finish()
+            super.onBackPressed()
     }
 
     override val category: OrderCategoryBean

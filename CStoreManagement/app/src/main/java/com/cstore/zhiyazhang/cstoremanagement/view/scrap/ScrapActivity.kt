@@ -168,8 +168,11 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             }
         }
         scrap_done.setOnClickListener {
-            val i = adapter.data.sortedByDescending { it.recordNumber }
-            presenter.submitScraps(editData, i[0].recordNumber)
+            var i=0
+            if (adapter.data.size>0){
+                i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
+            }
+            presenter.submitScraps(editData, i)
         }
     }
 
@@ -241,10 +244,10 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                         presenter.submitScraps(editData, adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber)
                     })
                     .setNegativeButton("放弃") { _, _ ->
-                        finishAfterTransition()
+                        super.onBackPressed()
                     }
                     .show()
-        } else finishAfterTransition()
+        } else super.onBackPressed()
     }
 
     /**

@@ -30,7 +30,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            android.R.id.home->finishAfterTransition()
+            android.R.id.home->onBackPressed()
         }
         return true
     }

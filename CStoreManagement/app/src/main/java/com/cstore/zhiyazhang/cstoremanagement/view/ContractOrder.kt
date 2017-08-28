@@ -71,7 +71,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                     4 -> {
                         val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
                         intent.putExtra(whereIsIt, "nop")//new or Promotion
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "ordrItem").toBundle())
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view, "orderItem").toBundle())
                     }
                     5 -> {
                         val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
@@ -156,7 +156,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> onBackPressed()
         }
         return true
     }

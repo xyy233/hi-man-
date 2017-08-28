@@ -144,13 +144,13 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     //toolbar的返回按钮事件
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
-        finish()
+        super.onBackPressed()
     }
 
     override fun showLoading() {
