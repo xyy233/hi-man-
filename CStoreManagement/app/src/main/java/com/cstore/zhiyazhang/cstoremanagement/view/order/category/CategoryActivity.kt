@@ -33,7 +33,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     override fun showUsaTime(isShow: Boolean) {
     }
 
-    val mPresenter = OrderCategoryPresenter(this, this)
+    val mPresenter = OrderCategoryPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

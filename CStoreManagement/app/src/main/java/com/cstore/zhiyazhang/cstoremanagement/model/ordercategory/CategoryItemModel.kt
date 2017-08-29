@@ -8,8 +8,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
@@ -27,7 +25,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.getItemByCategoryId(categoryId, orderBy), 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.getItemByCategoryId(categoryId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -35,7 +33,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -55,7 +53,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.getItemByShelfId(shelfId, orderBy), 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.getItemByShelfId(shelfId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -63,7 +61,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -84,7 +82,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.unitOrder(keywords), 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.unitOrder(keywords), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -92,7 +90,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -112,7 +110,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.getSelfBySelfId(selfId, orderBy), 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.getSelfBySelfId(selfId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -120,7 +118,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -142,7 +140,7 @@ class CategoryItemModel : CategoryInterface {
         }
         var sql: String? = null
         if (nopId == "0") sql = MySql.getPromotion(orderBy) else sql = MySql.getNewItemById(nopId, orderBy)
-        SocketUtil.getSocketUtil(ip).inquire(sql, 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(sql, 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -150,7 +148,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -167,7 +165,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.getFreashItem(categoryId,midId,orderBy),10, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.getFreashItem(categoryId,midId,orderBy),10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -175,7 +173,7 @@ class CategoryItemModel : CategoryInterface {
                         if (msg.obj as String == "" || msg.obj as String == "[]") {
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         } else {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<CategoryItemBean>>(msg.obj as String, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type))
+                            myListener.listenerSuccess(msg.obj as String)
                         }
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
@@ -204,11 +202,11 @@ class CategoryItemModel : CategoryInterface {
             return
         }
 
-        SocketUtil.getSocketUtil(ip).inquire(sql.toString().toLowerCase(), 20, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(sql.toString().toLowerCase(), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
-                    0 -> myListener.listenerSuccess()
+                    0 -> myListener.listenerSuccess("")
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }

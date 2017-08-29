@@ -35,7 +35,7 @@ import java.io.File
 class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, GenericView, EasyPermissions.PermissionCallbacks {
 
     var preferences: SharedPreferences? = null
-    val mSigninPresenter: SignInPresenter = SignInPresenter(this, this, this)
+    val mSigninPresenter: SignInPresenter = SignInPresenter(this, this, this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -213,7 +213,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     fun judgmentPermissions(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.openAu), 1, *perms)
+            EasyPermissions.requestPermissions(this, getString(R.string.openCamera), 1, *perms)
             return false
         }
         return true

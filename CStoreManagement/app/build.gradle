@@ -39,7 +39,7 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.4.0'
     //Glide图形加载
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    //图片view
+    //图片view,随意拖动放大缩小
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     //http请求与json解析
     compile 'com.google.code.gson:gson:2.8.0'

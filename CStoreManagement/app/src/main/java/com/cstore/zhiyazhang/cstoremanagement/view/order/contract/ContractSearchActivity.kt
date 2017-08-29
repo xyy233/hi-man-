@@ -87,7 +87,7 @@ class ContractSearchActivity(override val layoutId: Int = R.layout.activity_cont
         }
 
         override fun onAnalyzeFailed() {
-            Toast.makeText(this@ContractSearchActivity, getString(com.cstore.zhiyazhang.cstoremanagement.R.string.qrcode_nomessage), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ContractSearchActivity, getString(com.cstore.zhiyazhang.cstoremanagement.R.string.noMessage), Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -7,16 +7,17 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.OrderCategoryInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.OrderCategoryModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/7/25 14:24.
  */
-class OrderCategoryPresenter(private val gView: GenericView, private val tView:ContractTypeView) {
-    private val anInterfacve: OrderCategoryInterface = OrderCategoryModel()
+class OrderCategoryPresenter(private val gView: GenericView) {
+    private val anInterface: OrderCategoryInterface = OrderCategoryModel()
     private val mHandler = Handler()
     fun getAllCategory() {
         if (!ConnectionDetector.getConnectionDetector().isOnline) {
@@ -24,15 +25,13 @@ class OrderCategoryPresenter(private val gView: GenericView, private val tView:C
             gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterfacve.getAllCategory(User.getUser(), object : MyListener {
-            override fun listenerSuccess() {
-            }
-
-            override fun listenerSuccess(`object`: Any) {
+        anInterface.getAllCategory(User.getUser(), object : MyListener {
+            override fun listenerSuccess(data: String) {
+                val categories= Gson().fromJson<ArrayList<OrderCategoryBean>>(data, object : TypeToken<ArrayList<OrderCategoryBean>>() {}.type)
                 mHandler.post(
-                        Runnable {
+                        {
                             kotlin.run {
-                                val adapter=OrderCategoryAdapter(ArrayList<OrderCategoryBean>(), "category",`object` as ArrayList<OrderCategoryBean>){
+                                val adapter=OrderCategoryAdapter(ArrayList<OrderCategoryBean>(), "category",categories){
                                     gView.requestSuccess(it)
                                 }
                                 gView.showView(adapter)
@@ -58,15 +57,13 @@ class OrderCategoryPresenter(private val gView: GenericView, private val tView:C
             gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterfacve.getAllShelf(object : MyListener {
-            override fun listenerSuccess() {
-            }
-
-            override fun listenerSuccess(`object`: Any) {
+        anInterface.getAllShelf(object : MyListener {
+            override fun listenerSuccess(data: String) {
+                val shelf=Gson().fromJson<ArrayList<ShelfBean>>(data, object : TypeToken<ArrayList<ShelfBean>>() {}.type)
                 mHandler.post(
-                        Runnable {
+                        {
                             kotlin.run {
-                                val adapter=OrderCategoryAdapter(ArrayList<ShelfBean>(), "shelf",`object` as ArrayList<ShelfBean>){
+                                val adapter=OrderCategoryAdapter(ArrayList<ShelfBean>(), "shelf",shelf){
                                     gView.requestSuccess(it)
                                 }
                                 gView.showView(adapter)
@@ -92,15 +89,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val tView:C
             gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterfacve.getSelf(object : MyListener {
-            override fun listenerSuccess() {
-            }
+        anInterface.getSelf(object : MyListener {
 
-            override fun listenerSuccess(`object`: Any) {
+            override fun listenerSuccess(data: String) {
+                val self=Gson().fromJson<ArrayList<SelfBean>>(data, object : TypeToken<ArrayList<SelfBean>>() {}.type)
                 mHandler.post(
-                        Runnable {
+                        {
                             kotlin.run {
-                                val adapter=OrderCategoryAdapter(ArrayList<SelfBean>(), "self",`object` as ArrayList<SelfBean>){
+                                val adapter=OrderCategoryAdapter(ArrayList<SelfBean>(), "self",self){
                                     gView.requestSuccess(it)
                                 }
                                 gView.showView(adapter)
@@ -126,15 +122,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val tView:C
             gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterfacve.getNewItemId(object : MyListener {
-            override fun listenerSuccess() {
-            }
+        anInterface.getNewItemId(object : MyListener {
 
-            override fun listenerSuccess(`object`: Any) {
+            override fun listenerSuccess(`data`: String) {
+                val nops=Gson().fromJson<ArrayList<NOPBean>>(data, object : TypeToken<ArrayList<NOPBean>>() {}.type)
                 mHandler.post(
-                        Runnable {
+                        {
                             kotlin.run {
-                                val adapter=OrderCategoryAdapter(ArrayList<NOPBean>(), "nop",`object` as ArrayList<NOPBean>){
+                                val adapter=OrderCategoryAdapter(ArrayList<NOPBean>(), "nop",nops){
                                     gView.requestSuccess(it)
                                 }
                                 gView.showView(adapter)
@@ -163,16 +158,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val tView:C
             gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return
         }
-        anInterfacve.getFresh(freshType, object : MyListener {
-            override fun listenerSuccess() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+        anInterface.getFresh(freshType, object : MyListener {
 
-            override fun listenerSuccess(`object`: Any) {
+            override fun listenerSuccess(data: String) {
+                val freshs=Gson().fromJson<ArrayList<FreshGroup>>(data, object : TypeToken<ArrayList<FreshGroup>>() {}.type)
                 mHandler.post(
-                        Runnable {
+                        {
                             kotlin.run {
-                                val adapter=OrderCategoryAdapter(ArrayList<FreshGroup>(), "fresh",`object` as ArrayList<FreshGroup>){
+                                val adapter=OrderCategoryAdapter(ArrayList<FreshGroup>(), "fresh",freshs){
                                     gView.requestSuccess(it)
                                 }
                                 gView.showView(adapter)

@@ -7,6 +7,8 @@ import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
@@ -27,12 +29,8 @@ class ScrapPresenter(private val gView:GenericView,private val sView:ScrapView){
             return
         }
         anInterface.getAllScrap(sView.getDate(), object : MyListener {
-            override fun listenerSuccess() {
-                gView.hideLoading()
-            }
-
-            override fun listenerSuccess(`object`: Any) {
-                gView.requestSuccess(`object`)
+            override fun listenerSuccess(data: String) {
+                gView.requestSuccess(Gson().fromJson<ArrayList<ScrapContractBean>>(data, object : TypeToken<ArrayList<ScrapContractBean>>() {}.type))
                 gView.hideLoading()
             }
 
@@ -54,10 +52,8 @@ class ScrapPresenter(private val gView:GenericView,private val sView:ScrapView){
             return
         }
         anInterface.searchScrap(message, object : MyListener {
-            override fun listenerSuccess() {}
-
-            override fun listenerSuccess(`object`: Any) {
-                gView.requestSuccess(`object`)
+            override fun listenerSuccess(data: String) {
+                gView.requestSuccess(Gson().fromJson<ArrayList<ScrapContractBean>>(data, object : TypeToken<ArrayList<ScrapContractBean>>() {}.type))
                 gView.hideLoading()
             }
 
@@ -76,13 +72,12 @@ class ScrapPresenter(private val gView:GenericView,private val sView:ScrapView){
             return
         }
         anInterface.submitScraps(data, reCode, object : MyListener {
-            override fun listenerSuccess() {
+
+            override fun listenerSuccess(data: String) {
                 sView.updateDone()
                 gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.done))
                 gView.hideLoading()
             }
-
-            override fun listenerSuccess(`object`: Any) {}
 
             override fun listenerFailed(errorMessage: String) {
                 gView.hideLoading()

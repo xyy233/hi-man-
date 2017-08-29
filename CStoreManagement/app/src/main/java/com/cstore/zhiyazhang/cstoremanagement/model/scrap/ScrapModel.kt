@@ -8,8 +8,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
@@ -24,14 +22,14 @@ class ScrapModel:ScrapInterface{
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.AllScrap(date),10, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.AllScrap(date),10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     0 -> try {
                         if (msg.obj as String != "" && msg.obj as String != "[]") {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<ScrapContractBean>>(msg.obj as String, object : TypeToken<ArrayList<ScrapContractBean>>() {}.type))
-                        }else myListener.listenerSuccess()
+                            myListener.listenerSuccess(msg.obj as String)
+                        }else myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                     } catch (e: Exception) {
                         myListener.listenerFailed(msg.obj as String)
                     }
@@ -47,13 +45,13 @@ class ScrapModel:ScrapInterface{
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.getScrapByMessage(message),10, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.getScrapByMessage(message),10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     0 -> try {
                         if (msg.obj as String != "" && msg.obj as String != "[]") {
-                            myListener.listenerSuccess(Gson().fromJson<ArrayList<ScrapContractBean>>(msg.obj as String, object : TypeToken<ArrayList<ScrapContractBean>>() {}.type))
+                           myListener.listenerSuccess(msg.obj as String)
                         }else{
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
                         }
@@ -77,13 +75,13 @@ class ScrapModel:ScrapInterface{
             return
         }
         val sql=getSubmitString(data, reCode)
-        SocketUtil.getSocketUtil(ip).inquire(sql,10, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(sql,10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     0 -> try {
                         if (msg.obj as String != "" && msg.obj as String != "[]") {
-                            myListener.listenerSuccess()
+                            myListener.listenerSuccess("")
                         }else{
                             myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.socketError))
                         }

@@ -20,10 +20,8 @@ object ReportListener {
                 .addHeader("fileName", "$storeId/${MyTimeUtil.nowTimeString}.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
-                    override fun listenerSuccess() {
-                    }
 
-                    override fun listenerSuccess(`object`: Any) {
+                    override fun listenerSuccess(data: String) {
                     }
 
                     override fun listenerFailed(errorMessage: String) {
@@ -44,10 +42,8 @@ object ReportListener {
                 .addHeader("fileName","$storeId/login.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
-                    override fun listenerSuccess() {
-                    }
 
-                    override fun listenerSuccess(`object`: Any) {
+                    override fun listenerSuccess(data: String) {
                     }
 
                     override fun listenerFailed(errorMessage: String) {

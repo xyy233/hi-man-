@@ -6,7 +6,6 @@ package com.cstore.zhiyazhang.cstoremanagement.model
  */
 
 interface MyListener {
-    fun listenerSuccess()
-    fun listenerSuccess(`object`: Any)
+    fun listenerSuccess(data: Any)
     fun listenerFailed(errorMessage: String)
 }

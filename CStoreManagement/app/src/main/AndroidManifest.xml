@@ -83,32 +83,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <!--        &lt;!&ndash;报废选择&ndash;&gt;
-                <activity
-                    android:name=".view.scrap.ScrapSelectActivity"
-                    android:screenOrientation="portrait"/>
-
-                &lt;!&ndash;无码报废&ndash;&gt;
-                <activity
-                    android:name=".view.scrap.NoCodeScrapActivity"
-                    android:screenOrientation="portrait"/>
-
-                &lt;!&ndash;报废品详细列&ndash;&gt;
-                <activity
-                    android:name=".view.scrap.NCScrapActivity"
-                    android:screenOrientation="portrait"/>
-
-                &lt;!&ndash;条形码报废&ndash;&gt;
-                <activity
-                    android:name=".view.scrap.BarCodeScrapActivity"
-                    android:screenOrientation="portrait"
-                    android:windowSoftInputMode="adjustPan|stateHidden"/>-->
-
-
-        <!--测试用-->
-        <activity
-            android:name=".TestActivity"
-            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

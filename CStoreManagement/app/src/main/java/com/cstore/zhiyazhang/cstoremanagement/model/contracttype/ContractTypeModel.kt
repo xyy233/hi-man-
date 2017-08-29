@@ -1,13 +1,11 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.contracttype
 
-import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_HEADER
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_SWITCH
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.USER_HEADER
-import com.google.gson.Gson
 import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 
@@ -29,7 +27,7 @@ class ContractTypeModel : ContractTypeInterface {
                 .build()
                 .execute(object : MyStringCallBack(listener) {
                     override fun onResponse(response: String, id: Int) {
-                        listener.listenerSuccess(Gson().fromJson(response, ContractTypeResult::class.java))
+                       listener.listenerSuccess(response)
                     }
                 })
     }

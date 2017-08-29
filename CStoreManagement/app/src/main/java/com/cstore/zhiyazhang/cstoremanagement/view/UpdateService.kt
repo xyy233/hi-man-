@@ -43,18 +43,16 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
     }
 
     private val myListener = object : MyListener {
-        override fun listenerSuccess() {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
 
-        override fun listenerSuccess(`object`: Any) {
+        override fun listenerSuccess(data: String) {
+            val updates=Gson().fromJson(data, UpdateBean::class.java)
             downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
             val intent = Intent("com.cstore.zhiyazhang.UPDATE")
             //如果版本名不同就去下载
-            if ((`object` as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
+            if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
                 intent.putExtra("is_new", true)
                 sendBroadcast(intent)
-                versionUrl = `object`.downloadUrl
+                versionUrl = updates.downloadUrl
                 downloadAPK()
             } else {
                 intent.putExtra("is_new", false)
@@ -78,7 +76,7 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
                     override fun onResponse(response: String, id: Int) {
-                        myListener.listenerSuccess(Gson().fromJson(response, UpdateBean::class.java))
+                        myListener.listenerSuccess(response)
                     }
                 })
     }

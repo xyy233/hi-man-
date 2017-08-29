@@ -11,6 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.google.gson.Gson
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
@@ -27,16 +28,13 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
             return
         }
         anInterface.getAllContractType(User.getUser(), tView.isJustLook, object : MyListener {
-            //在这无用
-            override fun listenerSuccess() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
 
-            override fun listenerSuccess(`object`: Any) {
+            override fun listenerSuccess(data: String) {
+                val contracts= Gson().fromJson(data, ContractTypeResult::class.java)
                 mHandler.post(
                         Runnable {
                     kotlin.run {
-                        val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allDate, tView.isJustLook, (`object` as ContractTypeResult).detail) {
+                        val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allDate, tView.isJustLook, contracts.detail) {
                             gView.requestSuccess(it)
                         }
                         gView.showView(adapter)

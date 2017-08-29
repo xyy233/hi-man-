@@ -110,7 +110,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
 
     private fun initClick() {
         loading.setOnClickListener {
-            showPrompt(getString(R.string.waitDone))
+            showPrompt(getString(R.string.with_loading))
         }
         toolbar_time.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {

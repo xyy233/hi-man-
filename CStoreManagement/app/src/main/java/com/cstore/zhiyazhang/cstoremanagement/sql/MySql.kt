@@ -33,27 +33,6 @@ object MySql {
         return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address from employee A,store B) where employeeid='$uid'"
     }
 
-
-
-    /**
-     * 获得报废的类名
-
-     * @return 新的sql语句
-     */
-    val scrapCategory: String
-        get() = "select distinct categorynumber, categoryname from cat where midcategorynumber=' ' and microcategorynumber=' ' and categorynumber in (select distinct categorynumber from app_mrkitem_view where barcode_yn = 'N')order by categorynumber"
-
-    /**
-     * 从类id获得所有报废品
-
-     * @param categoryId 类的id
-     * *
-     * @return 新的sql语句
-     */
-    fun getAllScrapByCategory(categoryId: String): String {
-        return "select * from app_mrkitem_view where barcode_yn='N' and categorynumber='$categoryId' order by mrk_date desc"
-    }
-
     /**
      * 获得大类信息的存储过程
      */

@@ -2,7 +2,6 @@ package com.cstore.zhiyazhang.cstoremanagement.model.contract
 
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.ContractResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
@@ -31,7 +30,7 @@ class ContractModel : ContractInterface {
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
                     override fun onResponse(response: String, id: Int) {
-                        myListener.listenerSuccess(Gson().fromJson(response, ContractResult::class.java))
+                        myListener.listenerSuccess(response)
                     }
                 })
     }
@@ -49,7 +48,7 @@ class ContractModel : ContractInterface {
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
                     override fun onResponse(response: String, id: Int) {
-                        myListener.listenerSuccess(Gson().fromJson(response, ContractResult::class.java))
+                        myListener.listenerSuccess(response)
                     }
                 })
     }
@@ -67,7 +66,7 @@ class ContractModel : ContractInterface {
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
                     override fun onResponse(response: String, id: Int) {
-                        myListener.listenerSuccess(Gson().fromJson(response, ContractResult::class.java))
+                        myListener.listenerSuccess(response)
                     }
                 })
     }
@@ -98,7 +97,7 @@ class ContractModel : ContractInterface {
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
                     override fun onResponse(response: String, id: Int) {
-                        myListener.listenerSuccess()
+                        myListener.listenerSuccess(response)
                     }
                 })
     }

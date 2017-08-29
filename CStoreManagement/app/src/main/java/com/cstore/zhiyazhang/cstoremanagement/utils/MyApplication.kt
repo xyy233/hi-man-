@@ -1,25 +1,15 @@
 package com.zhiyazhang.mykotlinapplication.utils
 
 import android.app.Application
-import android.os.Environment
-import android.os.Looper
-import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.squareup.leakcanary.LeakCanary
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
-import java.io.File
-import java.io.FileOutputStream
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.net.SocketException
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 
 /**
@@ -78,7 +68,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        //LeakCanary.install(this)
+        LeakCanary.install(this)
         instance = this
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient
@@ -92,10 +82,10 @@ class MyApplication : Application() {
     }
 
 }
-
-/**
+/*
+*//**
  * 全局错误信息收集
- */
+ *//*
 class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
     private val mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler()
 
@@ -133,9 +123,9 @@ class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
         return true
     }
 
-    /**
+    *//**
      * 记录错误信息
-     */
+     *//*
     private fun saveCrashInfoFile(ex: Throwable) {
         val writer = StringWriter()
         val printWriter = PrintWriter(writer)
@@ -165,4 +155,4 @@ class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
         } catch (e: Exception) {
         }
     }
-}
+}*/

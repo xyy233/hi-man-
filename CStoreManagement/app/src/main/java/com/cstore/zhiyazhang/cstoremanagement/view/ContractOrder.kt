@@ -167,13 +167,13 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             MyToast.getShortToast(ip)
             return
         }
-        SocketUtil.getSocketUtil(ip).inquire(MySql.judgmentOrdt2, 10, @SuppressLint("HandlerLeak")
+        SocketUtil().writeIP(ip).inquire(MySql.judgmentOrdt2, 10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     0 -> {
                        if (msg.obj.toString()!="[{\"orderdate\":\""+MyTimeUtil.tomorrowDate+"\"}]"){
-                           SocketUtil.getSocketUtil(ip).inquire(MySql.ordT2(), 180, @SuppressLint("HandlerLeak")
+                           SocketUtil().writeIP(ip).inquire(MySql.ordT2(), 180, @SuppressLint("HandlerLeak")
                            object : Handler() {
                                override fun handleMessage(msg: Message) {
                                    when (msg.what) {
