@@ -1,97 +1,89 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.scrap
 
-import android.annotation.SuppressLint
-import android.os.Handler
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
-import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/8/21 16:20.
  */
-class ScrapModel:ScrapInterface{
+class ScrapModel(private val gView: GenericView, private val sView:ScrapView):ScrapInterface{
 
-    override fun getAllScrap(date:String, myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.AllScrap(date),10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        if (msg.obj as String != "" && msg.obj as String != "[]") {
-                            myListener.listenerSuccess(msg.obj as String)
-                        }else myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun getAllScrap(handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val data=SocketUtil.initSocket(ip,MySql.AllScrap(sView.getDate())).inquire()
+            if (!SocketUtil.judgmentNull(data,msg,handler))return@Runnable
+
+            val scraps=ArrayList<ScrapContractBean>()
+            try {
+                scraps.addAll(SocketUtil.getScrap(data))
+            }catch (e:Exception){}
+            if (scraps.isEmpty()){
+                msg.obj = data
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=scraps
+                msg.what=SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun searchScrap(message: String, myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.getScrapByMessage(message),10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        if (msg.obj as String != "" && msg.obj as String != "[]") {
-                           myListener.listenerSuccess(msg.obj as String)
-                        }else{
-                            myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun searchScrap(message: String, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val data=SocketUtil.initSocket(ip,MySql.getScrapByMessage(message)).inquire()
+            if (!SocketUtil.judgmentNull(data,msg,handler))return@Runnable
+
+            val scraps=ArrayList<ScrapContractBean>()
+            try {
+                scraps.addAll(SocketUtil.getScrap(data))
+            }catch (e:Exception){}
+            if (scraps.isEmpty()){
+                msg.obj = data
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=scraps
+                msg.what=SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode:Int, myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        if (data.size<1){
-            myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noEditMsg))
-            return
-        }
-        val sql=getSubmitString(data, reCode)
-        SocketUtil().writeIP(ip).inquire(sql,10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        if (msg.obj as String != "" && msg.obj as String != "[]") {
-                            myListener.listenerSuccess("")
-                        }else{
-                            myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.socketError))
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode:Int, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            if (data.size<1){
+                msg.obj=MyApplication.instance().applicationContext.resources.getString(R.string.noEditMsg)
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+                return@Runnable
             }
-        })
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val sql=getSubmitString(data, reCode)
+            val sqlData=SocketUtil.initSocket(ip,sql).inquire()
+            if (!SocketUtil.judgmentNull(sqlData,msg,handler))return@Runnable
+            msg.obj=sqlData
+            msg.what=SUCCESS
+            handler.sendMessage(msg)
+        }).start()
     }
 
     /**
@@ -125,15 +117,15 @@ interface ScrapInterface{
     /**
      * 得到当前所有的报废信息
      */
-    fun getAllScrap(date:String, myListener: MyListener)
+    fun getAllScrap(handler:MyHandler.MyHandler)
 
     /**
      * 搜索报废品
      */
-    fun searchScrap(message:String,myListener: MyListener)
+    fun searchScrap(message:String,handler:MyHandler.MyHandler)
 
     /**
      * 提交所有报废
      */
-    fun submitScraps(data:ArrayList<ScrapContractBean>, reCode: Int, myListener: MyListener)
+    fun submitScraps(data:ArrayList<ScrapContractBean>, reCode: Int, handler:MyHandler.MyHandler)
 }

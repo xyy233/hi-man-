@@ -17,6 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
@@ -113,6 +114,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     }
 
     override fun hideLoading() {
+        MyHandler.removeCallbacksAndMessages(null)
         progress.visibility = View.GONE
         wifi_hints.visibility = View.VISIBLE
         login.isEnabled = true
@@ -126,6 +128,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                 intent.putExtra("user", objects)
                 startActivity(intent)
+                finish()
             }
             else -> showPrompt(getString(R.string.system_error))
         }

@@ -17,7 +17,7 @@ interface GenericView {
      * 输出提示信息
      */
     fun showPrompt(errorMsg: String) {
-        MyToast.getShortToast(errorMsg)
+        MyToast.getLongToast(errorMsg)
     }
 
     /**

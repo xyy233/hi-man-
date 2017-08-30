@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_type_vertical.view.*
  * Created by zhiya.zhang
  * on 2017/7/25 16:10.
  */
-class OrderCategoryAdapter(val sqliteData: Any, val type: String, val data: Any, val listener: (Any) -> Unit) :
+class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) -> Unit) :
         RecyclerView.Adapter<OrderCategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

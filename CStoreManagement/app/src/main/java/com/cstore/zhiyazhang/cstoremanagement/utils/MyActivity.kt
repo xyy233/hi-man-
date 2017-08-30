@@ -37,6 +37,8 @@ abstract class MyActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        //删掉内容
+        MyHandler.removeCallbacksAndMessages(null)
         //释放监听
         unregisterReceiver(mBroadcastReceiver)
         super.onDestroy()

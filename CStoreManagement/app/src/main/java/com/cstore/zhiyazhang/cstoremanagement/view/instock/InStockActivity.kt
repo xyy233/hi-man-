@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.instock
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -24,7 +23,8 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
 
         scrap.setOnClickListener {
             val intent = Intent(this@InStockActivity, ScrapActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@InStockActivity, scrap, "scrap").toBundle())
+            startActivity(intent)
+//            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@InStockActivity, scrap, "scrap").toBundle())
         }
     }
 

@@ -11,8 +11,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
@@ -21,38 +19,39 @@ import com.zhiyazhang.mykotlinapplication.utils.MyApplication
  */
 class SignInModel : SignInInterface {
 
-    override fun login(sView:SignInView,gView:GenericView, myHandler:MyHandler.MyHandler) {
+    override fun login(sView: SignInView, gView: GenericView, myHandler: MyHandler.MyHandler) {
         Thread(Runnable {
-            val msg=Message()
+            val msg = Message()
             val ip = MyApplication.getIP()
-            if (ip == MyApplication.instance().getString(R.string.notFindIP)){
-                msg.obj=ip
-                msg.what=ERROR1
-                myHandler.sendMessage(msg)
-                return@Runnable
+            if (!SocketUtil.judgmentIP(ip,msg,myHandler))return@Runnable
+            val data = SocketUtil.initSocket(ip, MySql.SignIn(sView.uid), 10).inquire()
+            if (!SocketUtil.judgmentNull(data,msg,myHandler))return@Runnable
+
+            val users = ArrayList<User>()
+            try {
+                users.addAll(SocketUtil.getUser(data))
+            }catch (e:Exception) { //不进行操作，无法转换就代表数据错误，直接在下面的错误抛出
             }
-            val data = SocketUtil.initSocket(ip,MySql.SignIn(sView.uid),10).inquire()
-            val users = Gson().fromJson<List<User>>(data, object : TypeToken<List<User>>() {}.type)
-            if (users.isEmpty()){//不是用户信息
-                msg.obj=data
-                msg.what= ERROR1
+            if (users.isEmpty()) {//不是用户信息
+                msg.obj = data
+                msg.what = ERROR1
                 myHandler.sendMessage(msg)
-            }else if (users[0].password != sView.password) {
-                msg.obj=MyApplication.instance().applicationContext.resources.getString(R.string.pwdError)//密码错误
-                msg.what= ERROR1
+            } else if (users[0].password != sView.password) {
+                msg.obj = MyApplication.instance().applicationContext.resources.getString(R.string.pwdError)//密码错误
+                msg.what = ERROR1
                 myHandler.sendMessage(msg)
-            }else{
+            } else {
                 //判断和之前的用户店号是否一样，不一样要删除本地数据库
-                val oldUser=User.getUser()
+                val oldUser = User.getUser()
                 if (oldUser.storeId != users[0].storeId) {
-                    val cd= ContractTypeDao(MyApplication.instance().applicationContext)
-                    cd.editSQL(null,"deleteTable")
+                    val cd = ContractTypeDao(MyApplication.instance().applicationContext)
+                    cd.editSQL(null, "deleteTable")
                 }
-                if (oldUser.uId!=users[0].uId){
+                if (oldUser.uId != users[0].uId) {
                     sView.saveUser(users[0])
                 }
-                msg.obj=users[0]
-                msg.what=SUCCESS
+                msg.obj = users[0]
+                msg.what = SUCCESS
                 myHandler.sendMessage(msg)
             }
 
@@ -61,5 +60,5 @@ class SignInModel : SignInInterface {
 }
 
 interface SignInInterface {
-    fun login(sView:SignInView,gView:GenericView, myHandler:MyHandler.MyHandler)
+    fun login(sView: SignInView, gView: GenericView, myHandler: MyHandler.MyHandler)
 }

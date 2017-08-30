@@ -29,8 +29,8 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
         }
         anInterface.getAllContractType(User.getUser(), tView.isJustLook, object : MyListener {
 
-            override fun listenerSuccess(data: String) {
-                val contracts= Gson().fromJson(data, ContractTypeResult::class.java)
+            override fun listenerSuccess(data: Any) {
+               /* val contracts= Gson().fromJson(data, ContractTypeResult::class.java)
                 mHandler.post(
                         Runnable {
                     kotlin.run {
@@ -41,7 +41,7 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
                         if (adapter.ctbs.isEmpty())tView.showUsaTime(true)else tView.showUsaTime(false)
                         gView.hideLoading()
                     }
-                })
+                })*/
             }
 
             override fun listenerFailed(errorMessage: String) {

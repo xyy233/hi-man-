@@ -1,11 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
-import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -107,13 +105,13 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             MyToast.getLongToast(getString(R.string.loadingCall))
         }
         orderLoading.visibility = View.VISIBLE
-        runOrdT2()
         orderretry.setOnClickListener {
             orderpro.visibility = View.VISIBLE
             orderprotext.visibility = View.VISIBLE
             orderretry.visibility = View.GONE
             runOrdT2()
         }
+        runOrdT2()
     }
 
     override fun onBackPressed() {
@@ -142,16 +140,20 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
             data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
             data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
+            data.add(OrderData(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
+            data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
         }
 
 /*      调试使用
-        data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
-        data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
-        data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
-        data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
-        data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
-        data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
-        data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))*/
+            data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+            data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
+            data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
+            data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
+            data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
+            data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
+            data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
+            data.add(OrderData(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
+            data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -167,40 +169,40 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             MyToast.getShortToast(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.judgmentOrdt2, 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> {
-                       if (msg.obj.toString()!="[{\"orderdate\":\""+MyTimeUtil.tomorrowDate+"\"}]"){
-                           SocketUtil().writeIP(ip).inquire(MySql.ordT2(), 180, @SuppressLint("HandlerLeak")
-                           object : Handler() {
-                               override fun handleMessage(msg: Message) {
-                                   when (msg.what) {
-                                       0 -> {
-                                           //运行完成可以操作
-                                           orderLoading.visibility = View.GONE
-                                       }
-                                       else -> {
-                                           MyToast.getShortToast(msg.obj as String)
-                                           orderpro.visibility = View.GONE
-                                           orderprotext.visibility = View.GONE
-                                           orderretry.visibility = View.VISIBLE
-                                       }
-                                   }
-                               }
-                           })
-                       }else orderLoading.visibility = View.GONE
+        val handler=Handler()
+        Thread(Runnable {
+            var result=SocketUtil.initSocket(ip,MySql.judgmentOrdt2).inquire()
+            if (result.contains("orderdate")){
+                if (result=="[{\"orderdate\":\""+ MyTimeUtil.tomorrowDate+"\"}]"){
+                    //运行完成可以操作
+                    handler.post {
+                        orderLoading.visibility=View.GONE
                     }
-                    else -> {
-                        MyToast.getShortToast(msg.obj as String)
-                        orderpro.visibility = View.GONE
-                        orderprotext.visibility = View.GONE
-                        orderretry.visibility = View.VISIBLE
+                }else{
+                    result = SocketUtil.initSocket(ip,MySql.ordT2(),180).inquire()
+                    if (result=="0"){
+                        handler.post {
+                            orderLoading.visibility=View.GONE
+                        }
+                    }else{
+                        handler.post {
+                            MyToast.getLongToast(result)
+                            orderpro.visibility = View.GONE
+                            orderprotext.visibility = View.GONE
+                            orderretry.visibility = View.VISIBLE
+                        }
                     }
                 }
+            }else{
+                handler.post {
+                    MyToast.getLongToast(result)
+                    orderpro.visibility = View.GONE
+                    orderprotext.visibility = View.GONE
+                    orderretry.visibility = View.VISIBLE
+                }
             }
-        })
+
+        }).start()
     }
 
     data class OrderData(val img: Int, val msg: String, val position: Int)

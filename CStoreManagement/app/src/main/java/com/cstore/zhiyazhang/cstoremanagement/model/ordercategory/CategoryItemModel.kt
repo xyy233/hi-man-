@@ -1,12 +1,13 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 
-import android.annotation.SuppressLint
-import android.os.Handler
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
@@ -15,6 +16,56 @@ import com.zhiyazhang.mykotlinapplication.utils.MyApplication
  * on 2017/7/27 16:22.
  */
 class CategoryItemModel : CategoryInterface {
+    /**
+     * 通过categoryId获得item
+     */
+    override fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg=Message()
+            val ip=MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,MySql.getItemByCategoryId(categoryId,orderBy)).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+
+            val items=ArrayList<CategoryItemBean>()
+            try {
+                items.addAll(SocketUtil.getCategoryItem(result))
+            }catch (e:Exception){}
+            if (items.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=items
+                msg.what=SUCCESS
+                handler.sendMessage(msg)
+            }
+        }).start()
+    }
+
+    override fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getUnitItemByKeywords(keywords: String, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.MyHandler) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     /**
      * 通过categoryId获得item
@@ -25,7 +76,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.getItemByCategoryId(categoryId, orderBy), 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(MySql.getItemByCategoryId(categoryId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -41,7 +92,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 
     /**
@@ -53,7 +104,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.getItemByShelfId(shelfId, orderBy), 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(MySql.getItemByShelfId(shelfId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -70,7 +121,7 @@ class CategoryItemModel : CategoryInterface {
                 }
             }
 
-        })
+        })*/
     }
 
     /**
@@ -82,7 +133,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.unitOrder(keywords), 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(MySql.unitOrder(keywords), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -98,7 +149,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 
     /**
@@ -110,7 +161,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.getSelfBySelfId(selfId, orderBy), 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(MySql.getSelfBySelfId(selfId, orderBy), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -126,7 +177,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 
     /**
@@ -140,7 +191,7 @@ class CategoryItemModel : CategoryInterface {
         }
         var sql: String? = null
         if (nopId == "0") sql = MySql.getPromotion(orderBy) else sql = MySql.getNewItemById(nopId, orderBy)
-        SocketUtil().writeIP(ip).inquire(sql, 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(sql, 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -156,7 +207,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 
     override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, myListener: MyListener) {
@@ -165,7 +216,7 @@ class CategoryItemModel : CategoryInterface {
             myListener.listenerFailed(ip)
             return
         }
-        SocketUtil().writeIP(ip).inquire(MySql.getFreashItem(categoryId,midId,orderBy),10, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(MySql.getFreashItem(categoryId,midId,orderBy),10, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -181,7 +232,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 
     /**
@@ -202,7 +253,7 @@ class CategoryItemModel : CategoryInterface {
             return
         }
 
-        SocketUtil().writeIP(ip).inquire(sql.toString().toLowerCase(), 20, @SuppressLint("HandlerLeak")
+        /*SocketUtil().writeIP(ip).inquire(sql.toString().toLowerCase(), 20, @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
@@ -210,7 +261,7 @@ class CategoryItemModel : CategoryInterface {
                     else -> myListener.listenerFailed(msg.obj as String)
                 }
             }
-        })
+        })*/
     }
 }
 
@@ -218,35 +269,35 @@ interface CategoryInterface {
     /**
      * 通过categoryId获得item
      */
-    fun getAllItemByCategory(categoryId: String, orderBy: String, myListener: MyListener)
+    fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.MyHandler)
 
     /**
      * 根据货架id获得商品
      */
-    fun getAllItemByShelf(shelfId: String, orderBy: String, myListener: MyListener)
+    fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.MyHandler)
 
     /**
      * 根据关键字获得单品
      */
-    fun getUnitItemByKeywords(keywords: String, myListener: MyListener)
+    fun getUnitItemByKeywords(keywords: String, handler: MyHandler.MyHandler)
 
     /**
      *根据自用品种类id获得商品
      */
-    fun getAllItemBySelfId(selfId: String, orderBy: String, myListener: MyListener)
+    fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.MyHandler)
 
     /**
      * 根据新品档期获得商品或直接获得促销品
      */
-    fun getNewItemById(nopId: String, orderBy: String, myListener: MyListener)
+    fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.MyHandler)
 
     /**
      * 获得鲜食
      */
-    fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, myListener: MyListener)
+    fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.MyHandler)
 
     /**
      * 更新item
      */
-    fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, myListener: MyListener)
+    fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.MyHandler)
 }

@@ -11,12 +11,9 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
-import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -35,8 +32,8 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
         }
         anInterface.getAllContract(cView.getPage(), cView.sort, User.getUser(), cView.contractType, cView.isJustLook, object : MyListener {
 
-            override fun listenerSuccess(data: String) {
-                val contracts=Gson().fromJson(data, ContractResult::class.java)
+            override fun listenerSuccess(data: Any) {
+/*                val contracts=Gson().fromJson(data, ContractResult::class.java)
                 if (contracts.total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
@@ -57,7 +54,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                 if (maxDate.isNotEmpty() || minDate.isNotEmpty()) {
                     ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
                 }
-                mHandler.post(object : ContractRunnable(contracts, adapter, cView.isJustLook) {})
+                mHandler.post(object : ContractRunnable(contracts, adapter, cView.isJustLook) {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -76,14 +73,14 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.getEditAllContract(cView.getPage(), User.getUser(), object : MyListener {
-            override fun listenerSuccess(data: String) {
-                val contracts=Gson().fromJson(data, ContractResult::class.java)
+            override fun listenerSuccess(data: Any) {
+                /*val contracts=Gson().fromJson(data, ContractResult::class.java)
                 if (contracts.total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : ContractRunnable(contracts, adapter, true) {})
+                mHandler.post(object : ContractRunnable(contracts, adapter, true) {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -102,15 +99,15 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             return
         }
         anInterface.searchContract(cView.getPage(), cView.sort, cView.searchMsg, User.getUser(), object : MyListener {
-            override fun listenerSuccess(data: String) {
-                val contracts=Gson().fromJson(data, ContractResult::class.java)
+            override fun listenerSuccess(data: Any) {
+                /*val contracts=Gson().fromJson(data, ContractResult::class.java)
                 if (contracts.total == 0) {
                     cView.showNoMessage()
                     gView.hideLoading()
                     return
                 }
 
-                mHandler.post(object : ContractRunnable(contracts, adapter, false) {})
+                mHandler.post(object : ContractRunnable(contracts, adapter, false) {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -130,8 +127,8 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
         }
         anInterface.updateAllContract(cView.contractList, User.getUser(), object : MyListener {
 
-            override fun listenerSuccess(data:String) {
-                cView.updateDone()
+            override fun listenerSuccess(data:Any) {
+//                cView.updateDone()
             }
 
             override fun listenerFailed(errorMessage: String) {

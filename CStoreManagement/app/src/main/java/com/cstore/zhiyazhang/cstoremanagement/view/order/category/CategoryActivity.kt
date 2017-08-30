@@ -10,6 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCategoryAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCategoryPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
@@ -33,7 +34,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     override fun showUsaTime(isShow: Boolean) {
     }
 
-    val mPresenter = OrderCategoryPresenter(this)
+    val mPresenter = OrderCategoryPresenter(this,this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +92,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         setSupportActionBar(my_toolbar)
         type_list.layoutManager = LinearLayoutManager(this@CategoryActivity, LinearLayoutManager.VERTICAL, false)
         category_retry.setOnClickListener {
-            showLoading()
+            MyHandler.removeCallbacksAndMessages(null)
             category_retry.visibility = View.GONE
             when (whereIsIt) {
                 "category" -> {
@@ -114,13 +115,6 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 }
             }
         }
-/*        showLoading()
-        when (whereIsIt) {
-            "category" -> mPresenter.getAllCategory()
-            "shelf" -> mPresenter.getShelf()
-            "self" -> mPresenter.getSelf()
-            "nop" -> mPresenter.getNOP()
-        }*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -182,6 +176,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     }
 
     override fun hideLoading() {
+        MyHandler.removeCallbacksAndMessages(null)
         category_loading.visibility = View.GONE
     }
 
@@ -201,7 +196,6 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
 
     override fun onStart() {
         try {
-            showLoading()
             when (whereIsIt) {
                 "category" -> mPresenter.getAllCategory()
                 "shelf" -> mPresenter.getShelf()
@@ -214,15 +208,4 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         }
         super.onStart()
     }
-
-    /*private fun getPreviousType() {
-        val sp = getSharedPreferences("cib", Context.MODE_PRIVATE)
-        if (sp.getString("categoryId", "") != "") {
-            val changeCIB = (adapter?.data as ArrayList<OrderCategoryBean>).find { it.categoryId == sp.getString("categoryId", "") }
-            changeCIB?.ordSku = sp.getInt("ordSku", changeCIB?.ordSku!!)
-            val editor = sp.edit()
-            editor.clear()
-            editor.apply()
-        }
-    }*/
 }

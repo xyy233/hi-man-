@@ -21,7 +21,7 @@ object ReportListener {
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
 
-                    override fun listenerSuccess(data: String) {
+                    override fun listenerSuccess(data: Any) {
                     }
 
                     override fun listenerFailed(errorMessage: String) {
@@ -43,7 +43,7 @@ object ReportListener {
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
 
-                    override fun listenerSuccess(data: String) {
+                    override fun listenerSuccess(data: Any) {
                     }
 
                     override fun listenerFailed(errorMessage: String) {

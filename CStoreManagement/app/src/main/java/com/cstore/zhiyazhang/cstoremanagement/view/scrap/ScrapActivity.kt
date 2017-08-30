@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.os.SystemClock
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -23,6 +24,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.scrap.ScrapAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.scrap.ScrapPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
@@ -45,7 +47,7 @@ import kotlin.collections.ArrayList
  */
 class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyActivity(), GenericView, ScrapView, EasyPermissions.PermissionCallbacks {
 
-    private val presenter = ScrapPresenter(this, this)
+    private val presenter = ScrapPresenter(this, this, this)
     private val editData = ArrayList<ScrapContractBean>()
     private val adapter: ScrapAdapter = ScrapAdapter(ArrayList<ScrapContractBean>(), object : RecyclerOnTouch {
         override fun <T> onClickImage(objects: T, position: Int) {
@@ -316,79 +318,101 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         adapter.notifyDataSetChanged()
     }
 
+    private class MyThread : Thread() {
+        private var mRunning = false
+
+        override fun run() {
+            mRunning = true
+            while (mRunning) {
+                SystemClock.sleep(1000)
+            }
+        }
+
+        fun close() {
+            mRunning = false
+        }
+    }
+
     override fun <T> requestSuccess(objects: T) {
-        objects as ArrayList<ScrapContractBean>
-        if (objects.size != 0) {
-            //检查数据中的时间
-            when (objects[0].busiDate) {
-            //新搜索出来的
-                null -> {
-                    scrap_done.visibility = View.VISIBLE
-                    if (objects.size == 1) {//精确搜索只有一个，count+1
-                        var i = 0
-                        //先检查adapter是否有，有的话就修改数据+1
-                        adapter.data.filter { it.scrapId == objects[0].scrapId }.forEach {
-                            i++
-                            it.mrkCount++
-                            it.editCount++
-                        }
-                        var e = 0
-                        //检查editList，如果有并且不是delete那就+1,如果是delete代表之前被删除了的，修改action为update，不可能为insert，因为insert不会产生delete操作会直接remove掉
-                        editData.filter { it.scrapId == objects[0].scrapId }.forEach {
-                            e++
-                            if (it.action != 2) {
+        val handler=Handler()
+        val myThread = Thread(Runnable {
+            objects as ArrayList<ScrapContractBean>
+            if (objects.size != 0) {
+                //检查数据中的时间
+                when (objects[0].busiDate) {
+                //新搜索出来的
+                    null -> {
+                        handler.post { scrap_done.visibility = View.VISIBLE }
+                        if (objects.size == 1) {//精确搜索只有一个，count+1
+                            var i = 0
+                            //先检查adapter是否有，有的话就修改数据+1
+                            adapter.data.filter { it.scrapId == objects[0].scrapId }.forEach {
+                                i++
                                 it.mrkCount++
                                 it.editCount++
-                            } else {
-                                it.mrkCount = 1
-                                it.editCount = 1
-                                it.action = 1
+                            }
+                            var e = 0
+                            //检查editList，如果有并且不是delete那就+1,如果是delete代表之前被删除了的，修改action为update，不可能为insert，因为insert不会产生delete操作会直接remove掉
+                            editData.filter { it.scrapId == objects[0].scrapId }.forEach {
+                                e++
+                                if (it.action != 2) {
+                                    it.mrkCount++
+                                    it.editCount++
+                                } else {
+                                    it.mrkCount = 1
+                                    it.editCount = 1
+                                    it.action = 1
+                                }
+                            }
+                            if (i == 0 || e == 0) {//adapter里没有,有的话在循环内已经处理数据
+                                //检查editList
+                                val data = objects[0]
+                                data.mrkCount = 1
+                                data.editCount = 1
+                                data.action = 0
+                                if (i == 0) {
+                                    handler.post { adapter.addItem(data) }
+                                }
+                                if (e == 0) editData.add(data.copy())
+                            }
+                        } else {//模糊搜索有n个，count保持不变
+                            //先检查是否已经存在,检查adapter中的data
+                            for (scb in objects) {
+                                val newDatas = ArrayList<ScrapContractBean>()
+                                if (adapter.data.filter { it.scrapId == scb.scrapId }.isEmpty()) {
+                                    //没有查到数据就添加
+                                    scb.editCount = 0
+                                    scb.mrkCount = 0
+                                    scb.action = 0
+                                    newDatas.add(scb)
+                                }
+                                handler.post { adapter.addItems(newDatas) }
                             }
                         }
-                        if (i == 0 || e == 0) {//adapter里没有,有的话在循环内已经处理数据
-                            //检查editList
-                            val data = objects[0]
-                            data.mrkCount = 1
-                            data.editCount = 1
-                            data.action = 0
-                            if (i == 0) adapter.addItem(data)
-                            if (e == 0) editData.add(data.copy())
+                    }
+                //是今天的
+                    MyTimeUtil.nowDate -> {
+                        handler.post { scrap_done.visibility = View.VISIBLE }
+                        objects.forEach {
+                            it.action = 1
                         }
-                        adapter.notifyDataSetChanged()
-                    } else {//模糊搜索有n个，count保持不变
-                        //先检查是否已经存在,检查adapter中的data
-                        for (scb in objects) {
-                            val newDatas = ArrayList<ScrapContractBean>()
-                            if (adapter.data.filter { it.scrapId == scb.scrapId }.isEmpty()) {
-                                //没有查到数据就添加
-                                scb.editCount = 0
-                                scb.mrkCount = 0
-                                scb.action = 0
-                                newDatas.add(scb)
-                            }
-                            adapter.addItems(newDatas)
+                        handler.post { adapter.addItems(objects) }
+                    }
+                //不是今天的
+                    else -> {
+                        handler.post { scrap_done.visibility = View.GONE }
+                        objects.forEach {
+                            it.action = 3
                         }
+                        handler.post { adapter.addItems(objects) }
                     }
-                }
-            //是今天的
-                MyTimeUtil.nowDate -> {
-                    scrap_done.visibility = View.VISIBLE
-                    objects.forEach {
-                        it.action = 1
-                    }
-                    adapter.addItems(objects)
-                }
-            //不是今天的
-                else -> {
-                    scrap_done.visibility = View.GONE
-                    objects.forEach {
-                        it.action = 3
-                    }
-                    adapter.addItems(objects)
                 }
             }
-
-        }
+            handler.post {
+                hideLoading()
+                handler.removeCallbacksAndMessages(null)
+            }
+        }).start()
     }
 
     override fun showLoading() {
@@ -396,6 +420,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun hideLoading() {
+        MyHandler.removeCallbacksAndMessages(null)
         loading.visibility = View.GONE
     }
 

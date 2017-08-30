@@ -16,8 +16,8 @@ class MyHandler {
         val SUCCESS =0
         val ERROR1 =1
         val ERROR2 =2
-        lateinit private var mActivity: WeakReference<MyActivity>
-        lateinit private var mListener:MyListener
+        private var mActivity: WeakReference<MyActivity>?=null
+        private var mListener:MyListener?=null
         fun writeActivity(activity: MyActivity):MyHandler{
             mActivity= WeakReference<MyActivity>(activity)
             return this
@@ -29,15 +29,26 @@ class MyHandler {
         }
 
         override fun handleMessage(msg: Message) {
-            if (mActivity.get()==null)return
-            when(msg.what){
-                SUCCESS -> {
-                    if (msg.obj as String == "" || msg.obj as String == "[]") {
-                        mListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.idError))
-                    }
-                    mListener.listenerSuccess(msg.obj as String)
+            try {
+                if (mActivity!!.get()==null){
+                    mListener!!.listenerFailed(MyApplication.instance().applicationContext.getString(R.string.system_error))
+                    return
                 }
-                else-> mListener.listenerFailed(msg.obj as String)
+                when(msg.what){
+                    SUCCESS -> {
+                        mListener!!.listenerSuccess(msg.obj)
+                    }
+                    else-> {
+                        mListener!!.listenerFailed(msg.obj as String)
+                    }
+                }
+            }catch (e:Exception){
+                mListener!!.listenerFailed(e.message!!)
+                return
+            } finally {
+                //清除绑定的listener以免持有外部引用造成内存泄漏
+                mActivity=null
+                mListener=null
             }
         }
     }

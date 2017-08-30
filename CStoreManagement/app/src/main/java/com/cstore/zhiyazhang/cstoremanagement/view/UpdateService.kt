@@ -7,14 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import android.webkit.MimeTypeMap
-import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.google.gson.Gson
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
@@ -44,8 +41,8 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
 
     private val myListener = object : MyListener {
 
-        override fun listenerSuccess(data: String) {
-            val updates=Gson().fromJson(data, UpdateBean::class.java)
+        override fun listenerSuccess(data: Any) {
+            /*val updates=Gson().fromJson(data, UpdateBean::class.java)
             downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
             val intent = Intent("com.cstore.zhiyazhang.UPDATE")
             //如果版本名不同就去下载
@@ -57,7 +54,7 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
             } else {
                 intent.putExtra("is_new", false)
                 sendBroadcast(intent)
-            }
+            }*/
         }
 
         override fun listenerFailed(errorMessage: String) {

@@ -1,167 +1,146 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 
-import android.annotation.SuppressLint
-import android.os.Handler
 import android.os.Message
-import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.User
-import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/7/25 13:43.
+ * msg每次都要重置，ip每次都要检查
  */
-class OrderCategoryModel : OrderCategoryInterface {
-    override fun getAllShelf(myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.getAllShelf, 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        when (msg.obj as String) {
-                            "" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            "[]" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            else -> {
-                                myListener.listenerSuccess(msg.obj as String)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+class OrderCategoryModel() : OrderCategoryInterface {
+
+    override fun getAllCategory(handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg= Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,MySql.getAllCategory()).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+
+            val category=ArrayList<OrderCategoryBean>()
+            try {
+                category.addAll(SocketUtil.getCategory(result))
+            }catch (e:Exception){}
+            if (category.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=category
+                msg.what= SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun getNewItemId(myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.getNewItemId, 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        when (msg.obj as String) {
-                            "" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            "[]" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            else -> {
-                                myListener.listenerSuccess(msg.obj as String)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun getAllShelf(handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg= Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,MySql.getAllShelf).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+
+            val shelf=ArrayList<ShelfBean>()
+            try {
+                shelf.addAll(SocketUtil.getShelf(result))
+            }catch (e:Exception){}
+            if (shelf.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=shelf
+                msg.what= SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun getSelf(myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.getSelf, 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        when (msg.obj as String) {
-                            "" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            "[]" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            else -> {
-                                myListener.listenerSuccess(msg.obj as String)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun getNewItemId(handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg= Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,MySql.getNewItemId).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+
+            val nop=ArrayList<NOPBean>()
+            try {
+                nop.addAll(SocketUtil.getNOP(result))
+            }catch (e:Exception){}
+            if (nop.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=nop
+                msg.what= SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun getAllCategory(user: User, myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        SocketUtil().writeIP(ip).inquire(MySql.getAllCategory(), 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> try {
-                        when (msg.obj as String) {
-                            "" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            "[]" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                            else -> {
-                               myListener.listenerSuccess(msg.obj as String)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                    else -> myListener.listenerFailed(msg.obj as String)
-                }
+    override fun getSelf(handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg= Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,MySql.getSelf).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+
+            val self=ArrayList<SelfBean>()
+            try {
+                self.addAll(SocketUtil.getSelf(result))
+            }catch (e:Exception){}
+            if (self.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=self
+                msg.what= SUCCESS
+                handler.sendMessage(msg)
             }
-        })
+        }).start()
     }
 
-    override fun getFresh(freshType: Int, myListener: MyListener) {
-        val ip = MyApplication.getIP()
-        if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-            myListener.listenerFailed(ip)
-            return
-        }
-        var sql = ""
-        if (freshType == 1) sql = MySql.getFreshGroup1 else sql = MySql.getFreshGroup2
-        SocketUtil().writeIP(ip).inquire(sql, 10, @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    0 -> {
-                        try {
-                            when (msg.obj as String) {
-                                "" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                                "[]" -> myListener.listenerFailed(MyApplication.instance().applicationContext.resources.getString(R.string.noMessage))
-                                else -> {
-                                    myListener.listenerSuccess(msg.obj as String)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            myListener.listenerFailed(msg.obj as String)
-                        }
-                    }
-                    else -> {
-                        myListener.listenerFailed(msg.obj as String)
-                    }
-                }
-            }
-        })
-    }
+    override fun getFresh(freshType: Int, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg= Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val result=SocketUtil.initSocket(ip,if (freshType==1)MySql.getFreshGroup1 else MySql.getFreshGroup2).inquire()
+            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
 
+            val fresh=ArrayList<FreshGroup>()
+            try {
+                fresh.addAll(SocketUtil.getFresh(result))
+            }catch (e:Exception){}
+            if (fresh.isEmpty()){
+                msg.obj=result
+                msg.what=ERROR1
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=fresh
+                msg.what= SUCCESS
+                handler.sendMessage(msg)
+            }
+        }).start()
+    }
 }
 
 interface OrderCategoryInterface {
-    fun getAllCategory(user: User, myListener: MyListener)
-    fun getAllShelf(myListener: MyListener)
-    fun getNewItemId(myListener: MyListener)
-    fun getSelf(myListener: MyListener)
-    fun getFresh(freshType: Int, myListener: MyListener)
+    fun getAllCategory(handler:MyHandler.MyHandler)
+    fun getAllShelf(handler:MyHandler.MyHandler)
+    fun getNewItemId(handler:MyHandler.MyHandler)
+    fun getSelf(handler:MyHandler.MyHandler)
+    fun getFresh(freshType: Int, handler:MyHandler.MyHandler)
 }

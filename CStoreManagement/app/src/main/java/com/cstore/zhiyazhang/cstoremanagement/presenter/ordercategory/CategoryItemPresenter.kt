@@ -1,7 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory
 
 import android.content.Context
-import android.os.Handler
 import android.view.MotionEvent
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
@@ -9,36 +8,51 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.CategoryInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.CategoryItemModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 /**
  * Created by zhiya.zhang
  * on 2017/7/27 11:43.
  */
-class CategoryItemPresenter(private val gView: GenericView, private val cView: CategoryItemView, private val context: Context) {
+class CategoryItemPresenter(private val gView: GenericView, private val cView: CategoryItemView, private val context: Context, private val activity: MyActivity) {
     private val mInterface: CategoryInterface = CategoryItemModel()
-    private val mHandler = Handler()
 
-    fun getAllItem(adapter: CategoryItemAdapter?) {
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.showPrompt(context.getString(R.string.noInternet))
-            gView.hideLoading()
-            return
-        }
+    fun getAllItem() {
+        if (!PresenterUtil.judgmentInternet(gView))return
+        mInterface.getAllItemByCategory(cView.nowId,cView.sort, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                data as ArrayList<CategoryItemBean>
+                if (data.size==0){
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                }else{
+                    val adapter:CategoryItemAdapter=GetAdapter(data, "category")
+                    gView.showView(adapter)
+                    gView.hideLoading()
+                }
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+            }
+        }))
         mInterface.getAllItemByCategory(cView.nowId, cView.sort, object : MyListener {
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "category") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "category") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -49,6 +63,25 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         })
     }
 
+    private fun GetAdapter(data: ArrayList<CategoryItemBean>, isType: String): CategoryItemAdapter {
+        return CategoryItemAdapter(data, context, object : RecyclerOnTouch {
+            override fun <T> onClickImage(objects: T, position: Int) {
+            }
+
+            override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
+                when (objects) {
+                    is CategoryItemBean -> cView.touchAdd(objects, event, position)
+                }
+            }
+
+            override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
+                when (objects) {
+                    is CategoryItemBean -> cView.touchLess(objects, event, position)
+                }
+            }
+        }, isType)
+    }
+
     fun getAllShelf(adapter: CategoryItemAdapter?) {
         if (!ConnectionDetector.getConnectionDetector().isOnline) {
             gView.showPrompt(context.getString(R.string.noInternet))
@@ -57,14 +90,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }
         mInterface.getAllItemByShelf(cView.nowId, cView.sort, object : MyListener {
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "shelf") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "shelf") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -83,14 +116,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }
         mInterface.getUnitItemByKeywords(keywords, object : MyListener {
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "search") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "search") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -110,14 +143,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }
         mInterface.getAllItemBySelfId(cView.nowId, cView.sort, object : MyListener {
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "self") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "self") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -137,14 +170,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         mInterface.getNewItemById(cView.nowId, cView.sort, object : MyListener {
 
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "nop") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "nop") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -163,14 +196,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }
         mInterface.getAllFreshItem(cView.nowId,cView.nowMidId,cView.sort, object : MyListener {
 
-            override fun listenerSuccess(data: String)  {
-                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
+            override fun listenerSuccess(data: Any)  {
+/*                val categoryItems= Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
                 if (categoryItems.size == 0) {
                     gView.errorDealWith()
                     gView.hideLoading()
                     return
                 }
-                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "fresh") {})
+                mHandler.post(object : CategoryRunnable(categoryItems, adapter, "fresh") {})*/
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -190,9 +223,9 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }
         mInterface.updateAllCategory(cView.categoryList, object : MyListener {
 
-            override fun listenerSuccess(data: String) {
-                gView.hideLoading()
-                cView.updateDone()
+            override fun listenerSuccess(data: Any) {
+/*                gView.hideLoading()
+                cView.updateDone()*/
             }
 
             override fun listenerFailed(errorMessage: String) {
