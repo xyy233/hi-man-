@@ -80,9 +80,15 @@ class ScrapModel(private val gView: GenericView, private val sView:ScrapView):Sc
             val sql=getSubmitString(data, reCode)
             val sqlData=SocketUtil.initSocket(ip,sql).inquire()
             if (!SocketUtil.judgmentNull(sqlData,msg,handler))return@Runnable
-            msg.obj=sqlData
-            msg.what=SUCCESS
-            handler.sendMessage(msg)
+            if (sqlData=="0"){
+                msg.obj="0"
+                msg.what=SUCCESS
+                handler.sendMessage(msg)
+            }else{
+                msg.obj=sqlData
+                msg.what= ERROR1
+                handler.sendMessage(msg)
+            }
         }).start()
     }
 
@@ -98,15 +104,15 @@ class ScrapModel(private val gView: GenericView, private val sView:ScrapView):Sc
         if (a>b)i=a else i=b
         data.forEach {
             //0==insert 1==update 2==delete 3==none
-            when(it.action){
-                0->{
-                    i++
-                    it.recordNumber=i
-                    result.append(MySql.insertScrap(it))
+                when(it.action){
+                    0->{
+                        i++
+                        it.recordNumber=i
+                        result.append(MySql.insertScrap(it))
+                    }
+                    1->result.append(MySql.updateScrap(it))
+                    2->result.append(MySql.deleteScrap(it))
                 }
-                1->result.append(MySql.updateScrap(it))
-                2->result.append(MySql.deleteScrap(it))
-            }
         }
         result.append(MySql.affairFoot)
         return result.toString()

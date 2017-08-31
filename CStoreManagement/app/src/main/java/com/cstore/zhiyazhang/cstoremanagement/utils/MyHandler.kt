@@ -12,43 +12,57 @@ import java.lang.ref.WeakReference
  * on 2017/8/28 17:04.
  */
 class MyHandler {
-    companion object MyHandler:Handler(){
-        val SUCCESS =0
-        val ERROR1 =1
-        val ERROR2 =2
-        private var mActivity: WeakReference<MyActivity>?=null
-        private var mListener:MyListener?=null
-        fun writeActivity(activity: MyActivity):MyHandler{
-            mActivity= WeakReference<MyActivity>(activity)
+    companion object MyHandler : Handler() {
+        val SUCCESS = 0
+        val ERROR1 = 1
+        val ERROR2 = 2
+        private var isRun:Boolean=false
+
+        private var mActivity: WeakReference<MyActivity>? = null
+        private var mListener: MyListener? = null
+
+        fun writeActivity(activity: MyActivity): MyHandler {
+            mActivity = WeakReference<MyActivity>(activity)
+            isRun=true
             return this
         }
 
-        fun writeListener(myListener: MyListener):MyHandler{
-            mListener=myListener
+        fun writeListener(myListener: MyListener): MyHandler {
+            mListener = myListener
+            isRun=true
             return this
+        }
+
+        fun cleanAL() {
+            if (!isRun){//还在运行就不允许清空
+                mActivity = null
+                mListener = null
+            }
         }
 
         override fun handleMessage(msg: Message) {
             try {
-                if (mActivity!!.get()==null){
-                    mListener!!.listenerFailed(MyApplication.instance().applicationContext.getString(R.string.system_error))
-                    return
-                }
-                when(msg.what){
-                    SUCCESS -> {
-                        mListener!!.listenerSuccess(msg.obj)
+                if (mActivity != null && mListener != null) {
+                    if (mActivity!!.get() == null) {
+                        mListener!!.listenerFailed(MyApplication.instance().applicationContext.getString(R.string.system_error))
+                        isRun=false
+                        return
                     }
-                    else-> {
-                        mListener!!.listenerFailed(msg.obj as String)
+                    when (msg.what) {
+                        SUCCESS -> {
+                            mListener!!.listenerSuccess(msg.obj)
+                            isRun=false
+                        }
+                        else -> {
+                            mListener!!.listenerFailed(msg.obj as String)
+                            isRun=false
+                        }
                     }
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 mListener!!.listenerFailed(e.message!!)
+                isRun=false
                 return
-            } finally {
-                //清除绑定的listener以免持有外部引用造成内存泄漏
-                mActivity=null
-                mListener=null
             }
         }
     }

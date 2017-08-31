@@ -89,10 +89,12 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
     }
 
     private fun initView() {
+        order_item_next.visibility=View.GONE
+        order_item_last.visibility=View.GONE
         if (!isJustLook) {
             done.setOnClickListener {
                 if (MyTimeUtil.nowHour<18){
-                    changeData.removeAll(changeData.filter { it.todayStore == 0 })
+                    changeData.removeAll(changeData.filter { it.changeCount == 0 })
                     if (changeData.size == 0) {
                         showPrompt(getString(R.string.noEditMsg))
                         return@setOnClickListener
@@ -170,9 +172,10 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
      */
     private fun judgmentUpdate() {
         if (MyTimeUtil.nowHour>18){
-            finish()
+            super.onBackPressed()
             return
         }
+        changeData.removeAll(changeData.filter { it.changeCount == 0 })
         if (changeData.size != 0)
             AlertDialog.Builder(this@ContractActivity)
                     .setTitle("提示")
@@ -181,12 +184,12 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
                         isBack = true
                         presenter.updateAllContract()
                     })
-                    .setNegativeButton("放弃", { _, _ ->
-                        finish()
+                    .setNegativeButton("退出", { _, _ ->
+                        super.onBackPressed()
                     })
                     .show()
         else
-            finish()
+            super.onBackPressed()
     }
 
     override fun <T> requestSuccess(objects: T) {
@@ -505,7 +508,8 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         }
         removeChangeDate()
         hideLoading()
-        if (isBack) finish() else {
+        if (isBack)
+            super.onBackPressed() else {
             showPrompt(getString(R.string.saveDone))
         }
     }

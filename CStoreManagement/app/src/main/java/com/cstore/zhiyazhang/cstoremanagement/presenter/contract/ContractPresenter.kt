@@ -10,10 +10,13 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.google.gson.Gson
+import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -24,37 +27,36 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
     val mHandler = Handler()
 
     fun getAllContract(adapter: ContractAdapter?) {
-        gView.showLoading()
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.showPrompt(context.getString(R.string.noInternet))
-            gView.hideLoading()
-            return
-        }
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getAllContract(cView.getPage(), cView.sort, User.getUser(), cView.contractType, cView.isJustLook, object : MyListener {
 
             override fun listenerSuccess(data: Any) {
-/*                val contracts=Gson().fromJson(data, ContractResult::class.java)
-                if (contracts.total == 0) {
-                    cView.showNoMessage()
-                    gView.hideLoading()
-                    return
-                }
-                //检查数据是否正常
-                val maxDate = contracts.detail.filter { it.todayCount > it.maxQty }
-                val minDate = contracts.detail.filter { it.todayCount < it.minQty }
-                when {
-                    maxDate.isNotEmpty() -> {
-                        maxDate.forEach { it.isCanChange = false }
+                Thread(Runnable {
+                    val contracts= Gson().fromJson(data as String, ContractResult::class.java)
+                    if (contracts.total == 0) {
+                        mHandler.post {
+                            cView.showNoMessage()
+                            gView.hideLoading()
+                        }
+                        return@Runnable
                     }
-                    minDate.isNotEmpty() -> {
-                        maxDate.forEach { it.isCanChange = false }
+                    //检查数据是否正常
+                    val maxDate = contracts.detail.filter { it.todayCount > it.maxQty }
+                    val minDate = contracts.detail.filter { it.todayCount < it.minQty }
+                    when {
+                        maxDate.isNotEmpty() -> {
+                            maxDate.forEach { it.isCanChange = false }
+                        }
+                        minDate.isNotEmpty() -> {
+                            maxDate.forEach { it.isCanChange = false }
+                        }
                     }
-                }
-                //数据异常就传递数据到服务器
-                if (maxDate.isNotEmpty() || minDate.isNotEmpty()) {
-                    ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
-                }
-                mHandler.post(object : ContractRunnable(contracts, adapter, cView.isJustLook) {})*/
+                    //数据异常就传递数据到服务器
+                    if (maxDate.isNotEmpty() || minDate.isNotEmpty()) {
+                        ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
+                    }
+                    initAdapter(contracts,adapter,cView.isJustLook)
+                }).start()
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -66,21 +68,20 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
     }
 
     fun getAllEditContract(adapter: ContractAdapter?) {
-        gView.showLoading()
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.showPrompt(context.getString(R.string.noInternet))
-            gView.hideLoading()
-            return
-        }
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getEditAllContract(cView.getPage(), User.getUser(), object : MyListener {
             override fun listenerSuccess(data: Any) {
-                /*val contracts=Gson().fromJson(data, ContractResult::class.java)
-                if (contracts.total == 0) {
-                    cView.showNoMessage()
-                    gView.hideLoading()
-                    return
-                }
-                mHandler.post(object : ContractRunnable(contracts, adapter, true) {})*/
+                Thread(Runnable {
+                    val contracts=Gson().fromJson(data as String, ContractResult::class.java)
+                    if (contracts.total == 0) {
+                        mHandler.post {
+                            cView.showNoMessage()
+                            gView.hideLoading()
+                        }
+                        return@Runnable
+                    }
+                    initAdapter(contracts,adapter,true)
+                }).start()
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -92,22 +93,20 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
     }
 
     fun searchAllContract(adapter: ContractAdapter?) {
-        gView.showLoading()
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.showPrompt(context.getString(R.string.noInternet))
-            gView.hideLoading()
-            return
-        }
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.searchContract(cView.getPage(), cView.sort, cView.searchMsg, User.getUser(), object : MyListener {
             override fun listenerSuccess(data: Any) {
-                /*val contracts=Gson().fromJson(data, ContractResult::class.java)
-                if (contracts.total == 0) {
-                    cView.showNoMessage()
-                    gView.hideLoading()
-                    return
-                }
-
-                mHandler.post(object : ContractRunnable(contracts, adapter, false) {})*/
+                Thread(Runnable {
+                    val contracts=Gson().fromJson(data as String, ContractResult::class.java)
+                    if (contracts.total == 0) {
+                        mHandler.post {
+                            cView.showNoMessage()
+                            gView.hideLoading()
+                        }
+                        return@Runnable
+                    }
+                    initAdapter(contracts,adapter,false)
+                }).start()
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -119,16 +118,11 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
     }
 
     fun updateAllContract() {
-        gView.showLoading()
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.showPrompt(context.getString(R.string.noInternet))
-            gView.hideLoading()
-            return
-        }
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.updateAllContract(cView.contractList, User.getUser(), object : MyListener {
 
             override fun listenerSuccess(data:Any) {
-//                cView.updateDone()
+                cView.updateDone()
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -140,38 +134,35 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
         })
     }
 
-    private open inner class ContractRunnable internal constructor(internal val cr: ContractResult, internal var adapter: ContractAdapter?, internal val isJustLook: Boolean) : Runnable {
-        override fun run() {
-            if (adapter == null) {
-                adapter = ContractAdapter(cr, context, object : RecyclerOnTouch {
-                    override fun <T> onClickImage(objects: T, position: Int) {
-                        when (objects) {
-                            is ContractBean -> cView.clickImage(objects, position)
-                        }
+    private fun initAdapter(cr: ContractResult,adapter: ContractAdapter?,isJustLook: Boolean){
+        if (adapter==null){
+            val result =  ContractAdapter(cr, context, object : RecyclerOnTouch {
+                override fun <T> onClickImage(objects: T, position: Int) {
+                    when (objects) {
+                        is ContractBean -> cView.clickImage(objects, position)
                     }
+                }
 
-                    override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
-                        when (objects) {
-                            is ContractBean -> cView.touchAdd(objects, event, position)
-                        }
+                override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
+                    when (objects) {
+                        is ContractBean -> cView.touchAdd(objects, event, position)
                     }
+                }
 
-                    override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
-                        when (objects) {
-                            is ContractBean -> cView.touchLess(objects, event, position)
-                        }
+                override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
+                    when (objects) {
+                        is ContractBean -> cView.touchLess(objects, event, position)
                     }
-                }, isJustLook)
-                gView.showView(adapter)
-                cView.setPage(cr.page)
-                gView.hideLoading()
-            } else {
-                adapter!!.addItem(cr.detail)
-                adapter!!.changeMoreStatus(adapter!!.PULLUP_LOAD_MORE)
-                cView.setPage(cr.page)
-                gView.hideLoading()
-            }
+                }
+            }, isJustLook)
+            mHandler.post { gView.showView(result) }
+        }else{
+            adapter.addItem(cr.detail)
+            mHandler.post { adapter.changeMoreStatus(adapter.PULLUP_LOAD_MORE) }
         }
-
+        mHandler.post {
+            cView.setPage(cr.page)
+            gView.hideLoading()
+        }
     }
 }

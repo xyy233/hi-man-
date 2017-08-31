@@ -144,8 +144,8 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
         }
 
-/*      调试使用
-            data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+      //调试使用
+/*            data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
             data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
             data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
             data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))

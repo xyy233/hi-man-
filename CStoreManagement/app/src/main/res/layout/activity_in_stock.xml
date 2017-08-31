@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
-              android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -11,35 +10,72 @@
         />
 
     <LinearLayout
-        android:id="@+id/scrap"
-        android:orientation="vertical"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:transitionName="scrap"
-        android:foreground="@drawable/selector_foreground"
-        android:stateListAnimator="@drawable/lift_on_touch"
-        android:layout_height="wrap_content"
-        tools:ignore="UseCompoundDrawables">
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
+        <LinearLayout
+            android:id="@+id/scrap1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="5dp"
+            android:background="@color/white"
+            android:transitionName="scrap"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_scrap"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:contentDescription="@string/scrap"/>
-        <TextView
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:text="@string/scrap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_scrap"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="@string/scrap"/>
+            <TextView
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:text="@string/scrap1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/scrap2"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:transitionName="scrap"
+            android:elevation="5dp"
+            android:background="@color/white"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_scrap2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="@string/scrap"/>
+            <TextView
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:text="@string/scrap2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
-
-    <View
-        android:background="@color/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
 
 </LinearLayout>

@@ -2,9 +2,9 @@ package com.cstore.zhiyazhang.cstoremanagement.view.order.contract
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -14,12 +14,13 @@ import kotlinx.android.synthetic.main.activity_contract_search.*
  * Created by zhiya.zhang
  * on 2017/6/19 14:38.
  */
-class ContractSearchActivity(override val layoutId: Int = R.layout.activity_contract_search) : MyActivity() {
+class ContractSearchActivity : AppCompatActivity() {
 
     var nowLayout = 0
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_contract_search)
         initView()
     }
 

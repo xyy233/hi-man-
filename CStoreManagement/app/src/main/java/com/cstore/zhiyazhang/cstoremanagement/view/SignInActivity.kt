@@ -53,7 +53,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             val intent = Intent(this@SignInActivity, HomeActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
         })
-        //test2.setOnClickListener { ReportListener.report("storeId", "version", "测试错误信息", "测试错误数据") }
+//        test2.setOnClickListener { startActivity(Intent(this@SignInActivity,Test::class.java)) }
         //如果获得了就直接输入否则为""
         user_id.setText(preferences?.getString("id", ""))
         user_password.setText(preferences?.getString("pwd", ""))

@@ -39,6 +39,8 @@
     <string name="pwdError">密码错误</string>
     <string name="idError">查询不到此帐号</string>
     <string name="scrap">报废</string>
+    <string name="scrap1">一般商品报废</string>
+    <string name="scrap2">热食报废</string>
 
     <string name="strErrorSql">执行SQL出错</string>
     <string name="submit_scrap">提交报废信息</string>
@@ -103,4 +105,5 @@
     <string name="fresh1">即期鲜食订货</string>
     <string name="fresh2">其他鲜食订货</string>
     <string name="freshGroup">群组</string>
+    <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
 </resources>

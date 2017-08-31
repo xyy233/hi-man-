@@ -1,7 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.scrap
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -9,11 +8,11 @@ import android.hardware.Camera
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
 import android.os.SystemClock
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -170,11 +169,15 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             }
         }
         scrap_done.setOnClickListener {
-            var i=0
-            if (adapter.data.size>0){
-                i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
+            if (MyTimeUtil.nowHour > 23) {
+                showPrompt(getString(R.string.mrk_time))
+            } else {
+                var i = 0
+                if (adapter.data.size > 0) {
+                    i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
+                }
+                presenter.submitScraps(editData, i)
             }
-            presenter.submitScraps(editData, i)
         }
     }
 
@@ -221,16 +224,25 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun judgmentDate() {
         if (editData.size != 0) {
-            AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("您有未提交的修改，是否放弃？")
-                    .setPositiveButton("提交修改", { _, _ ->
-                        presenter.submitScraps(editData, adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber)
-                    })
-                    .setNegativeButton("放弃") { _, _ ->
-                        showDatePickDlg()
-                    }
-                    .show()
+
+            if (MyTimeUtil.nowHour > 23) {
+                showDatePickDlg()
+            } else {
+                AlertDialog.Builder(this)
+                        .setTitle("提示")
+                        .setMessage("您有未提交的修改，是否放弃？")
+                        .setPositiveButton("提交修改", { _, _ ->
+                            var i = 0
+                            if (adapter.data.size != 0) {
+                                i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
+                            }
+                            presenter.submitScraps(editData, i)
+                        })
+                        .setNegativeButton("放弃") { _, _ ->
+                            showDatePickDlg()
+                        }
+                        .show()
+            }
         } else showDatePickDlg()
     }
 
@@ -239,16 +251,25 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun judgmentFinish() {
         if (editData.size != 0) {
-            AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("您有未提交的修改，是否放弃？")
-                    .setPositiveButton("提交修改", { _, _ ->
-                        presenter.submitScraps(editData, adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber)
-                    })
-                    .setNegativeButton("放弃") { _, _ ->
-                        super.onBackPressed()
-                    }
-                    .show()
+            if (MyTimeUtil.nowHour > 23) {
+                super.onBackPressed()
+            } else {
+                AlertDialog.Builder(this)
+                        .setTitle("提示")
+                        .setMessage("您有未提交的修改，是否放弃？")
+                        .setPositiveButton("提交修改", { _, _ ->
+                            var i = 0
+                            if (adapter.data.size != 0) {
+                                i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
+                            }
+                            presenter.submitScraps(editData, i)
+                        })
+                        .setNegativeButton("放弃") { _, _ ->
+                            super.onBackPressed()
+                        }
+                        .show()
+            }
+
         } else super.onBackPressed()
     }
 
@@ -334,7 +355,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun <T> requestSuccess(objects: T) {
-        val handler=Handler()
+        val handler = Handler()
         val myThread = Thread(Runnable {
             objects as ArrayList<ScrapContractBean>
             if (objects.size != 0) {
@@ -373,8 +394,16 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                                 if (i == 0) {
                                     handler.post { adapter.addItem(data) }
                                 }
-                                if (e == 0) editData.add(data.copy())
+                                if (e == 0) {
+                                    try {
+                                        editData.add(adapter.data.filter { it.scrapId == objects[0].scrapId }[0])
+                                    } catch (e: Exception) {
+                                        Log.e("CStoreScrap", e.message)
+                                        editData.add(data)
+                                    }
+                                }
                             }
+                            handler.post { adapter.notifyDataSetChanged() }
                         } else {//模糊搜索有n个，count保持不变
                             //先检查是否已经存在,检查adapter中的data
                             for (scb in objects) {
@@ -424,52 +453,40 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         loading.visibility = View.GONE
     }
 
-    var isOnLongClick = false
-    var isRun = false
-    var mt: Thread? = null
-    var pt: Thread? = null
-    var hd: Handler? = null
+    override fun onDestroy() {
+        isOnLongClick = false
+        thread = null
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroy()
+    }
+
+    companion object {
+        var isOnLongClick = false
+        var thread: Thread? = null
+        var handler: Handler = Handler()
+    }
+
     @Synchronized private fun onTouchChange(addLess: Int, action: Int, view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-        if (!isRun) {
-            hd = @SuppressLint("HandlerLeak")
-            object : Handler() {
-                override fun handleMessage(msg: Message) {
-                    when (msg.what) {
-                        0 -> if (view.scrapLess.isEnabled) lessCount(view, scb)
-                        1 -> if (view.scrapAdd.isEnabled) addCount(view, scb)
-                    }
-                }
-            }
-        }
+
         if (addLess == 0) {//less
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
                     if (!isOnLongClick) {
-                        mt = object : Thread(Runnable {
+                        thread = Thread(Runnable {
                             while (isOnLongClick) {
                                 Thread.sleep(200)
-                                hd!!.sendEmptyMessage(0)
+                                lessCount(view, scb)
                             }
-                        }) {}
+                        })
                         isOnLongClick = true
-                        isRun = true
                         runOrStopEdit()
-                        mt!!.start()
+                        thread!!.start()
                     }
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (mt != null) {
+                    if (thread != null) {
                         isOnLongClick = false
-                        isRun = false
-                        mt = null
-                        runOrStopEdit()
-                    }
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (mt != null && view.scrapCount.text.toString() == "0") {
-                        isOnLongClick = false
-                        isRun = false
-                        mt = null
+                        thread = null
                         runOrStopEdit()
                     }
                 }
@@ -478,31 +495,21 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
                     if (!isOnLongClick) {
-                        pt = object : Thread(Runnable {
+                        thread = Thread(Runnable {
                             while (isOnLongClick) {
                                 Thread.sleep(200)
-                                hd!!.sendEmptyMessage(1)
+                                addCount(view, scb)
                             }
-                        }) {}
+                        })
                         isOnLongClick = true
-                        isRun = true
                         runOrStopEdit()
-                        pt!!.start()
+                        thread!!.start()
                     }
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (pt != null) {
+                    if (thread != null) {
                         isOnLongClick = false
-                        isRun = false
-                        pt = null
-                        runOrStopEdit()
-                    }
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (pt != null && view.scrapCount.text.toString() >= "999") {
-                        isOnLongClick = false
-                        isRun = false
-                        pt = null
+                        thread = null
                         runOrStopEdit()
                     }
                 }
@@ -514,7 +521,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         val nowCount = scb.mrkCount + 1
         val nowEditCount = scb.editCount + 1
         if (nowCount > 999) {
-            showPrompt(getString(R.string.maxCNoAdd))
+            handler.post { showPrompt(getString(R.string.maxCNoAdd)) }
             return
         }
         if (scb.action == 2) {
@@ -532,14 +539,14 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             it.editCount = nowEditCount
         }
         if (i == 0) editData.add(scb.copy())
-        view.scrapCount.text = scb.mrkCount.toString()
+        handler.post { view.scrapCount.text = scb.mrkCount.toString() }
     }
 
     private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
         val nowCount = scb.mrkCount - 1
         val nowEditCount = scb.editCount - 1
         if (nowCount == 0) {
-            var i=0
+            var i = 0
             editData.filter { it.scrapId == scb.scrapId }.forEach {
                 when (it.action) {
                     0 -> {
@@ -554,12 +561,12 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             scb.mrkCount = nowCount
             scb.editCount = nowEditCount
             scb.action = 2
-            if (i==0)editData.add(scb.copy())
-            view.scrapCount.text = scb.mrkCount.toString()
+            if (i == 0) editData.add(scb.copy())
+            handler.post { view.scrapCount.text = scb.mrkCount.toString() }
             return
         }
         if (nowCount < 0) {
-            showPrompt(getString(R.string.minCNoLess))
+            handler.post { showPrompt(getString(R.string.minCNoLess)) }
             return
         }
         scb.mrkCount = nowCount
@@ -571,7 +578,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             it.editCount = nowEditCount
         }
         if (i == 0) editData.add(scb.copy())
-        view.scrapCount.text = scb.mrkCount.toString()
+        handler.post { view.scrapCount.text = scb.mrkCount.toString() }
     }
 
     private fun runOrStopEdit() {
@@ -644,5 +651,10 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
 
     override fun errorDealWith() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (MyTimeUtil.nowHour > 23) mrk_time.visibility = View.VISIBLE
     }
 }

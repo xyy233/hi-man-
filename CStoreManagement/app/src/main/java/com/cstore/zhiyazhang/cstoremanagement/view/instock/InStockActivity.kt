@@ -21,7 +21,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
 
-        scrap.setOnClickListener {
+        scrap1.setOnClickListener {
             val intent = Intent(this@InStockActivity, ScrapActivity::class.java)
             startActivity(intent)
 //            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@InStockActivity, scrap, "scrap").toBundle())

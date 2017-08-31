@@ -109,12 +109,10 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
 
         //重试按钮点击事件
         retry.setOnClickListener {
-            showLoading()
             retry.visibility = View.GONE
             presenter.getAllContractType()
         }
 
-        showLoading()
         presenter.getAllContractType()
     }
 

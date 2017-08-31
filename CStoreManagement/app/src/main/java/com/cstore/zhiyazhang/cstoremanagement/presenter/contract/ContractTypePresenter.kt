@@ -1,18 +1,16 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.contract
 
 import android.os.Handler
-import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contracttype.ContractTypeInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contracttype.ContractTypeModel
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
-import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -22,15 +20,11 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
     val anInterface: ContractTypeInterface = ContractTypeModel()
     val mHandler = Handler()
     fun getAllContractType() {
-        if (!ConnectionDetector.getConnectionDetector().isOnline) {
-            gView.hideLoading()
-            gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
-            return
-        }
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getAllContractType(User.getUser(), tView.isJustLook, object : MyListener {
 
             override fun listenerSuccess(data: Any) {
-               /* val contracts= Gson().fromJson(data, ContractTypeResult::class.java)
+                val contracts= Gson().fromJson(data as String, ContractTypeResult::class.java)
                 mHandler.post(
                         Runnable {
                     kotlin.run {
@@ -41,7 +35,7 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
                         if (adapter.ctbs.isEmpty())tView.showUsaTime(true)else tView.showUsaTime(false)
                         gView.hideLoading()
                     }
-                })*/
+                })
             }
 
             override fun listenerFailed(errorMessage: String) {

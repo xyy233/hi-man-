@@ -24,10 +24,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
@@ -85,7 +82,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     private val changeData = ArrayList<CategoryItemBean>()//修改的数据
     private val layoutManager = MyLinearlayoutManager(this@CategoryItemActivity, LinearLayoutManager.VERTICAL, false)
     private var adapter: CategoryItemAdapter? = null
-    private val presenter = CategoryItemPresenter(this, this, this)
+    private val presenter = CategoryItemPresenter(this, this, this, this)
     private var changeCategory: OrderCategoryBean? = null
     private var isNext = false
     private var isLast = false
@@ -101,11 +98,11 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         my_swipe.setOnRefreshListener {
             if (my_swipe.isEnabled) getData()
         }
-        my_swipe.setProgressViewEndTarget(true, 200)
+        my_swipe.setProgressViewEndTarget(true, 300)
         when (whereIsIt) {
             "search" -> {
             }
-            "unitord" -> presenter.getAllSearch(null, intent.getStringExtra("search_message"))
+            "unitord" -> presenter.getAllSearch(intent.getStringExtra("search_message"))
             else -> my_swipe.autoRefresh()
         }
     }
@@ -129,14 +126,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             }
         }
         search_btn.setOnClickListener {
-            presenter.getAllSearch(null, search_edit.text.toString())
+            presenter.getAllSearch(search_edit.text.toString())
             val imm = getSystemService(
                     Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
         }
         search_edit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.getAllSearch(null, search_edit.text.toString())
+                presenter.getAllSearch(search_edit.text.toString())
                 val imm = getSystemService(
                         Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
@@ -198,25 +195,24 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     private fun getData() {
         adapter = null
-        showLoading()
         when (whereIsIt) {
             "category" -> {
-                presenter.getAllItem(null)
+                presenter.getAllItem()
             }
             "shelf" -> {
-                presenter.getAllShelf(null)
+                presenter.getAllShelf()
             }
             "search" -> {
-                presenter.getAllSearch(null, search_edit.text.toString())
+                presenter.getAllSearch(search_edit.text.toString())
             }
             "self" -> {
-                presenter.getAllSelf(null)
+                presenter.getAllSelf()
             }
             "nop" -> {
-                presenter.getAllNOP(null)
+                presenter.getAllNOP()
             }
             "fresh" -> {
-                presenter.getAllFresh(null)
+                presenter.getAllFresh()
             }
         }
     }
@@ -256,7 +252,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         }
         done.setOnClickListener {
             if (MyTimeUtil.nowHour<18){
-                changeData.removeAll(changeData.filter { it.orderQTY == 0 })
+                changeData.removeAll(changeData.filter { it.changeCount == 0 })
                 if (changeData.size == 0) {
                     showPrompt(getString(R.string.no_edit_msg))
                     return@setOnClickListener
@@ -281,13 +277,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             my_swipe.isEnabled = verticalOffset >= 0
         }
         swipe_recycler.layoutManager = layoutManager
-        retry.setOnClickListener { my_swipe.autoRefresh() }
+        retry.setOnClickListener { if (my_swipe.isEnabled) getData() }
         order_item_next.setOnClickListener {
+            my_swipe.isRefreshing=true
             if (MyTimeUtil.nowHour>18){
                 goNext()
                 return@setOnClickListener
             }
-            changeData.removeAll(changeData.filter { it.orderQTY == 0 })
+            changeData.removeAll(changeData.filter { it.changeCount == 0 })
             if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
                     .setTitle("提示")
                     .setMessage("您修改的订量尚未确认，是否放弃修改？")
@@ -307,7 +304,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 goLast()
                 return@setOnClickListener
             }
-            changeData.removeAll(changeData.filter { it.orderQTY == 0 })
+            changeData.removeAll(changeData.filter { it.changeCount == 0 })
             if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
                     .setTitle("提示")
                     .setMessage("您修改的订量尚未确认，是否放弃修改？")
@@ -324,6 +321,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     }
 
     fun goNext() {
+        my_swipe.isRefreshing=true
         isNext = false
         when (whereIsIt) {
             "category" -> {
@@ -404,10 +402,11 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 }
             }
         }
-        my_swipe.autoRefresh()
+        if (my_swipe.isEnabled) getData()
     }
 
     fun goLast() {
+        my_swipe.isRefreshing=true
         isLast = false
         when (whereIsIt) {
             "category" -> {
@@ -488,7 +487,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 }
             }
         }
-        my_swipe.autoRefresh()
+        if (my_swipe.isEnabled) getData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -507,7 +506,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             super.onBackPressed()
             return
         }
-        changeData.removeAll(changeData.filter { it.orderQTY == 0 })
+        changeData.removeAll(changeData.filter { it.changeCount == 0 })
         if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
                 .setTitle("提示")
                 .setMessage("您修改的订量尚未确认，是否放弃修改？")
@@ -568,7 +567,10 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.changeCount = 0
         }
         changeData.clear()
-        if (isBack) finish()
+        if (isBack) {
+            hideLoading()
+            super.onBackPressed()
+        }
         else if (isNext) {
             showPrompt(getString(R.string.saveDone))
             goNext()
@@ -579,13 +581,15 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             when (whereIsIt) {
                 "search" -> {
                     showPrompt(getString(R.string.saveDone))
+                    hideLoading()
                 }
                 "unitord" -> {
                     showPrompt(getString(R.string.saveDone))
+                    hideLoading()
                 }
                 else -> {
-                    my_swipe.autoRefresh()
                     showPrompt(getString(R.string.saveDone))
+                    if (my_swipe.isEnabled) getData()
                 }
             }
         }
@@ -609,6 +613,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
+        MyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
@@ -616,6 +621,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
+        MyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun <T> showView(adapter: T) {
