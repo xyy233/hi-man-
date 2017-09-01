@@ -7,36 +7,38 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/8/21 16:20.
  */
-class ScrapModel(private val gView: GenericView, private val sView:ScrapView):ScrapInterface{
+class ScrapModel(private val gView: GenericView, private val sView: ScrapView) : ScrapInterface {
 
     override fun getAllScrap(handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val data=SocketUtil.initSocket(ip,MySql.AllScrap(sView.getDate())).inquire()
-            if (!SocketUtil.judgmentNull(data,msg,handler))return@Runnable
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val data = SocketUtil.initSocket(ip, MySql.AllScrap(sView.getDate())).inquire()
+            if (!SocketUtil.judgmentNull(data, msg, handler)) return@Runnable
 
-            val scraps=ArrayList<ScrapContractBean>()
+            val scraps = ArrayList<ScrapContractBean>()
             try {
                 scraps.addAll(SocketUtil.getScrap(data))
-            }catch (e:Exception){}
-            if (scraps.isEmpty()){
+            } catch (e: Exception) {
+            }
+            if (scraps.isEmpty()) {
                 msg.obj = data
                 msg.what = ERROR1
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=scraps
-                msg.what=SUCCESS
+            } else {
+                msg.obj = scraps
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -46,92 +48,163 @@ class ScrapModel(private val gView: GenericView, private val sView:ScrapView):Sc
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val data=SocketUtil.initSocket(ip,MySql.getScrapByMessage(message)).inquire()
-            if (!SocketUtil.judgmentNull(data,msg,handler))return@Runnable
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val data = SocketUtil.initSocket(ip, MySql.getScrapByMessage(message)).inquire()
+            if (!SocketUtil.judgmentNull(data, msg, handler)) return@Runnable
 
-            val scraps=ArrayList<ScrapContractBean>()
+            val scraps = ArrayList<ScrapContractBean>()
             try {
                 scraps.addAll(SocketUtil.getScrap(data))
-            }catch (e:Exception){}
-            if (scraps.isEmpty()){
+            } catch (e: Exception) {
+            }
+            if (scraps.isEmpty()) {
                 msg.obj = data
                 msg.what = ERROR1
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=scraps
-                msg.what=SUCCESS
+            } else {
+                msg.obj = scraps
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
     }
 
-    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode:Int, handler: MyHandler.MyHandler) {
+    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
-            if (data.size<1){
-                msg.obj=MyApplication.instance().applicationContext.resources.getString(R.string.noEditMsg)
-                msg.what=ERROR1
+            if (data.size < 1) {
+                msg.obj = MyApplication.instance().applicationContext.resources.getString(R.string.noEditMsg)
+                msg.what = ERROR1
                 handler.sendMessage(msg)
                 return@Runnable
             }
             val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val sql=getSubmitString(data, reCode)
-            val sqlData=SocketUtil.initSocket(ip,sql).inquire()
-            if (!SocketUtil.judgmentNull(sqlData,msg,handler))return@Runnable
-            if (sqlData=="0"){
-                msg.obj="0"
-                msg.what=SUCCESS
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+
+            //检查是否有错误参数
+            val judgment = judgmentData(ip, data)
+            if (judgment == SCRAP_DATA_ERROR) {
+                msg.obj = judgment
+                msg.what = ERROR1
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=sqlData
-                msg.what= ERROR1
+                return@Runnable
+            }
+
+            //得到recodeNumber
+            val recodeNumber = ScrapModel.getRecodeNumber(ip)
+            if (recodeNumber.contains(RECODE_ERROR)) {
+                msg.obj = recodeNumber
+                msg.what = ERROR1
+                handler.handleMessage(msg)
+                return@Runnable
+            }
+
+            //得到提交数据的sql语句
+            val sql = getSubmitString(data, recodeNumber.toInt())
+
+            val sqlData = SocketUtil.initSocket(ip, sql).inquire()
+            if (!SocketUtil.judgmentNull(sqlData, msg, handler)) return@Runnable
+            if (sqlData == "0") {
+                msg.obj = sqlData
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+            } else {
+                msg.obj = sqlData
+                msg.what = ERROR1
                 handler.sendMessage(msg)
             }
         }).start()
     }
 
-    /**
-     * 从list中得到要用的sql语句
-     */
-    fun getSubmitString(data: ArrayList<ScrapContractBean>, reCode: Int):String{
-        val result:StringBuilder=StringBuilder()
-        result.append(MySql.affairHeader)
-        val a=data.sortedByDescending { it.recordNumber }[0].recordNumber
-        val b=reCode
-        var i=0
-        if (a>b)i=a else i=b
-        data.forEach {
-            //0==insert 1==update 2==delete 3==none
-                when(it.action){
-                    0->{
+    companion object {
+        val RECODE_ERROR = "-100"
+        val SCRAP_DATA_ERROR = "error"
+
+        /**
+         * 得到当前最大的recodeNumber
+         */
+        fun getRecodeNumber(ip: String): String {
+            val result = SocketUtil.initSocket(ip, MySql.getRecodeNumber).inquire()
+            if (result=="")return "0"
+            try {
+                val count=result.substring(0,result.length-2).substring(17).toInt()
+                if (count==0)return "0" else{
+                    return count.toString()
+                }
+            }catch (e:Exception){
+                return RECODE_ERROR + result + e.message
+            }
+
+        }
+
+        /**
+         * 判断是否上传的数据不对
+         * 有可能多人操作造成数据不同步
+         */
+        fun judgmentData(ip: String, data: ArrayList<ScrapContractBean>): String {
+            val result = SocketUtil.initSocket(ip, MySql.AllScrap(MyTimeUtil.nowDate)).inquire()
+            if (result == "" || result == "0") return ""
+            val allScraps = ArrayList<ScrapContractBean>()
+            try {
+                allScraps.addAll(SocketUtil.getScrap(result))
+            } catch (e: Exception) {
+                return result
+            }
+            //循环提交数据
+            for (scrap in data) {
+                //搜索所有数据库存在的数据
+                val s = allScraps.filter { it.scrapId == scrap.scrapId }
+                //如果不存在就检查提交的动作是否为update，如果是update就报错
+                if (s.isEmpty()) {
+                    if (scrap.action == 1) return SCRAP_DATA_ERROR
+                }
+                //遍历所有数据检查提交的动作是否为insert，如果是insert就报错
+                s.forEach { if (scrap.action == 0) return SCRAP_DATA_ERROR }
+            }
+            return ""
+        }
+
+        /**
+         * 从list中得到要用的sql语句
+         */
+        fun getSubmitString(data: ArrayList<ScrapContractBean>, reCode: Int): String {
+            val result: StringBuilder = StringBuilder()
+            result.append(MySql.affairHeader)
+            val a = data.sortedByDescending { it.recordNumber }[0].recordNumber
+            val b = reCode
+            var i = 0
+            if (a > b) i = a else i = b
+            data.forEach {
+                //0==insert 1==update 2==delete 3==none
+                when (it.action) {
+                    0 -> {
                         i++
-                        it.recordNumber=i
+                        it.recordNumber = i
                         result.append(MySql.insertScrap(it))
                     }
-                    1->result.append(MySql.updateScrap(it))
-                    2->result.append(MySql.deleteScrap(it))
+                    1 -> result.append(MySql.updateScrap(it))
+                    2 -> result.append(MySql.deleteScrap(it))
                 }
+            }
+            result.append(MySql.affairFoot)
+            return result.toString()
         }
-        result.append(MySql.affairFoot)
-        return result.toString()
     }
 }
 
-interface ScrapInterface{
+interface ScrapInterface {
     /**
      * 得到当前所有的报废信息
      */
-    fun getAllScrap(handler:MyHandler.MyHandler)
+    fun getAllScrap(handler: MyHandler.MyHandler)
 
     /**
      * 搜索报废品
      */
-    fun searchScrap(message:String,handler:MyHandler.MyHandler)
+    fun searchScrap(message: String, handler: MyHandler.MyHandler)
 
     /**
      * 提交所有报废
      */
-    fun submitScraps(data:ArrayList<ScrapContractBean>, reCode: Int, handler:MyHandler.MyHandler)
+    fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler.MyHandler)
 }

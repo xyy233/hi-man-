@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang

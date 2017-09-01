@@ -3,8 +3,6 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 import android.annotation.SuppressLint
 import android.widget.Toast
 
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
-
 /**
  * Created by zhiya.zhang
  * on 2017/6/9 9:02.

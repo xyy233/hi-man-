@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.Camera
 import android.net.Uri
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
@@ -35,6 +34,8 @@ import pub.devrel.easypermissions.EasyPermissions
  * on 2017/6/12 15:03.
  */
 class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contract_type) : MyActivity(), ContractTypeView, GenericView, EasyPermissions.PermissionCallbacks {
+
+
     override val whereIsIt: String
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -47,13 +48,20 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     val presenter = ContractTypePresenter(this, this, ctd)
     private var previousIntent: Intent? = null//上个页面的intent
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        previousIntent = intent
-        initView()
+    override fun initClick() {
+        //重试按钮点击事件
+        retry.setOnClickListener {
+            retry.visibility = View.GONE
+            presenter.getAllContractType()
+        }
     }
 
-    private fun initView() {
+    override fun initData() {
+        presenter.getAllContractType()
+    }
+
+    override fun initView() {
+        previousIntent = intent
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         if (isJustLook) {
             //承包商品修改一览表
@@ -106,14 +114,6 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
 
         //给recyclerview分配样式
         type_list.layoutManager = LinearLayoutManager(this@ContractTypeActivity, LinearLayoutManager.VERTICAL, false)
-
-        //重试按钮点击事件
-        retry.setOnClickListener {
-            retry.visibility = View.GONE
-            presenter.getAllContractType()
-        }
-
-        presenter.getAllContractType()
     }
 
     private fun search() {
@@ -159,15 +159,15 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
         contract_loding.visibility = View.GONE
     }
 
-    override fun <T> requestSuccess(objects: T) {
-        when (objects) {
+    override fun <T> requestSuccess(rData: T) {
+        when (rData) {
             is ContractTypeBean -> {
-                objects.isChangeColor = true
+                rData.isChangeColor = true
 
-                if (!isJustLook) ctd.editSQL(objects, "insert")
+                if (!isJustLook) ctd.editSQL(rData, "insert")
 
                 val i = Intent(this, ContractActivity::class.java)
-                i.putExtra("ctb", objects)
+                i.putExtra("ctb", rData)
                 i.putExtra("is_search", false)
                 i.putExtra("is_all", false)
                 i.putExtra("is_just_look", isJustLook)

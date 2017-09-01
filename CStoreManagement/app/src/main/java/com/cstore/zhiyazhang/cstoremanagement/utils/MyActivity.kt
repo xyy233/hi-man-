@@ -26,6 +26,10 @@ abstract class MyActivity : AppCompatActivity() {
      */
     protected abstract val layoutId: Int
 
+    protected abstract fun initView()
+    protected abstract fun initClick()
+    protected abstract fun initData()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //获得布局
@@ -34,6 +38,9 @@ abstract class MyActivity : AppCompatActivity() {
         val filter = IntentFilter()
         filter.addAction(EXIT_APP_ACTION)
         registerReceiver(mBroadcastReceiver, filter)
+        initView()
+        initClick()
+        initData()
     }
 
     override fun onDestroy() {

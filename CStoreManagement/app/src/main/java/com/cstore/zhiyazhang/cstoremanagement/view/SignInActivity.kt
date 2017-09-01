@@ -22,7 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -35,24 +35,21 @@ import java.io.File
  */
 class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, GenericView, EasyPermissions.PermissionCallbacks {
 
+
     var preferences: SharedPreferences? = null
     val mSigninPresenter: SignInPresenter = SignInPresenter(this, this, this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()
         //获得权限
         getPermissions()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initView() {
+    override fun initView() {
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
-        test.setOnClickListener({
-            val intent = Intent(this@SignInActivity, HomeActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
-        })
+
 //        test2.setOnClickListener { startActivity(Intent(this@SignInActivity,Test::class.java)) }
         //如果获得了就直接输入否则为""
         user_id.setText(preferences?.getString("id", ""))
@@ -62,6 +59,13 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             save_id.isChecked = true
             if (user_password.text.toString() != "") save_pwd.isChecked = true
         }
+    }
+
+    override fun initClick() {
+        test.setOnClickListener({
+            val intent = Intent(this@SignInActivity, HomeActivity::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@SignInActivity, test, "login").toBundle())
+        })
         //如果保存id checkBox为true，保存密码为可点击，否则不可点击并为false
         save_id.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) save_pwd.isEnabled = true else {
@@ -83,6 +87,9 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                         .hideSoftInputFromWindow(user_password.windowToken, 0)
             }
         })
+    }
+
+    override fun initData() {
         app_version.text = "v: ${MyApplication.getVersion()}"
     }
 
@@ -120,13 +127,13 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         login.isEnabled = true
     }
 
-    override fun <T> requestSuccess(objects: T) {
-        when (objects) {
+    override fun <T> requestSuccess(rData: T) {
+        when (rData) {
             is User -> {
-                showPrompt(objects.name + "您好,登陆成功")
-                ReportListener.reportEnter(objects.storeId)
+                showPrompt(rData.name + "您好,登陆成功")
+                ReportListener.reportEnter(rData.storeId)
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
-                intent.putExtra("user", objects)
+                intent.putExtra("user", rData)
                 startActivity(intent)
                 finish()
             }

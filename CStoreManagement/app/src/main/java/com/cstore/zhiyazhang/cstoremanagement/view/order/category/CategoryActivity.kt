@@ -1,7 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.order.category
 
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +22,8 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * on 2017/7/25 13:37.
  */
 class CategoryActivity(override val layoutId: Int = R.layout.activity_order_category) : MyActivity(), GenericView, ContractTypeView {
+
+
     var adapter: OrderCategoryAdapter? = null
 
     override val isJustLook: Boolean
@@ -36,12 +37,36 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
 
     val mPresenter = OrderCategoryPresenter(this,this)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
+    override fun initClick() {
+        category_retry.setOnClickListener {
+            MyHandler.removeCallbacksAndMessages(null)
+            category_retry.visibility = View.GONE
+            when (whereIsIt) {
+                "category" -> {
+                    mPresenter.getAllCategory()
+                }
+                "shelf" -> {
+                    mPresenter.getShelf()
+                }
+                "self" -> {
+                    mPresenter.getSelf()
+                }
+                "nop" -> {
+                    mPresenter.getNOP()
+                }
+                "fresh1"->{
+                    mPresenter.getFresh(1)
+                }
+                "fresh2"->{
+                    mPresenter.getFresh(2)
+                }
+            }
+        }
     }
 
-    private fun initView() {
+    override fun initData() {}
+
+    override fun initView() {
         when (whereIsIt) {
             "category" -> {
                 my_toolbar.title = getString(R.string.category_order)
@@ -91,30 +116,6 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
         type_list.layoutManager = LinearLayoutManager(this@CategoryActivity, LinearLayoutManager.VERTICAL, false)
-        category_retry.setOnClickListener {
-            MyHandler.removeCallbacksAndMessages(null)
-            category_retry.visibility = View.GONE
-            when (whereIsIt) {
-                "category" -> {
-                    mPresenter.getAllCategory()
-                }
-                "shelf" -> {
-                    mPresenter.getShelf()
-                }
-                "self" -> {
-                    mPresenter.getSelf()
-                }
-                "nop" -> {
-                    mPresenter.getNOP()
-                }
-                "fresh1"->{
-                    mPresenter.getFresh(1)
-                }
-                "fresh2"->{
-                    mPresenter.getFresh(2)
-                }
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -124,46 +125,46 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         return super.onOptionsItemSelected(item)
     }
 
-    override fun <T> requestSuccess(objects: T) {
+    override fun <T> requestSuccess(rData: T) {
         when (whereIsIt) {
             "category" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("category", objects as OrderCategoryBean)
+                i.putExtra("category", rData as OrderCategoryBean)
                 i.putExtra("whereIsIt", "category")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<OrderCategoryBean>))
                 startActivity(i)
             }
             "shelf" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("shelf", objects as ShelfBean)
+                i.putExtra("shelf", rData as ShelfBean)
                 i.putExtra("whereIsIt", "shelf")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<ShelfBean>))
                 startActivity(i)
             }
             "self" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("self", objects as SelfBean)
+                i.putExtra("self", rData as SelfBean)
                 i.putExtra("whereIsIt", "self")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<SelfBean>))
                 startActivity(i)
             }
             "nop" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("nop", objects as NOPBean)
+                i.putExtra("nop", rData as NOPBean)
                 i.putExtra("whereIsIt", "nop")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<NOPBean>))
                 startActivity(i)
             }
             "fresh1"->{
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("fg", objects as FreshGroup)
+                i.putExtra("fg", rData as FreshGroup)
                 i.putExtra("whereIsIt", "fresh")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<FreshGroup>))
                 startActivity(i)
             }
             "fresh2"->{
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
-                i.putExtra("fg", objects as FreshGroup)
+                i.putExtra("fg", rData as FreshGroup)
                 i.putExtra("whereIsIt", "fresh")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<FreshGroup>))
                 startActivity(i)

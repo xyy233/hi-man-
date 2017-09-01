@@ -15,7 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 import java.io.File

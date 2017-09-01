@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_image.*
  * on 2017/6/21 14:55.
  */
 class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyActivity() {
-
     /**
      * Glide回调监听
      */
@@ -53,5 +52,14 @@ class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyAc
                 .into(photoView)
         //photoView.setOnPhotoTapListener { _, _, _ -> finishAfterTransition() }
         photoView.setOnClickListener { finishAfterTransition() }
+    }
+
+    override fun initView() {
+    }
+
+    override fun initClick() {
+    }
+
+    override fun initData() {
     }
 }

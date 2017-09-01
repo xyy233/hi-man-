@@ -7,7 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -20,7 +20,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,MySql.getItemByCategoryId(categoryId,orderBy)).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -47,7 +47,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,MySql.getItemByShelfId(shelfId,orderBy)).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -74,7 +74,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getUnitItemByKeywords(keywords: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
         val msg=Message()
-        val ip=MyApplication.getIP()
+        val ip= MyApplication.getIP()
         if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
         val result=SocketUtil.initSocket(ip,MySql.unitOrder(keywords)).inquire()
         if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -101,7 +101,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,MySql.getSelfBySelfId(selfId, orderBy)).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -128,7 +128,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,if (nopId == "0") MySql.getPromotion(orderBy) else MySql.getNewItemById(nopId, orderBy)).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -155,7 +155,7 @@ class CategoryItemModel : CategoryInterface {
     override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,MySql.getFreashItem(categoryId,midId,orderBy)).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
@@ -189,7 +189,7 @@ class CategoryItemModel : CategoryInterface {
             }
             sql.append(MySql.affairFoot)
             val msg=Message()
-            val ip=MyApplication.getIP()
+            val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
             val result=SocketUtil.initSocket(ip,sql.toString()).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable

@@ -11,7 +11,7 @@ interface GenericView {
     /**
      * 请求成功，传递泛型对象进来自己处理
      */
-    fun <T> requestSuccess(objects: T)
+    fun <T> requestSuccess(rData: T)
 
     /**
      * 输出提示信息

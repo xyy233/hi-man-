@@ -2,7 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.bean
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import java.io.Serializable
 
 /**

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.Camera
 import android.net.Uri
-import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.support.v7.app.AlertDialog
@@ -85,14 +84,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     })
     private val layoutManager = MyLinearlayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-        initClick()
-        initData()
-    }
-
-    private fun initView() {
+    override fun initView() {
         my_toolbar.title = getString(R.string.scrap)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         toolbar_time.visibility = View.VISIBLE
@@ -105,11 +97,11 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         mItemTOuchHelper.attachToRecyclerView(scrap_recycler)
     }
 
-    private fun initData() {
+    override fun initData() {
         presenter.getAllScrap()
     }
 
-    private fun initClick() {
+    override fun initClick() {
         loading.setOnClickListener {
             showPrompt(getString(R.string.with_loading))
         }
@@ -354,27 +346,27 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         }
     }
 
-    override fun <T> requestSuccess(objects: T) {
+    override fun <T> requestSuccess(rData: T) {
         val handler = Handler()
         val myThread = Thread(Runnable {
-            objects as ArrayList<ScrapContractBean>
-            if (objects.size != 0) {
+            rData as ArrayList<ScrapContractBean>
+            if (rData.size != 0) {
                 //检查数据中的时间
-                when (objects[0].busiDate) {
+                when (rData[0].busiDate) {
                 //新搜索出来的
                     null -> {
                         handler.post { scrap_done.visibility = View.VISIBLE }
-                        if (objects.size == 1) {//精确搜索只有一个，count+1
+                        if (rData.size == 1) {//精确搜索只有一个，count+1
                             var i = 0
                             //先检查adapter是否有，有的话就修改数据+1
-                            adapter.data.filter { it.scrapId == objects[0].scrapId }.forEach {
+                            adapter.data.filter { it.scrapId == rData[0].scrapId }.forEach {
                                 i++
                                 it.mrkCount++
                                 it.editCount++
                             }
                             var e = 0
                             //检查editList，如果有并且不是delete那就+1,如果是delete代表之前被删除了的，修改action为update，不可能为insert，因为insert不会产生delete操作会直接remove掉
-                            editData.filter { it.scrapId == objects[0].scrapId }.forEach {
+                            editData.filter { it.scrapId == rData[0].scrapId }.forEach {
                                 e++
                                 if (it.action != 2) {
                                     it.mrkCount++
@@ -387,7 +379,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                             }
                             if (i == 0 || e == 0) {//adapter里没有,有的话在循环内已经处理数据
                                 //检查editList
-                                val data = objects[0]
+                                val data = rData[0]
                                 data.mrkCount = 1
                                 data.editCount = 1
                                 data.action = 0
@@ -396,7 +388,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                                 }
                                 if (e == 0) {
                                     try {
-                                        editData.add(adapter.data.filter { it.scrapId == objects[0].scrapId }[0])
+                                        editData.add(adapter.data.filter { it.scrapId == rData[0].scrapId }[0])
                                     } catch (e: Exception) {
                                         Log.e("CStoreScrap", e.message)
                                         editData.add(data)
@@ -406,7 +398,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                             handler.post { adapter.notifyDataSetChanged() }
                         } else {//模糊搜索有n个，count保持不变
                             //先检查是否已经存在,检查adapter中的data
-                            for (scb in objects) {
+                            for (scb in rData) {
                                 val newDatas = ArrayList<ScrapContractBean>()
                                 if (adapter.data.filter { it.scrapId == scb.scrapId }.isEmpty()) {
                                     //没有查到数据就添加
@@ -422,18 +414,18 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                 //是今天的
                     MyTimeUtil.nowDate -> {
                         handler.post { scrap_done.visibility = View.VISIBLE }
-                        objects.forEach {
+                        rData.forEach {
                             it.action = 1
                         }
-                        handler.post { adapter.addItems(objects) }
+                        handler.post { adapter.addItems(rData) }
                     }
                 //不是今天的
                     else -> {
                         handler.post { scrap_done.visibility = View.GONE }
-                        objects.forEach {
+                        rData.forEach {
                             it.action = 3
                         }
-                        handler.post { adapter.addItems(objects) }
+                        handler.post { adapter.addItems(rData) }
                     }
                 }
             }
@@ -463,7 +455,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     companion object {
         var isOnLongClick = false
         var thread: Thread? = null
-        var handler: Handler = Handler()
+        val handler: Handler = Handler()
     }
 
     @Synchronized private fun onTouchChange(addLess: Int, action: Int, view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
@@ -545,6 +537,10 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
         val nowCount = scb.mrkCount - 1
         val nowEditCount = scb.editCount - 1
+        if (nowCount < 0) {
+            handler.post { showPrompt(getString(R.string.minCNoLess)) }
+            return
+        }
         if (nowCount == 0) {
             var i = 0
             editData.filter { it.scrapId == scb.scrapId }.forEach {
@@ -560,13 +556,9 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             }
             scb.mrkCount = nowCount
             scb.editCount = nowEditCount
-            scb.action = 2
+            if (scb.action!=0)scb.action = 2
             if (i == 0) editData.add(scb.copy())
             handler.post { view.scrapCount.text = scb.mrkCount.toString() }
-            return
-        }
-        if (nowCount < 0) {
-            handler.post { showPrompt(getString(R.string.minCNoLess)) }
             return
         }
         scb.mrkCount = nowCount

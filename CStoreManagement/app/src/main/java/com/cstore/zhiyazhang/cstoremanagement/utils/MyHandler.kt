@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 import java.lang.ref.WeakReference
 
 /**

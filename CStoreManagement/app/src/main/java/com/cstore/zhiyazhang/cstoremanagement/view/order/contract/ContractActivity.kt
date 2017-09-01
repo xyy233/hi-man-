@@ -31,7 +31,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.ImageActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_contract.*
 
 /**
@@ -39,6 +39,7 @@ import kotlinx.android.synthetic.main.activity_contract.*
  * on 2017/6/15 12:00.
  */
 class ContractActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), ContractView, GenericView {
+
 
     override val contractType: ContractTypeBean
         get() = ctb!!
@@ -71,8 +72,6 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        previousIntent = intent
-        initView()
         //先去查询是否是通过搜索进入的，然后根据结果给页面赋值数据或隐藏
         initIsSearch()
         //设置下拉刷新和Recycler
@@ -80,15 +79,23 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         //设置排序
         initSort()
         //启动加载
-        my_swipe.setOnRefreshListener {
-            setPage(0)
-            if (my_swipe.isEnabled) isSearchOrGetAll()
-        }
+
         my_swipe.setProgressViewEndTarget(true, 100)
         my_swipe.autoRefresh()
     }
 
-    private fun initView() {
+    override fun initClick() {
+        my_swipe.setOnRefreshListener {
+            setPage(0)
+            if (my_swipe.isEnabled) isSearchOrGetAll()
+        }
+    }
+
+    override fun initData() {
+    }
+
+    override fun initView() {
+        previousIntent = intent
         order_item_next.visibility=View.GONE
         order_item_last.visibility=View.GONE
         if (!isJustLook) {
@@ -192,7 +199,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
             super.onBackPressed()
     }
 
-    override fun <T> requestSuccess(objects: T) {
+    override fun <T> requestSuccess(rData: T) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

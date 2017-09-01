@@ -35,26 +35,28 @@
             android:elevation="3dp"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay">
+
             <Button
                 android:id="@+id/order_item_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:text="@string/next"
-                android:textSize="18sp"
                 android:background="@color/touming"
                 android:foreground="@drawable/selector_foreground"
                 android:stateListAnimator="@drawable/lift_on_touch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:text="@string/next"
+                android:textSize="18sp"/>
+
             <Button
-            android:id="@+id/order_item_last"
-            android:layout_gravity="end"
-            android:text="@string/last"
-            android:background="@color/touming"
-            android:textSize="18sp"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+                android:id="@+id/order_item_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@color/touming"
+                android:foreground="@drawable/selector_foreground"
+                android:stateListAnimator="@drawable/lift_on_touch"
+                android:text="@string/last"
+                android:textSize="18sp"/>
         </android.support.v7.widget.Toolbar>
 
         <include

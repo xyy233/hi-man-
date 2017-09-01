@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -18,20 +17,16 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 
 class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
     var updateButton = false//确认是否是通过更新按钮更新的
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-        initListener()
-        initReceiver()
-    }
 
     private val updateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -44,7 +39,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         }
     }
 
-    private fun initReceiver() {
+    override fun initData() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("com.cstore.zhiyazhang.UPDATE")
         registerReceiver(updateReceiver, intentFilter)
@@ -63,7 +58,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initView() {
+    override fun initView() {
         toolbar.title = resources.getString(R.string.app_name)
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
@@ -79,7 +74,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         headerLayout.app_version.text = "v: ${MyApplication.getVersion()}"
     }
 
-    private fun initListener() {
+    override fun initClick() {
         gg1.setOnClickListener { MyToast.getShortToast("未完成") }
         gg2.setOnClickListener { MyToast.getShortToast("未完成") }
         gg3.setOnClickListener {

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.Camera
 import android.net.Uri
-import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v4.content.ContextCompat
@@ -30,7 +29,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemVie
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_contract.*
 import kotlinx.android.synthetic.main.layout_search_title.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -42,7 +41,6 @@ import java.io.Serializable
  * on 2017/7/26 14:23.
  */
 class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), GenericView, CategoryItemView, EasyPermissions.PermissionCallbacks {
-
 
     override var nowMidId: String = ""
         get() = field
@@ -87,18 +85,119 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     private var isNext = false
     private var isLast = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        order_item_next.setOnClickListener {
-            MyToast.getShortToast("Next")
+    override fun initView() {
+        my_swipe.setProgressViewEndTarget(true, 300)
+        toolbar.setNavigationIcon(R.drawable.ic_action_back)
+        when (whereIsIt) {
+            "category" -> {
+                nowId = category.categoryId
+                toolbar.title = category.categoryName
+            }
+            "shelf" -> {
+                nowId = shelf.shelfId
+                toolbar.title = shelf.shelfName
+            }
+            "search" -> {
+                search_bar.visibility = View.VISIBLE
+                toolbar.title = getString(R.string.unit_order)
+            }
+            "unitord" -> {
+                search_bar.visibility = View.VISIBLE
+                toolbar.title = getString(R.string.unit_order)
+            }
+            "self" -> {
+                nowId = self.selfId
+                toolbar.title = self.selfName
+            }
+            "nop" -> {
+                nowId = nop.nopId
+                toolbar.title = nop.nopName
+            }
+            "fresh" -> {
+                nowId = fg.categoryId
+                nowMidId = fg.midId
+                toolbar.title = fg.name
+            }
         }
-        initView()
+
+        setSupportActionBar(toolbar)
+        //设置loading样式
+        my_swipe.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_white))
+        my_swipe.setProgressViewOffset(false, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt())
+        my_swipe.setColorSchemeColors(
+                ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_red),
+                ContextCompat.getColor(this@CategoryItemActivity, R.color.yellow),
+                ContextCompat.getColor(this@CategoryItemActivity, R.color.blue),
+                ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_green))
+        //设置下拉刷新是否能用
+        appbar.addOnOffsetChangedListener { _, verticalOffset ->
+            my_swipe.isEnabled = verticalOffset >= 0
+        }
+        swipe_recycler.layoutManager = layoutManager
         initSort()
         initSearch()
+    }
+
+    override fun initClick() {
         my_swipe.setOnRefreshListener {
             if (my_swipe.isEnabled) getData()
         }
-        my_swipe.setProgressViewEndTarget(true, 300)
+        done.setOnClickListener {
+            if (MyTimeUtil.nowHour<18){
+                changeData.removeAll(changeData.filter { it.changeCount == 0 })
+                if (changeData.size == 0) {
+                    showPrompt(getString(R.string.no_edit_msg))
+                    return@setOnClickListener
+                }
+                presenter.updateAllCategory()
+            }else{
+                showPrompt("超出订货时间，不能保存")
+            }
+        }
+        order_item_next.setOnClickListener {
+            my_swipe.isRefreshing=true
+            if (MyTimeUtil.nowHour>18){
+                goNext()
+                return@setOnClickListener
+            }
+            changeData.removeAll(changeData.filter { it.changeCount == 0 })
+            if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
+                    .setTitle("提示")
+                    .setMessage("您修改的订量尚未确认，是否放弃修改？")
+                    .setPositiveButton("保存", { _, _ ->
+                        isNext = true
+                        presenter.updateAllCategory()
+                    })
+                    .setNegativeButton("放弃", { _, _ ->
+                        changeData.clear()
+                        goNext()
+                    })
+                    .show()
+            else goNext()
+        }
+        order_item_last.setOnClickListener {
+            if (MyTimeUtil.nowHour>18){
+                goLast()
+                return@setOnClickListener
+            }
+            changeData.removeAll(changeData.filter { it.changeCount == 0 })
+            if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
+                    .setTitle("提示")
+                    .setMessage("您修改的订量尚未确认，是否放弃修改？")
+                    .setPositiveButton("保存", { _, _ ->
+                        isLast = true
+                        presenter.updateAllCategory()
+                    })
+                    .setNegativeButton("放弃", { _, _ ->
+                        changeData.clear()
+                        goLast()
+                    })
+                    .show() else goLast()
+        }
+        retry.setOnClickListener { if (my_swipe.isEnabled) getData() }
+    }
+
+    override fun initData() {
         when (whereIsIt) {
             "search" -> {
             }
@@ -214,109 +313,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             "fresh" -> {
                 presenter.getAllFresh()
             }
-        }
-    }
-
-    private fun initView() {
-        toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        when (whereIsIt) {
-            "category" -> {
-                nowId = category.categoryId
-                toolbar.title = category.categoryName
-            }
-            "shelf" -> {
-                nowId = shelf.shelfId
-                toolbar.title = shelf.shelfName
-            }
-            "search" -> {
-                search_bar.visibility = View.VISIBLE
-                toolbar.title = getString(R.string.unit_order)
-            }
-            "unitord" -> {
-                search_bar.visibility = View.VISIBLE
-                toolbar.title = getString(R.string.unit_order)
-            }
-            "self" -> {
-                nowId = self.selfId
-                toolbar.title = self.selfName
-            }
-            "nop" -> {
-                nowId = nop.nopId
-                toolbar.title = nop.nopName
-            }
-            "fresh" -> {
-                nowId = fg.categoryId
-                nowMidId = fg.midId
-                toolbar.title = fg.name
-            }
-        }
-        done.setOnClickListener {
-            if (MyTimeUtil.nowHour<18){
-                changeData.removeAll(changeData.filter { it.changeCount == 0 })
-                if (changeData.size == 0) {
-                    showPrompt(getString(R.string.no_edit_msg))
-                    return@setOnClickListener
-                }
-                presenter.updateAllCategory()
-            }else{
-                showPrompt("超出订货时间，不能保存")
-            }
-        }
-
-        setSupportActionBar(toolbar)
-        //设置loading样式
-        my_swipe.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_white))
-        my_swipe.setProgressViewOffset(false, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt())
-        my_swipe.setColorSchemeColors(
-                ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_red),
-                ContextCompat.getColor(this@CategoryItemActivity, R.color.yellow),
-                ContextCompat.getColor(this@CategoryItemActivity, R.color.blue),
-                ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_green))
-        //设置下拉刷新是否能用
-        appbar.addOnOffsetChangedListener { _, verticalOffset ->
-            my_swipe.isEnabled = verticalOffset >= 0
-        }
-        swipe_recycler.layoutManager = layoutManager
-        retry.setOnClickListener { if (my_swipe.isEnabled) getData() }
-        order_item_next.setOnClickListener {
-            my_swipe.isRefreshing=true
-            if (MyTimeUtil.nowHour>18){
-                goNext()
-                return@setOnClickListener
-            }
-            changeData.removeAll(changeData.filter { it.changeCount == 0 })
-            if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
-                    .setTitle("提示")
-                    .setMessage("您修改的订量尚未确认，是否放弃修改？")
-                    .setPositiveButton("保存", { _, _ ->
-                        isNext = true
-                        presenter.updateAllCategory()
-                    })
-                    .setNegativeButton("放弃", { _, _ ->
-                        changeData.clear()
-                        goNext()
-                    })
-                    .show()
-            else goNext()
-        }
-        order_item_last.setOnClickListener {
-            if (MyTimeUtil.nowHour>18){
-                goLast()
-                return@setOnClickListener
-            }
-            changeData.removeAll(changeData.filter { it.changeCount == 0 })
-            if (changeData.size != 0) AlertDialog.Builder(this@CategoryItemActivity)
-                    .setTitle("提示")
-                    .setMessage("您修改的订量尚未确认，是否放弃修改？")
-                    .setPositiveButton("保存", { _, _ ->
-                        isLast = true
-                        presenter.updateAllCategory()
-                    })
-                    .setNegativeButton("放弃", { _, _ ->
-                        changeData.clear()
-                        goLast()
-                    })
-                    .show() else goLast()
         }
     }
 
@@ -604,7 +600,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         editor.apply()
     }
 
-    override fun <T> requestSuccess(objects: T) {
+    override fun <T> requestSuccess(rData: T) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

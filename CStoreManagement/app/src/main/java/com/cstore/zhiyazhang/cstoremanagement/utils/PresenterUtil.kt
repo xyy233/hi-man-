@@ -2,7 +2,6 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
 
 /**
  * Created by zhiya.zhang

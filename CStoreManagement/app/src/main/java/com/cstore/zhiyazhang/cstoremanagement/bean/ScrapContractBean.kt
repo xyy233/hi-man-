@@ -40,3 +40,10 @@ data class ScrapContractBean(
         var action:Int=0,
         var editCount:Int=0//本次操作修改的量
 ) : Serializable
+
+data class ScrapHotBean(
+        @SerializedName("midcategorynumber")
+        val sId:String,
+        @SerializedName("categoryname")
+        val sName:String
+):Serializable

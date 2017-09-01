@@ -16,7 +16,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeE
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.TYPE_ID
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang

@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -146,6 +146,10 @@ internal class SocketUtil  {
 
         fun getNOP(data:String):ArrayList<NOPBean>{
             return Gson().fromJson<ArrayList<NOPBean>>(data, object : TypeToken<ArrayList<NOPBean>>() {}.type)
+        }
+
+        fun getScrapHot(data: String):ArrayList<ScrapHotBean>{
+            return Gson().fromJson<ArrayList<ScrapHotBean>>(data, object : TypeToken<ArrayList<ScrapHotBean>>() {}.type)
         }
     }
 

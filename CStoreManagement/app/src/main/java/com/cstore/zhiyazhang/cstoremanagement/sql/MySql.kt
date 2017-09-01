@@ -293,22 +293,22 @@ object MySql {
     /**
      * 创建报废,配合事务头脚使用
      */
-    fun insertScrap(data:ScrapContractBean)="insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (${User.getUser().storeId}, trunc(sysdate), ${data.recordNumber}, ${data.scrapId}, '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', ${User.getUser().uId}, sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
+    fun insertScrap(data: ScrapContractBean) = "insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (${User.getUser().storeId}, trunc(sysdate), ${data.recordNumber}, ${data.scrapId}, '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', ${User.getUser().uId}, sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
 
     /**
      * 更新报废，配合事务头脚使用
      */
-    fun updateScrap(data:ScrapContractBean)="update mrk set mrkquantity=${data.mrkCount}, updateuserid='${User.getUser().uId}',updatedatetime=sysdate where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
+    fun updateScrap(data: ScrapContractBean) = "update mrk set mrkquantity=${data.mrkCount}, updateuserid='${User.getUser().uId}',updatedatetime=sysdate where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
 
     /**
      * 删除报废，配合事务头脚使用
      */
-    fun deleteScrap(data:ScrapContractBean)="delete from mrk where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
+    fun deleteScrap(data: ScrapContractBean) = "delete from mrk where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
 
     /**
      * 得到指定某天的所有报废信息
      */
-    fun AllScrap(date:String)=" select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.itemnumber=m.itemnumber and busidate=to_date('$date','yyyy-mm-dd') order by itemnumber"
+    fun AllScrap(date: String) = "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.itemnumber=m.itemnumber and busidate=to_date('$date','yyyy-mm-dd') order by itemnumber"
 
     /**
      * 通过扫码得到的数据加到sql查询语句的字符串中然后返回新的sql语句
@@ -318,4 +318,20 @@ object MySql {
     fun getScrapByMessage(data: String): String {
         return "select distinct itemnumber, pluname, categorynumber, storeunitprice, unitcost, sell_cost, citem_yn, recycle_yn, barcode_yn, mrk_date, sale_date, dlv_date from app_mrkitem_view where (itemnumber in (select distinct itemnumber from ITEMPLU where plunumber like '%$data%') or itemnumber like '%$data%' or pluname like '%$data%') and rownum<50"
     }
+
+    /**
+     * 得到当前recodenumber
+     */
+    val getRecodeNumber="select recordnumber from (select recordnumber from mrk where busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') order by recordnumber desc) where rownum=1"
+
+    /**
+     * 报废80大类热食分类
+     */
+    val getScrap80 = "select midcategorynumber,categoryname from cat where categorynumber='80' and midcategorynumber!=' ' and microcategorynumber=' ' order by midcategorynumber"
+
+    /**
+     * 报废80大类里的中类的item
+     */
+    fun getScrap80Item(midId: String) =
+            "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.CATEGORYNUMBER='80' and a.midcategorynumber='$midId' and m.itemnumber(+)=a.itemnumber and (m.busidate = to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') or m.busidate is null) order by itemnumber"
 }

@@ -2,7 +2,6 @@ package com.cstore.zhiyazhang.cstoremanagement.view
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
@@ -24,7 +23,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
-import com.zhiyazhang.mykotlinapplication.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -34,12 +33,18 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * on 2017/6/19 15:39.
  */
 class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
-    val whereIsIt ="whereIsIt"
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initView() {
         my_toolbar.title = getString(R.string.order)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
+
+        orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.VERTICAL))
+        orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.HORIZONTAL))
+
+        orderLoading.visibility = View.VISIBLE
+    }
+
+    override fun initClick() {
         val data = ArrayList<OrderData>()
         setData(data)
         orderRecycler.layoutManager = GridLayoutManager(this@ContractOrder, 3, GridLayoutManager.VERTICAL, false)
@@ -99,20 +104,22 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             }
 
         })
-        orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.VERTICAL))
-        orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.HORIZONTAL))
         orderLoading.setOnClickListener {
             MyToast.getLongToast(getString(R.string.loadingCall))
         }
-        orderLoading.visibility = View.VISIBLE
         orderretry.setOnClickListener {
             orderpro.visibility = View.VISIBLE
             orderprotext.visibility = View.VISIBLE
             orderretry.visibility = View.GONE
             runOrdT2()
         }
+    }
+
+    override fun initData() {
         runOrdT2()
     }
+
+    val whereIsIt ="whereIsIt"
 
     override fun onBackPressed() {
         if (orderLoading.visibility == View.GONE) {

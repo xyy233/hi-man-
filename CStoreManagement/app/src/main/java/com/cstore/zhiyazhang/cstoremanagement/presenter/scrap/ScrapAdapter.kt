@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.scrap
 
 import android.annotation.SuppressLint
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.onMoveAndSwipedListener
 import java.util.*
 
@@ -30,6 +32,10 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, val onClick: Recycler
                 holder.scrapAdd.visibility = View.VISIBLE
                 holder.scrapLess.visibility = View.VISIBLE
             }
+            ""->{
+                holder.scrapAdd.visibility = View.VISIBLE
+                holder.scrapLess.visibility = View.VISIBLE
+            }
             MyTimeUtil.nowDate -> {
                 holder.scrapAdd.visibility = View.VISIBLE
                 holder.scrapLess.visibility = View.VISIBLE
@@ -39,6 +45,10 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, val onClick: Recycler
                 holder.scrapLess.visibility = View.GONE
             }
         }
+
+        if (data[position].action==0)holder.scrapItem.setCardBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.add_bg))
+        else holder.scrapItem.setCardBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
+
         try {
             //删除的时候会点到 +or- 因此开个try
             holder.scrapAdd.setOnTouchListener { _, event ->
