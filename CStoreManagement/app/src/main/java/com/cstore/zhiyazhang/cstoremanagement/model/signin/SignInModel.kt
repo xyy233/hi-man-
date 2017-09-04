@@ -5,13 +5,13 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -47,9 +47,7 @@ class SignInModel : SignInInterface {
                     val cd = ContractTypeDao(MyApplication.instance().applicationContext)
                     cd.editSQL(null, "deleteTable")
                 }
-                if (oldUser.uId != users[0].uId) {
-                    sView.saveUser(users[0])
-                }
+                sView.saveUser(users[0])
                 msg.obj = users[0]
                 msg.what = SUCCESS
                 myHandler.sendMessage(msg)

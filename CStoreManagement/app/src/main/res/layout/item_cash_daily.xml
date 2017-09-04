@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_marginStart="8dp"
+              android:layout_marginEnd="8dp"
+              android:gravity="center"
+              android:background="@drawable/bg_item_line"
+              android:layout_width="match_parent"
+              android:layout_height="30dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/item_cash_daily"
+        android:gravity="center"
+        android:clickable="true"
+        android:foreground="@drawable/selector_foreground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="KeyboardInaccessibleWidget,UselessParent">
+        <TextView
+            android:id="@+id/item_cash_daily_name"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:layout_width="1dp"
+            android:background="@color/line"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/item_cash_daily_number"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</LinearLayout>

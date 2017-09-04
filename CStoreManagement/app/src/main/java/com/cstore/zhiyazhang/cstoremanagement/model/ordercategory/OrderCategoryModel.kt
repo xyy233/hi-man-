@@ -3,11 +3,11 @@ package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -117,8 +117,9 @@ class OrderCategoryModel() : OrderCategoryInterface {
             val msg= Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val user=User.getUser()
             val result=SocketUtil.initSocket(ip,if (freshType==1)MySql.getFreshGroup1 else MySql.getFreshGroup2).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
 
             val fresh=ArrayList<FreshGroup>()
             try {

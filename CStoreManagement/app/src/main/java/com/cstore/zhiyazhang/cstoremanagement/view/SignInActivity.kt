@@ -16,13 +16,9 @@ import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions

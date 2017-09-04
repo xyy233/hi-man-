@@ -92,6 +92,10 @@
         <activity android:name=".view.scrap.ScrapHotItemActivity"
                   android:screenOrientation="portrait"/>
 
+        <!--现金日报-->
+        <activity android:name=".view.cashdaily.CashDailyActivity"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

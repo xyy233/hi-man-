@@ -23,4 +23,14 @@
         <item>DMS销量正序</item>
         <item>DMS销量倒序</item>
     </string-array>
+
+    <string-array name="cashDailyTags">
+        <item>本日销货收入</item>
+        <item>代收款项</item>
+        <item>服务性商品</item>
+        <item>代现金回收</item>
+        <item>代现金溢收</item>
+        <item>汇款状况</item>
+        <item>其他</item>
+    </string-array>
 </resources>
