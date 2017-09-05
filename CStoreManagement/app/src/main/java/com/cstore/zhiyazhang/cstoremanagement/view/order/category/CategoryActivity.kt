@@ -181,11 +181,11 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         category_loading.visibility = View.GONE
     }
 
-    override fun <T> showView(adapter: T) {
-        when (adapter) {
+    override fun <T> showView(aData: T) {
+        when (aData) {
             is OrderCategoryAdapter -> {
-                type_list.adapter = adapter
-                this.adapter = adapter
+                type_list.adapter = aData
+                this.adapter = aData
             }
             else -> MyToast.getShortToast(getString(R.string.system_error))
         }

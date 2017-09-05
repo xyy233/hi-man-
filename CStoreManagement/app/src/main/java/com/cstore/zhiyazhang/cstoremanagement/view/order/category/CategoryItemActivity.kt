@@ -620,12 +620,12 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         MyHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
         retry.visibility = View.GONE
         noMessage.visibility = View.GONE
-        this.adapter = adapter as CategoryItemAdapter
-        if (adapter.data.isEmpty()) errorDealWith()
-        swipe_recycler.adapter = adapter
+        this.adapter = aData as CategoryItemAdapter
+        if (aData.data.isEmpty()) errorDealWith()
+        swipe_recycler.adapter = aData
     }
 
     override fun errorDealWith() {

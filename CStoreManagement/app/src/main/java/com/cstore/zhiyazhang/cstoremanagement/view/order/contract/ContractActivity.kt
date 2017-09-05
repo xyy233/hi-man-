@@ -459,15 +459,15 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
     }
 
     private var lastVisibleItem = 0
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
         retry.visibility = View.GONE
-        this.adapter = adapter as ContractAdapter
+        this.adapter = aData as ContractAdapter
         swipe_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.itemCount) {
-                    adapter.changeMoreStatus(adapter.LOADING_MORE)
-                    pullLoading(adapter)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == aData.itemCount) {
+                    aData.changeMoreStatus(aData.LOADING_MORE)
+                    pullLoading(aData)
                 }
             }
 
@@ -476,10 +476,10 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition()
             }
         })
-        if (adapter.cr.detail.isEmpty()) {
+        if (aData.cr.detail.isEmpty()) {
             showNoMessage()
         }
-        swipe_recycler.adapter = adapter
+        swipe_recycler.adapter = aData
     }
 
     override fun errorDealWith() {

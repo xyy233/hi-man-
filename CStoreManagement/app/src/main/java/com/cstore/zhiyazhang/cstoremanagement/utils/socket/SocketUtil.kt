@@ -1,12 +1,14 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils.socket
 
+import android.content.Context
+import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -96,7 +98,14 @@ internal class SocketUtil  {
          * 判断ip是否正确
          */
         fun judgmentIP(ip: String, msg: Message, handler: MyHandler.MyHandler): Boolean {
-            if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
+
+            val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
+            if (wifiName == null || wifiName == ""){
+                msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
+                msg.what = MyHandler.ERROR1
+                handler.sendMessage(msg)
+                return false
+            }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
                 msg.what = MyHandler.ERROR1
                 handler.sendMessage(msg)
@@ -151,6 +160,10 @@ internal class SocketUtil  {
         fun getScrapHot(data: String):ArrayList<ScrapHotBean>{
             return Gson().fromJson<ArrayList<ScrapHotBean>>(data, object : TypeToken<ArrayList<ScrapHotBean>>() {}.type)
         }
+
+        fun getCashDaily(data: String):ArrayList<CashDailyBean>{
+            return Gson().fromJson<ArrayList<CashDailyBean>>(data, object : TypeToken<ArrayList<CashDailyBean>>() {}.type)
+        }
     }
 
     /**
@@ -171,6 +184,7 @@ internal class SocketUtil  {
             while (receive == null) {
                 receive = br!!.readLine()
             }
+
             return receive
         } catch (ste: SocketTimeoutException) {
             return REQUEST_ERROR

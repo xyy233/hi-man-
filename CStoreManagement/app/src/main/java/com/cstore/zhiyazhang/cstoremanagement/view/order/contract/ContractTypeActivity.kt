@@ -180,11 +180,11 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     override val isJustLook: Boolean
         get() = previousIntent!!.getBooleanExtra("is_just_look", false)
 
-    override fun <T> showView(adapter: T) {
-        when (adapter) {
+    override fun <T> showView(aData: T) {
+        when (aData) {
             is ContractTypeAdapter -> {
-                type_list.adapter = adapter
-                this.adapter = adapter
+                type_list.adapter = aData
+                this.adapter = aData
             }
             else -> MyToast.getShortToast(getString(R.string.system_error))
         }

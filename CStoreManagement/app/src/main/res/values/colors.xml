@@ -48,4 +48,8 @@
     <color name="is_edit">#eeefef</color>
     <color name="type_name">#48b7c5</color>
     <color name="orange">#fea400</color>
+
+    <!--现金日报-->
+    <color name="item_green1">#8fed8f</color>
+    <color name="item_green2">#fefedf</color>
 </resources>

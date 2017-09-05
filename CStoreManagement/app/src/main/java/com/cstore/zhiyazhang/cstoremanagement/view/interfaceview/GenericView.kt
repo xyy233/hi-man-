@@ -32,8 +32,12 @@ interface GenericView {
 
     /**
      * presenter内adapter设置成功递给view的泛型adapter
+     *
+     * 现在作用和requestsuccess一样
      */
-    fun <T> showView(adapter: T)
+    fun <T> showView(aData: T)
 
     fun errorDealWith()
+
+    fun <T> updateDone(uData:T){}
 }

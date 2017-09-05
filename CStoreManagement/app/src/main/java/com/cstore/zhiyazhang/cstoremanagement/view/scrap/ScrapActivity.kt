@@ -637,7 +637,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         startActivity(Intent(this@ScrapActivity, ContractSearchActivity::class.java))
     }
 
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

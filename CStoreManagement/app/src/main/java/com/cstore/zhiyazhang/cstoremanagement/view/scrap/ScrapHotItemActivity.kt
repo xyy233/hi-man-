@@ -335,7 +335,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
         MyHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
     }
 
     override fun errorDealWith() {

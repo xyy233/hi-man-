@@ -52,6 +52,10 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyy/MM/dd").format(date)
     }
 
+    fun getYMDStringByDate3(date: Date): String {
+        return SimpleDateFormat("yyyyMMdd").format(date)
+    }
+
     /**
      * String转为时间
 
@@ -113,6 +117,9 @@ object MyTimeUtil {
 
     val nowDate2:String
     get() = getYMDStringByDate2(Date(System.currentTimeMillis()))
+
+    val nowDate3:String
+    get() = getYMDStringByDate3(Date(System.currentTimeMillis()))
 
     val tomorrowDate: String
         get() {

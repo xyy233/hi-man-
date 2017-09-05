@@ -41,6 +41,13 @@ object MySql {
     }
 
     /**
+     * 更新现金日报的存储过程
+     */
+    fun cashDaily():String{
+        return "call Scc01_P01('${MyTimeUtil.nowDate3}','${User.getUser().storeId}') \u000c"
+    }
+
+    /**
      * 检测是否存在正确存储过程
      */
     val judgmentOrdt2 :String
@@ -378,5 +385,37 @@ object MySql {
      */
     fun getScrap80Item(midId: String): String {
         return "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.CATEGORYNUMBER='80' and a.midcategorynumber='$midId' and m.itemnumber(+)=a.itemnumber and (m.busidate = to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') or m.busidate is null) order by itemnumber"
+    }
+
+    fun getAllCashDaily(date: String):String{
+        return " select * from ( " +
+                "Select x.Accountnumber, x.Accountname,a.updatetype,x.displaytype, " +
+                "trim(to_char(Sum(Nvl(x.Storeamount, 0)),Decode(sign(instr(x.accountname,'来客')),0,'9,999,990.00','9,999,990'))) storeamount " +
+                "From Accdayrpt x, accitem a "+
+                "Where x.Storeid ='${User.getUser().storeId}' " +
+                "And x.accountnumber=a.accountnumber " +
+                "And x.Accountdate = to_date('$date','yyyy-MM-dd') " +
+                "And x.Displaytype = '0' " +
+                "Group By x.Accountnumber, x.Accountname, a.updatetype,x.displaysequence,x.displaytype " +
+                "union all " +
+                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
+                "From (Select Accountnumber, Accountname, trim(to_char(nvl(Storeamount,0),'9,999,990.00')) Storeamount, Updatetype,Displaytype " +
+                "From Accdayrpt " +
+                "Where Storeid ='${User.getUser().storeId}' " +
+                "And Accountdate =to_date('$date','yyyy-MM-dd') " +
+                "And Displaytype in (1,2,3,5) " +
+                "Order By To_Number(Displaysequence),Accountnumber) x " +
+                "union all " +
+                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
+                "From (Select Accountnumber, Accountname, decode(accountnumber,'1100',datasource,'1097',(Select weather_desc From weathercode Where to_number(weather_id)=Accdayrpt.storeamount) ,trim(to_char(nvl(Storeamount,0),'9,999,990.00'))) Storeamount, DECODE(Updatetype,'P','Y',Updatetype) Updatetype,Displaytype " +
+                "From Accdayrpt " +
+                "Where Storeid ='${User.getUser().storeId}' " +
+                "And Accountdate = to_date('$date','yyyy-MM-dd') " +
+                "And Displaytype between 6 and 10 " +
+                "Order By To_Number(Displaysequence),Accountnumber) x) order by displaytype,accountnumber"
+    }
+
+    fun updateCashDaily(cdId:String, cdValue:String):String{
+        return "update accdayrpt a set a.storeamount='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
     }
 }

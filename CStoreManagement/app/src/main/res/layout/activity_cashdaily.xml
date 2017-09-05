@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
-        android:elevation="4dp"
+        android:elevation="2dp"
         android:background="@color/line"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"

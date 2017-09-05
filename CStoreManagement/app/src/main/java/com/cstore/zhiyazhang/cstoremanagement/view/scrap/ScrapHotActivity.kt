@@ -73,7 +73,7 @@ class ScrapHotActivity(override val layoutId: Int = R.layout.activity_contract_t
         contract_loding.visibility = View.GONE
     }
 
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
     }
 
     override fun errorDealWith() {

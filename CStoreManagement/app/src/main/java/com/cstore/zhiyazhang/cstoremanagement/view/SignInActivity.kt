@@ -85,6 +85,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         })
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initData() {
         app_version.text = "v: ${MyApplication.getVersion()}"
     }
@@ -137,7 +138,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         }
     }
 
-    override fun <T> showView(adapter: T) {
+    override fun <T> showView(aData: T) {
     }
 
     override fun errorDealWith() {

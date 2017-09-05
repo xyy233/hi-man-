@@ -36,6 +36,7 @@
     <string name="noInternet">网络有问题，请查看联网状态并尝试刷新</string>
     <string name="socketError">请求出错，请重试</string>
     <string name="notFindIP">不能获得IP地址，请检查网络</string>
+    <string name="cannt_mobile">不能使用移动网络!请连接门市WIFI!</string>
     <string name="pwdError">密码错误</string>
     <string name="idError">查询不到此帐号</string>
     <string name="scrap">报废</string>
@@ -69,6 +70,9 @@
     <string name="minTNoLess">已到当前类别最小订量，不能减少</string>
     <string name="minCNoLess">已到当前商品最小订量，不能减少</string>
     <string name="saveDone">保存成功</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="editValue">修改项目值</string>
     <string name="noEditMsg">无修改数据</string>
     <string name="contract_order">承包商品订货</string>
     <string name="contract_order_toview">承包商品修改一览表</string>
@@ -107,4 +111,5 @@
     <string name="freshGroup">群组</string>
     <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
     <string name="cash_daily">现金日报</string>
+    <string name="please_edit_value">请输入值</string>
 </resources>
