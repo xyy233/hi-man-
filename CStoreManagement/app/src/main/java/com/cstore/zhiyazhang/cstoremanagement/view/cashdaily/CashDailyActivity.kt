@@ -1,12 +1,15 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.cashdaily
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.cashdaily.CashDailyPresenter
@@ -80,14 +83,19 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             builder.setView(dialogView)
             builder.setCancelable(true)
             dialog=builder.create()
-            //设置输入类型
-            dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
-            dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
+            dialogView!!.dialog_cancel.setOnClickListener {
+                dialog!!.cancel()
+            }
+        }
+        dialogView!!.dialog_save.setOnClickListener {
+            if (cd.cdId=="1097"){
+                dialogView!!.dialog_progress.visibility=View.VISIBLE
+                //天气,在spinner内是从0开始，显示及存储是从1开始，所以+1
+                presenter.updateCashDaily(view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
+            }else{//其他
 
-            dialogView!!.dialog_save.setOnClickListener {
                 //去掉空格
                 val value=dialogView!!.dialog_edit.text.toString().replace(" ","")
-
                 if (value=="")showPrompt(getString(R.string.please_edit_value))//不能为空
                 else if (value==cd.cdValue){
                     //和之前一样就直接发个消息说完成
@@ -95,14 +103,38 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                     dialog!!.cancel()
                 }
                 else {
+                    dialogView!!.dialog_progress.visibility=View.VISIBLE
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
                     presenter.updateCashDaily(view,cd,value)
                 }
             }
-            dialogView!!.dialog_cancel.setOnClickListener {
-                dialog!!.cancel()
+        }
+        dialogView!!.dialog_title.text=cd.cdName
+        if (cd.cdId=="1097"){
+            dialogView!!.dialog_spinner.visibility=View.VISIBLE
+            dialogView!!.dialog_edit.visibility=View.GONE
+        }else{
+            dialogView!!.dialog_spinner.visibility=View.GONE
+            dialogView!!.dialog_edit.visibility=View.VISIBLE
+            //设置输入类型
+            if (cd.cdId=="1100"){
+                dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_TEXT
+            }else{
+                dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
+                dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
             }
         }
         dialog!!.show()
+    }
+
+    /**
+     * 得到天气选择的下拉列表
+     */
+    fun getWeatherAdapter(): ArrayAdapter<String> {
+        val weatherAdapter=ArrayAdapter(this,R.layout.custom_spinner_text_item,resources.getStringArray(R.array.weather))
+        weatherAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
+        return weatherAdapter
     }
 
     /**
@@ -131,7 +163,9 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     }
 
     override fun <T> updateDone(uData: T) {
+        dialogView!!.dialog_progress.visibility=View.GONE
         dialog!!.cancel()
+        dialogView!!.dialog_edit.setText("")
     }
 
     override fun showLoading() {

@@ -25,6 +25,7 @@
     </string-array>
 
     <string-array name="cashDailyTags">
+        <item>周转金</item>
         <item>本日销货收入</item>
         <item>销售收入</item>
         <item>代收款项</item>
@@ -34,7 +35,20 @@
         <item>现金进货退回</item>
         <item>现金进货</item>
         <item>门市费用现金支出</item>
-        <item>周转金</item>
         <item>其他</item>
+    </string-array>
+
+    <string-array name="weather">
+        <item>晴</item>
+        <item>多云</item>
+        <item>阴</item>
+        <item>小雨</item>
+        <item>中雨</item>
+        <item>大雨</item>
+        <item>雨夹雪</item>
+        <item>小雪</item>
+        <item>中雪</item>
+        <item>大雪</item>
+        <item>雷阵雨</item>
     </string-array>
 </resources>

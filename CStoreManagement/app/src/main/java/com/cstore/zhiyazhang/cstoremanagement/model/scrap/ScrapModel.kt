@@ -4,6 +4,7 @@ import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
@@ -11,7 +12,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -125,7 +125,7 @@ class ScrapModel(private val gView: GenericView, private val sView: ScrapView) :
          */
         fun getRecodeNumber(ip: String): String {
             val result = SocketUtil.initSocket(ip, MySql.getRecodeNumber).inquire()
-            if (result=="")return "0"
+            if (result==""||result=="[]")return "0"
             try {
                 val count=result.substring(0,result.length-2).substring(17).toInt()
                 if (count==0)return "0" else{

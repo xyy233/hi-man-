@@ -67,7 +67,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        //LeakCanary.install(this)
+        //LeakCanary.install(this)a
         instance = this
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient.Builder()

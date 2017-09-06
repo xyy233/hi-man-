@@ -1,7 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.cashdaily
 
-import android.content.Context.WIFI_SERVICE
-import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
@@ -35,6 +33,7 @@ class CashDailyModel:CashDailyInterface{
                 handler.sendMessage(msg)
             }else{
                 val fragments=ArrayList<CashDailyFragment>()
+                fragments.add(CashDailyFragment.newInstance(9,(cds.filter { it.cdType=="10"&&it.cdId!="1097"&&it.cdId!="1098"&&it.cdId!="1100"&&it.cdId!="1099" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(0,(cds.filter { it.cdType=="0" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(1,(cds.filter { it.cdType=="1" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(2,(cds.filter { it.cdType=="2" } as ArrayList<CashDailyBean>),date))
@@ -44,7 +43,6 @@ class CashDailyModel:CashDailyInterface{
                 fragments.add(CashDailyFragment.newInstance(6,(cds.filter { it.cdType=="7" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(7,(cds.filter { it.cdType=="8" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(8,(cds.filter { it.cdType=="9" } as ArrayList<CashDailyBean>),date))
-                fragments.add(CashDailyFragment.newInstance(9,(cds.filter { it.cdType=="10"&&it.cdId!="1097"&&it.cdId!="1098"&&it.cdId!="1100"&&it.cdId!="1099" } as ArrayList<CashDailyBean>),date))
                 fragments.add(CashDailyFragment.newInstance(10,(cds.filter { it.cdId=="1097"||it.cdId=="1098"||it.cdId=="1100"||it.cdId=="1099" } as ArrayList<CashDailyBean>),date))
                 msg.obj=fragments
                 msg.what=SUCCESS
@@ -59,8 +57,10 @@ class CashDailyModel:CashDailyInterface{
             val msg=Message()
             val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,MySql.updateCashDaily(cd.cdId,value)).inquire()
+            val sql=getSql(cd,value)
+            val result=SocketUtil.initSocket(ip,sql).inquire()
             if (result=="1"){
+                Thread.sleep(1000)
                 msg.obj=result
                 msg.what= SUCCESS
                 handler.sendMessage(msg)
@@ -70,6 +70,10 @@ class CashDailyModel:CashDailyInterface{
                 handler.sendMessage(msg)
             }
         }).start()
+    }
+
+    private fun getSql(cd: CashDailyBean, value: String): String {
+        if (cd.cdId=="1100")return MySql.updateCashDaily2(cd.cdId,value) else return MySql.updateCashDaily(cd.cdId,value)
     }
 
 }

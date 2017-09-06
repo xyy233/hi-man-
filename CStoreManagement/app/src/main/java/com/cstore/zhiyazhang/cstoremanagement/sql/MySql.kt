@@ -418,4 +418,8 @@ object MySql {
     fun updateCashDaily(cdId:String, cdValue:String):String{
         return "update accdayrpt a set a.storeamount='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
     }
+
+    fun updateCashDaily2(cdId:String, cdValue:String):String{
+        return "update accdayrpt a set a.datasource='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
+    }
 }

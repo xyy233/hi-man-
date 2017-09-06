@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.cashdaily
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -39,8 +40,18 @@ class CashDailyPresenter(private val gView:GenericView,private val context: Cont
         if(!PresenterUtil.judgmentInternet(gView))return
         mInterface.updateCashDaily(value,cd, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                (view as TextView).text=value
-                cd.cdValue=value
+                if (cd.cdId=="1097"){
+                    try {
+                        val weather=context.resources.getStringArray(R.array.weather)[value.toInt()-1]
+                        (view as TextView).text=weather
+                        cd.cdValue=weather
+                    }catch (e:Exception){
+                        Log.e("CashDaily",e.message)
+                    }
+                }else{
+                    (view as TextView).text=value
+                    cd.cdValue=value
+                }
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
                 gView.updateDone(data)
                 gView.hideLoading()

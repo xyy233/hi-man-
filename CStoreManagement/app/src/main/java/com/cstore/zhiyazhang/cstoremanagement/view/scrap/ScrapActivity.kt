@@ -384,14 +384,14 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                                 data.editCount = 1
                                 data.action = 0
                                 if (i == 0) {
-                                    handler.post { adapter.addItem(data) }
+                                    handler.post { adapter.addItem(data.copy()) }
                                 }
                                 if (e == 0) {
                                     try {
-                                        editData.add(adapter.data.filter { it.scrapId == rData[0].scrapId }[0])
+                                        editData.add(adapter.data.filter { it.scrapId == rData[0].scrapId }[0].copy())
                                     } catch (e: Exception) {
                                         Log.e("CStoreScrap", e.message)
-                                        editData.add(data)
+                                        editData.add(data.copy())
                                     }
                                 }
                             }
