@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:layout_marginStart="8dp"
-              android:layout_marginEnd="8dp"
-              android:gravity="center"
-              android:background="@drawable/bg_item_line"
               android:layout_width="match_parent"
-              android:layout_height="30dp">
+              android:layout_height="60dp"
+              android:layout_marginEnd="8dp"
+              android:layout_marginStart="8dp"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:id="@+id/item_cash_daily"
-        android:gravity="center"
-        android:clickable="true"
-        android:foreground="@drawable/selector_foreground"
-        android:stateListAnimator="@drawable/lift_on_touch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="KeyboardInaccessibleWidget,UselessParent">
+        android:background="@color/white"
+        android:foreground="@drawable/selector_foreground"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:stateListAnimator="@drawable/lift_on_touch">
+
         <TextView
             android:id="@+id/item_cash_daily_name"
-            android:gravity="center"
-            android:maxLines="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"/>
-
-        <View
-            android:layout_width="1dp"
-            android:background="@color/line"
-            android:layout_height="match_parent"/>
+            android:gravity="center|start"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/item_cash_daily_number"
+            android:layout_width="80dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="match_parent"/>
+            android:textSize="20sp"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"/>
 
 </LinearLayout>

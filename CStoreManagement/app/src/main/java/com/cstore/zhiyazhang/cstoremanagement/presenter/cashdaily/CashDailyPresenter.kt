@@ -59,6 +59,7 @@ class CashDailyPresenter(private val gView:GenericView,private val context: Cont
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
+                gView.errorDealWith()
                 gView.hideLoading()
             }
         }))

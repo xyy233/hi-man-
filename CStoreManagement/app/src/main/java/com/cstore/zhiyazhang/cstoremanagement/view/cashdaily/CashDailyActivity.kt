@@ -19,6 +19,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_cashdaily.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
+import kotlinx.android.synthetic.main.layout_date.*
+import kotlinx.android.synthetic.main.layout_date.view.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import java.util.*
@@ -37,8 +39,10 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     override fun initView() {
         my_toolbar.title=getString(R.string.cash_daily)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        toolbar_time.visibility=View.VISIBLE
-        toolbar_time.text=MyTimeUtil.nowDate
+        //toolbar_time.visibility=View.VISIBLE
+        date_util.visibility=View.VISIBLE
+        MyTimeUtil.setTextViewDate(date_util,MyTimeUtil.nowDate)
+        //toolbar_time.text=MyTimeUtil.nowDate
         setSupportActionBar(my_toolbar)
         //设置title
         resources.getStringArray(R.array.cashDailyTags).forEach { tabIndicators.add(it) }
@@ -57,7 +61,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         loading.setOnClickListener {
             showPrompt(getString(R.string.with_loading))
         }
-        toolbar_time.setOnTouchListener{_,event->
+        date_util.setOnTouchListener{_,event->
             if (event.action==MotionEvent.ACTION_DOWN){
                 showDatePickDlg()
                 true
@@ -67,12 +71,12 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             loading_retry.visibility=View.GONE
             loading_text.visibility=View.VISIBLE
             loading_progress.visibility=View.VISIBLE
-            presenter.getAllCashDaily(toolbar_time.text.toString())
+            presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
         }
     }
 
     override fun initData() {
-        presenter.getAllCashDaily(toolbar_time.text.toString())
+        presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
     }
 
     var dialogView:View?= null
@@ -144,15 +148,23 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@CashDailyActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
+                val calendar=Calendar.getInstance()
+                calendar.timeInMillis=System.currentTimeMillis()
+                if (year>calendar.get(Calendar.YEAR)||monthOfYear>calendar.get(Calendar.MONTH)||dayOfMonth>calendar.get(Calendar.DAY_OF_MONTH)){
+                    showPrompt("不能选择未来日期")
+                    return@run
+                }
+                val textYear=year.toString()+"年"
                 var mm = ""
-                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}"//如果小于十月就代表是个位数要手动加上0
-                else mm = (monthOfYear + 1).toString()
+                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                else mm = (monthOfYear + 1).toString()+"月"
                 var dd = ""
                 if (dayOfMonth < 10) dd = "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
                 else dd = dayOfMonth.toString()
-                val time = "$year-$mm-$dd"
-                toolbar_time.text = time
-                presenter.getAllCashDaily(time)
+                date_util.year.text=textYear
+                date_util.month.text=mm
+                date_util.day.text=dd
+                presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         datePickDialog.show()
@@ -195,7 +207,11 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     override fun errorDealWith() {
         loading_progress.visibility=View.GONE
         loading_text.visibility=View.GONE
-        loading_retry.visibility=View.VISIBLE
+        if (dialog!!.loading_progress.visibility==View.VISIBLE){
+            dialog!!.loading_progress.visibility=View.GONE
+        }else{
+            loading_retry.visibility=View.VISIBLE
+        }
         MyHandler.removeCallbacksAndMessages(null)
     }
 }

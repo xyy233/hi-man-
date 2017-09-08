@@ -32,6 +32,8 @@ import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearch
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemTouchHelperCallback
 import com.zhiyazhang.mykotlinapplication.utils.recycler.onMoveAndSwipedListener
 import kotlinx.android.synthetic.main.activity_scrap.*
+import kotlinx.android.synthetic.main.layout_date.*
+import kotlinx.android.synthetic.main.layout_date.view.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -87,12 +89,14 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     override fun initView() {
         my_toolbar.title = getString(R.string.scrap)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        toolbar_time.visibility = View.VISIBLE
-        toolbar_time.text = MyTimeUtil.nowDate
+        //toolbar_time.visibility = View.VISIBLE
+        //toolbar_time.text = MyTimeUtil.nowDate
+        date_util.visibility=View.VISIBLE
+        MyTimeUtil.setTextViewDate(date_util,MyTimeUtil.nowDate)
         setSupportActionBar(my_toolbar)
         scrap_recycler.layoutManager = layoutManager
         scrap_recycler.adapter = adapter
-        val callback = ItemTouchHelperCallback(adapter as onMoveAndSwipedListener, MyTimeUtil.nowDate == toolbar_time.text.toString())
+        val callback = ItemTouchHelperCallback(adapter as onMoveAndSwipedListener, MyTimeUtil.nowDate == MyTimeUtil.getTextViewDate(date_util))
         val mItemTOuchHelper = ItemTouchHelper(callback)
         mItemTOuchHelper.attachToRecyclerView(scrap_recycler)
     }
@@ -105,19 +109,19 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         loading.setOnClickListener {
             showPrompt(getString(R.string.with_loading))
         }
-        toolbar_time.setOnTouchListener { _, event ->
+        date_util.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 judgmentDate()
                 true
             } else false
         }
-        toolbar_time.setOnFocusChangeListener { _, b ->
+        date_util.setOnFocusChangeListener { _, b ->
             if (b) {
                 judgmentDate()
             }
         }
         scrap_qrcode.setOnClickListener {
-            if (toolbar_time.text.toString() != MyTimeUtil.nowDate) {
+            if (MyTimeUtil.getTextViewDate(date_util) != MyTimeUtil.nowDate) {
                 goTodayPrompt()
             } else {
                 if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -135,7 +139,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             }
         }
         scrap_search_btn.setOnClickListener {
-            if (toolbar_time.text.toString() != MyTimeUtil.nowDate) {
+            if (MyTimeUtil.getTextViewDate(date_util) != MyTimeUtil.nowDate) {
                 goTodayPrompt()
             } else {
                 if (scrap_search_edit.text.toString() != "")
@@ -146,7 +150,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             }
         }
         scrap_search_edit.setOnEditorActionListener { _, actionId, _ ->
-            if (toolbar_time.text.toString() != MyTimeUtil.nowDate) {
+            if (MyTimeUtil.getTextViewDate(date_util) != MyTimeUtil.nowDate) {
                 goTodayPrompt()
                 true
             } else {
@@ -192,7 +196,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                 .setTitle("提示")
                 .setMessage("进行报废操作要切换回今天，是否切换？")
                 .setPositiveButton("切换到今天", { _, _ ->
-                    toolbar_time.text = MyTimeUtil.nowDate
+                    MyTimeUtil.setTextViewDate(date_util,MyTimeUtil.nowDate)
                     adapter.data.clear()
                     editData.clear()
                     presenter.getAllScrap()
@@ -272,17 +276,25 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@ScrapActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
+                val calendar=Calendar.getInstance()
+                calendar.timeInMillis=System.currentTimeMillis()
+                if (year>calendar.get(Calendar.YEAR)||monthOfYear>calendar.get(Calendar.MONTH)||dayOfMonth>calendar.get(Calendar.DAY_OF_MONTH)){
+                    showPrompt("不能选择未来日期")
+                    return@run
+                }
+                val textYear=year.toString()+"年"
                 var mm = ""
-                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}"//如果小于十月就代表是个位数要手动加上0
-                else mm = (monthOfYear + 1).toString()
+                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                else mm = (monthOfYear + 1).toString()+"月"
                 var dd = ""
                 if (dayOfMonth < 10) dd = "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
                 else dd = dayOfMonth.toString()
-                val time = "$year-$mm-$dd"
-                toolbar_time.text = time
+                date_util.year.text=textYear
+                date_util.month.text=mm
+                date_util.day.text=dd
                 adapter.data.clear()
                 editData.clear()
-                val callback = ItemTouchHelperCallback(adapter as onMoveAndSwipedListener, MyTimeUtil.nowDate == toolbar_time.text.toString())
+                val callback = ItemTouchHelperCallback(adapter as onMoveAndSwipedListener, MyTimeUtil.nowDate == MyTimeUtil.getTextViewDate(date_util))
                 val mItemTOuchHelper = ItemTouchHelper(callback)
                 mItemTOuchHelper.attachToRecyclerView(scrap_recycler)
                 presenter.getAllScrap()
@@ -302,7 +314,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun getDate(): String {
-        return toolbar_time.text.toString()
+        return MyTimeUtil.getTextViewDate(date_util)
     }
 
     override fun updateDone() {

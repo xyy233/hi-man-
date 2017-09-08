@@ -1,6 +1,8 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.annotation.SuppressLint
+import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.layout_date.view.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,19 +43,19 @@ object MyTimeUtil {
      * @return string
      */
     fun getStringByDate(date: Date): String {
-        return SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(date)
+        return SimpleDateFormat("yyyy-MM-dd HH.mm.ss", Locale.CHINA).format(date)
     }
 
     fun getYMDStringByDate(date: Date): String {
-        return SimpleDateFormat("yyyy-MM-dd").format(date)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(date)
     }
 
-    fun getYMDStringByDate2(date:Date):String{
-        return SimpleDateFormat("yyyy/MM/dd").format(date)
+    fun getYMDStringByDate2(date: Date): String {
+        return SimpleDateFormat("yyyy/MM/dd", Locale.CHINA).format(date)
     }
 
     fun getYMDStringByDate3(date: Date): String {
-        return SimpleDateFormat("yyyyMMdd").format(date)
+        return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(date)
     }
 
     /**
@@ -67,7 +69,7 @@ object MyTimeUtil {
      */
     @Throws(ParseException::class)
     fun getDateByString(date: String): Date {
-        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date)
+        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.CHINA).parse(date)
     }
 
     /**
@@ -81,7 +83,7 @@ object MyTimeUtil {
      */
     @Throws(ParseException::class)
     fun getLongByString(date: String): Long {
-        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date).time / 1000
+        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.CHINA).parse(date).time / 1000
     }
 
     /**
@@ -92,7 +94,7 @@ object MyTimeUtil {
      * @return String
      */
     fun getStringByLong(date: Long?): String {
-        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Date(date!! * 1000))
+        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.CHINA).format(Date(date!! * 1000))
     }
 
     /**
@@ -103,8 +105,8 @@ object MyTimeUtil {
         @SuppressLint("WrongConstant")
         get() = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
-    val nowHour:Int
-    get() = Calendar.getInstance().get(Calendar.HOUR)
+    val nowHour: Int
+        get() = Calendar.getInstance().get(Calendar.HOUR)
 
     /**
      * @return 获得当前时间
@@ -115,18 +117,46 @@ object MyTimeUtil {
     val nowDate: String
         get() = getYMDStringByDate(Date(System.currentTimeMillis()))
 
-    val nowDate2:String
-    get() = getYMDStringByDate2(Date(System.currentTimeMillis()))
+    val nowDate2: String
+        get() = getYMDStringByDate2(Date(System.currentTimeMillis()))
 
-    val nowDate3:String
-    get() = getYMDStringByDate3(Date(System.currentTimeMillis()))
+    val nowDate3: String
+        get() = getYMDStringByDate3(Date(System.currentTimeMillis()))
 
     val tomorrowDate: String
         get() {
-            var date = Date()//取时间
+            val date = Date()//取时间
             val calendar: Calendar = GregorianCalendar()
             calendar.time = date
             calendar.add(Calendar.DATE, 1)//把日期往后增加一天.整数往后推,负数往前移动
-            return SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
+            return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
         }
+
+    fun getCalendarByString(data: String): Calendar {
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(data)
+        val result = Calendar.getInstance()
+        result.time = date
+        return result
+    }
+
+    fun setTextViewDate(dateUtil: LinearLayout, nowDate: String) {
+        val calendar = getCalendarByString(nowDate)
+        val year = "${calendar.get(Calendar.YEAR)}年"
+
+        var month = ""
+        if (calendar.get(Calendar.MONTH) + 1<10)month="0${calendar.get(Calendar.MONTH) + 1}月"
+        else month="${calendar.get(Calendar.MONTH) + 1}月"
+
+        var day = ""
+        if (calendar.get(Calendar.DAY_OF_MONTH)<10)day="0${calendar.get(Calendar.DAY_OF_MONTH)}"
+        else day=calendar.get(Calendar.DAY_OF_MONTH).toString()
+
+        dateUtil.year.text = year
+        dateUtil.month.text = month
+        dateUtil.day.text = day
+    }
+
+    fun getTextViewDate(dateUtil: LinearLayout):String{
+        return "${dateUtil.year.text.toString().replace("年","")}-${dateUtil.month.text.toString().replace("月","")}-${dateUtil.day.text}"
+    }
 }
