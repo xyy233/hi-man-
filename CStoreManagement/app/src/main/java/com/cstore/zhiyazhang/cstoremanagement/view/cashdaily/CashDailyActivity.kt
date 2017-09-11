@@ -39,10 +39,8 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     override fun initView() {
         my_toolbar.title=getString(R.string.cash_daily)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        //toolbar_time.visibility=View.VISIBLE
         date_util.visibility=View.VISIBLE
         MyTimeUtil.setTextViewDate(date_util,MyTimeUtil.nowDate)
-        //toolbar_time.text=MyTimeUtil.nowDate
         setSupportActionBar(my_toolbar)
         //设置title
         resources.getStringArray(R.array.cashDailyTags).forEach { tabIndicators.add(it) }

@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/commerce"
-                    android:src="@mipmap/ic_home_business_black"/>
+                    android:src="@mipmap/ic_home_business"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -183,7 +183,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/coi"
-                    android:src="@mipmap/ic_home_instock"/>
+                    android:src="@mipmap/ic_home_invest"/>
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -17,6 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.Acceptance.PurchaseAcceptanceActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.cashdaily.CashDailyActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
 import kotlinx.android.synthetic.main.activity_home.*
@@ -77,7 +78,8 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
 
     override fun initClick() {
         gg1.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg2.setOnClickListener { MyToast.getShortToast("未完成") }
+        gg2.setOnClickListener { startActivity(Intent(this@HomeActivity, PurchaseAcceptanceActivity::class.java),
+                ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg2, "gg3").toBundle()) }
         gg3.setOnClickListener {
             startActivity(Intent(this@HomeActivity, ContractOrder::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg3, "gg3").toBundle())
@@ -88,7 +90,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg6, "gg3").toBundle()) }
         gg7.setOnClickListener {
             startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
-                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg7").toBundle())
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg3").toBundle())
         }
     }
 

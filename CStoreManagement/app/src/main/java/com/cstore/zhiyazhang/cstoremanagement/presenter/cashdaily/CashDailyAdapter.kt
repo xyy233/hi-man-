@@ -43,15 +43,15 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
                         holder.itemNum.setBackgroundResource(R.drawable.bg_orange)
                     }else {
                         holder.item.isEnabled=false
-                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.white))
-                        holder.itemNum.setBackgroundResource(R.drawable.bg_gray)
+                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.gray))
+                        holder.itemNum.setBackgroundResource(R.color.white)
                     }
                 }
             }
         }else {
             holder.item.isEnabled=false
-            holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.white))
-            holder.itemNum.setBackgroundResource(R.drawable.bg_gray)
+            holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.gray))
+            holder.itemNum.setBackgroundResource(R.color.white)
         }
         //设置点击事件
         holder.item.setOnClickListener {

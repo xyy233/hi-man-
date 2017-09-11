@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.cstore.zhiyazhang.cstoremanagement">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -85,16 +86,25 @@
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <!--热食报废-->
-        <activity android:name=".view.scrap.ScrapHotActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.scrap.ScrapHotActivity"
+            android:screenOrientation="portrait"/>
 
         <!--热食报废商品页-->
-        <activity android:name=".view.scrap.ScrapHotItemActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.scrap.ScrapHotItemActivity"
+            android:screenOrientation="portrait"/>
 
         <!--现金日报-->
-        <activity android:name=".view.cashdaily.CashDailyActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.cashdaily.CashDailyActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--进货验收-->
+        <activity
+            android:name=".view.Acceptance.PurchaseAcceptanceActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="InnerclassSeparator"/>
 
     </application>
 

@@ -111,6 +111,7 @@
     <string name="freshGroup">群组</string>
     <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
     <string name="cash_daily">现金日报</string>
+    <string name="purchase_acceptance">进货验收</string>
     <string name="please_edit_value">请输入值</string>
     <string name="day">日</string>
 </resources>

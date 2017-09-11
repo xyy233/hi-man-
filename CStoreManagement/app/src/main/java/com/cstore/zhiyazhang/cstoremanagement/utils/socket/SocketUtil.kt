@@ -164,6 +164,14 @@ internal class SocketUtil  {
         fun getCashDaily(data: String):ArrayList<CashDailyBean>{
             return Gson().fromJson<ArrayList<CashDailyBean>>(data, object : TypeToken<ArrayList<CashDailyBean>>() {}.type)
         }
+
+        fun getAcceptance(data: String): ArrayList<AcceptanceBean> {
+            return Gson().fromJson<ArrayList<AcceptanceBean>>(data, object : TypeToken<ArrayList<AcceptanceBean>>() {}.type)
+        }
+
+        fun getAcceptanceItem(data: String): ArrayList<AcceptanceItemBean> {
+            return Gson().fromJson<ArrayList<AcceptanceItemBean>>(data, object : TypeToken<ArrayList<AcceptanceItemBean>>() {}.type)
+        }
     }
 
     /**

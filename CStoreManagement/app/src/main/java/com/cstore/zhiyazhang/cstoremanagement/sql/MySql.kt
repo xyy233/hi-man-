@@ -1,5 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
+import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
@@ -12,6 +14,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 
 object MySql {
 
+    /**********************************************批量处理事务头脚************************************************************/
     /**
      * 事务头，用于执行批量sql语句
      */
@@ -21,6 +24,9 @@ object MySql {
      * 事务脚，用于执行批量sql语句
      */
     val affairFoot = " commit;exception when others then rollback;end;"
+
+
+    /**********************************************登录************************************************************/
 
     /**
      * 传入帐号得到新生成的sql语句
@@ -33,6 +39,8 @@ object MySql {
         return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address from employee A,store B) where employeeid='$uid'"
     }
 
+
+    /**********************************************订货************************************************************/
     /**
      * 获得大类信息的存储过程
      */
@@ -41,17 +49,13 @@ object MySql {
     }
 
     /**
-     * 更新现金日报的存储过程
-     */
-    fun cashDaily():String{
-        return "call Scc01_P01('${MyTimeUtil.nowDate3}','${User.getUser().storeId}') \u000c"
-    }
-
-    /**
      * 检测是否存在正确存储过程
      */
-    val judgmentOrdt2 :String
-    get() {return "select distinct to_char(orderdate,'yyyy-mm-dd') orderdate from ord_t2"}
+    val judgmentOrdt2: String
+        get() {
+            return "select distinct to_char(orderdate,'yyyy-mm-dd') orderdate from ord_t2"
+        }
+
 
     /**
      * 获得大类信息
@@ -83,7 +87,7 @@ object MySql {
     /**
      * 通过大类id获得商品
      */
-    fun getItemByCategoryId(categoryId: String, sort: String): String{
+    fun getItemByCategoryId(categoryId: String, sort: String): String {
         return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
                 " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype," +
@@ -139,7 +143,6 @@ object MySql {
     fun updateOrdItem(itemId: String, value: Int): String {
         return "update ord set updateuserid='${User.getUser().uId}', updatedate=sysdate, ordstatus='1', ordactualquantity=$value where storeid='${User.getUser().storeId}' and orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId'; update ord_t2 set ordactualquantity=$value,status='1' where orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId';"
     }
-
 
     /**
      * 单品订货去搜索
@@ -273,7 +276,6 @@ object MySql {
                     "ORDER BY cat.categoryNumber ||'-'|| cat.midCategoryNumber"
         }
 
-
     /**
      * 其他鲜食订货
      */
@@ -300,7 +302,6 @@ object MySql {
                     "ORDER BY cat.categoryNumber ||'-'|| cat.midCategoryNumber"
         }
 
-
     /**
      * 根据大类、中类获得鲜食
      */
@@ -315,17 +316,61 @@ object MySql {
                 "and x.midCategoryNumber = '$midId' $orderBy"
     }
 
+    /**********************************************现金日报************************************************************/
+
     /**
-     * 报废商品
-     * @param user 操作者
-     * *
-     * @param scbs 所有当前报废商品
-     * *
-     * @return 新的sql语句
+     * 更新现金日报的存储过程
      */
-    fun getScrapSql(data: String): String {
-        return "{\"sql\":\"insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (?storeid, trunc(sysdate), ?recordnumber, ?itemnumber, '0', ?storeunitprice, ?unitcost, ?mrkquantity, '00', ?updateuserid, sysdate, ?citem_yn, ?sell_cost, ?recycle_yn)\",\"params\":$data}"
+    fun cashDaily(): String {
+        return "call Scc01_P01('${MyTimeUtil.nowDate3}','${User.getUser().storeId}') \u000c"
     }
+
+    /**
+     * 得到现金日报
+     */
+    fun getAllCashDaily(date: String): String {
+        return " select * from ( " +
+                "Select x.Accountnumber, x.Accountname,a.updatetype,x.displaytype, " +
+                "trim(to_char(Sum(Nvl(x.Storeamount, 0)),Decode(sign(instr(x.accountname,'来客')),0,'9,999,990.00','9,999,990'))) storeamount " +
+                "From Accdayrpt x, accitem a " +
+                "Where x.Storeid ='${User.getUser().storeId}' " +
+                "And x.accountnumber=a.accountnumber " +
+                "And x.Accountdate = to_date('$date','yyyy-MM-dd') " +
+                "And x.Displaytype = '0' " +
+                "Group By x.Accountnumber, x.Accountname, a.updatetype,x.displaysequence,x.displaytype " +
+                "union all " +
+                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
+                "From (Select Accountnumber, Accountname, trim(to_char(nvl(Storeamount,0),'9,999,990.00')) Storeamount, Updatetype,Displaytype " +
+                "From Accdayrpt " +
+                "Where Storeid ='${User.getUser().storeId}' " +
+                "And Accountdate =to_date('$date','yyyy-MM-dd') " +
+                "And Displaytype in (1,2,3,5) " +
+                "Order By To_Number(Displaysequence),Accountnumber) x " +
+                "union all " +
+                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
+                "From (Select Accountnumber, Accountname, decode(accountnumber,'1100',datasource,'1097',(Select weather_desc From weathercode Where to_number(weather_id)=Accdayrpt.storeamount) ,trim(to_char(nvl(Storeamount,0),'9,999,990.00'))) Storeamount, DECODE(Updatetype,'P','Y',Updatetype) Updatetype,Displaytype " +
+                "From Accdayrpt " +
+                "Where Storeid ='${User.getUser().storeId}' " +
+                "And Accountdate = to_date('$date','yyyy-MM-dd') " +
+                "And Displaytype between 6 and 10 " +
+                "Order By To_Number(Displaysequence),Accountnumber) x) order by displaytype,accountnumber"
+    }
+
+    /**
+     * 更新现金日报
+     */
+    fun updateCashDaily(cdId: String, cdValue: String): String {
+        return "update accdayrpt a set a.storeamount='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
+    }
+
+    /**
+     * 更新现金日报的事件
+     */
+    fun updateCashDaily2(cdId: String, cdValue: String): String {
+        return "update accdayrpt a set a.datasource='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
+    }
+
+    /**********************************************报废************************************************************/
 
     /**
      * 创建报废,配合事务头脚使用
@@ -387,39 +432,175 @@ object MySql {
         return "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.CATEGORYNUMBER='80' and a.midcategorynumber='$midId' and m.itemnumber(+)=a.itemnumber and (m.busidate = to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') or m.busidate is null) order by itemnumber"
     }
 
-    fun getAllCashDaily(date: String):String{
-        return " select * from ( " +
-                "Select x.Accountnumber, x.Accountname,a.updatetype,x.displaytype, " +
-                "trim(to_char(Sum(Nvl(x.Storeamount, 0)),Decode(sign(instr(x.accountname,'来客')),0,'9,999,990.00','9,999,990'))) storeamount " +
-                "From Accdayrpt x, accitem a "+
-                "Where x.Storeid ='${User.getUser().storeId}' " +
-                "And x.accountnumber=a.accountnumber " +
-                "And x.Accountdate = to_date('$date','yyyy-MM-dd') " +
-                "And x.Displaytype = '0' " +
-                "Group By x.Accountnumber, x.Accountname, a.updatetype,x.displaysequence,x.displaytype " +
-                "union all " +
-                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
-                "From (Select Accountnumber, Accountname, trim(to_char(nvl(Storeamount,0),'9,999,990.00')) Storeamount, Updatetype,Displaytype " +
-                "From Accdayrpt " +
-                "Where Storeid ='${User.getUser().storeId}' " +
-                "And Accountdate =to_date('$date','yyyy-MM-dd') " +
-                "And Displaytype in (1,2,3,5) " +
-                "Order By To_Number(Displaysequence),Accountnumber) x " +
-                "union all " +
-                "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
-                "From (Select Accountnumber, Accountname, decode(accountnumber,'1100',datasource,'1097',(Select weather_desc From weathercode Where to_number(weather_id)=Accdayrpt.storeamount) ,trim(to_char(nvl(Storeamount,0),'9,999,990.00'))) Storeamount, DECODE(Updatetype,'P','Y',Updatetype) Updatetype,Displaytype " +
-                "From Accdayrpt " +
-                "Where Storeid ='${User.getUser().storeId}' " +
-                "And Accountdate = to_date('$date','yyyy-MM-dd') " +
-                "And Displaytype between 6 and 10 " +
-                "Order By To_Number(Displaysequence),Accountnumber) x) order by displaytype,accountnumber"
+    /**********************************************验收************************************************************/
+
+    /**
+     * 得到配送列表
+     */
+    fun getAcceptanceList(date: String): String {
+        return "select dlh.requestnumber,ven.vendorname, " +
+                "to_date(to_char(plnDlvDate + dlv_days - 1,'yyyy-MM-dd'),'yyyy-MM-dd') end_dlv, " +
+                "(case when dlv_days='999' then null else to_date(to_char(plnDlvDate + dlv_days - 1,'yyyy-MM-dd')||'17:00','yyyy-MM-dd HH24:mi')end) end_dlvTimes , " +
+                "dlh.dlvStatus, " +
+                "dlh.actdlvtime,dlh.plndlvdate,dlh.orddate, " +
+                "dlh.orditemqty,sum(ordQuantity)ordQuantity, " +
+                "dlh.dlvitemqty, " +
+                "sum(dlvQuantity)dlvQuantity, " +
+                "dlh.retailtotal, " +
+                "to_char(sum(dlvQuantity*dlvdtl.sell_cost*(1+nvl(taxtype.taxRate,0))), '999,999,990.000000') sellcost_tot, " +
+                "decode(upper(substr(dlh.requestnumber,2,1)),'C', dlh.requestNumber,'OD' || dlh.requestnumber) dcNumber, " +
+                "dlh.vendorid,dlh.dlvstatus,to_char(dlh.dlvdate,'yyyy-mm-dd') dlvdate " +
+                "from dlvhead dlh left join dlvdtl on dlvdtl.storeid=dlh.storeID and dlvdtl.dlvdate=dlh.dlvdate and dlvdtl.requestnumber=dlh.requestnumber " +
+                "left join plu on plu.storeID=dlvdtl.storeID AND plu.itemNumber=dlvdtl.itemNumber " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID, " +
+                "vendor ven " +
+                "where dlh.dlvDate= to_date('$date','yyyy-mm-dd') and dlh.storeID='${User.getUser().storeId}' " +
+                "and ven.vendorID=dlh.vendorID and ven.storeid=dlh.storeID " +
+                "group by  dlh.requestnumber,ven.vendorname, " +
+                "dlh.dlvStatus, " +
+                "dlh.actdlvtime,dlh.plndlvdate,dlh.orddate, " +
+                "dlh.orditemqty, " +
+                "dlh.dlvitemqty, " +
+                "dlh.retailtotal, " +
+                "decode(upper(substr(dlh.requestnumber,2,1)),'C',dlh.requestNumber,'OD' || dlh.requestnumber), " +
+                "to_date(to_char(plnDlvDate + dlv_days - 1,'yyyy-MM-dd'),'yyyy-MM-dd') , " +
+                "dlh.vendorid, dlh.dlvstatus , dlh.dlvdate, " +
+                "(case when dlv_days='999' then null else to_date(to_char(plnDlvDate + dlv_days - 1,'yyyy-MM-dd')||'17:00','yyyy-MM-dd HH24:mi') end ) " +
+                "order by dlh.requestnumber"
     }
 
-    fun updateCashDaily(cdId:String, cdValue:String):String{
-        return "update accdayrpt a set a.storeamount='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
+    /**
+     * 得到配送表下的商品
+     */
+    fun getAcceptanceItemList(ab: AcceptanceBean, date: String): String {
+        return "select dlv.itemNumber,plu.stocktype,plu.order_item, dlv.ordQuantity,dlv.hqquantity,dlv.dctrsquantity ,nvl(dlv.varQuantity,0)varQuantity, " +
+                "dlv.pmcode, " +
+                "decode(head.dlvstatus,'1',dlv.dlvquantity,'2', dlv.dlvquantity, case when head.vendorid='00000000000099999801' or head.vendorid='00000000000099999701' or head.vendorid='00000000000099999100' or head.vendorid='00000000000099999101' or head.vendorid='00000000000099999102' " +
+                "then dlv.trsquantity else dlv.dlvquantity end ) dlvquantity, " +
+                "plu.pluName,unit.unitName, dlv.storeUnitPrice,plu.storeunitprice storeunitprice_now, " +
+                "dlv.storeUnitPrice-plu.storeunitprice price_diff,dlv.unitCost, " +
+                "dlv.SupplierID,dlv.requestNumber,dlv.shipNumber,dlv.vendorID,plu.sale_item,plu.pcs, dlv.varReason, " +
+                "Round(dlv.sell_cost,6) sell_cost,round(dlv.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, " +
+                "round(round(dlv.sell_cost*(1+nvl(taxtype.taxRate,0)),6)*dlvquantity,2) tax_sell_cost_total, " +
+                "dlvquantity old_dlvquantity, " +
+                "(nvl(dlv.storeunitprice,0)* decode(head.dlvstatus,'2', dlv.dlvquantity, '1', dlv.dlvquantity, case when head.vendorid='00000000000099999801' or head.vendorid='00000000000099999701' or head.vendorid='00000000000099999100' or head.vendorid='00000000000099999101' or head.vendorid='00000000000099999102' " +
+                "then dlv.trsquantity else dlv.dlvquantity end ) ) retailPriceTotal, 'FromDB' data_status, " +
+                "(dlv.unitCost*dlv.dlvQuantity) TotalUnitCost, nvl(dlv.trsQuantity,0) trsQuantity,Dlv.Itemnumber||upper(pub_get_string_py(Plu.Pluname)||Plu.Pluname) FindTxt " +
+                "from dlvdtl dlv " +
+                "left join  plu  on  plu.storeid=dlv.storeID  and plu.ItemNumber=dlv.ItemNumber " +
+                "left join unit  on  unit.storeid=plu.storeid and  unit.UnitID=plu.smallUnitID " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                ",dlvhead head " +
+                "where head.storeID ='${User.getUser().storeId}' " +
+                "and head.dlvdate=to_date('$date','yyyy-mm-dd') " +
+                "and head.requestnumber='${ab.distributionId}' " +
+                "and dlv.storeid=head.storeid " +
+                "and dlv.dlvdate=head.dlvdate " +
+                "and dlv.requestnumber=head.requestnumber " +
+                "order by dlv.itemNumber"
     }
 
-    fun updateCashDaily2(cdId:String, cdValue:String):String{
-        return "update accdayrpt a set a.datasource='$cdValue' where a.storeid='${User.getUser().storeId}' and a.accountdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and a.accountnumber='$cdId' "
+    /**
+     * 更新配送单,配合事务使用
+     */
+    fun updateAcceptance(ab: AcceptanceBean): String {
+        return "update dlvhead set " +
+                "dlvstatus='${ab.dlvStatus}'," +
+                "orditemqty=${ab.ordItemQTY}," +
+                "dlvitemqty=${ab.dlvItemQTY}," +
+                "retailtotal=${ab.retailTotal}," +
+                "costtotal=${ab.costTotal}," +
+                "updateuserid='${User.getUser().uId}'," +
+                "updatedate=sysdate," +
+                "actdlvtime=sysdate," +
+                "where storeid='${User.getUser().storeId}' " +
+                "and dlvdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') " +
+                "and vendorid='${ab.vendorId}' " +
+                "and requestnumber='${ab.distributionId}';"
+    }
+
+    /**
+     * 更新配送单的商品,配合事务使用
+     */
+    fun updateAcceptanceItem(aib:AcceptanceItemBean):String{
+        return "update dlvdtl set " +
+                "dlvquantity=${aib.dlvQuantity}, " +
+                "trsquantity=${aib.trsQuantity}, " +
+                "updateuserid='${User.getUser().uId}', " +
+                "updatedate=sysdate " +
+                "where storeid='${User.getUser().storeId}' " +
+                "and itemnumber='${aib.itemId}' " +
+                "and vendorid='${aib.vendorId}' " +
+                "and dlvdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') " +
+                "and requestnumber='${aib.distributionId}';"
+    }
+
+    /**
+     * 得到配送商
+     */
+    val getVendor:String
+    get() {
+        return "SELECT x.vendorID,substr(x.vendorID,13,8) || x.vendorName vendorNames ,x.VendorType,x.supplierType " +
+                "from vendor x, " +
+                "(select vendorid,supplierid from plu where storeid='${User.getUser().storeId}' " +
+                "group by vendorid,supplierid) y, " +
+                "(select vendorid from dlvhead  where storeid='${User.getUser().storeId}' " +
+                "and dlvdate > sysdate-365 group by vendorid) z " +
+                "where x.vendortype='Y'and x.suppliertype='Y' and x.vendorid=y.vendorid and x.vendorid=z.vendorid(+) " +
+                "order by x.vendorid"
+    }
+
+    /**
+     * 创建配送单,配合事务使用
+     */
+    fun createAcceptance(ab:AcceptanceBean, date:String):String{
+        return "insert into dlvhead " +
+                "(storeID, dlvDate, requestNumber, vendorID, shipNumber,ordDate, plnDlvDate, " +
+                "actDlvTime, dlvStatus, ordItemQty, dlvItemQty,retailTotal, costTotal, busiDate, updateUserID, updateDate) " +
+                "values " +
+                "('${User.getUser().storeId}',sysdate,'${ab.distributionId}','${ab.vendorId}','0',sysdate,sysdate,sysdate,'2',${ab.ordItemQTY},${ab.dlvItemQTY},${ab.retailTotal},${ab.costTotal},sysdate,'${User.getUser().uId}',sysdate)"
+    }
+
+    /**
+     * 创建配送单下的商品，配合事务使用
+     */
+    fun createAcceptanceItem(aib:AcceptanceItemBean, date:String):String{
+        return "insert into dlvdtl " +
+                "(storeid,dlvdate,vendorid,itemnumber,shipnumber,dlvquantity,varquantity,storeunitprice, " +
+                "unitcost,requestnumber,pmcode,supplierid,updateuserid,updatedate,varreason,sell_cost,trsquantity,hqquantity,dctrsquantity,ordquantity) " +
+                "values" +
+                "('${User.getUser().storeId}',sysdate,'${aib.vendorId}','${aib.itemId}','${aib.shipNumber}',${aib.dlvQuantity},${aib.varQuantity},${aib.storeUnitPrice}," +
+                "${aib.unitCost},'${aib.distributionId}','-','${aib.supplierId}','${User.getUser().uId}',sysdate,null,${aib.sellCost},${aib.trsQuantity},${aib.hqQuantity},${aib.dctrsQuantity},${aib.ordQutity})"
+    }
+
+    /**
+     * 得到今天最大的配送单
+     */
+    fun getMaxAcceptanceId():String{
+        return "select max(requestNumber) from dlvHead where DlvDate = to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and RequestNumber< 'A00000000' and RequestNumber like'${getNowNum()}%'"
+    }
+
+    /**
+     * 得到配送单号的前缀
+     */
+    private fun getNowNum(): String {
+        var month=""
+        when(MyTimeUtil.nowMonth){
+            1->month="A"
+            2->month="B"
+            3->month="C"
+            4->month="D"
+            5->month="E"
+            6->month="F"
+            7->month="G"
+            8->month="H"
+            9->month="I"
+            10->month="J"
+            11->month="K"
+            12->month="L"
+        }
+        val year=MyTimeUtil.nowYear.toString().substring(2)
+        val day=MyTimeUtil.todayDay
+        if (day<10)return year+month+"0"+day else return year+month+day
     }
 }

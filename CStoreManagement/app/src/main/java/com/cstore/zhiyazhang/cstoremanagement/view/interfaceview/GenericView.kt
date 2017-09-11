@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.interfaceview
 
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 
 /**
@@ -28,7 +29,9 @@ interface GenericView {
     /**
      * 隐藏loading信息
      */
-    fun hideLoading()
+    fun hideLoading(){
+        MyHandler.removeCallbacksAndMessages(null)
+    }
 
     /**
      * presenter内adapter设置成功递给view的泛型adapter
