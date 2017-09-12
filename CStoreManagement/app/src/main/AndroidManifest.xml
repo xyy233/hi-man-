@@ -100,11 +100,15 @@
             android:name=".view.cashdaily.CashDailyActivity"
             android:screenOrientation="portrait"/>
 
-        <!--进货验收-->
+        <!--进货验收配送单页面-->
         <activity
-            android:name=".view.Acceptance.PurchaseAcceptanceActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="InnerclassSeparator"/>
+            android:name=".view.acceptance.PurchaseAcceptanceActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--进货验收商品页-->
+        <activity android:name=".view.acceptance.PurchaseAcceptanceItemActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     </application>
 

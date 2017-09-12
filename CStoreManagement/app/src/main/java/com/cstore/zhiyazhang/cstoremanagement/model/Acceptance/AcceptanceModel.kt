@@ -1,9 +1,10 @@
-package com.cstore.zhiyazhang.cstoremanagement.model.Acceptance
+package com.cstore.zhiyazhang.cstoremanagement.model.acceptance
 
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
@@ -20,7 +21,14 @@ class AcceptanceModel : AcceptanceInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val result = SocketUtil.initSocket(ip, MySql.getAcceptanceList(date)).inquire()
+            val sql=MySql.getAcceptanceList(date)
+            if (sql==""){
+                msg.obj = "sql语句为空"
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+                return@Runnable
+            }
+            val result = SocketUtil.initSocket(ip,sql).inquire()
             if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
             val abs = ArrayList<AcceptanceBean>()
@@ -28,22 +36,21 @@ class AcceptanceModel : AcceptanceInterface {
                 abs.addAll(SocketUtil.getAcceptance(result))
             } catch (e: Exception) {
             }
+
             if (abs.isEmpty()) {
                 msg.obj = result
                 msg.what = ERROR1
                 handler.sendMessage(msg)
+            }else{
+                abs.forEach {
+                    val allItems = getAcceptanceItemList(it, date, handler, msg, ip)
+                    if (allItems.size == 0) return@Runnable
+                    it.allItems = allItems
+                }
+                msg.obj = abs
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
             }
-
-            abs.forEach {
-                val allItems = getAcceptanceItemList(it, date, handler, msg, ip)
-                if (allItems.size == 0) return@Runnable
-                it.allItems = allItems
-            }
-
-            msg.obj = abs
-            msg.what = SUCCESS
-            handler.sendMessage(msg)
-
         }).start()
     }
 
@@ -67,11 +74,24 @@ class AcceptanceModel : AcceptanceInterface {
         }
     }
 
-    override fun updateAcceptance(ab: AcceptanceBean, handler: MyHandler.MyHandler) {
+    override fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            CStoreCalendar.setCstoreCalendar()
+            if (CStoreCalendar.getNowStatus(3)!=0&&CStoreCalendar.getCurrentDate(3)!=date){
+                var errorMsg=""
+                if (CStoreCalendar.getNowStatus(3)==1){
+                    errorMsg="正在换日中，请等待换日完成！"
+                }else{
+                    errorMsg="换日失败，请停止操作并联系系统部！"
+                }
+                msg.obj=errorMsg
+                msg.obj=ERROR1
+                handler.sendMessage(msg)
+                return@Runnable
+            }
             val sql = getUpdateSql(ab)
             val result = SocketUtil.initSocket(ip, sql).inquire()
             if (result == "0") {
@@ -96,8 +116,8 @@ class AcceptanceModel : AcceptanceInterface {
         var allDCQTY = 0//所有商品的大仓出货量
         var allStoreUnitPrice: Double = 0.00//验收单总计的零售价格
         var costTotal = 0.00
+        //重新计算一些修改量
         ab.allItems.forEach {
-            //在view层判断修改过的话0也存储
             allDCQTY += it.dctrsQuantity
             allDlvQTY += it.dlvQuantity
             it.retailTotal = (it.storeUnitPrice * it.dlvQuantity)//修改当前商品的零售小计
@@ -114,7 +134,7 @@ class AcceptanceModel : AcceptanceInterface {
         //不是转次日的就去修改验收状态
         if (ab.dlvStatus != 3) {
             //相同就是未修正的验收，不相同且不为0就是已修正过的
-            if (allDlvQTY == allDCQTY) ab.dlvStatus = 1 else if (allDlvQTY != 0) ab.dlvStatus = 0
+            if (allDlvQTY == allDCQTY) ab.dlvStatus = 1 else if (allDlvQTY != 0) ab.dlvStatus = 2
         }
         result.append(MySql.updateAcceptance(ab))//添加修改配送单的sql
         result.append(MySql.affairFoot)//添加事务脚
@@ -132,7 +152,7 @@ interface AcceptanceInterface {
     /**
      * 更新验收
      */
-    fun updateAcceptance(ab: AcceptanceBean, handler: MyHandler.MyHandler)
+    fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler)
 
 /*    */
     /**

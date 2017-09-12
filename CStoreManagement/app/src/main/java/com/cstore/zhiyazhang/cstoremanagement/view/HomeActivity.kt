@@ -17,7 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.view.Acceptance.PurchaseAcceptanceActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.acceptance.PurchaseAcceptanceActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.cashdaily.CashDailyActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
 import kotlinx.android.synthetic.main.activity_home.*

@@ -15,5 +15,5 @@ interface ItemClickListener {
     /**
      * 长按
      */
-    fun onItemLongClick(view: View, position: Int)
+    fun onItemLongClick(view: View, position: Int){}
 }

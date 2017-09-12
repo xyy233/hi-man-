@@ -14,6 +14,13 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 
 object MySql {
 
+
+    /**********************************************换日************************************************************/
+    /**
+     * 得到换日表
+     */
+    val cstoreCalendar="select storeid,datetype,to_char(currentdate,'yyyy-MM-dd') currentdate,changetime,sceodresult,typename from calendar order by datetype"
+
     /**********************************************批量处理事务头脚************************************************************/
     /**
      * 事务头，用于执行批量sql语句
@@ -511,8 +518,7 @@ object MySql {
                 "retailtotal=${ab.retailTotal}," +
                 "costtotal=${ab.costTotal}," +
                 "updateuserid='${User.getUser().uId}'," +
-                "updatedate=sysdate," +
-                "actdlvtime=sysdate," +
+                "updatedate=sysdate " +
                 "where storeid='${User.getUser().storeId}' " +
                 "and dlvdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') " +
                 "and vendorid='${ab.vendorId}' " +

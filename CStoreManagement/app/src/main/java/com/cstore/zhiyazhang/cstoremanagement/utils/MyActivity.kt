@@ -26,6 +26,9 @@ abstract class MyActivity : AppCompatActivity() {
      */
     protected abstract val layoutId: Int
 
+    /**
+     * 初始化三部曲,其实data在view前该获得一次的。。。
+     */
     protected abstract fun initView()
     protected abstract fun initClick()
     protected abstract fun initData()

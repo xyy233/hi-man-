@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.cashdaily.CashDailyPresenter
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
@@ -40,7 +41,8 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         my_toolbar.title=getString(R.string.cash_daily)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         date_util.visibility=View.VISIBLE
-        MyTimeUtil.setTextViewDate(date_util,MyTimeUtil.nowDate)
+        //用换日表的时间
+        MyTimeUtil.setTextViewDate(date_util,CStoreCalendar.getCurrentDate(1))
         setSupportActionBar(my_toolbar)
         //设置title
         resources.getStringArray(R.array.cashDailyTags).forEach { tabIndicators.add(it) }
@@ -57,7 +59,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
 
     override fun initClick() {
         loading.setOnClickListener {
-            showPrompt(getString(R.string.with_loading))
+            showPrompt(getString(R.string.wait_loading))
         }
         date_util.setOnTouchListener{_,event->
             if (event.action==MotionEvent.ACTION_DOWN){
@@ -79,6 +81,16 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
 
     var dialogView:View?= null
     fun updateData(view:View, cd:CashDailyBean){
+        when(CStoreCalendar.getNowStatus(1)){
+            1->{
+                showPrompt(getString(R.string.huanri))
+                return
+            }
+            2->{
+                showPrompt(getString(R.string.huanri_error))
+                return
+            }
+        }
         if (dialog==null){
             val builder=AlertDialog.Builder(this@CashDailyActivity)
             dialogView = View.inflate(this,R.layout.dialog_cashdaily,null)!!
@@ -148,6 +160,10 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             run {
                 val calendar=Calendar.getInstance()
                 calendar.timeInMillis=System.currentTimeMillis()
+                if (MyTimeUtil.nowHour > CStoreCalendar.getChangeTime(1)) {
+                    //换日了要加一天
+                    calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1)
+                }
                 if (year>calendar.get(Calendar.YEAR)||monthOfYear>calendar.get(Calendar.MONTH)||dayOfMonth>calendar.get(Calendar.DAY_OF_MONTH)){
                     showPrompt("不能选择未来日期")
                     return@run

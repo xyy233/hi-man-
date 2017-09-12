@@ -129,6 +129,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             is User -> {
                 showPrompt(rData.name + "您好,登陆成功")
                 ReportListener.reportEnter(rData.storeId)
+                CStoreCalendar.setCStoreCalendarIsThread()
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                 intent.putExtra("user", rData)
                 startActivity(intent)

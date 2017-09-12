@@ -102,7 +102,7 @@
     <string name="nop_value">促销品及新品项目</string>
     <string name="promotion">促销品</string>
     <string name="loadingCall">请耐心等候操作完成，预计时间2分钟</string>
-    <string name="with_loading">请耐心等候运行结束</string>
+    <string name="wait_loading">请耐心等候运行结束</string>
     <string name="noSaveMessage">无要保存的数据</string>
     <string name="last">上一个</string>
     <string name="next">下一个</string>
@@ -114,4 +114,9 @@
     <string name="purchase_acceptance">进货验收</string>
     <string name="please_edit_value">请输入值</string>
     <string name="day">日</string>
+    <string name="trsQuantity">到货量:</string>
+    <string name="dlvQuantity">验收量:</string>
+    <string name="dlv_more_trs">验收量不能大于到货量！</string>
+    <string name="huanri">正在换日，不能操作！</string>
+    <string name="huanri_error">换日失败，请停止操作并联系系统部！</string>
 </resources>

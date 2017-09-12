@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendarBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.google.gson.Gson
@@ -171,6 +172,10 @@ internal class SocketUtil  {
 
         fun getAcceptanceItem(data: String): ArrayList<AcceptanceItemBean> {
             return Gson().fromJson<ArrayList<AcceptanceItemBean>>(data, object : TypeToken<ArrayList<AcceptanceItemBean>>() {}.type)
+        }
+
+        fun getCstoreCalendar(data: String): ArrayList<CStoreCalendarBean> {
+            return Gson().fromJson<ArrayList<CStoreCalendarBean>>(data, object : TypeToken<ArrayList<CStoreCalendarBean>>() {}.type)
         }
     }
 

@@ -7,22 +7,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 
 /**
  * Created by zhiya.zhang
  * on 2017/9/11 17:31.
  */
-class PurchaseAcceptanceAdapter(private val data: ArrayList<AcceptanceBean>, private val onClick: ItemClickListener) : RecyclerView.Adapter<PurchaseAcceptanceAdapter.ViewHolder>() {
+class PurchaseAcceptanceItemAdapter(private val data: AcceptanceBean, private val date:String, private val onClick: ItemClickListener) : RecyclerView.Adapter<PurchaseAcceptanceItemAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
-        return data.size
+        return data.allItems.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.t.text = data[position].toString()
-        holder.t.setOnClickListener {
-            onClick.onItemClick(holder.t, position)
+        holder.t.text = data.allItems[position].toString()
+        if (date==CStoreCalendar.getCurrentDate(3)){
+            holder.t.setOnClickListener {
+                onClick.onItemClick(holder.t, position)
+            }
         }
     }
 
