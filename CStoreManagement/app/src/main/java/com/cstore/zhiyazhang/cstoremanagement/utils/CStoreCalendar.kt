@@ -15,6 +15,7 @@ object CStoreCalendar{
 
     private var data:ArrayList<CStoreCalendarBean>?=null//换日数据
     private var date:String?=null//上一次执行获得换日的日期
+    private val ERROR_MSG="获得换日表失败,请停止操作并退出应用重进应用或联系系统部"
 
     /**
      * 登陆时调用写入换日,开了线程，是用于登录成功后执行,只能登录后执行，不然在疯狂开启关闭的操作中会导致错误
@@ -29,11 +30,11 @@ object CStoreCalendar{
                 while (result==""||result=="[]"||result=="0"){
                     result=SocketUtil.initSocket(MyApplication.getIP(),MySql.cstoreCalendar).inquire()
                     i++
-                    if (i==10)break
+                    if (i==2)break
                 }
-                if (i==10){
+                if (i==2){
                     Log.e("CstoreCalendar","获得换日表失败")
-                    MyToast.getLongToast("获得换日表失败,请停止操作并联系系统部")
+                    MyToast.getLongToast(ERROR_MSG)
                     return@Runnable
                 }
                 data=SocketUtil.getCstoreCalendar(result)
@@ -51,11 +52,11 @@ object CStoreCalendar{
         while (result==""||result=="[]"||result=="0"){
             result=SocketUtil.initSocket(MyApplication.getIP(),MySql.cstoreCalendar).inquire()
             i++
-            if (i==10)break
+            if (i==2)break
         }
-        if (i==10){
+        if (i==2){
             Log.e("CstoreCalendar","获得换日表失败")
-            MyToast.getLongToast("获得换日表失败,请停止操作并联系系统部")
+            MyToast.getLongToast(ERROR_MSG)
             return
         }
         data=SocketUtil.getCstoreCalendar(result)
@@ -69,7 +70,7 @@ object CStoreCalendar{
         }catch (e:Exception){
             Log.e("CStoreCalendar",e.message)
         }
-        MyToast.getLongToast("获得换日表失败,请停止操作并联系系统部")
+        MyToast.getLongToast(ERROR_MSG)
         return "type=$type error!"
     }
 
@@ -79,7 +80,7 @@ object CStoreCalendar{
         }catch (e:Exception){
             Log.e("CStoreCalendar",e.message)
         }
-        MyToast.getLongToast("获得换日表失败,请停止操作并联系系统部")
+        MyToast.getLongToast(ERROR_MSG)
         return 0
     }
 
@@ -89,7 +90,7 @@ object CStoreCalendar{
         }catch (e:Exception){
             Log.e("CStoreCalendar",e.message)
         }
-        MyToast.getLongToast("获得换日表失败,请停止操作并联系系统部")
+        MyToast.getLongToast(ERROR_MSG)
         return 0
     }
 

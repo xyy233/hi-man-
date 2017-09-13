@@ -160,7 +160,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             run {
                 val calendar=Calendar.getInstance()
                 calendar.timeInMillis=System.currentTimeMillis()
-                if (MyTimeUtil.nowHour > CStoreCalendar.getChangeTime(1)) {
+                if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(1)) {
                     //换日了要加一天
                     calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1)
                 }

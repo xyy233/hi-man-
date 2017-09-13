@@ -564,7 +564,7 @@ object MySql {
                 "(storeID, dlvDate, requestNumber, vendorID, shipNumber,ordDate, plnDlvDate, " +
                 "actDlvTime, dlvStatus, ordItemQty, dlvItemQty,retailTotal, costTotal, busiDate, updateUserID, updateDate) " +
                 "values " +
-                "('${User.getUser().storeId}',sysdate,'${ab.distributionId}','${ab.vendorId}','0',sysdate,sysdate,sysdate,'2',${ab.ordItemQTY},${ab.dlvItemQTY},${ab.retailTotal},${ab.costTotal},sysdate,'${User.getUser().uId}',sysdate)"
+                "('${User.getUser().storeId}',sysdate,'${ab.distributionId}','${ab.vendorId}','0',sysdate,sysdate,sysdate,'2',${ab.ordItemQTY},${ab.dlvItemQTY},${ab.retailTotal},${ab.costTotal},sysdate,'${User.getUser().uId}',sysdate);"
     }
 
     /**
@@ -576,7 +576,7 @@ object MySql {
                 "unitcost,requestnumber,pmcode,supplierid,updateuserid,updatedate,varreason,sell_cost,trsquantity,hqquantity,dctrsquantity,ordquantity) " +
                 "values" +
                 "('${User.getUser().storeId}',sysdate,'${aib.vendorId}','${aib.itemId}','${aib.shipNumber}',${aib.dlvQuantity},${aib.varQuantity},${aib.storeUnitPrice}," +
-                "${aib.unitCost},'${aib.distributionId}','-','${aib.supplierId}','${User.getUser().uId}',sysdate,null,${aib.sellCost},${aib.trsQuantity},${aib.hqQuantity},${aib.dctrsQuantity},${aib.ordQutity})"
+                "${aib.unitCost},'${aib.distributionId}','-','${aib.supplierId}','${User.getUser().uId}',sysdate,null,${aib.sellCost},${aib.trsQuantity},${aib.hqQuantity},${aib.dctrsQuantity},${aib.ordQutity});"
     }
 
     /**

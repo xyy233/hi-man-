@@ -24,12 +24,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/orderRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/line"/>
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -122,6 +122,10 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                 refreshSaveClick(position)
                 dialog.show()
             }
+
+            override fun onItemLongClick(view: View, position: Int) {
+                showPrompt("创建")
+            }
         })
         acceptance_item_recycler.adapter=adapter
     }

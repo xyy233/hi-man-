@@ -10,8 +10,8 @@ import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 
 /**
@@ -27,7 +27,7 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
         holder.itemName.text=data[position].cdName
         holder.itemNum.text=data[position].cdValue
         //设置能否修改
-        if (data[position].isEdit!="N"&&date==MyTimeUtil.nowDate){
+        if (data[position].isEdit!="N"&&date==CStoreCalendar.getCurrentDate(1)){
             when(data[position].isEdit){
                 "Y"->{
                     //谁都可以修改

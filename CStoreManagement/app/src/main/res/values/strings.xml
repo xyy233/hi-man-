@@ -119,4 +119,22 @@
     <string name="dlv_more_trs">验收量不能大于到货量！</string>
     <string name="huanri">正在换日，不能操作！</string>
     <string name="huanri_error">换日失败，请停止操作并联系系统部！</string>
+
+    <!--验收-->
+    <string name="acceptance_id">配送单号：</string>
+    <string name="vendor">配送商：</string>
+    <string name="order_count">品项数：</string>
+    <string name="dlv_count">验收项：</string>
+    <string name="order_quantity">订货数量：</string>
+    <string name="dlv_quantity">验收数量：</string>
+    <string name="cost_total">含税成本：</string>
+    <string name="retail_total">零售小计：</string>
+
+    <string name="commodity_id">品号：</string>
+    <string name="commodity_name">品名：</string>
+    <string name="dc_quantity">配送商出货量：</string>
+    <string name="trs_quantity">到货量：</string>
+    <string name="hq_quantity">强配量：</string>
+    <string name="tax_sell_cost">含税单价：</string>
+    <string name="retail">零售价：</string>
 </resources>

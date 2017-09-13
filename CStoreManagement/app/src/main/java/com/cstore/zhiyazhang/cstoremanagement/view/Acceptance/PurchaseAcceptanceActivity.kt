@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.acceptance
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.support.v7.widget.DefaultItemAnimator
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +14,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAccep
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
@@ -38,6 +40,10 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
         MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(3))
         setSupportActionBar(my_toolbar)
         orderRecycler.layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceActivity, LinearLayout.VERTICAL, false)
+        val dividerItemDecoration=DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST)
+        dividerItemDecoration.setDivider(R.drawable.divider_bg)
+        orderRecycler.addItemDecoration(dividerItemDecoration)
+        orderRecycler.itemAnimator= DefaultItemAnimator()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -69,7 +75,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
 
     override fun <T> requestSuccess(rData: T) {
         rData as ArrayList<AcceptanceBean>
-        val adapter = PurchaseAcceptanceAdapter(rData, object : ItemClickListener {
+        val adapter = PurchaseAcceptanceAdapter(MyTimeUtil.getTextViewDate(date_util),rData, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceItemActivity::class.java)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
@@ -78,7 +84,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
             }
 
             override fun onItemLongClick(view: View, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                showPrompt("创建一个新的")
             }
         })
         orderRecycler.adapter = adapter
@@ -112,7 +118,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
             run {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = System.currentTimeMillis()
-                if (MyTimeUtil.nowHour > CStoreCalendar.getChangeTime(3)) {
+                if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(3)) {
                     //换日了要加一天
                     calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1)
                 }

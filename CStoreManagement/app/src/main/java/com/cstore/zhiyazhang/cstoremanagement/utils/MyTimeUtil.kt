@@ -106,7 +106,7 @@ object MyTimeUtil {
         get() = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
     val nowHour: Int
-        get() = Calendar.getInstance().get(Calendar.HOUR)
+        get() = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
     val nowMonth:Int
     get() {

@@ -29,14 +29,18 @@ class AcceptanceModel : AcceptanceInterface {
                 return@Runnable
             }
             val result = SocketUtil.initSocket(ip,sql).inquire()
-            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
-
             val abs = ArrayList<AcceptanceBean>()
+            //空的话就传空的数据出去
+            if (result=="[]"){
+                msg.obj = abs
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+                return@Runnable
+            }
             try {
                 abs.addAll(SocketUtil.getAcceptance(result))
             } catch (e: Exception) {
             }
-
             if (abs.isEmpty()) {
                 msg.obj = result
                 msg.what = ERROR1
@@ -60,18 +64,16 @@ class AcceptanceModel : AcceptanceInterface {
     private fun getAcceptanceItemList(ab: AcceptanceBean, date: String, handler: MyHandler.MyHandler, msg: Message, ip: String): ArrayList<AcceptanceItemBean> {
         val abs = ArrayList<AcceptanceItemBean>()
         val result = SocketUtil.initSocket(ip, MySql.getAcceptanceItemList(ab, date)).inquire()
+        if (result=="[]")return abs
         try {
             abs.addAll(SocketUtil.getAcceptanceItem(result))
-        } catch (e: Exception) {
-        }
-        if (abs.isEmpty()) {
+        } catch (e: Exception) {}
+        if (abs.isEmpty()){
             msg.obj = result
             msg.what = ERROR1
             handler.sendMessage(msg)
-            return abs
-        } else {
-            return abs
         }
+        return abs
     }
 
     override fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler) {
