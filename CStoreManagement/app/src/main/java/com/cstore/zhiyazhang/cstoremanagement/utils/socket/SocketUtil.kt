@@ -177,6 +177,14 @@ internal class SocketUtil  {
         fun getCstoreCalendar(data: String): ArrayList<CStoreCalendarBean> {
             return Gson().fromJson<ArrayList<CStoreCalendarBean>>(data, object : TypeToken<ArrayList<CStoreCalendarBean>>() {}.type)
         }
+
+        fun  getVendor(data: String): ArrayList<VendorBean> {
+            return Gson().fromJson<ArrayList<VendorBean>>(data, object : TypeToken<ArrayList<VendorBean>>() {}.type)
+        }
+
+        fun  getUtilBean(data: String): ArrayList<UtilBean> {
+            return Gson().fromJson<ArrayList<UtilBean>>(data, object : TypeToken<ArrayList<UtilBean>>() {}.type)
+        }
     }
 
     /**
@@ -197,7 +205,6 @@ internal class SocketUtil  {
             while (receive == null) {
                 receive = br!!.readLine()
             }
-
             return receive
         } catch (ste: SocketTimeoutException) {
             return REQUEST_ERROR

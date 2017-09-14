@@ -5,23 +5,27 @@
               android:layout_height="match_parent"
               android:background="@color/touminghui"
               android:elevation="5dp"
+              android:animateLayoutChanges="true"
               android:gravity="center"
               android:visibility="gone"
               android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/loading_progress"
+        android:animateLayoutChanges="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/loading_text"
+        android:animateLayoutChanges="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading"/>
 
     <Button
         android:id="@+id/loading_retry"
+        android:animateLayoutChanges="true"
         android:text="@string/retry"
         android:visibility="gone"
         android:textColor="@color/white"

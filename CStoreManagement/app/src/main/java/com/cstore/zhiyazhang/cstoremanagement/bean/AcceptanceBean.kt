@@ -61,7 +61,7 @@ data class AcceptanceItemBean(
         @SerializedName("retailtotal")
         var retailTotal: Double, //零售小计
         @SerializedName("requestnumber")
-        val distributionId: String, //配送号
+        var distributionId: String, //配送号
         @SerializedName("vendorid")
         val vendorId: String, //配送商id
         @SerializedName("unitcost")
@@ -76,5 +76,11 @@ data class AcceptanceItemBean(
         val supplierId: String, //鬼知道是什么
         @SerializedName("sell_cost")
         val sellCost: Double//成本
-) : Serializable {
-}
+) : Serializable
+
+data class VendorBean(
+        @SerializedName("vendorid")
+        val vendorId: String,
+        @SerializedName("vendornames")
+        val vendorName: String
+):Serializable

@@ -63,6 +63,9 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 true
             } else false
         }
+        orderLoading.setOnClickListener {
+            showPrompt(getString(R.string.wait_loading))
+        }
     }
 
     //获得数据在start那里，因为可能保存后退回进入，不用管直接重新获得
@@ -84,7 +87,9 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
             }
 
             override fun onItemLongClick(view: View, position: Int) {
-                showPrompt("创建一个新的")
+                val i=Intent(this@PurchaseAcceptanceActivity,PurchaseAcceptanceCreate::class.java)
+                i.putExtra("date",MyTimeUtil.getTextViewDate(date_util))
+                startActivity(i)
             }
         })
         orderRecycler.adapter = adapter

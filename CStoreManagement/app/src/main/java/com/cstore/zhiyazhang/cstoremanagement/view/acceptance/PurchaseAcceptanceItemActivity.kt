@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.acceptance
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
@@ -9,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptanceItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptancePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
@@ -124,10 +126,25 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
             }
 
             override fun onItemLongClick(view: View, position: Int) {
-                showPrompt("创建")
+                val i= Intent(this@PurchaseAcceptanceItemActivity,PurchaseAcceptanceCreate::class.java)
+                i.putExtra("date",date)
+                i.putExtra("data",ab)
+                startActivityForResult(i,0)
             }
         })
         acceptance_item_recycler.adapter=adapter
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(resultCode){
+            0->{
+                try {
+                    val aib=data!!.getSerializableExtra("aib") as AcceptanceItemBean
+                    adapter.addItem(aib)
+                }catch (e:Exception){}
+            }
+        }
     }
 
     /**

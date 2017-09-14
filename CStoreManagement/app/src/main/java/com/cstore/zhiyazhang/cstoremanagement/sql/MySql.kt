@@ -560,38 +560,41 @@ object MySql {
      * 创建配送单,配合事务使用
      */
     fun createAcceptance(ab:AcceptanceBean, date:String):String{
+        val time="to_date('$date','yyyy-MM-dd')"
         return "insert into dlvhead " +
                 "(storeID, dlvDate, requestNumber, vendorID, shipNumber,ordDate, plnDlvDate, " +
                 "actDlvTime, dlvStatus, ordItemQty, dlvItemQty,retailTotal, costTotal, busiDate, updateUserID, updateDate) " +
                 "values " +
-                "('${User.getUser().storeId}',sysdate,'${ab.distributionId}','${ab.vendorId}','0',sysdate,sysdate,sysdate,'2',${ab.ordItemQTY},${ab.dlvItemQTY},${ab.retailTotal},${ab.costTotal},sysdate,'${User.getUser().uId}',sysdate);"
+                "('${User.getUser().storeId}',$time,'${ab.distributionId}','${ab.vendorId}','0',$time,$time,$time,'2',${ab.ordItemQTY},${ab.dlvItemQTY},${ab.retailTotal},${ab.costTotal},$time,'${User.getUser().uId}',sysdate);"
     }
 
     /**
      * 创建配送单下的商品，配合事务使用
      */
     fun createAcceptanceItem(aib:AcceptanceItemBean, date:String):String{
+        val time="to_date('$date','yyyy-MM-dd')"
         return "insert into dlvdtl " +
                 "(storeid,dlvdate,vendorid,itemnumber,shipnumber,dlvquantity,varquantity,storeunitprice, " +
                 "unitcost,requestnumber,pmcode,supplierid,updateuserid,updatedate,varreason,sell_cost,trsquantity,hqquantity,dctrsquantity,ordquantity) " +
                 "values" +
-                "('${User.getUser().storeId}',sysdate,'${aib.vendorId}','${aib.itemId}','${aib.shipNumber}',${aib.dlvQuantity},${aib.varQuantity},${aib.storeUnitPrice}," +
+                "('${User.getUser().storeId}',$time,'${aib.vendorId}','${aib.itemId}','${aib.shipNumber}',${aib.dlvQuantity},${aib.varQuantity},${aib.storeUnitPrice}," +
                 "${aib.unitCost},'${aib.distributionId}','-','${aib.supplierId}','${User.getUser().uId}',sysdate,null,${aib.sellCost},${aib.trsQuantity},${aib.hqQuantity},${aib.dctrsQuantity},${aib.ordQutity});"
     }
 
     /**
      * 得到今天最大的配送单
      */
-    fun getMaxAcceptanceId():String{
-        return "select max(requestNumber) from dlvHead where DlvDate = to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') and RequestNumber< 'A00000000' and RequestNumber like'${getNowNum()}%'"
+    fun getMaxAcceptanceId(date:String, num:String):String{
+        return "select max(requestNumber) from dlvHead where DlvDate = to_date('$date','yyyy-MM-dd') and RequestNumber< 'A00000000' and RequestNumber like'$num%'"
     }
 
     /**
      * 得到配送单号的前缀
      */
-    private fun getNowNum(): String {
+    fun getNowNum(date:String): String {
         var month=""
-        when(MyTimeUtil.nowMonth){
+        val x=date.substring(5,7).toInt()
+        when(date.substring(5,7).toInt()){
             1->month="A"
             2->month="B"
             3->month="C"
@@ -605,8 +608,32 @@ object MySql {
             11->month="K"
             12->month="L"
         }
-        val year=MyTimeUtil.nowYear.toString().substring(2)
-        val day=MyTimeUtil.todayDay
-        if (day<10)return year+month+"0"+day else return year+month+day
+        val year=date.substring(2,4)
+        val day= date.substring(8)
+        return year+month+day
     }
+
+    /**
+     * 得到创建验收输入的商品
+     */
+    fun getAcceptanceCommodity(id:String, vendorId:String):String{
+        return "select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
+                "plu.basic_cost unitCost,plu.sell_cost sell_cost,unit.UnitName,plu.shipNumber,orderBeginDate,orderEndDate, " +
+                "round(plu.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, plu.pcs, plu.sale_item " +
+                "from plu left join unit on  unit.storeID=plu.storeid and unit.unitID=plu.SmallUnitID " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                "where plu.StoreID='${User.getUser().storeId}' " +
+                "and vendorid like '%$vendorId%' " +
+                "and itemNumber='$id' " +
+                "and trim(SupplierID) is not null and trim(VendorID) is not null"
+    }
+
+    /**
+     * 检测输入的商品是否重复
+     */
+    fun getJudgmentCommodity(id:String, date: String):String{
+        return "select * from dlvdtl where dlvdate=to_date('$date','yyyy-MM-dd') and itemnumber='$id'"
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
+import android.os.Message
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
@@ -99,6 +100,29 @@ object CStoreCalendar{
      */
     private fun getHourByString(date:String):Int{
         return date.substring(0,2).toInt()
+    }
+
+    /**
+     * 判断是否能执行创建或修改操作
+     */
+    fun judgmentCalender(date:String, msg: Message, handler: MyHandler.MyHandler):Boolean{
+        CStoreCalendar.setCstoreCalendar()
+        //时间不对或或换日状态异常就报错
+        if (CStoreCalendar.getNowStatus(3)!=0||CStoreCalendar.getCurrentDate(3)!=date){
+            var errorMsg=""
+            if (CStoreCalendar.getNowStatus(3)==1){
+                errorMsg="正在换日中，请等待换日完成！"
+            }else if (CStoreCalendar.getNowStatus(3)==2){
+                errorMsg="换日失败，请停止操作并联系系统部！"
+            }else{
+                errorMsg="当前日期不能进行操作"
+            }
+            msg.obj=errorMsg
+            msg.obj= MyHandler.ERROR1
+            handler.sendMessage(msg)
+            return false
+        }
+        return true
     }
 }
 

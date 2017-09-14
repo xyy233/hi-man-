@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 
@@ -56,6 +57,11 @@ class PurchaseAcceptanceItemAdapter(private val data: AcceptanceBean, private va
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_acceptance_item, parent, false))
+    }
+
+    fun addItem(aib:AcceptanceItemBean){
+        data.allItems.add(aib)
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -111,6 +111,8 @@
     <string name="freshGroup">群组</string>
     <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
     <string name="cash_daily">现金日报</string>
+
+    <!--验收-->
     <string name="purchase_acceptance">进货验收</string>
     <string name="please_edit_value">请输入值</string>
     <string name="day">日</string>
@@ -119,8 +121,6 @@
     <string name="dlv_more_trs">验收量不能大于到货量！</string>
     <string name="huanri">正在换日，不能操作！</string>
     <string name="huanri_error">换日失败，请停止操作并联系系统部！</string>
-
-    <!--验收-->
     <string name="acceptance_id">配送单号：</string>
     <string name="vendor">配送商：</string>
     <string name="order_count">品项数：</string>
@@ -137,4 +137,9 @@
     <string name="hq_quantity">强配量：</string>
     <string name="tax_sell_cost">含税单价：</string>
     <string name="retail">零售价：</string>
+
+    <string name="please_edit_id">请输入品号</string>
+    <string name="please_edit_dlv">请输入验收量</string>
+    <string name="getCommodity_error">品号或配送商错误，请重试</string>
+    <string name="create_acceptance">创建验收项</string>
 </resources>
