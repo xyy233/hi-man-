@@ -9,7 +9,10 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.cashdaily.CashDailyInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.cashdaily.CashDailyModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
 /**
@@ -33,9 +36,9 @@ class CashDailyPresenter(private val gView:GenericView,private val context: Cont
         }))
     }
 
-    fun updateCashDaily(view:View, cd:CashDailyBean, value:String) {
+    fun updateCashDaily(date:String, view:View, cd:CashDailyBean, value:String) {
         if(!PresenterUtil.judgmentInternet(gView))return
-        mInterface.updateCashDaily(value,cd, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        mInterface.updateCashDaily(date, value,cd, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 if (cd.cdId=="1097"){
                     try {

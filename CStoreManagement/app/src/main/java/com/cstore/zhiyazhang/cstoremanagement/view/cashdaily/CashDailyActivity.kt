@@ -81,16 +81,6 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
 
     var dialogView:View?= null
     fun updateData(view:View, cd:CashDailyBean){
-        when(CStoreCalendar.getNowStatus(1)){
-            1->{
-                showPrompt(getString(R.string.huanri))
-                return
-            }
-            2->{
-                showPrompt(getString(R.string.huanri_error))
-                return
-            }
-        }
         if (dialog==null){
             val builder=AlertDialog.Builder(this@CashDailyActivity)
             dialogView = View.inflate(this,R.layout.dialog_cashdaily,null)!!
@@ -105,7 +95,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             if (cd.cdId=="1097"){
                 dialogView!!.dialog_progress.visibility=View.VISIBLE
                 //天气,在spinner内是从0开始，显示及存储是从1开始，所以+1
-                presenter.updateCashDaily(view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
+                presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
             }else{//其他
 
                 //去掉空格
@@ -120,7 +110,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                     dialogView!!.dialog_progress.visibility=View.VISIBLE
                     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
-                    presenter.updateCashDaily(view,cd,value)
+                    presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
                 }
             }
         }

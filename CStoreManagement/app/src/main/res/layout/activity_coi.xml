@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include
+        layout="@layout/toolbar_layout"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
+        <LinearLayout
+            android:id="@+id/cash_daily"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:background="@color/white"
+            android:transitionName="scrap"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:src="@drawable/no_img"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="@string/cash_daily"/>
+            <TextView
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:text="@string/cash_daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/purchase_acceptance"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:transitionName="scrap"
+            android:elevation="5dp"
+            android:background="@color/white"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:src="@drawable/no_img"
+                android:layout_height="80dp"
+                android:contentDescription="@string/purchase_acceptance"/>
+            <TextView
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:text="@string/purchase_acceptance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

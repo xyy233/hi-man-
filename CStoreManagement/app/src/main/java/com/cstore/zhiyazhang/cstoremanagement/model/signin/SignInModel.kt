@@ -5,6 +5,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
@@ -47,6 +48,7 @@ class SignInModel : SignInInterface {
                     val cd = ContractTypeDao(MyApplication.instance().applicationContext)
                     cd.editSQL(null, "deleteTable")
                 }
+                CStoreCalendar.setCStoreCalendar()
                 sView.saveUser(users[0])
                 msg.obj = users[0]
                 msg.what = SUCCESS

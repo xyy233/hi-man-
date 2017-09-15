@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.cashdaily
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
@@ -52,11 +53,12 @@ class CashDailyModel:CashDailyInterface{
         }).start()
     }
 
-    override fun updateCashDaily(value: String, cd: CashDailyBean, handler: MyHandler.MyHandler) {
+    override fun updateCashDaily(date: String, value: String, cd: CashDailyBean, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            if (!CStoreCalendar.judgmentCalender(date, msg, handler, 1)) return@Runnable
             val sql=getSql(cd,value)
             val result=SocketUtil.initSocket(ip,sql).inquire()
             if (result=="1"){
@@ -81,5 +83,5 @@ class CashDailyModel:CashDailyInterface{
 interface CashDailyInterface{
     fun getAllCashDaily(date:String, handler:MyHandler.MyHandler)
 
-    fun updateCashDaily(value:String, cd:CashDailyBean,handler:MyHandler.MyHandler)
+    fun updateCashDaily(date:String, value:String, cd:CashDailyBean,handler:MyHandler.MyHandler)
 }

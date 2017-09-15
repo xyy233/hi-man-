@@ -1,11 +1,8 @@
 package com.zhang.givejoe
 
-import android.content.*
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
+import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,14 +11,16 @@ class MainActivity : AppCompatActivity() {
     val url="donation.qinheyuzhou.org"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //全屏化
         this.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         setContentView(R.layout.activity_main)
-        web_url.setText(url)
+        web_edit.setText(url)
         go_web.setOnClickListener {
             this.stopLockTask()
             val i=Intent(this@MainActivity,WebActivity::class.java)
-            i.putExtra("url",web_url.text.toString())
+            i.putExtra("url", web_edit.text.toString())
             startActivity(i)
         }
     }
@@ -37,7 +36,9 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         backCount++
         if (backCount==20){
-            this.stopLockTask()
+            try {
+                this.stopLockTask()
+            }catch (e:Exception){}
             super.onBackPressed()
         }
     }

@@ -1,20 +1,17 @@
 package com.zhang.givejoe
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
-import android.net.http.SslError
 import android.os.Bundle
+import android.os.Message
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.webkit.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_web.*
 
 /**
- * Created by zhang on 2017/9/14 0014.
+ * Created by zhang
+ * on 2017/9/14 0014 11:02.
  */
 class WebActivity : AppCompatActivity() {
 
@@ -28,19 +25,48 @@ class WebActivity : AppCompatActivity() {
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_web)
         url = intent.getStringExtra("url")
+        //检测是否有http，如果没有就加上
         if (!url.contains("http://") && !url.contains("https://")) {
             url = "http://" + url
         }
+        val openAdm = intent.getBooleanExtra("openAdm", false)
         //配置userAgent
         val ua = my_web.settings.userAgentString + "ADM"
         my_web.settings.userAgentString = ua
         //支持javascript交互
         my_web.settings.javaScriptEnabled = true
+        //支持javascript弹窗
+        my_web.settings.javaScriptCanOpenWindowsAutomatically = true
+        //html5数据存储支持
+        my_web.settings.domStorageEnabled = true
         //取消滚动条
         my_web.scrollBarStyle = WebView.SCROLLBARS_OUTSIDE_OVERLAY
+        //设置缓存
+        my_web.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         //触摸焦点起作用
         my_web.requestFocus()
-        my_web.settings.javaScriptCanOpenWindowsAutomatically = true
+        //不允许缩放
+        my_web.settings.setSupportZoom(false)
+        //不显示缩放按钮
+        my_web.settings.builtInZoomControls = false
+        //任意比例缩放
+        my_web.settings.useWideViewPort = true
+        //解决自适应问题
+        my_web.settings.loadWithOverviewMode = true
+        //不使用缓存
+        my_web.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        my_web.settings.setAppCacheEnabled(false)
+        //设置渲染优先级
+        my_web.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+
+        my_web.settings.loadsImagesAutomatically = true
+
+        my_web.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+
+        my_web.settings.defaultTextEncodingName = "GBK"
+        my_web.settings.loadsImagesAutomatically = true
+
+        my_web.settings.setSupportMultipleWindows(true)
         my_web.webViewClient = viewClient
         my_web.webChromeClient = chromeClient
         swipe.setDistanceToTriggerSync(200)
@@ -79,6 +105,12 @@ class WebActivity : AppCompatActivity() {
             }
             super.onProgressChanged(view, newProgress)
         }
+
+        override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+            val transport = resultMsg!!.obj as WebView.WebViewTransport
+            resultMsg.sendToTarget()
+            return true
+        }
     }
 
     override fun onStart() {
@@ -90,8 +122,11 @@ class WebActivity : AppCompatActivity() {
         my_web.goBack()
         backCount++
         if (backCount == 10) {
-            this.stopLockTask()
-            finish()
+            try {
+                this.stopLockTask()
+            }catch (e:Exception){}
+            my_web.destroy()
+            super.onBackPressed()
         }
     }
 }

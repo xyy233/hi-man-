@@ -115,6 +115,10 @@
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateHidden|adjustPan"/>
 
+        <!--成本投资-->
+        <activity android:name=".view.coi.COIActivity"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

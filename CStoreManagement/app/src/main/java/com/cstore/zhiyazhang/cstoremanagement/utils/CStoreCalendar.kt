@@ -16,7 +16,7 @@ object CStoreCalendar{
 
     private var data:ArrayList<CStoreCalendarBean>?=null//换日数据
     private var date:String?=null//上一次执行获得换日的日期
-    private val ERROR_MSG="获得换日表失败,请停止操作并退出应用重进应用或联系系统部"
+    private val ERROR_MSG="获得换日表失败,请停止操作并退出重进应用或联系系统部"
 
     /**
      * 登陆时调用写入换日,开了线程，是用于登录成功后执行,只能登录后执行，不然在疯狂开启关闭的操作中会导致错误
@@ -34,7 +34,7 @@ object CStoreCalendar{
                     if (i==2)break
                 }
                 if (i==2){
-                    Log.e("CstoreCalendar","获得换日表失败")
+                    Log.e("CStoreCalendar","获得换日表失败")
                     MyToast.getLongToast(ERROR_MSG)
                     return@Runnable
                 }
@@ -47,7 +47,7 @@ object CStoreCalendar{
     /**
      * 没开线程，是要在执行线程的时候执行
      */
-    fun setCstoreCalendar(){
+    fun setCStoreCalendar(){
         var result=""
         var i=0
         while (result==""||result=="[]"||result=="0"){
@@ -56,7 +56,7 @@ object CStoreCalendar{
             if (i==2)break
         }
         if (i==2){
-            Log.e("CstoreCalendar","获得换日表失败")
+            Log.e("CStoreCalendar","获得换日表失败")
             MyToast.getLongToast(ERROR_MSG)
             return
         }
@@ -105,14 +105,14 @@ object CStoreCalendar{
     /**
      * 判断是否能执行创建或修改操作
      */
-    fun judgmentCalender(date:String, msg: Message, handler: MyHandler.MyHandler):Boolean{
-        CStoreCalendar.setCstoreCalendar()
+    fun judgmentCalender(date:String, msg: Message, handler: MyHandler.MyHandler, type:Int):Boolean{
+        CStoreCalendar.setCStoreCalendar()
         //时间不对或或换日状态异常就报错
-        if (CStoreCalendar.getNowStatus(3)!=0||CStoreCalendar.getCurrentDate(3)!=date){
+        if (CStoreCalendar.getNowStatus(type)!=0||CStoreCalendar.getCurrentDate(type)!=date){
             var errorMsg=""
-            if (CStoreCalendar.getNowStatus(3)==1){
+            if (CStoreCalendar.getNowStatus(type)==1){
                 errorMsg="正在换日中，请等待换日完成！"
-            }else if (CStoreCalendar.getNowStatus(3)==2){
+            }else if (CStoreCalendar.getNowStatus(type)==2){
                 errorMsg="换日失败，请停止操作并联系系统部！"
             }else{
                 errorMsg="当前日期不能进行操作"

@@ -193,7 +193,13 @@ class PurchaseAcceptanceCreate(override val layoutId: Int=R.layout.activity_acce
     }
 
     override fun <T> updateDone(uData: T) {
+        if(ab==null){
+            //记录创建好的
+            ab=uData as AcceptanceBean
+        }
         showPrompt(getString(R.string.saveDone))
+        //不允许再选别的配送
+        acceptance_spinner.isEnabled=false
         dlv_quantity.setText("")
         acceptance_create_data.visibility=View.GONE
         acceptance_save.visibility=View.GONE
