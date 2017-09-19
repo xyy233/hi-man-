@@ -14,9 +14,9 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:foreground="@drawable/selector_foreground"
+        android:stateListAnimator="@drawable/lift_on_touch"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:stateListAnimator="@drawable/lift_on_touch">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/item_cash_daily_name"
@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/item_cash_daily_number"
-            android:layout_width="80dp"
+            android:layout_width="120dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_height="wrap_content"

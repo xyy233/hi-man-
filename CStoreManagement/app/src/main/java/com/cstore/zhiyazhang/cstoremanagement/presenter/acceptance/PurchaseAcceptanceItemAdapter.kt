@@ -11,14 +11,16 @@ import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 
 /**
  * Created by zhiya.zhang
  * on 2017/9/11 17:31.
+ * type 1=进货验收 2=退货验收
  */
-class PurchaseAcceptanceItemAdapter(private val data: AcceptanceBean, private val date:String, private val onClick: ItemClickListener) : RecyclerView.Adapter<PurchaseAcceptanceItemAdapter.ViewHolder>() {
+class PurchaseAcceptanceItemAdapter(private val type:Int, private val data: AcceptanceBean, private val date:String, private val onClick: ItemClickListener) : RecyclerView.Adapter<PurchaseAcceptanceItemAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
@@ -32,50 +34,57 @@ class PurchaseAcceptanceItemAdapter(private val data: AcceptanceBean, private va
         if (data.allItems.size==position){
             //是加
             holder.add.visibility=View.VISIBLE
-            holder.acceptance_data.visibility=View.GONE
+            holder.acceptanceData.visibility=View.GONE
             holder.item.setOnClickListener {
                 onClick.onItemLongClick(holder.item,position)
             }
-        }else{
+            return
+        }
+        if (type==1){
+            if (User.getUser().storeAttr==1||User.getUser().storeAttr==5)holder.sellCostBody.visibility=View.GONE
             //还是内部数据
             holder.add.visibility=View.GONE
-            holder.acceptance_data.visibility=View.VISIBLE
-            holder.commodity_id.text=data.allItems[position].itemId
-            holder.commodity_name.text=data.allItems[position].itemName
-            holder.order_quantity.text=data.allItems[position].ordQutity.toString()
-            holder.hq_quantity.text=data.allItems[position].hqQuantity.toString()
-            holder.dc_quantity.text=data.allItems[position].dctrsQuantity.toString()
-            holder.trs_quantity.text=data.allItems[position].trsQuantity.toString()
-            holder.dlv_quantity.text=data.allItems[position].dlvQuantity.toString()
-            holder.tax_sell_cost.text=data.allItems[position].taxSellCost.toString()
+            holder.acceptanceData.visibility=View.VISIBLE
+            holder.commodityId.text=data.allItems[position].itemId
+            holder.commodityName.text=data.allItems[position].itemName
+            holder.orderQuantity.text=data.allItems[position].ordQutity.toString()
+            holder.hqQuantity.text=data.allItems[position].hqQuantity.toString()
+            holder.dcQuantity.text=data.allItems[position].dctrsQuantity.toString()
+            holder.trsQuantity.text=data.allItems[position].trsQuantity.toString()
+            holder.dlvQuantity.text=data.allItems[position].dlvQuantity.toString()
+            holder.taxSellCost.text=data.allItems[position].taxSellCost.toString()
             holder.retail.text=data.allItems[position].storeUnitPrice.toString()
             holder.item.setOnClickListener {
                 onClick.onItemClick(holder.item, position)
             }
+        }else{
+
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_acceptance_item, parent, false))
     }
 
-    fun addItem(aib:AcceptanceItemBean){
-        data.allItems.add(aib)
+    fun addItem(aib:ArrayList<AcceptanceItemBean>){
+        data.allItems.addAll(aib)
         notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val item=itemView.findViewById<CardView>(R.id.acceptance_item)!!
         val add=itemView.findViewById<ImageView>(R.id.add)!!
-        val acceptance_data=itemView.findViewById<LinearLayout>(R.id.acceptance_data)!!
-        val commodity_id = itemView.findViewById<TextView>(R.id.commodity_id)!!
-        val commodity_name = itemView.findViewById<TextView>(R.id.commodity_name)!!
-        val order_quantity = itemView.findViewById<TextView>(R.id.order_quantity)!!
-        val hq_quantity = itemView.findViewById<TextView>(R.id.hq_quantity)!!
-        val dc_quantity = itemView.findViewById<TextView>(R.id.dc_quantity)!!
-        val trs_quantity = itemView.findViewById<TextView>(R.id.trs_quantity)!!
-        val dlv_quantity = itemView.findViewById<TextView>(R.id.dlv_quantity)!!
-        val tax_sell_cost = itemView.findViewById<TextView>(R.id.tax_sell_cost)!!
+        val acceptanceData=itemView.findViewById<LinearLayout>(R.id.acceptance_data)!!
+        val commodityId = itemView.findViewById<TextView>(R.id.commodity_id)!!
+        val commodityName = itemView.findViewById<TextView>(R.id.commodity_name)!!
+        val orderQuantity = itemView.findViewById<TextView>(R.id.order_quantity)!!
+        val hqQuantity = itemView.findViewById<TextView>(R.id.hq_quantity)!!
+        val dcQuantity = itemView.findViewById<TextView>(R.id.dc_quantity)!!
+        val trsQuantity = itemView.findViewById<TextView>(R.id.trs_quantity)!!
+        val dlvQuantity = itemView.findViewById<TextView>(R.id.dlv_quantity)!!
+        val taxSellCost = itemView.findViewById<TextView>(R.id.tax_sell_cost)!!
         val retail = itemView.findViewById<TextView>(R.id.retail)!!
+        val sellCostBody =itemView.findViewById<LinearLayout>(R.id.sell_cost_body)!!
     }
 }

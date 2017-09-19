@@ -9,24 +9,42 @@
         layout="@layout/toolbar_layout"
         android:id="@+id/toolbar"/>
 
+    <FrameLayout
+        android:id="@+id/acceptance_search_body"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <EditText
+            android:id="@+id/acceptance_search_line"
+            android:hint="@string/edit_search_item_id"
+            android:inputType="number"
+            android:textSize="14sp"
+            android:imeOptions="actionDone"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"/>
+
+    </FrameLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/acceptance_item_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/acceptance_item_save"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/acceptance_search_body"
         android:background="@color/contract_bg"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="0dp"/>
 
     <Button
         android:id="@+id/acceptance_item_save"
-        android:text="@string/save"
+        android:text="@string/confirm_acceptance"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:background="@color/contract_sure"
         app:layout_constraintBottom_toBottomOf="parent"

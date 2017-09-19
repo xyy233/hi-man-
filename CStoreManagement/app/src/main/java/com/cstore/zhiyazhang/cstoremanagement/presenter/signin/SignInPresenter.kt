@@ -24,6 +24,7 @@ class SignInPresenter(private val signInView: SignInView, private val genericVie
         signInInterface.login(signInView,genericView, MyHandler.writeActivity(myActivity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User
+                signInView.saveUser(data)
                 genericView.requestSuccess(data)
                 genericView.hideLoading()
             }

@@ -4,6 +4,8 @@ import android.content.Context
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnAcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnAcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.acceptance.AcceptanceModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -20,11 +22,29 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
     private val model = AcceptanceModel()
 
     /**
-     * 得到所有验收单
+     * 得到所有进货验收单
      */
     fun getAcceptanceList(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
         model.getAcceptanceList(date, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                gView.requestSuccess(data)
+                gView.hideLoading()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(context.getString(R.string.socketError)+errorMessage)
+                gView.errorDealWith()
+            }
+        }))
+    }
+
+    /**
+     * 得到所有退货验收单
+     */
+    fun getReturnAcceptanceList(date:String){
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        model.getReturnAcceptanceList(date, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -56,6 +76,24 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
     }
 
     /**
+     * 更新退货验收单
+     */
+    fun updateReturnAcceptance(date:String, rab:ReturnAcceptanceBean){
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        model.updateReturnAcceptance(date, rab, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
+                gView.updateDone(data)
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(context.getString(R.string.socketError)+errorMessage)
+                gView.errorDealWith()
+            }
+        }))
+    }
+
+    /**
      * 得到所有配送商
      */
     fun getVendor(){
@@ -73,25 +111,28 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
         }))
     }
 
-    fun getCommodity(commodityId:String, vendorId:String){
+    /**
+     * 得到输入的商品
+     */
+    fun getCommodity(vendorId:String){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getCommodity(commodityId,vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getCommodity(vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
             }
 
             override fun listenerFailed(errorMessage: String) {
-                if (errorMessage=="0"){
-                    gView.showPrompt(context.getString(R.string.socketError))
-                }
-                gView.showPrompt(errorMessage+","+context.getString(R.string.getCommodity_error))
+                gView.showPrompt(context.getString(R.string.socketError)+","+errorMessage)
                 gView.hideLoading()
             }
         }))
     }
 
-    fun createAcceptance(date:String, ab: AcceptanceBean?,aib:AcceptanceItemBean){
+    /**
+     * 创建进货验收单
+     */
+    fun createAcceptance(date:String, ab: AcceptanceBean?,aib:ArrayList<AcceptanceItemBean>){
         if (!PresenterUtil.judgmentInternet(gView)) return
         model.createAcceptance(date,ab,aib, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
@@ -104,7 +145,24 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
                 gView.hideLoading()
             }
         }))
+    }
 
+    /**
+     * 创建退货验收单
+     */
+    fun createReturnAcceptance(date:String, rab:ReturnAcceptanceBean?, raib:ReturnAcceptanceItemBean){
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        model.createReturnAcceptance(date, rab, raib, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                gView.updateDone(data)
+                gView.hideLoading()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(context.getString(R.string.socketError)+errorMessage)
+                gView.hideLoading()
+            }
+        }))
     }
 
 

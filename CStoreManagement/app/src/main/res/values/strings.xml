@@ -129,6 +129,7 @@
     <string name="dlv_quantity">验收数量：</string>
     <string name="cost_total">含税成本：</string>
     <string name="retail_total">零售小计：</string>
+    <string name="confirm_acceptance">确认验收</string>
 
     <string name="commodity_id">品号：</string>
     <string name="commodity_name">品名：</string>
@@ -140,6 +141,10 @@
 
     <string name="please_edit_id">请输入品号</string>
     <string name="please_edit_dlv">请输入验收量</string>
-    <string name="getCommodity_error">品号或配送商错误，请重试</string>
     <string name="create_acceptance">创建验收项</string>
+
+    <string name="return_item_qty">实退项：</string>
+    <string name="return_qty">实退总数：</string>
+    <string name="ord_return_qty">预退总数：</string>
+    <string name="edit_search_item_id">输入要查询的品号</string>
 </resources>

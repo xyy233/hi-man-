@@ -1,8 +1,8 @@
 package com.cstore.zhiyazhang.cstoremanagement.bean
 
 import android.content.Context
-import com.google.gson.annotations.SerializedName
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
@@ -38,23 +38,34 @@ data class User(
          */
         @SerializedName("address") val address: String,
         /**
+         * 店的类型
+         */
+        @SerializedName("store_attr") val storeAttr:Int,
+        /**
          * 0是非承包店，1是承包店
          */
         val cnt: Int
 ) : Serializable {
     companion object {
-        fun getUser(): User {
-            val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
-            return User(
-                    sp.getString("storeId", ""),
-                    sp.getString("uid", ""),
-                    "", //不保存密码
-                    sp.getString("uName", ""),
-                    sp.getString("telphone", ""),
-                    sp.getString("storeName", ""),
-                    sp.getString("address", ""),
-                    sp.getInt("cnt", 0)
-            )
+
+        private var staticUser:User?=null
+
+        fun getUser(): User{
+            if (staticUser==null){
+                val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
+                staticUser = User(
+                        sp.getString("storeId", ""),
+                        sp.getString("uid", ""),
+                        "", //不保存密码
+                        sp.getString("uName", ""),
+                        sp.getString("telphone", ""),
+                        sp.getString("storeName", ""),
+                        sp.getString("address", ""),
+                        sp.getInt("storeAttr",1),
+                        sp.getInt("cnt", 0)
+                )
+            }
+            return staticUser!!
         }
     }
 }

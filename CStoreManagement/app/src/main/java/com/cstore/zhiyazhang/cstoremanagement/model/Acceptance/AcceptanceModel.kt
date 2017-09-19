@@ -3,10 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.acceptance
 import android.os.Message
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.UtilBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.VendorBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
@@ -38,19 +35,60 @@ class AcceptanceModel : AcceptanceInterface {
             try {
                 abs.addAll(SocketUtil.getAcceptance(result))
             } catch (e: Exception) {
+                Log.e("AcceptanceModel", e.message)
             }
             if (abs.isEmpty()) {
                 msg.obj = result
                 msg.what = ERROR1
                 handler.sendMessage(msg)
             } else {
-                abs.forEach {
-                    //获得每个单下的商品
-                    val allItems = getAcceptanceItemList(it, date, handler, msg, ip)
+                try {
+                    abs.forEach {
+                        //获得每个单下的商品
+                        val allItems = getAcceptanceItemList(it, date, ip)
+                        it.allItems = allItems
+                    }
+                }catch (e:Exception){
+                    msg.obj = e.message
+                    msg.what = ERROR1
+                    handler.sendMessage(msg)
+                    return@Runnable
+                }
+                msg.obj = abs
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+            }
+        }).start()
+    }
+
+    override fun getReturnAcceptanceList(date: String, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val result = SocketUtil.initSocket(ip, MySql.getReturnAcceptanceList(date)).inquire()
+            val rabs = ArrayList<ReturnAcceptanceBean>()
+            if (result == "[]") {
+                msg.obj = rabs
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+                return@Runnable
+            }
+            try {
+                rabs.addAll(SocketUtil.getReturnAcceptance(result))
+            } catch (e: Exception) {
+            }
+            if (rabs.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+            } else {
+                rabs.forEach {
+                    val allItems = getReturnAcceptanceItemList(it, date, handler, msg, ip)
                     if (allItems.size == 0) return@Runnable
                     it.allItems = allItems
                 }
-                msg.obj = abs
+                msg.obj = rabs
                 msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
@@ -60,20 +98,31 @@ class AcceptanceModel : AcceptanceInterface {
     /**
      * 得到配送表下的商品
      */
-    private fun getAcceptanceItemList(ab: AcceptanceBean, date: String, handler: MyHandler.MyHandler, msg: Message, ip: String): ArrayList<AcceptanceItemBean> {
+    private fun getAcceptanceItemList(ab: AcceptanceBean, date: String, ip: String): ArrayList<AcceptanceItemBean> {
         val abs = ArrayList<AcceptanceItemBean>()
         val result = SocketUtil.initSocket(ip, MySql.getAcceptanceItemList(ab, date)).inquire()
         if (result == "[]") return abs
+        abs.addAll(SocketUtil.getAcceptanceItem(result))
+        return abs
+    }
+
+    /**
+     * 得到退货验收单下的商品
+     */
+    private fun getReturnAcceptanceItemList(rab: ReturnAcceptanceBean, date: String, handler: MyHandler.MyHandler, msg: Message, ip: String): ArrayList<ReturnAcceptanceItemBean> {
+        val raibs = ArrayList<ReturnAcceptanceItemBean>()
+        val result = SocketUtil.initSocket(ip, MySql.getReturnAcceptanceItemList(rab, date)).inquire()
+        if (result == "[]") return raibs
         try {
-            abs.addAll(SocketUtil.getAcceptanceItem(result))
+            raibs.addAll(SocketUtil.getReturnAcceptanceItem(result))
         } catch (e: Exception) {
         }
-        if (abs.isEmpty()) {
+        if (raibs.isEmpty()) {
             msg.obj = result
             msg.what = ERROR1
             handler.sendMessage(msg)
         }
-        return abs
+        return raibs
     }
 
     override fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler) {
@@ -85,14 +134,30 @@ class AcceptanceModel : AcceptanceInterface {
             val sql = getUpdateSql(ab)
             val result = SocketUtil.initSocket(ip, sql).inquire()
             if (result == "0") {
-                msg.obj = result
                 msg.what = SUCCESS
-                handler.sendMessage(msg)
             } else {
-                msg.obj = result
                 msg.what = ERROR1
-                handler.sendMessage(msg)
             }
+            msg.obj = result
+            handler.sendMessage(msg)
+        }).start()
+    }
+
+    override fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            if (!CStoreCalendar.judgmentCalender(date, msg, handler, 3)) return@Runnable
+            val sql = getReturnUpdateSql(rab)
+            val result = SocketUtil.initSocket(ip, sql).inquire()
+            if (result == "0") {
+                msg.what = SUCCESS
+            } else {
+                msg.what = ERROR1
+            }
+            msg.obj = result
+            handler.sendMessage(msg)
         }).start()
     }
 
@@ -131,6 +196,43 @@ class AcceptanceModel : AcceptanceInterface {
         return result.toString()
     }
 
+    /**
+     * 得到更新退货验收用的sql
+     */
+    private fun getReturnUpdateSql(rab: ReturnAcceptanceBean): String {
+        val result = StringBuilder()
+        result.append(MySql.affairHeader)
+        var plnRtnItemQTY = 0//退货品项数
+        var retailTotal = 0.00//零售小计
+        var costTotal = 0.00//总成本
+        var allRtnQTY = 0//总退货量
+        var allActQty = 0//总预退量
+        //计算验收单数据并添加商品sql语句
+        rab.allItems.forEach {
+            allRtnQTY += it.rtnQuantity
+            allActQty += it.ordQuantity
+            if (it.rtnQuantity > 0) plnRtnItemQTY++//得到退货品项数
+            costTotal += (it.unitCost * it.rtnQuantity)//得到总成本
+            retailTotal += (it.storeUnitPrice * it.rtnQuantity)//得到零售小计
+            result.append(MySql.updateReturnAcceptanceItem(it))
+        }
+        //写入预退品项数
+        rab.actRtnItemQTY = rab.allItems.size
+        //写入退货品项数
+        rab.plnRtnItemQTY = plnRtnItemQTY
+        //写入总成本
+        rab.costTotal = costTotal
+        //写入零售小计
+        rab.retailTotal = retailTotal
+        //不是转次日就修改验收状态
+        if (rab.rtnStatus != 3) {
+            if (allRtnQTY == allActQty) rab.rtnStatus = 1 else if (allRtnQTY != 0) rab.rtnStatus = 2
+        }
+        result.append(MySql.updateReturnAcceptance(rab))
+        result.append(MySql.affairFoot)
+        return result.toString()
+    }
+
     override fun getVendor(handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
@@ -156,13 +258,12 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-
-    override fun getCommodity(commodityId: String, vendorId: String, handler: MyHandler.MyHandler) {
+    override fun getCommodity(vendorId: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val result = SocketUtil.initSocket(ip, MySql.getAcceptanceCommodity(commodityId, vendorId)).inquire()
+            val result = SocketUtil.initSocket(ip, MySql.getAcceptanceCommodity(vendorId)).inquire()
             if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
             val aib = ArrayList<AcceptanceItemBean>()
             try {
@@ -182,14 +283,14 @@ class AcceptanceModel : AcceptanceInterface {
     }
 
     var newAB: AcceptanceBean? = null
-    override fun createAcceptance(date: String, ab: AcceptanceBean?, aib: AcceptanceItemBean, handler: MyHandler.MyHandler) {
+    override fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             if (!CStoreCalendar.judgmentCalender(date, msg, handler, 3)) return@Runnable
             //判断是否有重复商品
-            val commoditySql = SocketUtil.initSocket(ip, MySql.getJudgmentCommodity(aib.itemId, date)).inquire()
+            val commoditySql = SocketUtil.initSocket(ip, MySql.getJudgmentCommodity(aib, date)).inquire()
             val commodity = ArrayList<AcceptanceItemBean>()
             try {
                 commodity.addAll(SocketUtil.getAcceptanceItem(commoditySql))
@@ -224,10 +325,52 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
+    var newRAB: ReturnAcceptanceBean? = null
+    override fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ReturnAcceptanceItemBean, handler: MyHandler.MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            if (!CStoreCalendar.judgmentCalender(date, msg, handler, 3)) return@Runnable
+            val commoditySql = SocketUtil.initSocket(ip, MySql.getJudgmentReturnCommodity(raib.itemId, date)).inquire()
+            val commodity = ArrayList<ReturnAcceptanceItemBean>()
+            try {
+                commodity.addAll(SocketUtil.getReturnAcceptanceItem(commoditySql))
+            } catch (e: Exception) {
+            }
+            if (commodity.isNotEmpty()) {
+                msg.obj = "已有此商品的退货单，不能重复创建！"
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+                return@Runnable
+            }
+            val sql = getCreateReturnAcceptance(date, ip, raib, rab)
+            if (sql == "0") {
+                msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
+                msg.what = ERROR1
+                handler.sendMessage(msg)
+                return@Runnable
+            }
+            val result = SocketUtil.initSocket(ip, sql).inquire()
+            if (result == "0") {
+                msg.what = SUCCESS
+            } else {
+                msg.what = ERROR1
+            }
+            if (rab == null && newRAB != null) {
+                msg.obj = newAB
+            } else {
+                msg.obj = result
+            }
+            handler.sendMessage(msg)
+        }).start()
+    }
+
     /**
      * 得到创建的sql语句,isAllCreate true就是不存在这个配送单，要创建配送单和商品否则就是存在配送单，只要创建商品
      */
-    private fun getCreateAcceptance(date: String, ip: String, aib: AcceptanceItemBean, ab: AcceptanceBean?): String {
+    private fun getCreateAcceptance(date: String, ip: String, aib:  ArrayList<AcceptanceItemBean>, ab: AcceptanceBean?): String {
+        newAB = null
         if (ab == null) {
             val numHeader = MySql.getNowNum(date)
             val distributionId = getDistribution(ip, date, numHeader)
@@ -237,33 +380,72 @@ class AcceptanceModel : AcceptanceInterface {
             //获得当前的完整单号
             val nowId = numHeader + (numFoot + 1).toString()
             //数据加入
-            val nowAB = AcceptanceBean(nowId, aib.vendorId, "", 1, 1, 0, aib.storeUnitPrice * aib.dlvQuantity, aib.dlvQuantity, 0.00, "", "", 2, aib.totalUnitCost, ArrayList<AcceptanceItemBean>())
-            nowAB.allItems.add(aib)
-            newAB = nowAB
-            aib.distributionId = nowId
+            val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", 1, 1, 0, 0.00, 0, 0.00, "", "", 2,0.00, ArrayList<AcceptanceItemBean>())
             val result = StringBuilder()
             result.append(MySql.affairHeader)
-            result.append(MySql.createAcceptanceItem(aib, date))
+            //重新计算一些修改量
+            aib.forEach {
+                it.distributionId=nowId//写入配送单号
+                nowAB.retailTotal+=it.storeUnitPrice*it.dlvQuantity//写入零售小计
+                nowAB.costTotal+=it.unitCost*it.dlvQuantity//写入成本总计
+                nowAB.dlvQuantity+=it.dlvQuantity//写入验收量
+                nowAB.dlvItemQTY++//写入验收项
+                nowAB.ordItemQTY++//写入品项
+                result.append(MySql.createAcceptanceItem(it, date))
+            }
+            nowAB.allItems.addAll(aib)
+            newAB = nowAB
             result.append(MySql.createAcceptance(nowAB, date))
             result.append(MySql.affairFoot)
             return result.toString()
         } else {
-            //重新计算一些修改量
-            //写入零售小计
-            ab.retailTotal += aib.storeUnitPrice * aib.dlvQuantity
-            //写入成本总计
-            ab.costTotal += aib.unitCost * aib.dlvQuantity
-            //写入验收量
-            ab.dlvQuantity += aib.dlvQuantity
-            //写入验收项
-            ab.dlvItemQTY++
-            //写入品项
-            ab.ordItemQTY++
-
             val result = StringBuilder()
             result.append(MySql.affairHeader)
-            result.append(MySql.createAcceptanceItem(aib, date))
+            //重新计算一些修改量
+            aib.forEach {
+                ab.retailTotal+=it.storeUnitPrice*it.dlvQuantity//写入零售小计
+                ab.costTotal+=it.unitCost*it.dlvQuantity//写入成本总计
+                ab.dlvQuantity+=it.dlvQuantity//写入验收量
+                ab.dlvItemQTY++//写入验收项
+                ab.ordItemQTY++//写入品项
+                result.append(MySql.createAcceptanceItem(it, date))
+            }
             result.append(MySql.updateAcceptance(ab))
+            result.append(MySql.affairFoot)
+            return result.toString()
+        }
+    }
+
+    private fun getCreateReturnAcceptance(date: String, ip: String, raib: ReturnAcceptanceItemBean, rab: ReturnAcceptanceBean?): String {
+        newRAB = null
+        if (rab == null) {
+            val numHeader = MySql.getNowNum(date)
+            val distributionId = getDistribution(ip, date, numHeader)
+            if (distributionId == "0") return "0"
+            //获得后四位数字
+            val numFoot = distributionId.substring(distributionId.length - 4).toInt()
+            //获得当前的完整单号
+            val nowId = numHeader + (numFoot + 1).toString()
+            val nowARB = ReturnAcceptanceBean(nowId, date, date, date, 1, 1, raib.storeUnitPrice * raib.rtnQuantity, 2, date, raib.vendorId, "", 0.00, raib.rtnQuantity, 0, raib.unitCost * raib.rtnQuantity, ArrayList<ReturnAcceptanceItemBean>())
+            raib.distributionId = nowId
+            nowARB.allItems.add(raib)
+            newRAB = nowARB
+            val result = StringBuilder()
+            result.append(MySql.affairHeader)
+            result.append(MySql.createReturnAcceptanceItem(raib))
+            result.append(MySql.createReturnAcceptance(nowARB))
+            result.append(MySql.affairFoot)
+            return result.toString()
+        } else {
+            rab.retailTotal += raib.storeUnitPrice * raib.rtnQuantity
+            rab.costTotal += raib.unitCost * raib.rtnQuantity
+            rab.rtnQuantity += raib.rtnQuantity
+            rab.actRtnItemQTY++
+            rab.plnRtnItemQTY++
+            val result = StringBuilder()
+            result.append(MySql.affairHeader)
+            result.append(MySql.createReturnAcceptanceItem(raib))
+            result.append(MySql.updateReturnAcceptance(rab))
             result.append(MySql.affairFoot)
             return result.toString()
         }
@@ -314,10 +496,25 @@ interface AcceptanceInterface {
     /**
      * 得到商品
      */
-    fun getCommodity(commodityId: String, vendorId: String, handler: MyHandler.MyHandler)
+    fun getCommodity(vendorId: String, handler: MyHandler.MyHandler)
 
     /**
      * 创建配送
      */
-    fun createAcceptance(date: String, ab: AcceptanceBean?, aib: AcceptanceItemBean, handler: MyHandler.MyHandler)
+    fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.MyHandler)
+
+    /**
+     * 得到退货验收列表
+     */
+    fun getReturnAcceptanceList(date: String, handler: MyHandler.MyHandler)
+
+    /**
+     * 更新退货验收
+     */
+    fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.MyHandler)
+
+    /**
+     * 创建退货验收
+     */
+    fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ReturnAcceptanceItemBean, handler: MyHandler.MyHandler)
 }

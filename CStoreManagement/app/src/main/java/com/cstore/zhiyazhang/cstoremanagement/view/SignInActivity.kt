@@ -166,6 +166,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         ue.putString("telphone", user.telphone)
         ue.putString("storeName", user.storeName)
         ue.putString("address", user.address)
+        ue.putInt("storeAttr",user.storeAttr)
         ue.putInt("cnt", user.cnt)
         ue.apply()
     }

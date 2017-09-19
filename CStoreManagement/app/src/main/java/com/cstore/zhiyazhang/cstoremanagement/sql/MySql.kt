@@ -1,9 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 
 /**
@@ -43,7 +40,7 @@ object MySql {
      * @return 新的sql语句
      */
     fun SignIn(uid: String): String {
-        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address from employee A,store B) where employeeid='$uid'"
+        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr from employee A,store B) where employeeid='$uid'"
     }
 
 
@@ -95,7 +92,7 @@ object MySql {
      * 通过大类id获得商品
      */
     fun getItemByCategoryId(categoryId: String, sort: String): String {
-        return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
                 " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
@@ -130,7 +127,7 @@ object MySql {
      * 通过货架id获得商品
      */
     fun getItemByShelfId(shelfId: String, sort: String): String {
-        return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
                 " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
@@ -156,7 +153,7 @@ object MySql {
      */
     fun unitOrder(value: String): String {
         return "select * from " +
-                "(Select distinct x.itemnumber， to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
+                "(Select distinct x.itemnumber， to_char(x.sell_cost, '999999990.00') sell_cost," +
                 "x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
@@ -176,7 +173,7 @@ object MySql {
             return "select c.midcategorynumber,c.categoryname, " +
                     "count(*) tot_sku, " +
                     "sum(decode(sign(a.ordActualQuantity+a.ordActualQuantity1), 1,1,0)) ord_sku, " +
-                    "to_char(sum((a.ordActualQuantity+a.ordActualQuantity1)* a.sell_cost),'999,999,990.00') amt " +
+                    "to_char(sum((a.ordActualQuantity+a.ordActualQuantity1)* a.sell_cost),'999999990.00') amt " +
                     "from ( " +
                     "select p.itemnumber,p.pluname,o.ordactualquantity,o.ordactualquantity1,p.categorynumber,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, p.sell_cost " +
                     "from ord o, plu p " +
@@ -195,7 +192,7 @@ object MySql {
      * 通过自用品id获得商品
      */
     fun getSelfBySelfId(selfId: String, orderBy: String): String {
-        return "select p.itemnumber,p.pluname,x.ordactualquantity,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, to_char(p.sell_cost,'999,999,990.00') storeunitprice,x.inv_qty,x.dlv_qty,p.ordertype " +
+        return "select p.itemnumber,p.pluname,x.ordactualquantity,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, to_char(p.sell_cost,'999999990.00') storeunitprice,x.inv_qty,x.dlv_qty,p.ordertype " +
                 "from ord x, plu p " +
                 "where x.itemnumber=p.itemnumber " +
                 "and x.orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') " +
@@ -228,7 +225,7 @@ object MySql {
                     "select '0' in_th_code,'促销品' title, count(*) tot_sku, " +
                     "sum(decode(sign(ordActualQuantity+ordActualQuantity1), 1,1,0)) ord_sku, " +
                     "sum((ordActualQuantity+ordActualQuantity1)*storeunitprice) amt " +
-                    "from (Select to_char(x.sell_cost, '999,999,990.000000') sell_cost, " +
+                    "from (Select to_char(x.sell_cost, '999999990.00') sell_cost, " +
                     "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.ordactualquantity1,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, " +
                     "substr(p.signType,12,1) s_returntype, " +
                     "round(p.storeunitprice,2) storeunitprice " +
@@ -242,7 +239,7 @@ object MySql {
      * 根据档期获得商品
      */
     fun getNewItemById(id: String, orderBy: String): String {
-        return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost,x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, substr(p.signType,12,1) s_returntype, round(p.storeunitprice,2) storeunitprice " +
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost,x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, substr(p.signType,12,1) s_returntype, round(p.storeunitprice,2) storeunitprice " +
                 "From ord_t2 x,plu p " +
                 "where x.itemnumber = p.itemnumber(+) " +
                 "AND nvl(x.market_date,TO_DATE('1970-01-01','YYYY-MM-DD'))>=(sysdate-60 ) " +
@@ -254,7 +251,7 @@ object MySql {
      * 获得促销品
      */
     fun getPromotion(orderBy: String): String {
-        return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From ord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy"
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From ord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy"
     }
 
     /**
@@ -313,7 +310,7 @@ object MySql {
      * 根据大类、中类获得鲜食
      */
     fun getFreashItem(categoryId: String, midId: String, orderBy: String): String {
-        return "Select to_char(x.sell_cost, '999,999,990.000000') sell_cost," +
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
                 "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, x.dms,x.ordertype,x.pro_yn," +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
@@ -337,17 +334,16 @@ object MySql {
      */
     fun getAllCashDaily(date: String): String {
         return " select * from ( " +
-                "Select x.Accountnumber, x.Accountname,a.updatetype,x.displaytype, " +
-                "trim(to_char(Sum(Nvl(x.Storeamount, 0)),Decode(sign(instr(x.accountname,'来客')),0,'9,999,990.00','9,999,990'))) storeamount " +
-                "From Accdayrpt x, accitem a " +
+                "Select x.Accountnumber, x.Accountname,'N' updatetype,x.displaytype, " +
+                "trim(to_char(Sum(Nvl(x.Storeamount, 0)),Decode(sign(instr(x.accountname,'来客')),0,'9999990.00','9999990'))) storeamount " +
+                "From Accdayrpt x " +
                 "Where x.Storeid ='${User.getUser().storeId}' " +
-                "And x.accountnumber=a.accountnumber " +
                 "And x.Accountdate = to_date('$date','yyyy-MM-dd') " +
                 "And x.Displaytype = '0' " +
-                "Group By x.Accountnumber, x.Accountname, a.updatetype,x.displaysequence,x.displaytype " +
+                "Group By x.Accountnumber, x.Accountname, x.displaytype " +
                 "union all " +
                 "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
-                "From (Select Accountnumber, Accountname, trim(to_char(nvl(Storeamount,0),'9,999,990.00')) Storeamount, Updatetype,Displaytype " +
+                "From (Select Accountnumber, Accountname, trim(to_char(nvl(Storeamount,0),'9999990.00')) Storeamount, Updatetype,Displaytype " +
                 "From Accdayrpt " +
                 "Where Storeid ='${User.getUser().storeId}' " +
                 "And Accountdate =to_date('$date','yyyy-MM-dd') " +
@@ -355,7 +351,7 @@ object MySql {
                 "Order By To_Number(Displaysequence),Accountnumber) x " +
                 "union all " +
                 "Select x.Accountnumber, x.Accountname, x.updatetype, x.displaytype,x.storeamount " +
-                "From (Select Accountnumber, Accountname, decode(accountnumber,'1100',datasource,'1097',(Select weather_desc From weathercode Where to_number(weather_id)=Accdayrpt.storeamount) ,trim(to_char(nvl(Storeamount,0),'9,999,990.00'))) Storeamount, DECODE(Updatetype,'P','Y',Updatetype) Updatetype,Displaytype " +
+                "From (Select Accountnumber, Accountname, decode(accountnumber,'1100',datasource,'1097',(Select weather_desc From weathercode Where to_number(weather_id)=Accdayrpt.storeamount) ,trim(to_char(nvl(Storeamount,0),'9999990.00'))) Storeamount, DECODE(Updatetype,'P','Y',Updatetype) Updatetype,Displaytype " +
                 "From Accdayrpt " +
                 "Where Storeid ='${User.getUser().storeId}' " +
                 "And Accountdate = to_date('$date','yyyy-MM-dd') " +
@@ -439,7 +435,7 @@ object MySql {
         return "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.CATEGORYNUMBER='80' and a.midcategorynumber='$midId' and m.itemnumber(+)=a.itemnumber and (m.busidate = to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') or m.busidate is null) order by itemnumber"
     }
 
-    /**********************************************验收************************************************************/
+    /**********************************************进货验收************************************************************/
 
     /**
      * 得到配送列表
@@ -450,11 +446,11 @@ object MySql {
                 "(case when dlv_days='999' then null else to_date(to_char(plnDlvDate + dlv_days - 1,'yyyy-MM-dd')||'17:00','yyyy-MM-dd HH24:mi')end) end_dlvTimes , " +
                 "dlh.dlvStatus, " +
                 "dlh.actdlvtime,dlh.plndlvdate,dlh.orddate, " +
-                "dlh.orditemqty,sum(ordQuantity)ordQuantity, " +
+                "dlh.orditemqty,nvl(sum(ordQuantity),0)ordQuantity, " +
                 "dlh.dlvitemqty, " +
-                "sum(dlvQuantity)dlvQuantity, " +
+                "nvl(sum(dlvQuantity),0)dlvQuantity, " +
                 "dlh.retailtotal, " +
-                "to_char(sum(dlvQuantity*dlvdtl.sell_cost*(1+nvl(taxtype.taxRate,0))), '999,999,990.000000') sellcost_tot, " +
+                "nvl(to_char(sum(dlvQuantity*dlvdtl.sell_cost*(1+nvl(taxtype.taxRate,0))), '999999990.00'),0.00) sellcost_tot, " +
                 "decode(upper(substr(dlh.requestnumber,2,1)),'C', dlh.requestNumber,'OD' || dlh.requestnumber) dcNumber, " +
                 "dlh.vendorid,dlh.dlvstatus,to_char(dlh.dlvdate,'yyyy-mm-dd') dlvdate " +
                 "from dlvhead dlh left join dlvdtl on dlvdtl.storeid=dlh.storeID and dlvdtl.dlvdate=dlh.dlvdate and dlvdtl.requestnumber=dlh.requestnumber " +
@@ -616,24 +612,130 @@ object MySql {
     /**
      * 得到创建验收输入的商品
      */
-    fun getAcceptanceCommodity(id:String, vendorId:String):String{
-        return "select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
+    fun getAcceptanceCommodity(vendorId:String):String{
+        return "select * from (select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
                 "plu.basic_cost unitCost,plu.sell_cost sell_cost,unit.UnitName,plu.shipNumber,orderBeginDate,orderEndDate, " +
                 "round(plu.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, plu.pcs, plu.sale_item " +
                 "from plu left join unit on  unit.storeID=plu.storeid and unit.unitID=plu.SmallUnitID " +
                 "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
                 "where plu.StoreID='${User.getUser().storeId}' " +
                 "and vendorid like '%$vendorId%' " +
-                "and itemNumber='$id' " +
-                "and trim(SupplierID) is not null and trim(VendorID) is not null"
+                "and trim(SupplierID) is not null and trim(VendorID) is not null" +
+                ") where rownum<100"
     }
 
     /**
      * 检测输入的商品是否重复
      */
-    fun getJudgmentCommodity(id:String, date: String):String{
-        return "select * from dlvdtl where dlvdate=to_date('$date','yyyy-MM-dd') and itemnumber='$id'"
+    fun getJudgmentCommodity(aib: ArrayList<AcceptanceItemBean>, date: String):String{
+        var sql="select * from dlvdtl where dlvdate=to_date('$date','yyyy-MM-dd') and itemnumber in("
+        aib.forEach { sql+="'${it.itemId}'," }
+        sql.substring(0,sql.length-1)//去掉逗号
+        sql+=")"
+        return sql
     }
 
+    /**
+     * 检测输入的退货商品是否重复
+     */
+    fun getJudgmentReturnCommodity(id: String, date:String):String{
+        return "select * from rtndtl where rtndate=to_date('$date','yyyy-MM-dd') and itemnumber='$id'"
+    }
 
+    /**********************************************退货验收************************************************************/
+
+    /**
+     * 得到退货验收单
+     */
+    fun getReturnAcceptanceList(date: String):String{
+        return "select rtn.requestNumber, rtn.rtnDate,rtn.plnrtnDate,rtn.preRtnDate, " +
+                "nvl(rtn.plnRtnItemQty,0) plnRtnItemQty, " +
+                "nvl(rtn.actRtnItemQty,0)actRtnItemQty, " +
+                "nvl(rtn.retailTotal,0) retailTotal,rtn.rtnStatus,rtn.actRtnTime ,rtn.vendorID,ven.vendorName, " +
+                "sum(rtnQuantity*rtndtl.sell_cost*(1+nvl(taxtype.taxRate,0))) sellcost_tot, " +
+                "sum(rtnquantity) rtnquantity,sum(ordQuantity) ordQuantity " +
+                "from vendor ven,rtnhead rtn " +
+                "left join rtndtl on rtn.storeID=rtndtl.storeid AND rtn.RtnDate=rtndtl.Rtndate AND rtn.requestnumber=rtndtl.requestnumber " +
+                "left join plu on plu.storeID=rtndtl.storeID AND plu.itemNumber=rtndtl.itemNumber " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                "where rtn.storeID='${User.getUser().storeId}' and rtn.RtnDate= to_date('$date','yyyy-MM-dd') " +
+                "and ven.storeid=rtn.storeID and ven.vendorID=rtn.vendorid " +
+                "group by rtn.requestNumber, rtn.rtnDate,rtn.plnrtnDate,rtn.preRtnDate,plnRtnItemQty,actRtnItemQty, retailTotal, rtn.rtnStatus, rtn.actRtnTime, rtn.vendorID,ven.vendorName order by requestnumber"
+    }
+
+    /**
+     * 得到退货单下的商品
+     */
+    fun getReturnAcceptanceItemList(rab:ReturnAcceptanceBean,date:String):String{
+        return "select rtn.rtnDate,rtn.itemNumber,nvl(rtn.ordQuantity,0)ordQuantity, rtn.RequestNumber,rtn.supplierID,NVL(rtn.rtnQuantity,0) rtnQuantity, nvl(rtn.storeUnitPrice,0) storeUnitPrice,rtn.shipNumber,rtn.vendorID,rtn.unitCost, " +
+                "plu.pluName,unit.unitName,plu.sale_item,plu.pcs, nvl(rtn.sell_cost,plu.sell_cost) sell_cost , " +
+                "Round(nvl(rtn.sell_cost, plu.sell_cost) *(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, " +
+                "Round(Round(nvl(rtn.sell_cost, plu.sell_cost) *(1+nvl(taxtype.taxRate,0)),6)*NVL(rtn.rtnQuantity,0),2) tax_sell_cost_total, " +
+                "rtnQuantity old_plnquantity, rtn.unitCost*rtn.rtnQuantity totalUnitCost, " +
+                "(nvl(rtn.rtnQuantity,0))*(nvl(rtn.storeUnitPrice,0)) Total " +
+                "from rtndtl rtn " +
+                "left join  plu  on plu.storeID=rtn.storeID and plu.itemNumber=rtn.itemNumber " +
+                "left join unit on  unit.storeid=plu.storeid and unit.unitID=plu.smallUnitID " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                "where rtn.storeID='${User.getUser().storeId}' " +
+                "and rtn.requestNumber='${rab.distributionId}' " +
+                "and rtn.rtnDate=to_date('$date','yyyy-MM-dd') " +
+                "order by requestNumber"
+    }
+
+    /**
+     * 更新退货验收单，配合事务使用
+     */
+    fun updateReturnAcceptance(rab: ReturnAcceptanceBean):String{
+        return "update rtnHead set " +
+                "rtnStatus='${rab.rtnStatus}', " +
+                "plnRtnItemQty=${rab.plnRtnItemQTY}, " +
+                "actRtnItemQty=${rab.actRtnItemQTY}, " +
+                "retailTotal=${rab.retailTotal}, " +
+                "costTotal=${rab.costTotal}, " +
+                "updateUserId='${User.getUser().uId}', " +
+                "updateDate=sysdate, " +
+                "actRtnTime=sysdate " +
+                "where storeId='${User.getUser().storeId}' " +
+                "and rtnDate=to_date('${rab.rtnDate}','yyyy-MM-dd') " +
+                "and requestNumber='${rab.distributionId}';"
+    }
+
+    /**
+     * 更新验收单下的商品，配合事务使用
+     */
+    fun updateReturnAcceptanceItem(raib:ReturnAcceptanceItemBean):String{
+        return "update rtndtl set " +
+                "rtnQuantity=${raib.rtnQuantity},updateUserId='${User.getUser().uId}',updateDate=sysdate " +
+                "where storeId='${User.getUser().storeId}' " +
+                "and itemNumber='${raib.itemId}' " +
+                "and rtnDate=to_date('${raib.rtnDate}','yyyy-MM-dd') " +
+                "and requestNumber='${raib.distributionId}';"
+    }
+
+    /**
+     * 创建退货验收单，配合事务使用
+     */
+    fun createReturnAcceptance(rab:ReturnAcceptanceBean):String{
+        return "insert into rtnHead " +
+                "(storeId, rtnDate, requestNumber, vendorId, shipNumber, " +
+                "preRtnDate, plnRtnDate, rtnStatus, plnRtnItemQty, actRtnItemQty, " +
+                "retailTotal, costTotal, busiDate, updateUserId, updateDate, actRtnTime) " +
+                "values " +
+                "('${User.getUser().storeId}', to_date('${rab.rtnDate}','yyyy-MM-dd'), '${rab.distributionId}','${rab.vendorId}',0, " +
+                "to_date('${rab.rtnDate}','yyyy-MM-dd'), to_date('${rab.rtnDate}','yyyy-MM-dd'), '${rab.rtnStatus}', ${rab.plnRtnItemQTY}, ${rab.actRtnItemQTY}, " +
+                "${rab.retailTotal}, ${rab.costTotal}, to_date('${rab.rtnDate}','yyyy-MM-dd'), '${User.getUser().uId}',sysdate, sysdate);"
+    }
+
+    /**
+     * 穿件退货验收单下的商品，配合事务使用
+     */
+    fun createReturnAcceptanceItem(raib: ReturnAcceptanceItemBean):String{
+        return "insert into rtndtl " +
+                "(storeId, rtnDate, vendorID, itemNumber, shipNumber, rtnQuantity, ordQuantity, storeUnitPrice, " +
+                "unitCost, requestNumber, supplierId, UpdateUserId, updateDate, sell_cost) " +
+                "values " +
+                "('${User.getUser().storeId}',to_date('${raib.rtnDate}','yyyy-MM-dd'),'${raib.vendorId}','${raib.itemId}','${raib.shipNumber}',${raib.rtnQuantity},${raib.ordQuantity},${raib.storeUnitPrice}, " +
+                "${raib.unitCost}, '${raib.distributionId}','${raib.supplierId}','${User.getUser().uId}',sysdate, ${raib.sellCost});"
+    }
 }

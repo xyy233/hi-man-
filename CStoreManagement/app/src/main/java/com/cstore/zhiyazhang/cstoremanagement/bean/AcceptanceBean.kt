@@ -34,8 +34,42 @@ data class AcceptanceBean(
         var dlvStatus: Int, //0:未验收 1:未修正 2:有修正 3:转次日
         @SerializedName("costtotal")
         var costTotal: Double, //成本总计
-        var allItems: ArrayList<AcceptanceItemBean>//所有商品，后期插入
+        var allItems: ArrayList<AcceptanceItemBean>,//所有商品，后期插入
+        var isChange:Boolean=false//用来判断是否有修改过的
 ) : Serializable
+
+data class ReturnAcceptanceBean(
+        @SerializedName("requestnumber")
+        val distributionId: String,//单号
+        @SerializedName("rtndate")
+        val rtnDate:String,//退货日
+        @SerializedName("plnrtndate")
+        val plnRtnDate:String,//原退货日
+        @SerializedName("prertndate")
+        val preRtnDate:String,//不知道
+        @SerializedName("plnrtnitemqty")
+        var plnRtnItemQTY:Int,//退货品项数
+        @SerializedName("actrtnitemqty")
+        var actRtnItemQTY:Int,//实退品项数
+        @SerializedName("retailtotal")
+        var retailTotal:Double,//零售小计
+        @SerializedName("rtnstatus")
+        var rtnStatus:Int,//验收状态
+        @SerializedName("actrtntime")
+        val actRtnTime:String,//验收时间
+        @SerializedName("vendorid")
+        val vendorId:String,//配送商id
+        @SerializedName("vendorname")
+        val vendorName:String,//配送商名
+        @SerializedName("sellcost_tot")
+        var sellCostTot:Double,//含税总成本
+        @SerializedName("rtnquantity")
+        var rtnQuantity:Int,//实退总数
+        @SerializedName("ordquantity")
+        var ordQuantity: Int,//预退总数
+        var costTotal: Double,//成本总计
+        var allItems: ArrayList<ReturnAcceptanceItemBean>
+):Serializable
 
 data class AcceptanceItemBean(
         @SerializedName("itemnumber")
@@ -75,7 +109,45 @@ data class AcceptanceItemBean(
         @SerializedName("supplierid")
         val supplierId: String, //鬼知道是什么
         @SerializedName("sell_cost")
-        val sellCost: Double//成本
+        val sellCost: Double,//成本
+        var isChange: Boolean=false
+) : Serializable
+
+data class ReturnAcceptanceItemBean(
+        @SerializedName("itemnumber")
+        val itemId: String, //品号
+        @SerializedName("pluname")
+        val itemName: String, //品名
+        @SerializedName("rtndate")
+        val rtnDate: String,
+        @SerializedName("ordquantity")
+        var ordQuantity: Int, //预退数
+        @SerializedName("requestnumber")
+        var distributionId: String, //单号
+        @SerializedName("supplierid")
+        val supplierId: String, //不知道
+        @SerializedName("rtnquantity")
+        var rtnQuantity: Int, //实退数
+        @SerializedName("storeunitprice")
+        var storeUnitPrice: Double, //零售价
+        @SerializedName("shipnumber")
+        val shipNumber: Int, //不知道
+        @SerializedName("vendorid")
+        val vendorId: String, //配送商id
+        @SerializedName("unitcost")
+        val unitCost: Double, //单价
+        @SerializedName("sellcost")
+        val sellCost: Double, //成本
+        @SerializedName("tax_sell_cost")
+        val taxSellCost: Double, //含税成本
+        @SerializedName("tax_sell_cost_total")
+        var taxSellCostTotal: Double, //含税总成本
+        @SerializedName("old_plnquantity")
+        val oldPlnQuantity: Int, //老预约数？
+        @SerializedName("totalunitcost")
+        var unitCostTotal: Double, //总单价
+        @SerializedName("total")
+        var StoreUnitPriceTotal: Double //零售小计
 ) : Serializable
 
 data class VendorBean(

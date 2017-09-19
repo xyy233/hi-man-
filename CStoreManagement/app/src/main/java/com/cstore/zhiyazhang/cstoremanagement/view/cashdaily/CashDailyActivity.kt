@@ -119,6 +119,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             dialogView!!.dialog_spinner.visibility=View.VISIBLE
             dialogView!!.dialog_edit.visibility=View.GONE
         }else{
+            dialogView!!.dialog_edit.setText(cd.cdValue)
             dialogView!!.dialog_spinner.visibility=View.GONE
             dialogView!!.dialog_edit.visibility=View.VISIBLE
             //设置输入类型
@@ -128,6 +129,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                 dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
                 dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
             }
+            dialogView!!.dialog_edit.setSelection(dialogView!!.dialog_edit.text.length)
         }
         dialog!!.show()
     }

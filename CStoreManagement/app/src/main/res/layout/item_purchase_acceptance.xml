@@ -7,7 +7,7 @@
              android:clickable="true"
              android:layout_width="match_parent"
              android:background="@color/white"
-             android:layout_height="105dp"
+             android:layout_height="wrap_content"
              tools:ignore="KeyboardInaccessibleWidget">
 
     <ImageView
@@ -70,44 +70,55 @@
             <TextView
                 android:text="@string/order_count"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/order_count"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:layout_marginStart="12dp"
+                android:id="@+id/dlv_text"
+                android:layout_marginStart="6dp"
                 android:textSize="12sp"
                 android:text="@string/dlv_count"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/dlv_count"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:layout_marginStart="12dp"
+                android:id="@+id/order_text"
+                android:layout_marginStart="6dp"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:text="@string/order_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/order_quantity"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:layout_marginStart="12dp"
+                android:id="@+id/dlv_text2"
+                android:layout_marginStart="6dp"
                 android:textSize="12sp"
                 android:text="@string/dlv_quantity"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/dlv_quantity"
                 android:textSize="12sp"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -119,17 +130,18 @@
             android:layout_height="wrap_content"
             tools:ignore="UselessParent">
             <TextView
+                android:id="@+id/cost_total_text"
                 android:text="@string/cost_total"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:layout_marginEnd="16dp"
                 android:id="@+id/cost_total"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:layout_marginStart="16dp"
                 android:textSize="12sp"
                 android:text="@string/retail_total"
                 android:layout_width="wrap_content"

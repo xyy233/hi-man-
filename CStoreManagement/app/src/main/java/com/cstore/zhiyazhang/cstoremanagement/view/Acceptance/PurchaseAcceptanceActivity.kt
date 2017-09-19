@@ -55,6 +55,9 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
 
     override fun initClick() {
         orderretry.setOnClickListener {
+            orderpro.visibility = View.VISIBLE
+            orderprotext.visibility = View.VISIBLE
+            orderretry.visibility = View.GONE
             presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
         }
         date_util.setOnTouchListener { _, event ->
@@ -78,7 +81,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
 
     override fun <T> requestSuccess(rData: T) {
         rData as ArrayList<AcceptanceBean>
-        val adapter = PurchaseAcceptanceAdapter(MyTimeUtil.getTextViewDate(date_util),rData, object : ItemClickListener {
+        val adapter = PurchaseAcceptanceAdapter(1, MyTimeUtil.getTextViewDate(date_util),rData, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceItemActivity::class.java)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))

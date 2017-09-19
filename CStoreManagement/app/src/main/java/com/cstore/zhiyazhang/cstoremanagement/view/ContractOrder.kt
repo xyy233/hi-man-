@@ -17,13 +17,13 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -186,7 +186,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         orderLoading.visibility=View.GONE
                     }
                 }else{
-                    result = SocketUtil.initSocket(ip,MySql.ordT2(),180).inquire()
+                    result = SocketUtil.initSocket(ip,MySql.ordT2(),300).inquire()
                     if (result=="0"){
                         handler.post {
                             orderLoading.visibility=View.GONE

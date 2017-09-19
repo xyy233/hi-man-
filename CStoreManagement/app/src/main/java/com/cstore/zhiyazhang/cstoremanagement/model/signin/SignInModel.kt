@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.signin
 
+import android.os.Looper
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
@@ -22,16 +23,17 @@ class SignInModel : SignInInterface {
 
     override fun login(sView: SignInView, gView: GenericView, myHandler: MyHandler.MyHandler) {
         Thread(Runnable {
+            Looper.prepare()
             val msg = Message()
             val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,myHandler))return@Runnable
+            if (!SocketUtil.judgmentIP(ip, msg, myHandler)) return@Runnable
             val data = SocketUtil.initSocket(ip, MySql.SignIn(sView.uid), 10).inquire()
-            if (!SocketUtil.judgmentNull(data,msg,myHandler))return@Runnable
+            if (!SocketUtil.judgmentNull(data, msg, myHandler)) return@Runnable
 
             val users = ArrayList<User>()
             try {
                 users.addAll(SocketUtil.getUser(data))
-            }catch (e:Exception) { //不进行操作，无法转换就代表数据错误，直接在下面的错误抛出
+            } catch (e: Exception) { //不进行操作，无法转换就代表数据错误，直接在下面的错误抛出
             }
             if (users.isEmpty()) {//不是用户信息
                 msg.obj = data
@@ -48,13 +50,18 @@ class SignInModel : SignInInterface {
                     val cd = ContractTypeDao(MyApplication.instance().applicationContext)
                     cd.editSQL(null, "deleteTable")
                 }
-                CStoreCalendar.setCStoreCalendar()
-                sView.saveUser(users[0])
-                msg.obj = users[0]
-                msg.what = SUCCESS
-                myHandler.sendMessage(msg)
+                val calendar = CStoreCalendar.setCStoreCalendar()
+                if (calendar == CStoreCalendar.SUCCESS_MSG) {
+                    msg.obj = users[0]
+                    msg.what = SUCCESS
+                    myHandler.sendMessage(msg)
+                } else {
+                    msg.obj = calendar
+                    msg.what = ERROR1
+                    myHandler.sendMessage(msg)
+                }
             }
-
+            Looper.loop()
         }).start()
     }
 }

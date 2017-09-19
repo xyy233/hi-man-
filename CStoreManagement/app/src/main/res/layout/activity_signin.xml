@@ -59,6 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
             <ImageView
@@ -84,10 +86,7 @@
                 android:paddingEnd="15dp"
                 android:paddingStart="10dp"
                 android:textColorHint="@color/white"
-                android:textSize="16sp">
-
-                <requestFocus/>
-            </EditText>
+                android:textSize="16sp"/>
 
         </LinearLayout>
 

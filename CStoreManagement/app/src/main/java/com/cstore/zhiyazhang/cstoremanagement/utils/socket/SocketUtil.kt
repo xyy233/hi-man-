@@ -185,6 +185,14 @@ internal class SocketUtil  {
         fun  getUtilBean(data: String): ArrayList<UtilBean> {
             return Gson().fromJson<ArrayList<UtilBean>>(data, object : TypeToken<ArrayList<UtilBean>>() {}.type)
         }
+
+        fun getReturnAcceptance(data: String): ArrayList<ReturnAcceptanceBean> {
+            return Gson().fromJson<ArrayList<ReturnAcceptanceBean>>(data, object : TypeToken<ArrayList<ReturnAcceptanceBean>>() {}.type)
+        }
+
+        fun getReturnAcceptanceItem(data: String): ArrayList<ReturnAcceptanceItemBean> {
+            return Gson().fromJson<ArrayList<ReturnAcceptanceItemBean>>(data, object : TypeToken<ArrayList<ReturnAcceptanceItemBean>>() {}.type)
+        }
     }
 
     /**

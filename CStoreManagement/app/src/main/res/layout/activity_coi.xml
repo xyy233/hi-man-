@@ -32,7 +32,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:src="@drawable/no_img"
+                android:src="@mipmap/ic_cashdaily"
                 android:layout_gravity="center"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -65,7 +65,7 @@
             <ImageView
                 android:layout_gravity="center"
                 android:layout_width="80dp"
-                android:src="@drawable/no_img"
+                android:src="@mipmap/ic_acceptance"
                 android:layout_height="80dp"
                 android:contentDescription="@string/purchase_acceptance"/>
             <TextView
