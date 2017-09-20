@@ -186,7 +186,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
      * 判断是否有未提交的信息，根据选择决定finish
      */
     private fun judgmentFinish() {
-        if (ab.dlvStatus==0) {
+        if (ab.dlvStatus==0||ab.isChange) {
                 AlertDialog.Builder(this)
                         .setTitle("提示")
                         .setMessage("您未进行验收，是否放弃？")
@@ -211,7 +211,6 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
         }
         //未验收和有修改就去保存
         if (ab.dlvStatus==0||ab.isChange){
-            ab.isChange=false
             presenter.updateAcceptance(date,ab)
         }else{
             showPrompt(getString(R.string.saveDone))
@@ -271,6 +270,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
 
     override fun <T> updateDone(uData: T) {
         judgmentZhuanRi()
+        ab.isChange=false
         acceptance_item_recycler.adapter.notifyDataSetChanged()
         loading.visibility=View.GONE
         loading_progress.visibility=View.VISIBLE

@@ -21,7 +21,7 @@ class SignInPresenter(private val signInView: SignInView, private val genericVie
 
     fun login() {
         if (!PresenterUtil.judgmentInternet(genericView))return
-        signInInterface.login(signInView,genericView, MyHandler.writeActivity(myActivity).writeListener(object : MyListener {
+        signInInterface.login(signInView.uid,signInView.password, MyHandler.writeActivity(myActivity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User
                 signInView.saveUser(data)

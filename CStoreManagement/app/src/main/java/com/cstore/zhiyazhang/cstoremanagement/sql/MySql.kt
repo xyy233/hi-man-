@@ -432,7 +432,19 @@ object MySql {
      * 报废80大类里的中类的item
      */
     fun getScrap80Item(midId: String): String {
-        return "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.CATEGORYNUMBER='80' and a.midcategorynumber='$midId' and m.itemnumber(+)=a.itemnumber and (m.busidate = to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') or m.busidate is null) order by itemnumber"
+        val time=MyTimeUtil.nowDate
+        return "select a.itemnumber, " +
+                "decode(m.busidate,to_date('$time','yyyy-mm-dd'),m.busidate,'') busidate, " +
+                "a.pluname,a.STOREUNITPRICE, " +
+                "a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, " +
+                "decode(m.busidate,to_date('$time','yyyy-mm-dd'),m.mrkquantity,'') mrkquantity, " +
+                "decode(m.busidate,to_date('$time','yyyy-mm-dd'),m.recordnumber,'') recordnumber " +
+                "from app_mrkitem_view a, " +
+                "(select * from mrk where busidate = to_date('$time','yyyy-mm-dd')) m " +
+                "where categorynumber='80' " +
+                "and midcategorynumber='$midId' " +
+                "and m.itemnumber(+)=a.itemnumber " +
+                "order by itemnumber"
     }
 
     /**********************************************进货验收************************************************************/
@@ -612,16 +624,33 @@ object MySql {
     /**
      * 得到创建验收输入的商品
      */
-    fun getAcceptanceCommodity(vendorId:String):String{
-        return "select * from (select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
-                "plu.basic_cost unitCost,plu.sell_cost sell_cost,unit.UnitName,plu.shipNumber,orderBeginDate,orderEndDate, " +
-                "round(plu.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, plu.pcs, plu.sale_item " +
-                "from plu left join unit on  unit.storeID=plu.storeid and unit.unitID=plu.SmallUnitID " +
-                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
-                "where plu.StoreID='${User.getUser().storeId}' " +
-                "and vendorid like '%$vendorId%' " +
-                "and trim(SupplierID) is not null and trim(VendorID) is not null" +
-                ") where rownum<100"
+    fun getAcceptanceCommodity(ab:AcceptanceBean?, vendorId:String):String{
+        var sql=""
+        if (ab!=null){
+            sql+="select * from (select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
+                    "plu.basic_cost unitCost,plu.sell_cost sell_cost,unit.UnitName,plu.shipNumber,orderBeginDate,orderEndDate, " +
+                    "round(plu.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, plu.pcs, plu.sale_item " +
+                    "from plu left join unit on  unit.storeID=plu.storeid and unit.unitID=plu.SmallUnitID " +
+                    "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                    "where plu.StoreID='${User.getUser().storeId}' " +
+                    "and vendorid like '%$vendorId%' " +
+                    "and trim(SupplierID) is not null and trim(VendorID) is not null " +
+                    "and itemnumber not in ("
+            ab.allItems.forEach { sql+= "${it.itemId},"}//得到not in的品号
+            sql=sql.substring(0,sql.length-1)//去掉逗号
+            sql+=") ) where rownum<100"
+        }else{
+            sql="select * from (select plu.itemNumber,plu.stocktype,plu.order_item,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID, " +
+                    "plu.basic_cost unitCost,plu.sell_cost sell_cost,unit.UnitName,plu.shipNumber,orderBeginDate,orderEndDate, " +
+                    "round(plu.sell_cost*(1+nvl(taxtype.taxRate,0)),6) tax_sell_cost, plu.pcs, plu.sale_item " +
+                    "from plu left join unit on  unit.storeID=plu.storeid and unit.unitID=plu.SmallUnitID " +
+                    "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                    "where plu.StoreID='${User.getUser().storeId}' " +
+                    "and vendorid like '%$vendorId%' " +
+                    "and trim(SupplierID) is not null and trim(VendorID) is not null" +
+                    ") where rownum<100"
+        }
+        return sql
     }
 
     /**
@@ -630,7 +659,7 @@ object MySql {
     fun getJudgmentCommodity(aib: ArrayList<AcceptanceItemBean>, date: String):String{
         var sql="select * from dlvdtl where dlvdate=to_date('$date','yyyy-MM-dd') and itemnumber in("
         aib.forEach { sql+="'${it.itemId}'," }
-        sql.substring(0,sql.length-1)//去掉逗号
+        sql = sql.substring(0,sql.length-1)//去掉逗号
         sql+=")"
         return sql
     }

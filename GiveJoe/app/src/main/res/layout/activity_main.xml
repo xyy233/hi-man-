@@ -16,6 +16,7 @@
         android:textSize="16sp"
         android:textColor="@color/black"
         android:maxLines="1"
+        android:inputType="text"
         android:background="@drawable/edit_bg_gradient"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

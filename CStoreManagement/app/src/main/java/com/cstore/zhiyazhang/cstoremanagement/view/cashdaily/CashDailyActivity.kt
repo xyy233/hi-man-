@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.text.method.DigitsKeyListener
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -19,6 +20,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_cashdaily.*
+import kotlinx.android.synthetic.main.dialog_cashdaily.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 import kotlinx.android.synthetic.main.layout_date.*
 import kotlinx.android.synthetic.main.layout_date.view.*
@@ -91,45 +93,64 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                 dialog!!.cancel()
             }
         }
-        dialogView!!.dialog_save.setOnClickListener {
-            if (cd.cdId=="1097"){
-                dialogView!!.dialog_progress.visibility=View.VISIBLE
-                //天气,在spinner内是从0开始，显示及存储是从1开始，所以+1
-                presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
-            }else{//其他
-
-                //去掉空格
-                val value=dialogView!!.dialog_edit.text.toString().replace(" ","")
-                if (value=="")showPrompt(getString(R.string.please_edit_value))//不能为空
-                else if (value==cd.cdValue){
-                    //和之前一样就直接发个消息说完成
-                    showPrompt(getString(R.string.saveDone))
-                    dialog!!.cancel()
-                }
-                else {
-                    dialogView!!.dialog_progress.visibility=View.VISIBLE
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
-                    presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
-                }
-            }
-        }
-        dialogView!!.dialog_title.text=cd.cdName
-        if (cd.cdId=="1097"){
-            dialogView!!.dialog_spinner.visibility=View.VISIBLE
-            dialogView!!.dialog_edit.visibility=View.GONE
-        }else{
+        if (CStoreCalendar.getCurrentDate(1)!=MyTimeUtil.getTextViewDate(date_util)){
+            //1100事件要可点击查看
+            dialogView!!.dialog_save.visibility=View.GONE
+            dialogView!!.dialog_title.text=cd.cdName
             dialogView!!.dialog_edit.setText(cd.cdValue)
             dialogView!!.dialog_spinner.visibility=View.GONE
             dialogView!!.dialog_edit.visibility=View.VISIBLE
-            //设置输入类型
-            if (cd.cdId=="1100"){
-                dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_TEXT
-            }else{
-                dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
-                dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
+            dialogView!!.dialog_edit.isEnabled=false
+            dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
+            dialogView!!.dialog_edit.gravity=Gravity.TOP
+            dialogView!!.dialog_edit.setSingleLine(false)
+            dialogView!!.dialog_edit.setHorizontallyScrolling(false)
+        }else{
+            dialogView!!.dialog_edit.isEnabled=true
+            dialogView!!.dialog_save.visibility=View.VISIBLE
+            dialogView!!.dialog_save.setOnClickListener {
+                if (cd.cdId=="1097"){
+                    dialogView!!.dialog_progress.visibility=View.VISIBLE
+                    //天气,在spinner内是从0开始，显示及存储是从1开始，所以+1
+                    presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
+                }else{//其他
+
+                    //去掉空格
+                    val value=dialogView!!.dialog_edit.text.toString().replace(" ","")
+                    if (value=="")showPrompt(getString(R.string.please_edit_value))//不能为空
+                    else if (value==cd.cdValue){
+                        //和之前一样就直接发个消息说完成
+                        showPrompt(getString(R.string.saveDone))
+                        dialog!!.cancel()
+                    }
+                    else {
+                        dialogView!!.dialog_progress.visibility=View.VISIBLE
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
+                        presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
+                    }
+                }
             }
-            dialogView!!.dialog_edit.setSelection(dialogView!!.dialog_edit.text.length)
+            dialogView!!.dialog_title.text=cd.cdName
+            if (cd.cdId=="1097"){
+                dialogView!!.dialog_spinner.visibility=View.VISIBLE
+                dialogView!!.dialog_edit.visibility=View.GONE
+            }else{
+                dialogView!!.dialog_edit.setText(cd.cdValue)
+                dialogView!!.dialog_spinner.visibility=View.GONE
+                dialogView!!.dialog_edit.visibility=View.VISIBLE
+                //设置输入类型
+                if (cd.cdId=="1100"){
+                    dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
+                    dialogView!!.dialog_edit.gravity=Gravity.TOP
+                    dialogView!!.dialog_edit.setSingleLine(false)
+                    dialogView!!.dialog_edit.setHorizontallyScrolling(false)
+                }else{
+                    dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
+                    dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
+                }
+                dialogView!!.dialog_edit.setSelection(dialogView!!.dialog_edit.text.length)
+            }
         }
         dialog!!.show()
     }
@@ -213,8 +234,8 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     override fun errorDealWith() {
         loading_progress.visibility=View.GONE
         loading_text.visibility=View.GONE
-        if (dialog!!.loading_progress.visibility==View.VISIBLE){
-            dialog!!.loading_progress.visibility=View.GONE
+        if (dialog!!.dialog_progress.visibility==View.VISIBLE){
+            dialog!!.dialog_progress.visibility=View.GONE
         }else{
             loading_retry.visibility=View.VISIBLE
         }

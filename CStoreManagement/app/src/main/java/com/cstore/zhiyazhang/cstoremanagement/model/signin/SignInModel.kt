@@ -12,8 +12,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 
 /**
  * Created by zhiya.zhang
@@ -21,13 +19,13 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
  */
 class SignInModel : SignInInterface {
 
-    override fun login(sView: SignInView, gView: GenericView, myHandler: MyHandler.MyHandler) {
+    override fun login( uid:String, password:String, myHandler: MyHandler.MyHandler) {
         Thread(Runnable {
             Looper.prepare()
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, myHandler)) return@Runnable
-            val data = SocketUtil.initSocket(ip, MySql.SignIn(sView.uid), 10).inquire()
+            val data = SocketUtil.initSocket(ip, MySql.SignIn(uid), 10).inquire()
             if (!SocketUtil.judgmentNull(data, msg, myHandler)) return@Runnable
 
             val users = ArrayList<User>()
@@ -39,7 +37,7 @@ class SignInModel : SignInInterface {
                 msg.obj = data
                 msg.what = ERROR1
                 myHandler.sendMessage(msg)
-            } else if (users[0].password != sView.password) {
+            } else if (users[0].password != password) {
                 msg.obj = MyApplication.instance().applicationContext.resources.getString(R.string.pwdError)//密码错误
                 msg.what = ERROR1
                 myHandler.sendMessage(msg)
@@ -67,5 +65,5 @@ class SignInModel : SignInInterface {
 }
 
 interface SignInInterface {
-    fun login(sView: SignInView, gView: GenericView, myHandler: MyHandler.MyHandler)
+    fun login( uid:String, password:String, myHandler: MyHandler.MyHandler)
 }

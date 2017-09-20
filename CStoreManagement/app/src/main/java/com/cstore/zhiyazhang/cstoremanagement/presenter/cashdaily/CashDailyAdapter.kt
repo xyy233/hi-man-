@@ -49,7 +49,7 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
                 }
             }
         }else {
-            holder.item.isEnabled=false
+            holder.item.isEnabled = data[position].cdId=="1100"
             holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.gray))
             holder.itemNum.setBackgroundResource(R.color.white)
         }

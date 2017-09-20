@@ -8,32 +8,19 @@ import java.io.Serializable
  * on 2017/9/8 17:04.
  */
 data class AcceptanceBean(
-        @SerializedName("requestnumber")
-        val distributionId: String, //配送号
-        @SerializedName("vendorid")
-        val vendorId: String, //配送商id
-        @SerializedName("vendorname")
-        val vendorName: String, //配送商名字
-        @SerializedName("orditemqty")
-        var ordItemQTY: Int, //品项
-        @SerializedName("dlvitemqty")
-        var dlvItemQTY: Int, //验收项
-        @SerializedName("ordquantity")
-        var ordQuantity: Int, //订货总数
-        @SerializedName("retailtotal")
-        var retailTotal: Double, //零售小计
-        @SerializedName("dlvquantity")
-        var dlvQuantity: Int, //验收总数
-        @SerializedName("sellcost_tot")
-        var sellCostTot: Double, //含税成本
-        @SerializedName("end_dlvtimes")
-        val endDlvTimes: String, //验收截止时间
-        @SerializedName("actdlvtime")
-        val actDlvTime: String, //验收时间
-        @SerializedName("dlvstatus")
-        var dlvStatus: Int, //0:未验收 1:未修正 2:有修正 3:转次日
-        @SerializedName("costtotal")
-        var costTotal: Double, //成本总计
+        @SerializedName("requestnumber") val distributionId: String, //配送号
+        @SerializedName("vendorid") val vendorId: String, //配送商id
+        @SerializedName("vendorname") val vendorName: String, //配送商名字
+        @SerializedName("orditemqty") var ordItemQTY: Int, //品项
+        @SerializedName("dlvitemqty") var dlvItemQTY: Int, //验收项
+        @SerializedName("ordquantity") var ordQuantity: Int, //订货总数
+        @SerializedName("retailtotal") var retailTotal: Double, //零售小计
+        @SerializedName("dlvquantity") var dlvQuantity: Int, //验收总数
+        @SerializedName("sellcost_tot") var sellCostTot: Double, //含税成本
+        @SerializedName("end_dlvtimes") val endDlvTimes: String, //验收截止时间
+        @SerializedName("actdlvtime") val actDlvTime: String, //验收时间
+        @SerializedName("dlvstatus") var dlvStatus: Int, //0:未验收 1:未修正 2:有修正 3:转次日
+        @SerializedName("costtotal") var costTotal: Double, //成本总计
         var allItems: ArrayList<AcceptanceItemBean>,//所有商品，后期插入
         var isChange:Boolean=false//用来判断是否有修改过的
 ) : Serializable

@@ -114,9 +114,9 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
     /**
      * 得到输入的商品
      */
-    fun getCommodity(vendorId:String){
+    fun getCommodity(ab: AcceptanceBean?, vendorId:String){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getCommodity(vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getCommodity(ab, vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()

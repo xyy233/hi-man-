@@ -70,7 +70,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                presenter.getCommodity(vendor!![acceptance_spinner.selectedItemPosition].vendorId)
+                presenter.getCommodity(ab, vendor!![acceptance_spinner.selectedItemPosition].vendorId)
             }
 
         }
@@ -88,6 +88,10 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     }
 
     override fun onBackPressed() {
+        if (adapter == null){
+            super.onBackPressed()
+            return
+        }
         val saveAib = (adapter!!.data.filter { it.isChange } as ArrayList<AcceptanceItemBean>)
         if (saveAib.isNotEmpty()){
             AlertDialog.Builder(this@PurchaseAcceptanceCreate)
@@ -174,7 +178,9 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
             //记录创建好的
             ab = uData as AcceptanceBean
         }
-        adapter!!.data.filter { it.isChange }.forEach { it.isChange=false }
+
+        adapter!!.data.removeAll(adapter!!.data.filter { it.isChange })
+        adapter!!.notifyDataSetChanged()
         showPrompt(getString(R.string.saveDone))
         //不允许再选别的配送
         acceptance_spinner.isEnabled = false

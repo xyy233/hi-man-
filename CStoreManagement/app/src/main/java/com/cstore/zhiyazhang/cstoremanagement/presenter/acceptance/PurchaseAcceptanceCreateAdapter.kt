@@ -27,6 +27,7 @@ class PurchaseAcceptanceCreateAdapter(private val type:Int, val data:ArrayList<A
             holder.commodityName.text=data[position].itemName
             holder.taxSellCost.text=data[position].taxSellCost.toString()
             holder.retail.text=data[position].storeUnitPrice.toString()
+            holder.dlvQuantity.text=""
             holder.dlvQuantity.keyListener= DigitsKeyListener.getInstance("1234567890")
             holder.dlvQuantity.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {

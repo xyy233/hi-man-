@@ -9,6 +9,8 @@ import android.view.WindowManager
 import android.webkit.*
 import kotlinx.android.synthetic.main.activity_web.*
 
+
+
 /**
  * Created by zhang
  * on 2017/9/14 0014 11:02.
@@ -63,7 +65,7 @@ class WebActivity : AppCompatActivity() {
 
         my_web.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-        my_web.settings.defaultTextEncodingName = "GBK"
+        my_web.settings.defaultTextEncodingName = "UTF-8"
         my_web.settings.loadsImagesAutomatically = true
 
         my_web.settings.setSupportMultipleWindows(true)
@@ -73,7 +75,20 @@ class WebActivity : AppCompatActivity() {
         swipe.setOnRefreshListener {
             my_web.loadUrl(my_web.url)
         }
+        click()
         my_web.loadUrl(url)
+    }
+
+    private fun click() {
+        my_web.setIWebViewScroll(object : cbWebView.IWebViewScroll {
+            override fun onNotTop() {
+                swipe.isEnabled=false
+            }
+
+            override fun onTop() {
+                swipe.isEnabled = true
+            }
+        })
     }
 
     val viewClient = object : WebViewClient() {
@@ -86,6 +101,8 @@ class WebActivity : AppCompatActivity() {
             }
             return super.shouldOverrideUrlLoading(view, url)
         }
+
+
 
         //打开网页时不调用系统浏览器， 而是在本WebView中显示,不同版本调用不同的
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import java.lang.ref.WeakReference
@@ -59,6 +60,7 @@ class MyHandler {
                     }
                 }
             } catch (e: Exception) {
+                Log.e("MyHandler",e.message)
                 mListener!!.listenerFailed(e.message!!)
                 isRun=false
                 return

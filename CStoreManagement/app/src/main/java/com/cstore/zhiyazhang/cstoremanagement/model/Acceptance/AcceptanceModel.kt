@@ -258,12 +258,12 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-    override fun getCommodity(vendorId: String, handler: MyHandler.MyHandler) {
+    override fun getCommodity(ab:AcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val result = SocketUtil.initSocket(ip, MySql.getAcceptanceCommodity(vendorId)).inquire()
+            val result = SocketUtil.initSocket(ip, MySql.getAcceptanceCommodity(ab, vendorId)).inquire()
             if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
             val aib = ArrayList<AcceptanceItemBean>()
             try {
@@ -380,7 +380,7 @@ class AcceptanceModel : AcceptanceInterface {
             //获得当前的完整单号
             val nowId = numHeader + (numFoot + 1).toString()
             //数据加入
-            val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", 1, 1, 0, 0.00, 0, 0.00, "", "", 2,0.00, ArrayList<AcceptanceItemBean>())
+            val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", aib.size, aib.size, 0, 0.00, 0, 0.00, "", "", 2,0.00, ArrayList<AcceptanceItemBean>())
             val result = StringBuilder()
             result.append(MySql.affairHeader)
             //重新计算一些修改量
@@ -389,8 +389,6 @@ class AcceptanceModel : AcceptanceInterface {
                 nowAB.retailTotal+=it.storeUnitPrice*it.dlvQuantity//写入零售小计
                 nowAB.costTotal+=it.unitCost*it.dlvQuantity//写入成本总计
                 nowAB.dlvQuantity+=it.dlvQuantity//写入验收量
-                nowAB.dlvItemQTY++//写入验收项
-                nowAB.ordItemQTY++//写入品项
                 result.append(MySql.createAcceptanceItem(it, date))
             }
             nowAB.allItems.addAll(aib)
@@ -496,7 +494,7 @@ interface AcceptanceInterface {
     /**
      * 得到商品
      */
-    fun getCommodity(vendorId: String, handler: MyHandler.MyHandler)
+    fun getCommodity(ab:AcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler)
 
     /**
      * 创建配送
