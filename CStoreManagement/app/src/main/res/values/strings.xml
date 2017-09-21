@@ -143,8 +143,12 @@
     <string name="please_edit_dlv">请输入验收量</string>
     <string name="create_acceptance">创建验收项</string>
 
+    <string name="return_purchase_acceptance">退货验收</string>
     <string name="return_item_qty">实退项：</string>
     <string name="return_qty">实退总数：</string>
     <string name="ord_return_qty">预退总数：</string>
     <string name="edit_search_item_id">输入要查询的品号</string>
+    <string name="return_quantity">实退数：</string>
+    <string name="pre_quantity">预退数：</string>
+    <string name="returnQuantity">退货量：</string>
 </resources>

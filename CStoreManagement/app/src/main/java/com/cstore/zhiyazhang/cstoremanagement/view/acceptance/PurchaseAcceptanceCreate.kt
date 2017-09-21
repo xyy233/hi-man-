@@ -8,9 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.VendorBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptanceCreateAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptancePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -28,17 +26,21 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
 
     private lateinit var date: String
     private var ab: AcceptanceBean? = null
-    private val aib=ArrayList<AcceptanceItemBean>()
+    private var rab: ReturnAcceptanceBean? = null
+    private var type = 1
+    private val aib = ArrayList<AcceptanceItemBean>()
+    private val raib = ArrayList<ReturnAcceptanceItemBean>()
     private val presenter = PurchaseAcceptancePresenter(this, this, this)
     private var vendor: ArrayList<VendorBean>? = null
     private val layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceCreate, LinearLayout.VERTICAL, false)
     private var adapter: PurchaseAcceptanceCreateAdapter? = null
 
     override fun initView() {
+        type = intent.getIntExtra("type", 1)
         date = intent.getStringExtra("date")
         val a = intent.getSerializableExtra("data")
         if (a != null) {
-            ab = a as AcceptanceBean
+            if (type == 1) ab = a as AcceptanceBean else rab = a as ReturnAcceptanceBean
         }
         my_toolbar.title = getString(R.string.create_acceptance)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
@@ -58,10 +60,23 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
         }
 
         acceptance_save.setOnClickListener {
-            val saveAib = (adapter!!.data.filter { it.isChange } as ArrayList<AcceptanceItemBean>)
-            if (saveAib.isEmpty()){
+            val saveAib = if (type == 1) {
+                (adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange } as ArrayList<AcceptanceItemBean>
+            } else {
+                (adapter!!.data as ArrayList<ReturnAcceptanceItemBean>).filter { it.isChange } as ArrayList<ReturnAcceptanceItemBean>
+            }
+
+            if (saveAib.isEmpty()) {
                 showPrompt(getString(R.string.please_edit_dlv))
-            }else saveAcceptance(saveAib)
+            } else {
+                if (type == 1) {
+                    saveAib as ArrayList<AcceptanceItemBean>
+                    saveAcceptance(saveAib)
+                } else {
+                    saveAib as ArrayList<ReturnAcceptanceItemBean>
+                    saveReturnAcceptance(saveAib)
+                }
+            }
         }
 
         acceptance_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -70,7 +85,8 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                presenter.getCommodity(ab, vendor!![acceptance_spinner.selectedItemPosition].vendorId)
+                if (type == 1) presenter.getCommodity(ab, vendor!![acceptance_spinner.selectedItemPosition].vendorId)
+                else presenter.getReturnCommodity(rab, vendor!![acceptance_spinner.selectedItemPosition].vendorId)
             }
 
         }
@@ -88,22 +104,34 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     }
 
     override fun onBackPressed() {
-        if (adapter == null){
+        if (adapter == null) {
             super.onBackPressed()
             return
         }
-        val saveAib = (adapter!!.data.filter { it.isChange } as ArrayList<AcceptanceItemBean>)
-        if (saveAib.isNotEmpty()){
+
+        val saveAib = if (type == 1) {
+            (adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange } as ArrayList<AcceptanceItemBean>
+        } else {
+            (adapter!!.data as ArrayList<ReturnAcceptanceItemBean>).filter { it.isChange } as ArrayList<ReturnAcceptanceItemBean>
+        }
+
+        if (saveAib.isNotEmpty()) {
             AlertDialog.Builder(this@PurchaseAcceptanceCreate)
                     .setTitle("提示")
                     .setMessage("您的修改的验收商品尚未保存，是否放弃？")
                     .setPositiveButton("保存", { _, _ ->
-                        saveAcceptance(saveAib)
+                        if (type == 1) {
+                            saveAib as ArrayList<AcceptanceItemBean>
+                            saveAcceptance(saveAib)
+                        } else {
+                            saveAib as ArrayList<ReturnAcceptanceItemBean>
+                            saveReturnAcceptance(saveAib)
+                        }
                     })
                     .setNegativeButton("退出", { _, _ ->
-                        if (ab != null) {
+                        if (if (type==1)ab != null else rab!=null) {
                             val i = Intent()
-                            i.putExtra("aib", aib)
+                            if (type == 1) i.putExtra("aib", aib) else i.putExtra("aib", raib)
                             setResult(0, i)
                         }
                         super.onBackPressed()
@@ -111,23 +139,35 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
                     .show()
             return
         }
-        if (ab != null) {
+
+        if (if (type==1)ab != null else rab!=null) {
             val i = Intent()
-            i.putExtra("aib", aib)
+            if (type == 1) i.putExtra("aib", aib) else i.putExtra("aib", raib)
             setResult(0, i)
         }
+
         super.onBackPressed()
+
     }
 
-    private fun saveAcceptance(saveAib:ArrayList<AcceptanceItemBean>) {
+    private fun saveAcceptance(saveAib: ArrayList<AcceptanceItemBean>) {
         saveAib.forEach {
-            it.totalUnitCost=it.unitCost*it.dlvQuantity
-            it.retailTotal=it.storeUnitPrice*it.dlvQuantity
-            if (ab!=null){
-                it.distributionId=ab!!.distributionId
+            it.totalUnitCost = it.unitCost * it.dlvQuantity
+            it.retailTotal = it.storeUnitPrice * it.dlvQuantity
+            if (ab != null) {
+                it.distributionId = ab!!.distributionId
             }
         }
         presenter.createAcceptance(date, ab, saveAib)
+    }
+
+    private fun saveReturnAcceptance(saveAib: ArrayList<ReturnAcceptanceItemBean>) {
+        saveAib.forEach {
+            if (rab != null) {
+                it.distributionId = rab!!.distributionId
+            }
+        }
+        presenter.createReturnAcceptance(date, rab, saveAib)
     }
 
     override fun showLoading() {
@@ -154,10 +194,14 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
             return
         }
         val adapterResource = ArrayList<String>()
-        if (ab != null) {
-            adapterResource.add(ab!!.vendorName)
+        if (ab != null || rab != null) {
+            adapterResource.add(if (type==1)ab!!.vendorName else rab!!.vendorName)
             vendor = ArrayList<VendorBean>()
-            vendor!!.add(VendorBean(ab!!.vendorId, ab!!.vendorName))
+            if (type==1){
+                vendor!!.add(VendorBean(ab!!.vendorId, ab!!.vendorName))
+            }else{
+                vendor!!.add(VendorBean(rab!!.vendorId, rab!!.vendorName))
+            }
         } else {
             vendor!!.forEach { adapterResource.add(it.vendorName) }
         }
@@ -167,19 +211,44 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     }
 
     override fun <T> requestSuccess(rData: T) {
-        rData as ArrayList<AcceptanceItemBean>
-        adapter = PurchaseAcceptanceCreateAdapter(1, rData)
+        adapter = if (type == 1) {
+            rData as ArrayList<AcceptanceItemBean>
+            PurchaseAcceptanceCreateAdapter(type, rData)
+        } else {
+            rData as ArrayList<ReturnAcceptanceItemBean>
+            PurchaseAcceptanceCreateAdapter(type, rData)
+        }
         acceptance_create_recycler.adapter = adapter
         acceptance_save.visibility = View.VISIBLE
     }
 
     override fun <T> updateDone(uData: T) {
-        if (ab == null) {
-            //记录创建好的
-            ab = uData as AcceptanceBean
+        if (type == 1) {
+            if (ab == null) {
+                //记录创建好的
+                ab = uData as AcceptanceBean
+            }
+            /*else{
+                ab!!.allItems=((uData as AcceptanceBean).allItems)
+            }*/
+        } else {
+            if (rab == null) {
+                rab = uData as ReturnAcceptanceBean
+            }
+            /*else{
+                rab!!.allItems=((uData as ReturnAcceptanceBean).allItems)
+            }*/
+        }
+        if (type==1){
+            val a=(adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange }
+            aib.addAll(a)
+            adapter!!.data.removeAll(a)
+        }else{
+            val a = (adapter!!.data as ArrayList<ReturnAcceptanceItemBean>).filter { it.isChange }
+            raib.addAll(a)
+            adapter!!.data.removeAll(a)
         }
 
-        adapter!!.data.removeAll(adapter!!.data.filter { it.isChange })
         adapter!!.notifyDataSetChanged()
         showPrompt(getString(R.string.saveDone))
         //不允许再选别的配送

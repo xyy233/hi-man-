@@ -26,36 +26,23 @@ data class AcceptanceBean(
 ) : Serializable
 
 data class ReturnAcceptanceBean(
-        @SerializedName("requestnumber")
-        val distributionId: String,//单号
-        @SerializedName("rtndate")
-        val rtnDate:String,//退货日
-        @SerializedName("plnrtndate")
-        val plnRtnDate:String,//原退货日
-        @SerializedName("prertndate")
-        val preRtnDate:String,//不知道
-        @SerializedName("plnrtnitemqty")
-        var plnRtnItemQTY:Int,//退货品项数
-        @SerializedName("actrtnitemqty")
-        var actRtnItemQTY:Int,//实退品项数
-        @SerializedName("retailtotal")
-        var retailTotal:Double,//零售小计
-        @SerializedName("rtnstatus")
-        var rtnStatus:Int,//验收状态
-        @SerializedName("actrtntime")
-        val actRtnTime:String,//验收时间
-        @SerializedName("vendorid")
-        val vendorId:String,//配送商id
-        @SerializedName("vendorname")
-        val vendorName:String,//配送商名
-        @SerializedName("sellcost_tot")
-        var sellCostTot:Double,//含税总成本
-        @SerializedName("rtnquantity")
-        var rtnQuantity:Int,//实退总数
-        @SerializedName("ordquantity")
-        var ordQuantity: Int,//预退总数
+        @SerializedName("requestnumber") val distributionId: String,//单号
+        @SerializedName("rtndate") val rtnDate:String,//退货日
+        @SerializedName("plnrtndate") val plnRtnDate:String,//原退货日
+        @SerializedName("prertndate") val preRtnDate:String,//不知道
+        @SerializedName("plnrtnitemqty") var plnRtnItemQTY:Int,//退货品项数
+        @SerializedName("actrtnitemqty") var actRtnItemQTY:Int,//实退品项数
+        @SerializedName("retailtotal") var retailTotal:Double,//零售小计
+        @SerializedName("rtnstatus") var rtnStatus:Int,//验收状态
+        @SerializedName("actrtntime") val actRtnTime:String,//验收时间
+        @SerializedName("vendorid") val vendorId:String,//配送商id
+        @SerializedName("vendorname") val vendorName:String,//配送商名
+        @SerializedName("sellcost_tot") var sellCostTot:Double,//含税总成本
+        @SerializedName("rtnquantity") var rtnQuantity:Int,//实退总数
+        @SerializedName("ordquantity") var ordQuantity: Int,//预退总数
         var costTotal: Double,//成本总计
-        var allItems: ArrayList<ReturnAcceptanceItemBean>
+        var allItems: ArrayList<ReturnAcceptanceItemBean>,
+        var isChange: Boolean=false
 ):Serializable
 
 data class AcceptanceItemBean(
@@ -88,7 +75,7 @@ data class AcceptanceItemBean(
         @SerializedName("unitcost")
         val unitCost: Double, //成本
         @SerializedName("ordqutity")
-        val ordQutity: Int, //订量
+        val ordQuantity: Int, //订量
         @SerializedName("totalunitcost")
         var totalUnitCost: Double, //总成本
         @SerializedName("shipnumber")
@@ -134,7 +121,8 @@ data class ReturnAcceptanceItemBean(
         @SerializedName("totalunitcost")
         var unitCostTotal: Double, //总单价
         @SerializedName("total")
-        var StoreUnitPriceTotal: Double //零售小计
+        var StoreUnitPriceTotal: Double, //零售小计
+        var isChange: Boolean=false
 ) : Serializable
 
 data class VendorBean(

@@ -25,7 +25,14 @@ class COIActivity(override val layoutId: Int = R.layout.activity_coi) : MyActivi
             startActivity(Intent(this@COIActivity, CashDailyActivity::class.java))
         }
         purchase_acceptance.setOnClickListener {
-            startActivity(Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java))
+            val intent=Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
+            intent.putExtra("type",1)
+            startActivity(intent)
+        }
+        purchase_return_acceptance.setOnClickListener {
+            val intent=Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
+            intent.putExtra("type",2)
+            startActivity(intent)
         }
     }
 

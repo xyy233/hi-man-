@@ -2,168 +2,155 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:id="@+id/acceptance_item"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/white"
+             android:clickable="true"
              android:foreground="@drawable/selector_foreground"
              android:stateListAnimator="@drawable/lift_on_touch"
-             android:clickable="true"
-             android:layout_width="match_parent"
-             android:background="@color/white"
-             android:layout_height="wrap_content"
              tools:ignore="KeyboardInaccessibleWidget">
 
     <ImageView
         android:id="@+id/add"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_add"
+        android:visibility="gone"
         tools:ignore="ContentDescription"/>
 
     <LinearLayout
         android:id="@+id/acceptance_data"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             tools:ignore="UselessParent">
+
             <TextView
-                android:text="@string/acceptance_id"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/acceptance_id"
+                android:textSize="12sp"/>
+
             <TextView
                 android:id="@+id/acceptance_id"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
             tools:ignore="UselessParent">
+
             <TextView
-                android:text="@string/vendor"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/vendor"
+                android:textSize="12sp"/>
+
             <TextView
                 android:id="@+id/vendor_name"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
             tools:ignore="UselessParent">
+
             <TextView
-                android:text="@string/order_count"
-                android:textSize="12sp"
-                android:maxLines="1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/order_count"
+                android:textSize="12sp"/>
+
             <TextView
                 android:id="@+id/order_count"
-                android:textSize="12sp"
-                android:maxLines="1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/dlv_text"
-                android:layout_marginStart="6dp"
-                android:textSize="12sp"
-                android:text="@string/dlv_count"
+                android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/dlv_count"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/order_text"
-                android:layout_marginStart="6dp"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:text="@string/order_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/order_quantity"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="12sp"/>
+
+
             <TextView
                 android:id="@+id/dlv_text2"
-                android:layout_marginStart="6dp"
-                android:textSize="12sp"
-                android:text="@string/dlv_quantity"
-                android:maxLines="1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:maxLines="1"
+                android:text="@string/dlv_quantity"
+                android:textSize="12sp"/>
+
             <TextView
                 android:id="@+id/dlv_quantity"
-                android:textSize="12sp"
-                android:maxLines="1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="12sp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/retail_total"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/retail_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
             tools:ignore="UselessParent">
+
             <TextView
                 android:id="@+id/cost_total_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/cost_total"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="12sp"/>
+
             <TextView
-                android:layout_marginEnd="16dp"
                 android:id="@+id/cost_total"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textSize="12sp"
-                android:text="@string/retail_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/retail_total"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textSize="12sp"/>
         </LinearLayout>
 
     </LinearLayout>
 
     <ImageView
-        android:src="@drawable/is_acceptance"
-        android:visibility="gone"
         android:id="@+id/acceptance_status"
         android:layout_width="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="80dp"
-        android:layout_gravity="end"
         android:layout_height="30dp"
-        android:contentDescription="@string/purchase_acceptance"/>
+        android:layout_gravity="end"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/purchase_acceptance"
+        android:src="@drawable/is_acceptance"
+        android:visibility="gone"/>
 
 </FrameLayout>

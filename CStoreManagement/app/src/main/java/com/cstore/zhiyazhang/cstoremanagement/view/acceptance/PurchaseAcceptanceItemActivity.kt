@@ -6,13 +6,14 @@ import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnAcceptanceBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptanceItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptancePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
@@ -37,17 +38,20 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
     private val presenter=PurchaseAcceptancePresenter(this,this,this)
     private lateinit var date:String
     private lateinit var ab:AcceptanceBean
+    private lateinit var rab:ReturnAcceptanceBean
+    private var type:Int=1
     private lateinit var adapter:PurchaseAcceptanceItemAdapter
     private val layoutManager=MyLinearlayoutManager(this@PurchaseAcceptanceItemActivity, LinearLayout.VERTICAL, false)
 
     override fun initView() {
         date=intent.getStringExtra("date")
-        ab=intent.getSerializableExtra("data") as AcceptanceBean
-       /* if (ab.allItems.isEmpty()){
-            showPrompt("数据错误，请重试!")
-            finish()
-        }*/
-        val title="单号:${ab.distributionId}"
+        type=intent.getIntExtra("type",1)
+        if (type==1){
+            ab=intent.getSerializableExtra("data") as AcceptanceBean
+        }else{
+            rab=intent.getSerializableExtra("data") as ReturnAcceptanceBean
+        }
+        val title="单号:${if (type==1)ab.distributionId else rab.distributionId}"
         my_toolbar.title=title
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
@@ -69,7 +73,6 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
         return true
     }
 
-    private var isEdit=false
     override fun initClick() {
         loading.setOnClickListener {
             showPrompt(getString(R.string.wait_loading))
@@ -86,9 +89,9 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
             override fun afterTextChanged(p0: Editable?) {
                 //输入结束
                 if (acceptance_search_line.text.length>=3){
-                    for (i in 0..ab.allItems.size-1){
-                        if (ab.allItems[i].itemId.contains(acceptance_search_line.text)){
-                            if (i==ab.allItems.size-1){
+                    for (i in 0 until if (type==1)ab.allItems.size else rab.allItems.size){
+                        if (if (type==1)ab.allItems[i].itemId.contains(acceptance_search_line.text) else rab.allItems[i].itemId.contains(acceptance_search_line.text)){
+                            if (i==if (type==1)ab.allItems.size-1 else rab.allItems.size-1){
                                 //直接到最后
                                 layoutManager.stackFromEnd = true
                             }else{
@@ -115,20 +118,20 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
 //确保是能操作的,选择时间等于换日时间并且换日成功状态
         if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
             //是未验收的就显示转次日操作
-            if (ab.dlvStatus==3){//是转次日的就显示取消转次日
+            if (if (type==1)ab.dlvStatus==3 else rab.rtnStatus==3){//是转次日的就显示取消转次日
                 toolbar_btn.visibility=View.VISIBLE
                 toolbar_btn.text="取消转次日"
-                ab.isChange=true
                 toolbar_btn.setOnClickListener{
-                    ab.dlvStatus=0
+                    if (type==1)ab.isChange=true else rab.isChange=true
+                    if (type==1)ab.dlvStatus=0 else rab.rtnStatus=0
                     saveDate()
                 }
             }else{
                 toolbar_btn.visibility=View.VISIBLE
                 toolbar_btn.text = "转次日"
-                ab.isChange=true
                 toolbar_btn.setOnClickListener {
-                    ab.dlvStatus=3
+                    if (type==1)ab.isChange=true else rab.isChange=true
+                    if (type==1)ab.dlvStatus=3 else rab.rtnStatus=3
                     saveDate()
                 }
             }
@@ -138,7 +141,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
     }
 
     override fun initData() {
-        adapter= PurchaseAcceptanceItemAdapter(1, ab, date, object : ItemClickListener {
+        adapter= PurchaseAcceptanceItemAdapter(type, if (type==1)ab.allItems else rab.allItems, date, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 when(CStoreCalendar.getNowStatus(1)){
                     1->{
@@ -150,12 +153,18 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                         return
                     }
                 }
-                val title=ab.allItems[position].itemId+"/"+ab.allItems[position].itemName
+                val title=if (type==1)ab.allItems[position].itemId+"/"+ab.allItems[position].itemName else rab.allItems[position].itemId+"/"+rab.allItems[position].itemName
                 dialogView.dialog_title.text=title
-                dialogView.trs.setText(ab.allItems[position].trsQuantity.toString())
-                dialogView.dlv.setText(ab.allItems[position].dlvQuantity.toString())
+                if (type==1){
+                    dialogView.dlv.setText(ab.allItems[position].dlvQuantity.toString())
+                    dialogView.dlv.keyListener=DigitsKeyListener.getInstance("1234567890")
+                }else{
+                    dialogView.dlv.visibility=View.GONE
+                    dialogView.dlv_text.visibility=View.GONE
+                    dialogView.trs_text.text=getString(R.string.returnQuantity)
+                }
+                dialogView.trs.setText(if (type==1)ab.allItems[position].trsQuantity.toString() else rab.allItems[position].rtnQuantity.toString())
                 dialogView.trs.keyListener=DigitsKeyListener.getInstance("1234567890")
-                dialogView.dlv.keyListener=DigitsKeyListener.getInstance("1234567890")
                 refreshSaveClick(position)
                 dialog.show()
             }
@@ -163,7 +172,8 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
             override fun onItemLongClick(view: View, position: Int) {
                 val i= Intent(this@PurchaseAcceptanceItemActivity,PurchaseAcceptanceCreate::class.java)
                 i.putExtra("date",date)
-                i.putExtra("data",ab)
+                i.putExtra("type",type)
+                i.putExtra("data",if (type==1)ab else rab)
                 startActivityForResult(i,0)
             }
         })
@@ -175,9 +185,12 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
         when(resultCode){
             0->{
                 try {
-                    val aib=data!!.getSerializableExtra("aib") as ArrayList<AcceptanceItemBean>
+                    val aib=data!!.getSerializableExtra("aib") as ArrayList<*>
+                    //ab.allItems.addAll(aib)
                     adapter.addItem(aib)
-                }catch (e:Exception){}
+                }catch (e:Exception){
+                    Log.e("验收item",e.message)
+                }
             }
         }
     }
@@ -186,7 +199,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
      * 判断是否有未提交的信息，根据选择决定finish
      */
     private fun judgmentFinish() {
-        if (ab.dlvStatus==0||ab.isChange) {
+        if (if (type==1)ab.dlvStatus==0||ab.isChange else rab.rtnStatus==0||rab.isChange) {
                 AlertDialog.Builder(this)
                         .setTitle("提示")
                         .setMessage("您未进行验收，是否放弃？")
@@ -205,13 +218,13 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
     }
 
     private fun saveDate(){
-        if (ab.allItems.isEmpty()){
+        if (if (type==1)ab.allItems.isEmpty()else rab.allItems.isEmpty()){
             showPrompt(getString(R.string.noMessage))
             return
         }
         //未验收和有修改就去保存
-        if (ab.dlvStatus==0||ab.isChange){
-            presenter.updateAcceptance(date,ab)
+        if (if (type==1)ab.dlvStatus==0||ab.isChange else rab.rtnStatus==0||rab.isChange){
+            if (type==1)presenter.updateAcceptance(date,ab)else presenter.updateReturnAcceptance(date,rab)
         }else{
             showPrompt(getString(R.string.saveDone))
         }
@@ -226,51 +239,62 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                     showPrompt(getString(R.string.noEditMsg))
                     return@setOnClickListener
                 }
-                ab.allItems[position].trsQuantity.toString()->{//相同就不管
+                if (type==1)ab.allItems[position].trsQuantity.toString()else rab.allItems[position].rtnQuantity.toString()->{//相同就不管
                 }
                 else->{
-                    if (dialogView.trs.text.toString().toInt()<dialogView.dlv.text.toString().toInt()){
-                        showPrompt(getString(R.string.dlv_more_trs))
-                        return@setOnClickListener
+                    if (type==1){
+                        if (dialogView.trs.text.toString().toInt()<dialogView.dlv.text.toString().toInt()){
+                            showPrompt(getString(R.string.dlv_more_trs))
+                            return@setOnClickListener
+                        }
+                        ab.allItems[position].trsQuantity=dialogView.trs.text.toString().toInt()
+                        ab.isChange=true
                     }
-                    ab.allItems[position].trsQuantity=dialogView.trs.text.toString().toInt()
-                    ab.isChange=true
+                    else {
+                        rab.allItems[position].rtnQuantity=dialogView.trs.text.toString().toInt()
+                        rab.isChange=true
+                    }
                 }
             }
-            //判断输入的验收量
-            when(dialogView.dlv.text.toString()){
-                ""->{
-                    //为空报错
-                    showPrompt(getString(R.string.noEditMsg))
-                    return@setOnClickListener
-                }
-                ab.allItems[position].dlvQuantity.toString()->{//相同就不管
-                }
-                else->{
-                    //因为有可能到货量和之前相同就没有检查
-                    if (dialogView.trs.text.toString().toInt()<dialogView.dlv.text.toString().toInt()){
-                        showPrompt(getString(R.string.dlv_more_trs))
+            if (type==1){
+                //判断输入的验收量
+                when(dialogView.dlv.text.toString()){
+                    ""->{
+                        //为空报错
+                        showPrompt(getString(R.string.noEditMsg))
                         return@setOnClickListener
                     }
-                    ab.allItems[position].dlvQuantity=dialogView.dlv.text.toString().toInt()
-                    //修改内部数据
-                    val df=DecimalFormat("######0.00")
-                    ab.allItems[position].totalUnitCost = df.format(ab.allItems[position].unitCost * ab.allItems[position].dlvQuantity).toDouble()
-                    ab.allItems[position].retailTotal = df.format(ab.allItems[position].storeUnitPrice * ab.allItems[position].dlvQuantity).toDouble()
-                    ab.isChange=true
+                    ab.allItems[position].dlvQuantity.toString()->{//相同就不管
+                    }
+                    else->{
+                        //因为有可能到货量和之前相同就没有检查
+                        if (dialogView.trs.text.toString().toInt()<dialogView.dlv.text.toString().toInt()){
+                            showPrompt(getString(R.string.dlv_more_trs))
+                            return@setOnClickListener
+                        }
+                        ab.allItems[position].dlvQuantity=dialogView.dlv.text.toString().toInt()
+                        //修改内部数据
+                        val df=DecimalFormat("######0.00")
+                        ab.allItems[position].totalUnitCost = df.format(ab.allItems[position].unitCost * ab.allItems[position].dlvQuantity).toDouble()
+                        ab.allItems[position].retailTotal = df.format(ab.allItems[position].storeUnitPrice * ab.allItems[position].dlvQuantity).toDouble()
+                        ab.isChange=true
+                    }
                 }
             }
             acceptance_item_recycler.adapter.notifyDataSetChanged()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(dialogView.trs.windowToken, 0)
-            imm.hideSoftInputFromWindow(dialogView.dlv.windowToken, 0)
             dialog.hide()
         }
     }
 
     override fun <T> updateDone(uData: T) {
         judgmentZhuanRi()
-        ab.isChange=false
+        if (type==1){
+            ab.isChange=false
+        } else {
+            rab.isChange=false
+        }
         acceptance_item_recycler.adapter.notifyDataSetChanged()
         loading.visibility=View.GONE
         loading_progress.visibility=View.VISIBLE

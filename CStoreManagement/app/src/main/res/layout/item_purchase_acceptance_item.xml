@@ -13,7 +13,7 @@
     android:stateListAnimator="@drawable/lift_on_touch"
     android:layout_width="match_parent"
     app:cardElevation="4dp"
-    android:layout_height="135dp"
+    android:layout_height="wrap_content"
     tools:ignore="KeyboardInaccessibleWidget">
 
 
@@ -90,6 +90,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/order_text"
                     android:text="@string/order_quantity"
                     android:textSize="12sp"
                     android:maxLines="1"
@@ -111,6 +112,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/hq_text"
                     android:textSize="12sp"
                     android:maxLines="1"
                     android:text="@string/hq_quantity"
@@ -126,6 +128,7 @@
 
 
             <LinearLayout
+                android:id="@+id/dc_body"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_weight="1.5"
@@ -159,6 +162,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/dlv_text"
                     android:textSize="12sp"
                     android:maxLines="1"
                     android:text="@string/dlv_quantity"
@@ -178,6 +182,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/trs_text"
                     android:text="@string/trs_quantity"
                     android:textSize="12sp"
                     android:maxLines="1"
@@ -191,45 +196,12 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
+
             <LinearLayout
+                android:id="@+id/retail_body"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_weight="1.5"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessLeaf"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:id="@+id/sell_cost_body"
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:text="@string/tax_sell_cost"
-                    android:textSize="12sp"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tax_sell_cost"
-                    android:textSize="12sp"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <TextView
                     android:textSize="12sp"
@@ -244,13 +216,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1.5"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessLeaf"/>
+        <LinearLayout
+            android:id="@+id/sell_cost_body"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
+
+            <TextView
+                android:text="@string/tax_sell_cost"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tax_sell_cost"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -129,6 +129,21 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
         }))
     }
 
+    fun getReturnCommodity(rab:ReturnAcceptanceBean?,vendorId: String){
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        model.getReturnCommodity(rab, vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                gView.requestSuccess(data)
+                gView.hideLoading()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(context.getString(R.string.socketError)+","+errorMessage)
+                gView.hideLoading()
+            }
+        }))
+    }
+
     /**
      * 创建进货验收单
      */
@@ -150,7 +165,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
     /**
      * 创建退货验收单
      */
-    fun createReturnAcceptance(date:String, rab:ReturnAcceptanceBean?, raib:ReturnAcceptanceItemBean){
+    fun createReturnAcceptance(date:String, rab:ReturnAcceptanceBean?, raib:ArrayList<ReturnAcceptanceItemBean>){
         if (!PresenterUtil.judgmentInternet(gView)) return
         model.createReturnAcceptance(date, rab, raib, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {

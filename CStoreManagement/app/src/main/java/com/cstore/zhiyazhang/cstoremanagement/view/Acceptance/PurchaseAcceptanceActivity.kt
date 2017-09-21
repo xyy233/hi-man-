@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnAcceptanceBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptanceAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptancePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
@@ -31,9 +32,11 @@ import java.util.*
  */
 class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity(), GenericView {
     private val presenter = PurchaseAcceptancePresenter(this, this, this)
+    private var type=1
 
     override fun initView() {
-        my_toolbar.title = getString(R.string.purchase_acceptance)
+        type=intent.getIntExtra("type",1)
+        my_toolbar.title = if (type==1)getString(R.string.purchase_acceptance) else getString(R.string.return_purchase_acceptance)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         date_util.visibility = View.VISIBLE
         //不用管换不换日直接从换日表拿时间
@@ -58,7 +61,8 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
             orderpro.visibility = View.VISIBLE
             orderprotext.visibility = View.VISIBLE
             orderretry.visibility = View.GONE
-            presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+            if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+            else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
         }
         date_util.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -76,21 +80,30 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
 
     override fun onStart() {
         super.onStart()
-        presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+        if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+        else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
     }
 
     override fun <T> requestSuccess(rData: T) {
-        rData as ArrayList<AcceptanceBean>
-        val adapter = PurchaseAcceptanceAdapter(1, MyTimeUtil.getTextViewDate(date_util),rData, object : ItemClickListener {
+
+        val adapter = PurchaseAcceptanceAdapter(type, MyTimeUtil.getTextViewDate(date_util),
+                if (type==1){rData as ArrayList<AcceptanceBean>
+            rData} else {rData as ArrayList<ReturnAcceptanceBean>
+            rData}, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceItemActivity::class.java)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
-                i.putExtra("data", rData[position])
+                i.putExtra("type",type)
+                i.putExtra("data",
+                        if (type==1){rData as ArrayList<AcceptanceBean>
+                    rData[position]} else {rData as ArrayList<ReturnAcceptanceBean>
+                    rData[position]})
                 startActivity(i)
             }
 
             override fun onItemLongClick(view: View, position: Int) {
                 val i=Intent(this@PurchaseAcceptanceActivity,PurchaseAcceptanceCreate::class.java)
+                i.putExtra("type",type)
                 i.putExtra("date",MyTimeUtil.getTextViewDate(date_util))
                 startActivity(i)
             }
@@ -136,11 +149,11 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 }
                 val textYear = year.toString() + "年"
                 var mm = ""
-                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else mm = (monthOfYear + 1).toString() + "月"
+                mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                else (monthOfYear + 1).toString() + "月"
                 var dd = ""
-                if (dayOfMonth < 10) dd = "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dd = dayOfMonth.toString()
+                dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
+                else dayOfMonth.toString()
                 date_util.year.text = textYear
                 date_util.month.text = mm
                 date_util.day.text = dd

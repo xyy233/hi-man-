@@ -24,10 +24,10 @@ import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, private val data: ArrayList<*>, private val onClick: ItemClickListener) : RecyclerView.Adapter<PurchaseAcceptanceAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
-        if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
-            return data.size+1
+        return if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
+            data.size+1
         }else{
-            return data.size
+            data.size
         }
     }
 
@@ -45,8 +45,6 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
             return
         }
         if (type==1){
-            holder.dlvText.text=MyApplication.instance().applicationContext.getString(R.string.dlv_count)
-            holder.ordText.text=MyApplication.instance().applicationContext.getString(R.string.order_quantity)
             holder.dlvText2.text=MyApplication.instance().applicationContext.getString(R.string.dlv_quantity)
             if (User.getUser().storeAttr==1||User.getUser().storeAttr==5){
                 holder.costTotalText.visibility=View.GONE
@@ -59,8 +57,6 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                 holder.acceptanceId.text=data[position].distributionId
                 holder.vendorName.text=data[position].vendorName
                 holder.orderCount.text=data[position].ordItemQTY.toString()
-                holder.dlvCount.text=data[position].dlvItemQTY.toString()
-                holder.orderQuantity.text=data[position].ordQuantity.toString()
                 holder.dlvQuantity.text=data[position].dlvQuantity.toString()
                 holder.costTotal.text=data[position].sellCostTot.toString()
                 holder.retailTotal.text=data[position].retailTotal.toString()
@@ -75,11 +71,11 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                 }
 
         }else{
-            holder.dlvText.text=MyApplication.instance().applicationContext.getString(R.string.return_item_qty)
-            holder.ordText.text=MyApplication.instance().applicationContext.getString(R.string.return_qty)
-            holder.dlvText2.text=MyApplication.instance().applicationContext.getString(R.string.ord_return_qty)
-            holder.costTotalText.visibility=View.VISIBLE
-            holder.costTotal.visibility=View.VISIBLE
+            holder.dlvText2.text=MyApplication.instance().applicationContext.getString(R.string.return_qty)
+            if (User.getUser().storeAttr==1||User.getUser().storeAttr==5){
+                holder.costTotalText.visibility=View.GONE
+                holder.costTotal.visibility=View.GONE
+            }
             data as ArrayList<ReturnAcceptanceBean>
                 holder.acceptanceData.visibility=View.VISIBLE
                 holder.acceptanceStatus.visibility=View.VISIBLE
@@ -87,8 +83,6 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                 holder.acceptanceId.text=data[position].distributionId
                 holder.vendorName.text=data[position].vendorName
                 holder.orderCount.text=data[position].plnRtnItemQTY.toString()
-                holder.dlvCount.text=data[position].actRtnItemQTY.toString()
-                holder.orderQuantity.text=data[position].ordQuantity.toString()
                 holder.dlvQuantity.text=data[position].rtnQuantity.toString()
                 holder.costTotal.text=data[position].sellCostTot.toString()
                 holder.retailTotal.text=data[position].retailTotal.toString()
@@ -101,7 +95,6 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                 holder.acceptanceItem.setOnClickListener {
                     onClick.onItemClick(holder.acceptanceItem,position)
                 }
-
         }
     }
 
@@ -115,17 +108,13 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
         val acceptanceId=itemView.findViewById<TextView>(R.id.acceptance_id)!!
         val vendorName=itemView.findViewById<TextView>(R.id.vendor_name)!!
         val orderCount=itemView.findViewById<TextView>(R.id.order_count)!!
-        val dlvCount=itemView.findViewById<TextView>(R.id.dlv_count)!!
-        val orderQuantity=itemView.findViewById<TextView>(R.id.order_quantity)!!
         val dlvQuantity=itemView.findViewById<TextView>(R.id.dlv_quantity)!!
         val costTotal=itemView.findViewById<TextView>(R.id.cost_total)!!
         val retailTotal=itemView.findViewById<TextView>(R.id.retail_total)!!
         val add=itemView.findViewById<ImageView>(R.id.add)!!
         val acceptanceStatus=itemView.findViewById<ImageView>(R.id.acceptance_status)!!
 
-        val dlvText=itemView.findViewById<TextView>(R.id.dlv_text)!!
         val dlvText2=itemView.findViewById<TextView>(R.id.dlv_text2)!!
-        val ordText=itemView.findViewById<TextView>(R.id.order_text)!!
         val costTotalText =itemView.findViewById<TextView>(R.id.cost_total_text)!!
     }
 }
