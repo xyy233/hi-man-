@@ -75,7 +75,7 @@ class CashDailyModel:CashDailyInterface{
     }
 
     private fun getSql(cd: CashDailyBean, value: String): String {
-        if (cd.cdId=="1100")return MySql.updateCashDaily2(cd.cdId,value) else return MySql.updateCashDaily(cd.cdId,value)
+        return if (cd.cdId=="1100") MySql.updateCashDaily2(cd.cdId,value) else MySql.updateCashDaily(cd.cdId,value)
     }
 
 }

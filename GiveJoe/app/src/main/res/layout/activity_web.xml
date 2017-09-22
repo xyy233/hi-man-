@@ -3,16 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/refresh"
+        android:layout_marginEnd="60dp"
+        android:layout_gravity="center|top"
+        android:background="@android:color/transparent"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
         <com.zhang.givejoe.cbWebView
             android:id="@+id/my_web"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         </com.zhang.givejoe.cbWebView>
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -414,7 +414,7 @@ class AcceptanceModel : AcceptanceInterface {
             //获得当前的完整单号
             val nowId = numHeader + (numFoot + 1).toString()
             //数据加入
-            val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", aib.size, aib.size, 0, 0.00, 0, 0.00, "", "", 2, 0.00, ArrayList<AcceptanceItemBean>())
+            val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", aib.size, aib.size, 0, 0.00, 0, 0.00, "", "", 2, 0.00, ArrayList())
             val result = StringBuilder()
             result.append(MySql.affairHeader)
             //重新计算一些修改量
@@ -459,7 +459,7 @@ class AcceptanceModel : AcceptanceInterface {
             val numFoot = distributionId.substring(distributionId.length - 4).toInt()
             //获得当前的完整单号
             val nowId = numHeader + (numFoot + 1).toString()
-            val nowARB = ReturnAcceptanceBean(nowId, date, date, date, raib.size, raib.size, 0.00, 2, date, raib[0].vendorId, "", 0.00, 0, 0, 0.00, ArrayList<ReturnAcceptanceItemBean>())
+            val nowARB = ReturnAcceptanceBean(nowId, date, date, date, raib.size, raib.size, 0.00, 2, date, raib[0].vendorId, "", 0.00, 0, 0, 0.00, ArrayList())
             val result = StringBuilder()
             result.append(MySql.affairHeader)
             raib.forEach {

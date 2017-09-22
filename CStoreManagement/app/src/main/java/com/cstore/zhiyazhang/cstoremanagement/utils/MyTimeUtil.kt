@@ -159,13 +159,11 @@ object MyTimeUtil {
         val calendar = getCalendarByString(nowDate)
         val year = "${calendar.get(Calendar.YEAR)}年"
 
-        var month = ""
-        if (calendar.get(Calendar.MONTH) + 1<10)month="0${calendar.get(Calendar.MONTH) + 1}月"
-        else month="${calendar.get(Calendar.MONTH) + 1}月"
+        val month = if (calendar.get(Calendar.MONTH) + 1<10) "0${calendar.get(Calendar.MONTH) + 1}月"
+        else "${calendar.get(Calendar.MONTH) + 1}月"
 
-        var day = ""
-        if (calendar.get(Calendar.DAY_OF_MONTH)<10)day="0${calendar.get(Calendar.DAY_OF_MONTH)}"
-        else day=calendar.get(Calendar.DAY_OF_MONTH).toString()
+        val day = if (calendar.get(Calendar.DAY_OF_MONTH)<10) "0${calendar.get(Calendar.DAY_OF_MONTH)}"
+        else calendar.get(Calendar.DAY_OF_MONTH).toString()
 
         dateUtil.year.text = year
         dateUtil.month.text = month

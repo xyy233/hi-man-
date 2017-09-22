@@ -42,7 +42,7 @@ internal class SocketUtil  {
     }
 
     companion object {
-        private val PORT = 49999
+        private val PORT = 49999//50000
         private val REQUEST_ERROR = "服务器连接超时"
         private val SOCKET_ERROR = "服务器异常，确定连在内网中，确定服务器正常"
         private val NULL_HOST = "host为空"

@@ -157,7 +157,8 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 date_util.year.text = textYear
                 date_util.month.text = mm
                 date_util.day.text = dd
-                presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+                if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+                else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
                 orderRecycler.adapter = null
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))

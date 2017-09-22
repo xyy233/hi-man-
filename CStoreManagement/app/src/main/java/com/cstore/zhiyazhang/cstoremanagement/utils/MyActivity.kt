@@ -28,6 +28,7 @@ abstract class MyActivity : AppCompatActivity() {
 
     /**
      * 初始化三部曲,其实data在view前该获得一次的。。。
+     * 不管了，就当做获得未经网络的数据为initView内的部分
      */
     protected abstract fun initView()
     protected abstract fun initClick()

@@ -15,14 +15,13 @@ class MyHandler {
     companion object MyHandler : Handler() {
         val SUCCESS = 0
         val ERROR1 = 1
-        val ERROR2 = 2
         private var isRun:Boolean=false
 
         private var mActivity: WeakReference<MyActivity>? = null
         private var mListener: MyListener? = null
 
         fun writeActivity(activity: MyActivity): MyHandler {
-            mActivity = WeakReference<MyActivity>(activity)
+            mActivity = WeakReference(activity)
             isRun=true
             return this
         }
@@ -48,14 +47,14 @@ class MyHandler {
                         isRun=false
                         return
                     }
-                    when (msg.what) {
+                    isRun = when (msg.what) {
                         SUCCESS -> {
                             mListener!!.listenerSuccess(msg.obj)
-                            isRun=false
+                            false
                         }
                         else -> {
                             mListener!!.listenerFailed(msg.obj as String)
-                            isRun=false
+                            false
                         }
                     }
                 }

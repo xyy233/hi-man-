@@ -31,7 +31,7 @@ class MySwipeRefresh : SwipeRefreshLayout {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (mHasScrollingChild) {
+        return if (mHasScrollingChild) {
             when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isEnabled = true   //每次按下时先开启SwipeRefreshLayout，保证正常工作
@@ -40,9 +40,9 @@ class MySwipeRefresh : SwipeRefreshLayout {
                     }
                 }
             }
-            return super.dispatchTouchEvent(ev)
+            super.dispatchTouchEvent(ev)
         } else {
-            return super.dispatchTouchEvent(ev)
+            super.dispatchTouchEvent(ev)
         }
     }
 

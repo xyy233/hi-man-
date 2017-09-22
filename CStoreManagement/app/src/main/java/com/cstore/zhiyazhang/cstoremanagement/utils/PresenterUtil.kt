@@ -10,10 +10,10 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 object PresenterUtil{
         fun judgmentInternet(gView:GenericView):Boolean{
             gView.showLoading()
-            if (!ConnectionDetector.getConnectionDetector().isOnline) {
+            return if (!ConnectionDetector.getConnectionDetector().isOnline) {
                 gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
                 gView.hideLoading()
-                return false
-            }else return true
+                false
+            }else true
         }
 }

@@ -1,7 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.squareup.leakcanary.LeakCanary
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
@@ -18,6 +20,10 @@ import java.util.concurrent.TimeUnit
 class MyApplication : Application() {
 
     companion object {
+        /**
+         * 你爸爸的！明明是kotlin官方推荐的静态单列application还提示会导致内存泄漏逗我哈？
+         */
+        @SuppressLint("StaticFieldLeak")
         private var instance: Application? = null
         fun instance() = instance!!
 
@@ -67,7 +73,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        //LeakCanary.install(this)
+        LeakCanary.install(this)
         instance = this
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient.Builder()

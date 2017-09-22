@@ -35,15 +35,15 @@ abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
         }
     }
 
-    protected fun myError(): String {
-        if (code != 200) {
+    private fun myError(): String {
+        return if (code != 200) {
             var message = string!!.substring(string!!.indexOf("HTTP Status 500 - ") + 18, string!!.indexOf("</h1><div class=\"line\">"))
             if (message == "") {
                 message = "服务器遇到内部错误，阻止其执行此请求,请重试。"
             }
-            return message
+            message
         } else {
-            return ""
+            ""
         }
     }
 }

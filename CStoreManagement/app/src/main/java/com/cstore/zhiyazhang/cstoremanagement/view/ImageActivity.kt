@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
-import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
@@ -39,8 +38,7 @@ class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyAc
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initView() {
         val cb = intent?.getSerializableExtra("cb") as ContractBean
         val photoView = findViewById<PhotoView>(R.id.zoom_image)
         photoView.isEnabled = true
@@ -52,9 +50,6 @@ class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyAc
                 .into(photoView)
         //photoView.setOnPhotoTapListener { _, _, _ -> finishAfterTransition() }
         photoView.setOnClickListener { finishAfterTransition() }
-    }
-
-    override fun initView() {
     }
 
     override fun initClick() {

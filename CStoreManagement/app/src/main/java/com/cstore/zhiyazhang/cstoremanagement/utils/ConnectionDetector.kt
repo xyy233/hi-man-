@@ -16,7 +16,6 @@ class ConnectionDetector private constructor() {
         fun getConnectionDetector(): ConnectionDetector {
             return Inner.cd
         }
-        private val context = MyApplication.instance().applicationContext
     }
 
     private object Inner {
@@ -30,10 +29,10 @@ class ConnectionDetector private constructor() {
      */
     val isOnline: Boolean
         get() {
-            val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivity = MyApplication.instance().applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val info = connectivity.activeNetworkInfo
             if (info!=null)if (info.isConnected) if (info.state == NetworkInfo.State.CONNECTED) return true
-            MyToast.getShortToast(context.getString(R.string.noInternet))
+            MyToast.getShortToast(MyApplication.instance().applicationContext.getString(R.string.noInternet))
             return false
         }
 }

@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_web.*
  */
 class WebActivity : AppCompatActivity() {
 
+    private val TAG="WebActivity"
     var backCount = 0
     var url = ""
     var retry = ""
@@ -25,6 +26,7 @@ class WebActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_web)
         url = intent.getStringExtra("url")
         //检测是否有http，如果没有就加上
@@ -58,8 +60,12 @@ class WebActivity : AppCompatActivity() {
         //不使用缓存
         my_web.settings.cacheMode = WebSettings.LOAD_NO_CACHE
         my_web.settings.setAppCacheEnabled(false)
-        //设置渲染优先级
-        my_web.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        try{
+            //设置渲染优先级
+            my_web.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        }catch (e:Exception){
+            //报错就是版本不对不用管了
+        }
 
         my_web.settings.loadsImagesAutomatically = true
 
@@ -71,27 +77,33 @@ class WebActivity : AppCompatActivity() {
         my_web.settings.setSupportMultipleWindows(true)
         my_web.webViewClient = viewClient
         my_web.webChromeClient = chromeClient
-        swipe.setDistanceToTriggerSync(200)
+        //2017.09.22吴铭说去掉下拉刷新
+        /*swipe.setDistanceToTriggerSync(200)
         swipe.setOnRefreshListener {
             my_web.loadUrl(my_web.url)
-        }
+        }*/
         click()
         my_web.loadUrl(url)
     }
 
     private fun click() {
+        refresh.setOnClickListener {
+            my_web.loadUrl(my_web.url)
+        }
         my_web.setIWebViewScroll(object : cbWebView.IWebViewScroll {
             override fun onNotTop() {
-                swipe.isEnabled=false
+                //当前屏幕不在顶层，不可以刷新      2017.09.22吴铭说去掉下拉刷新
+//                swipe.isEnabled=false
             }
 
             override fun onTop() {
-                swipe.isEnabled = true
+                //当前屏幕在顶层，可以刷新      2017.09.22吴铭说去掉下拉刷新
+//                swipe.isEnabled = true
             }
         })
     }
 
-    val viewClient = object : WebViewClient() {
+    private val viewClient = object : WebViewClient() {
 
         //打开网页时不调用系统浏览器， 而是在本WebView中显示,不同版本调用不同的
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
@@ -114,11 +126,11 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    val chromeClient = object : WebChromeClient() {
+    private val chromeClient = object : WebChromeClient() {
         //获得网页的加载进度
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
             if (newProgress == 100) {
-                swipe.isRefreshing = false
+
             }
             super.onProgressChanged(view, newProgress)
         }
@@ -129,6 +141,20 @@ class WebActivity : AppCompatActivity() {
             return true
         }
     }
+/*
+    private var mWakeLock:PowerManager.WakeLock?=null
+    override fun onResume() {
+        super.onResume()
+        val pManager= (getSystemService(POWER_SERVICE) as PowerManager)
+        mWakeLock = pManager.newWakeLock(PowerManager.ON_AFTER_RELEASE, TAG)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (mWakeLock!=null){
+            mWakeLock!!.release()
+        }
+    }*/
 
     override fun onStart() {
         super.onStart()
