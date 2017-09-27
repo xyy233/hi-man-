@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.MenuItem
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.inventory.InventoryAdjustmentActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapHotActivity
 import kotlinx.android.synthetic.main.activity_in_stock.*
@@ -26,6 +27,9 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
         }
         scrap2.setOnClickListener {
             startActivity(Intent(this@InStockActivity,ScrapHotActivity::class.java))
+        }
+        inventory_adjustment.setOnClickListener {
+            startActivity(Intent(this@InStockActivity,InventoryAdjustmentActivity::class.java))
         }
     }
 

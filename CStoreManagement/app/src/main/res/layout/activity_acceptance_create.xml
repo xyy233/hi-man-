@@ -34,6 +34,7 @@
                 android:id="@+id/acceptance_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"/>
+
         </LinearLayout>
 
         <!--废弃-->

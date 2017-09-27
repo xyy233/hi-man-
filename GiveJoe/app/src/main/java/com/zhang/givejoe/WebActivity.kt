@@ -1,6 +1,7 @@
 package com.zhang.givejoe
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
@@ -158,7 +159,9 @@ class WebActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        this.startLockTask()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.startLockTask()
+        }
     }
 
     override fun onBackPressed() {
@@ -166,7 +169,9 @@ class WebActivity : AppCompatActivity() {
         backCount++
         if (backCount == 10) {
             try {
-                this.stopLockTask()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    this.stopLockTask()
+                }
             }catch (e:Exception){}
             my_web.destroy()
             super.onBackPressed()

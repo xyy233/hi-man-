@@ -59,10 +59,6 @@ class CashDailyFragment : Fragment() {
             override fun onItemClick(view: View, position: Int) {
                 mActivity!!.updateData(view,data[position])
             }
-
-            override fun onItemLongClick(view: View, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
         },date)
     }
 
@@ -74,11 +70,5 @@ class CashDailyFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         mActivity=context as CashDailyActivity
-    }
-
-    /**
-     * Activity 被销毁的时候，FragmentManager 里的 Fragment 也不会得到保留。
-     */
-    override fun onSaveInstanceState(outState: Bundle?) {
     }
 }

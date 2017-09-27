@@ -806,4 +806,65 @@ object MySql {
                 "('${User.getUser().storeId}',to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd'),'${raib.vendorId}','${raib.itemId}','${raib.shipNumber}',${raib.rtnQuantity},${raib.ordQuantity},${raib.storeUnitPrice}, " +
                 "${raib.unitCost}, '${raib.distributionId}','${raib.supplierId}','${User.getUser().uId}',sysdate, ${raib.sellCost});"
     }
+
+    /**********************************************库调************************************************************/
+
+    /**
+     * 得到某一天的所有库调操作
+     */
+    fun getAdjustmentList(date:String):String{
+        return "select adj.recordnumber, adj.itemnumber, plu.pluname, (adj.actStockQuantity+adj.adjQuantity) currStockQuantity, adj.actstockquantity,adj.adjquantity, plu.shipnumber, adjreasonnumber " +
+                "from adj left join plu on plu.storeid=adj.storeid and plu.itemnumber=adj.itemnumber " +
+                "where adj.storeid='${User.getUser().storeId}' " +
+                "and adj.busidate=to_date('$date','yyyy-MM-dd') " +
+                "order by adj.recordnumber,adj.itemnumber"
+    }
+
+    /**
+     * 库调的单品搜索
+     */
+    fun searchAdjustment(date:String, msg:String):String{
+        return "select plu.itemnumber,plu.shipnumber,plu.storeUnitPrice, plu.unitCost,plu.pluname " +
+                ",nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)- " +
+                "nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+ " +
+                "nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+ " +
+                "nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0) as actStockQuantity " +
+                "plu.storeunitprice,plu.unitcost " +
+                "from plu right join inv on plu.storeID=inv.StoreID right join itemplu on itemplu.storeid=inv.storeid " +
+                "where  inv.StoreID= plu.StoreID  and plu.itemnumber=inv.itemnumber and plu.itemnumber=itemplu.itemnumber " +
+                "and inv.busidate=to_date('$date','yyyy-MM-dd') " +
+                "AND substr(plu.signType, 9, 1) = 'Y' " +
+                "and (plu.itemnumber='$msg' or plu.pluname like '%$msg%' or itemplu.plunumber='$msg') " +
+                "and rownum=1 " +
+                "order by plu.itemnumber"
+    }
+
+    /**
+     * 得到当前最大的recodeNumber
+     */
+    fun getAdjustmentMaxId(date:String):String{
+        return "select MAX(recordnumber) value from adj where busidate = to_date('$date','yyyy-MM-dd')"
+    }
+
+    /**
+     * 创建库调,必须配合事务使用!
+     */
+    fun createAdjustment(ab:AdjustmentBean,date: String, recordNumber:Int):String{
+        //创建库调
+        var result=
+                "Insert into adj " +
+                "(StoreID,BusiDate,RecordNumber,Itemnumber,Shipnumber,StoreUnitPrice, " +
+                "UnitCost,AdjQuantity,adj.ActStockQuantity,adjReasonNumber,UpdateUserID,UpdateDateTime) " +
+                "Values " +
+                "('${User.getUser().storeId}',to_date('$date','yyyy-MM-dd'),$recordNumber,'${ab.itemId}',${ab.shipNumber},${ab.storeUnitPrice}, " +
+                "${ab.unitCost}, ${ab.adjQTY}, ${ab.actStockQTY}, ${ab.adjReasonNumber}, ${User.getUser().uId}, sysdate);"
+        //更新库存
+        result+=
+                "update inv set accAdjQuantity=accAdjQuantity + ${ab.adjQTY} " +
+                "where storeID='${User.getUser().storeId}' " +
+                "and busiDate=to_date('$date','yyyy-MM-dd') " +
+                "and ItemNumber='${ab.itemId}' " +
+                "and shipNumber='${ab.shipNumber}';"
+        return result
+    }
 }

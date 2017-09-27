@@ -193,6 +193,10 @@ internal class SocketUtil  {
         fun getReturnAcceptanceItem(data: String): ArrayList<ReturnAcceptanceItemBean> {
             return Gson().fromJson<ArrayList<ReturnAcceptanceItemBean>>(data, object : TypeToken<ArrayList<ReturnAcceptanceItemBean>>() {}.type)
         }
+
+        fun getAdjustment(data: String): ArrayList<AdjustmentBean> {
+            return Gson().fromJson<ArrayList<AdjustmentBean>>(data, object : TypeToken<ArrayList<AdjustmentBean>>() {}.type)
+        }
     }
 
     /**

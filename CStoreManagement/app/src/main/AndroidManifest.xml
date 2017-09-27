@@ -119,6 +119,10 @@
         <activity android:name=".view.coi.COIActivity"
                   android:screenOrientation="portrait"/>
 
+        <!--库存调整-->
+        <activity android:name=".view.inventory.InventoryAdjustmentActivity"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

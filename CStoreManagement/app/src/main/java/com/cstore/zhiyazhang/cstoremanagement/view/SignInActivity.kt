@@ -169,6 +169,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         ue.putInt("storeAttr",user.storeAttr)
         ue.putInt("cnt", user.cnt)
         ue.apply()
+        User.refreshUser()
     }
 
 

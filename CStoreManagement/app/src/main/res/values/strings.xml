@@ -151,4 +151,9 @@
     <string name="return_quantity">实退数：</string>
     <string name="pre_quantity">预退数：</string>
     <string name="returnQuantity">退货量：</string>
+    
+    <string name="curr_stock_quantity">实际库存：</string>
+    <string name="act_stock_quantity">账上库存：</string>
+    <string name="inventory_adjustment">库存整理</string>
+    <string name="isNotNull">值不能为空！</string>
 </resources>

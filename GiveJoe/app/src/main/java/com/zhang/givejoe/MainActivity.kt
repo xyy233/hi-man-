@@ -1,6 +1,7 @@
 package com.zhang.givejoe
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
@@ -18,7 +19,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         web_edit.setText(url)
         go_web.setOnClickListener {
-            this.stopLockTask()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.stopLockTask()
+            }
             val i=Intent(this@MainActivity,WebActivity::class.java)
             i.putExtra("url", web_edit.text.toString())
             startActivity(i)
@@ -27,7 +30,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        this.startLockTask()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.startLockTask()
+        }
     }
 
     override fun onResume() {
@@ -37,7 +42,9 @@ class MainActivity : AppCompatActivity() {
         backCount++
         if (backCount==20){
             try {
-                this.stopLockTask()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    this.stopLockTask()
+                }
             }catch (e:Exception){}
             super.onBackPressed()
         }

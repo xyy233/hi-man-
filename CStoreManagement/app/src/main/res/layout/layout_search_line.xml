@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,22 +11,20 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bg_search_line"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
         <EditText
-
             android:id="@+id/search_edit"
-            android:layout_width="140dp"
+            android:layout_width="240dp"
             android:layout_height="30dp"
-            android:layout_gravity="center"
             android:layout_marginEnd="25dp"
             android:layout_marginStart="13dp"
             android:background="@null"
@@ -42,7 +41,8 @@
             android:layout_height="30dp"
             android:layout_gravity="end|center"
             android:layout_margin="2dp"
-            android:src="@mipmap/ic_search"/>
+            android:src="@mipmap/ic_search"
+            tools:ignore="ContentDescription"/>
     </FrameLayout>
 
     <ImageView
@@ -50,6 +50,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:src="@mipmap/ic_ercode"/>
+        android:src="@mipmap/ic_ercode"
+        tools:ignore="ContentDescription"/>
 
 </LinearLayout>

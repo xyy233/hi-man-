@@ -117,17 +117,19 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
 
                     //去掉空格
                     val value=dialogView!!.dialog_edit.text.toString().replace(" ","")
-                    if (value=="")showPrompt(getString(R.string.please_edit_value))//不能为空
-                    else if (value==cd.cdValue){
-                        //和之前一样就直接发个消息说完成
-                        showPrompt(getString(R.string.saveDone))
-                        dialog!!.cancel()
-                    }
-                    else {
-                        dialogView!!.dialog_progress.visibility=View.VISIBLE
-                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
-                        presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
+                    when (value) {
+                        "" -> showPrompt(getString(R.string.please_edit_value))//不能为空
+                        cd.cdValue -> {
+                            //和之前一样就直接发个消息说完成
+                            showPrompt(getString(R.string.saveDone))
+                            dialog!!.cancel()
+                        }
+                        else -> {
+                            dialogView!!.dialog_progress.visibility=View.VISIBLE
+                            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
+                            presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
+                        }
                     }
                 }
             }
@@ -171,23 +173,23 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@CashDailyActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
-                val calendar=Calendar.getInstance()
-                calendar.timeInMillis=System.currentTimeMillis()
+                val calendar1=Calendar.getInstance()
+                calendar1.timeInMillis=System.currentTimeMillis()
                 if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(1)) {
                     //换日了要加一天
-                    calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1)
+                    calendar1.set(Calendar.DATE, calendar1.get(Calendar.DATE) + 1)
                 }
-                if (year>calendar.get(Calendar.YEAR)||monthOfYear>calendar.get(Calendar.MONTH)||dayOfMonth>calendar.get(Calendar.DAY_OF_MONTH)){
+                if (year>calendar1.get(Calendar.YEAR)||monthOfYear>calendar1.get(Calendar.MONTH)||dayOfMonth>calendar1.get(Calendar.DAY_OF_MONTH)){
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear=year.toString()+"年"
                 var mm = ""
-                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else mm = (monthOfYear + 1).toString()+"月"
+                mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                else (monthOfYear + 1).toString()+"月"
                 var dd = ""
-                if (dayOfMonth < 10) dd = "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dd = dayOfMonth.toString()
+                dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
+                else dayOfMonth.toString()
                 date_util.year.text=textYear
                 date_util.month.text=mm
                 date_util.day.text=dd
@@ -234,7 +236,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     override fun errorDealWith() {
         loading_progress.visibility=View.GONE
         loading_text.visibility=View.GONE
-        if (dialog!!.dialog_progress.visibility==View.VISIBLE){
+        if (dialog!=null&&dialog!!.dialog_progress.visibility==View.VISIBLE){
             dialog!!.dialog_progress.visibility=View.GONE
         }else{
             loading_retry.visibility=View.VISIBLE

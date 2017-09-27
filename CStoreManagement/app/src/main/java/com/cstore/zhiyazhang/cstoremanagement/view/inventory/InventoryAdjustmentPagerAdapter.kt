@@ -1,4 +1,4 @@
-package com.cstore.zhiyazhang.cstoremanagement.view.cashdaily
+package com.cstore.zhiyazhang.cstoremanagement.view.inventory
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -7,13 +7,11 @@ import android.support.v4.view.PagerAdapter
 
 /**
  * Created by zhiya.zhang
- * on 2017/9/4 14:38.
+ * on 2017/9/27 14:17.
  */
-
-class CashDailyPagerAdapter(private val fm: FragmentManager, private val tabFragments: ArrayList<CashDailyFragment>, private val tabTitle: ArrayList<String>) : FragmentPagerAdapter(fm) {
+class InventoryAdjustmentPagerAdapter(private val fm:FragmentManager, private val tabFragments:ArrayList<InventoryAdjustmentFragment>, private val tabTitle:ArrayList<String>): FragmentPagerAdapter(fm){
 
     private var time:Long=0
-
 
     override fun getItem(position: Int): Fragment {
         return tabFragments[position]
@@ -35,7 +33,7 @@ class CashDailyPagerAdapter(private val fm: FragmentManager, private val tabFrag
         return tabTitle[position]
     }
 
-    fun setFragments(data:ArrayList<CashDailyFragment>){
+    fun setFragments(data:ArrayList<InventoryAdjustmentFragment>){
         time = System.currentTimeMillis()
         tabFragments.clear()
         tabFragments.addAll(data)

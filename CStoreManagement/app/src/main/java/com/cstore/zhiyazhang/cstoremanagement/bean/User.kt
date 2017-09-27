@@ -67,6 +67,21 @@ data class User(
             }
             return staticUser!!
         }
+
+        fun refreshUser(){
+            val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
+            staticUser = User(
+                    sp.getString("storeId", ""),
+                    sp.getString("uid", ""),
+                    "", //不保存密码
+                    sp.getString("uName", ""),
+                    sp.getString("telphone", ""),
+                    sp.getString("storeName", ""),
+                    sp.getString("address", ""),
+                    sp.getInt("storeAttr",1),
+                    sp.getInt("cnt", 0)
+            )
+        }
     }
 }
 

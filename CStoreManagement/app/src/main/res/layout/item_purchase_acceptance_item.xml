@@ -10,6 +10,7 @@
     android:id="@+id/acceptance_item"
     android:clickable="true"
     android:foreground="@drawable/selector_foreground"
+    android:animateLayoutChanges="true"
     android:stateListAnimator="@drawable/lift_on_touch"
     android:layout_width="match_parent"
     app:cardElevation="4dp"
