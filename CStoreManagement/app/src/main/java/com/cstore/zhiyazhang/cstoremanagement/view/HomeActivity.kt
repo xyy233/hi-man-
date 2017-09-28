@@ -139,6 +139,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 updateButton = true
                 this@HomeActivity.startService(Intent(this@HomeActivity, UpdateService::class.java))
             }
+            R.id.nav_open_tutorial->{
+                val sp=getSharedPreferences("tutorial",Context.MODE_PRIVATE)
+                sp.edit().clear().apply()
+                MyToast.getLongToast(getString(R.string.open_tutorial_done))
+            }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true

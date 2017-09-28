@@ -33,10 +33,11 @@ class InventoryAdjustmentPagerAdapter(private val fm:FragmentManager, private va
         return tabTitle[position]
     }
 
-    fun setFragments(data:ArrayList<InventoryAdjustmentFragment>){
-        time = System.currentTimeMillis()
-        tabFragments.clear()
-        tabFragments.addAll(data)
+    /**
+     * clear引用的list自然就被情况，往里添加也会添加，只需要刷新就好
+     */
+    fun refresh(){
+        time=System.currentTimeMillis()
         notifyDataSetChanged()
     }
 }

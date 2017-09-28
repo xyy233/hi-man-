@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -27,7 +28,8 @@ class InventoryAdjustmentFragment : Fragment(){
     private val data=ArrayList<AdjustmentBean>()
     private var type=0
     var adapter:AdjustmentAdapter?=null
-    var saveBtn:Button?=null
+    private var rootView:View?=null
+    var saveBtn: Button?=null
 
     companion object {
         private val PAGE_TYPE="page_type"
@@ -46,7 +48,11 @@ class InventoryAdjustmentFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_adjustment,container,false)
+        if (rootView==null){
+            rootView=inflater.inflate(R.layout.fragment_adjustment,container,false)
+            saveBtn=rootView!!.findViewById(R.id.adjustment_save)
+        }
+        return rootView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +60,6 @@ class InventoryAdjustmentFragment : Fragment(){
         data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<AdjustmentBean>)
         date=arguments.getString(PAGE_DATE)
         type=arguments.getInt(PAGE_TYPE)
-        saveBtn=view!!.findViewById(R.id.adjustment_save)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -69,16 +74,33 @@ class InventoryAdjustmentFragment : Fragment(){
         adjustment_recycler.adapter=adapter
         //如果是搜索还要显示搜索栏
         if (type==2){
-            search_bar.visibility=View.VISIBLE
+            search_line_bar.visibility=View.VISIBLE
             search_btn.setOnClickListener {
                 mActivity!!.searchAdjustment(search_edit.text.toString())
                 hideEdit()
+            }
+            search_edit.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId==EditorInfo.IME_ACTION_SEARCH){
+                    mActivity!!.searchAdjustment(search_edit.text.toString())
+                    hideEdit()
+                    true
+                }else false
             }
             qrcode.setOnClickListener {
                 mActivity!!.openQRCode()
             }
             adjustment_save.setOnClickListener {
                 mActivity!!.saveData(adapter!!.data)
+            }
+        }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser){
+            //fragment可见的时候
+            if (type==2){
+                mActivity!!.showTutorial(type)
             }
         }
     }
@@ -99,9 +121,13 @@ class InventoryAdjustmentFragment : Fragment(){
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is InventoryAdjustmentActivity){
-            mActivity=context as InventoryAdjustmentActivity
+            mActivity= context
         }else{
             throw ClassCastException(context.toString()+" activity错误")
         }
+    }
+
+    fun clearEdit() {
+        search_edit.setText("")
     }
 }

@@ -121,7 +121,8 @@
 
         <!--库存调整-->
         <activity android:name=".view.inventory.InventoryAdjustmentActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     </application>
 

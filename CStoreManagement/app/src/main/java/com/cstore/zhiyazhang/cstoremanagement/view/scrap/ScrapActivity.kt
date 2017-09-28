@@ -211,7 +211,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun goQRCode() {
         val i = Intent(this@ScrapActivity, ContractSearchActivity::class.java)
-        i.putExtra("whereIsIt", "scrap")
+        i.putExtra("whereIsIt", "result")
         startActivityForResult(i, 0)
     }
 
@@ -597,7 +597,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      * 获得相机权限
      */
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
-    fun judgmentCarmer(): Boolean {
+    private fun judgmentCarmer(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, "请打开权限以操作扫描更新", 1, *perms)
@@ -609,7 +609,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     /**
      * 返回true 表示可以使用  返回false表示不可以使用
      */
-    fun cameraIsCanUse(): Boolean {
+    private fun cameraIsCanUse(): Boolean {
         var isCanUse = true
         var mCamera: Camera? = null
         try {
@@ -646,7 +646,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
 
     //获取权限成功
     override fun onPermissionsGranted(requestCode: Int, list: List<String>) {
-        startActivity(Intent(this@ScrapActivity, ContractSearchActivity::class.java))
+        goQRCode()
     }
 
     override fun <T> showView(aData: T) {

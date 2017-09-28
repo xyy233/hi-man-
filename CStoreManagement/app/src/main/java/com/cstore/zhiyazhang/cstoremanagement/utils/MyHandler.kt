@@ -60,7 +60,7 @@ class MyHandler {
                 }
             } catch (e: Exception) {
                 Log.e("MyHandler",e.message)
-                mListener!!.listenerFailed(e.message!!)
+                //mListener!!.listenerFailed(e.message!!)
                 isRun=false
                 return
             }

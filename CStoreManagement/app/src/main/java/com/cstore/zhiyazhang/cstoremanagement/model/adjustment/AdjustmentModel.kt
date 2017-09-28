@@ -103,9 +103,9 @@ class AdjustmentModel:AdjustmentInterface{
         var id=0
         try {
             val ids=SocketUtil.getUtilBean(result)
+            if (ids[0].value==null)return 0
             id=ids[0].value!!.toInt()
         }catch (e:Exception){
-            Log.e(TAG,e.message)
             msg.obj=result
             msg.what=MyHandler.ERROR1
             handler.sendMessage(msg)

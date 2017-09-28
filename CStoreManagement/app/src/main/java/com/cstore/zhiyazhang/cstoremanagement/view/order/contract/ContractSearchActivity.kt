@@ -53,14 +53,14 @@ class ContractSearchActivity : AppCompatActivity() {
     /**
      * 二维码解析回调函数
      */
-    internal var analyzeCallback: CodeUtils.AnalyzeCallback = object : CodeUtils.AnalyzeCallback {
+    private var analyzeCallback: CodeUtils.AnalyzeCallback = object : CodeUtils.AnalyzeCallback {
         override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
             val datas=result.split("|")
             var data=""
-            if (datas.size>1){
-                data=datas[datas.size-1]
+            data = if (datas.size>1){
+                datas[datas.size-1]
             }else{
-                data=result
+                result
             }
             when(intent.getStringExtra("whereIsIt")){
                 "unitord"->{
@@ -70,7 +70,7 @@ class ContractSearchActivity : AppCompatActivity() {
                     startActivity(i)
                     finish()
                 }
-                "scrap"->{
+                "result"->{
                     val i=Intent()
                     i.putExtra("message",data)
                     setResult(0,i)

@@ -154,6 +154,11 @@
     
     <string name="curr_stock_quantity">实际库存：</string>
     <string name="act_stock_quantity">账上库存：</string>
-    <string name="inventory_adjustment">库存整理</string>
+    <string name="inventory_adjustment">库存调整</string>
     <string name="isNotNull">值不能为空！</string>
+    <string name="zero_error">营业换日失败，请停止操作并联系系统部！</string>
+    <string name="tutorial">教学</string>
+    <string name="double_close_tutorial">再按一次关闭教程</string>
+    <string name="open_tutorial">开启教程</string>
+    <string name="open_tutorial_done">已开启教程！</string>
 </resources>

@@ -70,7 +70,7 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${data[position].itemId}.do")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)
-                .dontAnimate()
+                .crossFade()
                 .into(holder.orderImg)
         holder.add.setOnTouchListener { v, event ->
             onTouch.onTouchAddListener(data[position], event, position)

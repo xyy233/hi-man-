@@ -824,19 +824,18 @@ object MySql {
      * 库调的单品搜索
      */
     fun searchAdjustment(date:String, msg:String):String{
-        return "select plu.itemnumber,plu.shipnumber,plu.storeUnitPrice, plu.unitCost,plu.pluname " +
-                ",nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)- " +
-                "nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+ " +
-                "nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+ " +
-                "nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0) as actStockQuantity " +
+        return "select " +
+                "plu.itemnumber,plu.shipnumber,plu.storeUnitPrice, plu.unitCost,plu.pluname," +
+                "nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)- nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+ nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+ nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0) as actStockQuantity," +
                 "plu.storeunitprice,plu.unitcost " +
-                "from plu right join inv on plu.storeID=inv.StoreID right join itemplu on itemplu.storeid=inv.storeid " +
-                "where  inv.StoreID= plu.StoreID  and plu.itemnumber=inv.itemnumber and plu.itemnumber=itemplu.itemnumber " +
+                "from plu " +
+                "right join inv on plu.storeID=inv.StoreID " +
+                "where  inv.StoreID= plu.StoreID  " +
+                "and plu.itemnumber=inv.itemnumber " +
                 "and inv.busidate=to_date('$date','yyyy-MM-dd') " +
                 "AND substr(plu.signType, 9, 1) = 'Y' " +
-                "and (plu.itemnumber='$msg' or plu.pluname like '%$msg%' or itemplu.plunumber='$msg') " +
-                "and rownum=1 " +
-                "order by plu.itemnumber"
+                "and (plu.itemnumber='$msg' or plu.pluname like '%$msg%' or plu.itemnumber = (select itemnumber from itemplu where plunumber='$msg')) " +
+                "and rownum<100 order by plu.itemnumber"
     }
 
     /**

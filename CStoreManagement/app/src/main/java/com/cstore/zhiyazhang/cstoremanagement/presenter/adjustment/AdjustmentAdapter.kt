@@ -29,6 +29,7 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
         holder.adjustmentItemName.text=data[position].itemName
         holder.adjustmentActQty.text=data[position].actStockQTY.toString()
         holder.adjustmentCurrQty.text=data[position].currStockQTY.toString()
+        if (data[position].isClickClear)holder.adjustmentClear.visibility=View.VISIBLE else holder.adjustmentClear.visibility=View.GONE
         if (type==2&&date==nowDate){
             //只有是操作且时间是营业换日时间才允许监听点击
             holder.adjustmentItemBody.setOnClickListener {
@@ -36,11 +37,14 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
                 onClick.onItemClick(holder.adjustmentItemBody,position)
             }
             holder.adjustmentItemBody.setOnLongClickListener {
+                data[position].isClickClear=true
                 holder.adjustmentClear.visibility=View.VISIBLE
                 true
             }
         }
         holder.adjustmentClear.setOnClickListener {
+            data[position].isClickClear=false
+            holder.adjustmentClear.visibility=View.GONE
             removeData(position)
         }
     }

@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     var backCount=0
-    val url="donation.qinheyuzhou.org"
+    private val url="donation.qinheyuzhou.org"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //全屏化

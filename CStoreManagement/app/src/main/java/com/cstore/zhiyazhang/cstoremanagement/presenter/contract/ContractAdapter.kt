@@ -80,7 +80,7 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
                 Glide.with(context).load(cr.detail[position].img_url)
                         .placeholder(R.mipmap.loading)
                         .error(R.mipmap.load_error)
-                        .dontAnimate()
+                        .crossFade()
                         .into(holder.commodifyImg)
                 holder.commodifyImg.setOnClickListener {
                     onTouch.onClickImage(cr.detail[position], position)

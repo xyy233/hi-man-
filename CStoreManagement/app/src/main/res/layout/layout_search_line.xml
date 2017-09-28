@@ -2,13 +2,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/search_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/windowBackground"
     android:elevation="3dp"
-    android:gravity="end"
     android:orientation="horizontal">
+
+    <LinearLayout
+        android:background="@drawable/side_nav_bar"
+        android:id="@+id/search_line_bar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        tools:ignore="UselessParent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,7 +31,7 @@
 
         <EditText
             android:id="@+id/search_edit"
-            android:layout_width="240dp"
+            android:layout_width="270dp"
             android:layout_height="30dp"
             android:layout_marginEnd="25dp"
             android:layout_marginStart="13dp"
@@ -52,5 +60,7 @@
         android:layout_gravity="center"
         android:src="@mipmap/ic_ercode"
         tools:ignore="ContentDescription"/>
+
+    </LinearLayout>
 
 </LinearLayout>
