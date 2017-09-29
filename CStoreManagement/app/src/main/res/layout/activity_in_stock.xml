@@ -8,104 +8,15 @@
     <include
         layout="@layout/toolbar_layout"
         />
-
     <LinearLayout
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:background="@color/white"
+        android:layout_marginTop="6dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:baselineAligned="false">
-        <LinearLayout
-            android:id="@+id/scrap1"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:elevation="5dp"
-            android:background="@color/white"
-            android:transitionName="scrap"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:layout_height="wrap_content"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_scrap"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:contentDescription="@string/scrap"/>
-            <TextView
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:text="@string/scrap1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/scrap2"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:transitionName="scrap"
-            android:elevation="5dp"
-            android:background="@color/white"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:layout_height="wrap_content"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_scrap2"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:contentDescription="@string/scrap"/>
-            <TextView
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:text="@string/scrap2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/inventory_adjustment"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:transitionName="scrap"
-            android:elevation="5dp"
-            android:background="@color/white"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:layout_height="wrap_content"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_inventory_adjustment"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:contentDescription="@string/scrap"/>
-            <TextView
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:text="@string/inventory_adjustment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+        android:background="@color/white"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/inv_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

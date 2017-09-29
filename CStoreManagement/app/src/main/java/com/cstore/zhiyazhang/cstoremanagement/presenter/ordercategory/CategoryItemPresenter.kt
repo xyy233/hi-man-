@@ -21,6 +21,11 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
     private val mInterface: CategoryInterface = CategoryItemModel()
 
     fun getAllItem() {
+        if (cView.nowId=="-1"){
+            gView.errorDealWith()
+            gView.hideLoading()
+            return
+        }
         if (!PresenterUtil.judgmentInternet(gView)) return
         mInterface.getAllItemByCategory(cView.nowId, cView.sort, MyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {

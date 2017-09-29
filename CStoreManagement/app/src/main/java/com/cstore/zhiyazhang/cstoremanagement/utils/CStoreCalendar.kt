@@ -19,6 +19,7 @@ object CStoreCalendar{
     private var data:ArrayList<CStoreCalendarBean>?=null//换日数据
     private var date:String?=null//上一次执行获得换日的日期
     val SUCCESS_MSG="success"
+    val ERROR_MSG2="换日失败！请联系系统部！"
     private val ERROR_MSG="获得换日表失败,请停止操作并退出重进应用或联系系统部"
 
     /**
@@ -65,13 +66,27 @@ object CStoreCalendar{
     }
 
     fun getNowStatus(type:Int):Int{
-        try {
-            data?.filter{it.dateType==type}?.forEach { return it.sceodResult }
-        }catch (e:Exception){
-            Log.e("CStoreCalendar",e.message)
+        if (data!=null){
+            data!!.filter{it.dateType==type}.forEach { return it.sceodResult }
+        }else{
+            MyToast.getLongToast(ERROR_MSG)
         }
-        MyToast.getLongToast(ERROR_MSG)
         return 0
+    }
+
+    /**
+     * 检查状态是否有换日失败的
+     */
+    fun judgmentStatus():Boolean{
+        if (data!=null){
+            data!!.filter {it.sceodResult == 2}.forEach {
+                return false
+            }
+        }else{
+            MyToast.getLongToast(ERROR_MSG)
+            return false
+        }
+        return true
     }
 
     /**
@@ -93,13 +108,10 @@ object CStoreCalendar{
         }
         //时间不对或或换日状态异常就报错
         if (CStoreCalendar.getNowStatus(type)!=0||CStoreCalendar.getCurrentDate(type)!=date){
-            var errorMsg=""
-            if (CStoreCalendar.getNowStatus(type)==1){
-                errorMsg="正在换日中，请等待换日完成！"
-            }else if (CStoreCalendar.getNowStatus(type)==2){
-                errorMsg="换日失败，请停止操作并联系系统部！"
-            }else{
-                errorMsg="当前日期不能进行操作"
+            val errorMsg = when {
+                CStoreCalendar.getNowStatus(type)==1 -> "正在换日中，请等待换日完成！"
+                CStoreCalendar.getNowStatus(type)==2 -> "换日失败，请停止操作并联系系统部！"
+                else -> "当前日期不能进行操作"
             }
             msg.obj=errorMsg
             msg.what= ERROR1

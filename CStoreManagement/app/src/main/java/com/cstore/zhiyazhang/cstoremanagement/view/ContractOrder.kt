@@ -5,16 +5,12 @@ import android.content.Intent
 import android.os.Handler
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
@@ -45,10 +41,10 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
     }
 
     override fun initClick() {
-        val data = ArrayList<OrderData>()
+        val data = ArrayList<LogoBean>()
         setData(data)
         orderRecycler.layoutManager = GridLayoutManager(this@ContractOrder, 3, GridLayoutManager.VERTICAL, false)
-        orderRecycler.adapter = OrderAdapter(data, object : ItemClickListener {
+        orderRecycler.adapter =  LogoAdapter(this@ContractOrder, data, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 when (data[position].position) {
                     0 -> {
@@ -99,10 +95,6 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                 }
             }
 
-            override fun onItemLongClick(view: View, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
         })
         orderLoading.setOnClickListener {
             MyToast.getLongToast(getString(R.string.loadingCall))
@@ -129,38 +121,38 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         }
     }
 
-    private fun setData(data: ArrayList<OrderData>) {
+    private fun setData(data: ArrayList<LogoBean>) {
         //保持顺序，手动插入
         if (User.getUser().cnt == 0) {
-            data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
-            data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
-            data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
-            data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
-            data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
-            data.add(OrderData(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
-            data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
+            data.add(LogoBean(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
+            data.add(LogoBean(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
+            data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
+            data.add(LogoBean(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
+            data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
+            data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
+            data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
         } else {
-            data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
-            data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
-            data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
-            data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
-            data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
-            data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
-            data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
-            data.add(OrderData(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
-            data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
+            data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+            data.add(LogoBean(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
+            data.add(LogoBean(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
+            data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
+            data.add(LogoBean(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
+            data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
+            data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
+            data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
+            data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
         }
 
       //调试使用
-/*            data.add(OrderData(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
-            data.add(OrderData(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
-            data.add(OrderData(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
-            data.add(OrderData(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
-            data.add(OrderData(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
-            data.add(OrderData(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
-            data.add(OrderData(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
-            data.add(OrderData(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
-            data.add(OrderData(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))*/
+/*            data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+            data.add(LogoBean(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
+            data.add(LogoBean(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
+            data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
+            data.add(LogoBean(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
+            data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
+            data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
+            data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
+            data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -179,14 +171,14 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         val handler=Handler()
         Thread(Runnable {
             var result=SocketUtil.initSocket(ip,MySql.judgmentOrdt2).inquire()
-            if (result.contains("orderdate")){
+            if (result.contains("orderdate")||result=="[]"){
                 if (result=="[{\"orderdate\":\""+ MyTimeUtil.tomorrowDate+"\"}]"){
                     //运行完成可以操作
                     handler.post {
                         orderLoading.visibility=View.GONE
                     }
                 }else{
-                    result = SocketUtil.initSocket(ip,MySql.ordT2(),300).inquire()
+                    result = SocketUtil.initSocket(ip,MySql.ordT2(),600).inquire()
                     if (result=="0"){
                         handler.post {
                             orderLoading.visibility=View.GONE
@@ -212,30 +204,6 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         }).start()
     }
 
-    data class OrderData(val img: Int, val msg: String, val position: Int)
-
-    class OrderAdapter(val data: ArrayList<OrderData>, val itemClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-                ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_order, parent, false))
 
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            when (holder) {
-                is ViewHolder -> {
-                    holder.orderImg.setImageResource(data[position].img)
-                    holder.orderMsg.text = data[position].msg
-                    holder.orderItem.setOnClickListener { itemClick.onItemClick(holder.orderItem, position) }
-                }
-            }
-
-        }
-
-        override fun getItemCount(): Int = data.size
-
-        class ViewHolder(itemVIew: View) : RecyclerView.ViewHolder(itemVIew) {
-            val orderImg = itemView.findViewById<ImageView>(R.id.orderImg)
-            val orderMsg = itemView.findViewById<TextView>(R.id.orderMsg)
-            val orderItem = itemView.findViewById<LinearLayout>(R.id.orderItem)
-        }
-    }
 }

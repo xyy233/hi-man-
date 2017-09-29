@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.inventory
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import android.widget.Button
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AdjustmentBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.adjustment.AdjustmentAdapter
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.fragment_adjustment.*
@@ -65,10 +67,14 @@ class InventoryAdjustmentFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adjustment_recycler.layoutManager=MyLinearlayoutManager(mActivity as Context,LinearLayoutManager.VERTICAL,false)
+        val dividerItemDecoration= DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        dividerItemDecoration.setDivider(R.drawable.divider_bg2)
+        adjustment_recycler.addItemDecoration(dividerItemDecoration)
+        adjustment_recycler.itemAnimator= DefaultItemAnimator()
         //在创建的时候传入的data就会相应type==1传该有的值type==2传空list
         adapter=AdjustmentAdapter(type, date, data, object : ItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                mActivity!!.updateDate(view, data[position])
+                mActivity!!.updateDate(data[position])
             }
         })
         adjustment_recycler.adapter=adapter

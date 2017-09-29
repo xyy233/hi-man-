@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.annotation.SuppressLint
+import android.os.Handler
 import android.widget.Toast
 
 /**
@@ -10,6 +11,7 @@ import android.widget.Toast
 
 object MyToast {
     private var toast: Toast? = null
+    private val handler=Handler()
 
     @SuppressLint("ShowToast")
     fun getShortToast(msg: String) {
@@ -19,7 +21,7 @@ object MyToast {
             toast!!.setText(msg)
             toast!!.duration = Toast.LENGTH_SHORT
         }
-        toast!!.show()
+        handler.run { toast!!.show() }
     }
 
     @SuppressLint("ShowToast")
@@ -30,6 +32,6 @@ object MyToast {
             toast!!.setText(msg)
             toast!!.duration = Toast.LENGTH_LONG
         }
-        toast!!.show()
+        handler.run { toast!!.show() }
     }
 }

@@ -194,7 +194,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     /**
      * 返回true 表示可以使用  返回false表示不可以使用
      */
-    fun cameraIsCanUse(): Boolean {
+    private fun cameraIsCanUse(): Boolean {
         var isCanUse = true
         var mCamera: Camera? = null
         try {
@@ -219,7 +219,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
     //获得相机权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
-    fun judgmentPermissions(): Boolean {
+    private fun judgmentPermissions(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, getString(R.string.openCamera), 1, *perms)

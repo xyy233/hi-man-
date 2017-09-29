@@ -89,7 +89,7 @@ internal class SocketUtil  {
         }
 
         /**
-         * 初始化Socket，附带设置等待时间
+         * 初始化Socket，附带设置等待时间,时间是以秒为单位
          */
         fun initSocket(ip: String, message: String, loadingTime:Int): SocketUtil {
             return SocketUtil(ip, message, loadingTime)

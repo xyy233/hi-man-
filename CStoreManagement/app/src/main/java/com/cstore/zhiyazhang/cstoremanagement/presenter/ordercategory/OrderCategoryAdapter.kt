@@ -70,11 +70,13 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
             inventory_h.text = ocb.allSku.toString()
             tonightCount_h.text = ocb.ordSku.toString()
             todayCount_h.text = ocb.ordPrice.toString()
-            if (ocb.ordSku != 0) {
-                type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
-                type_tag_h.visibility = View.VISIBLE
-            } else {
-                type_tag_h.visibility = View.GONE
+            when {
+                ocb.categoryId=="-1" -> type_tag_h.visibility = View.GONE
+                ocb.ordSku != 0 -> {
+                    type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
+                    type_tag_h.visibility = View.VISIBLE
+                }
+                else -> type_tag_h.visibility = View.GONE
             }
             setOnClickListener { listener(ocb) }
         }

@@ -3,6 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:gravity="center"
+              android:elevation="2dp"
               android:id="@+id/orderItem"
               android:foreground="@drawable/selector_foreground"
               android:stateListAnimator="@drawable/lift_on_touch"

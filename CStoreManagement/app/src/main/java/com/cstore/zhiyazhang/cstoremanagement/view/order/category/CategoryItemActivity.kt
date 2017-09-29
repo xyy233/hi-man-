@@ -29,7 +29,6 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemVie
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.google.gson.Gson
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_contract.*
 import kotlinx.android.synthetic.main.layout_search_title.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -43,38 +42,31 @@ import java.io.Serializable
 class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), GenericView, CategoryItemView, EasyPermissions.PermissionCallbacks {
 
     override var nowMidId: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
 
     override var nowId: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
 
-
-    //订量倒序
-    private val TODAY_SORT_DESC = "order by x.ordActualQuantity desc"
-    //品号倒序
-    private val COMMODIFY_ID_SORT_DESC = "order by x.itemNumber desc"
-    //品名倒序
-    private val COMMODIFY_NAME_SORT_DESC = "order by x.pluName desc"
-    //价格倒序
-    private val MONEY_SORT_DESC = "order by x.storeUnitPrice desc"
-    //订量正序
-    private val TODAY_SORT = "order by x.ordActualQuantity"
-    //品号正序
-    private val COMMODIFY_ID_SORT = "order by x.itemNumber"
-    //品名正序
-    private val COMMODIFY_NAME_SORT = "order by x.pluName"
-    //价格正序
-    private val MONEY_SORT = "order by x.storeUnitPrice"
-    //DMS销量正序
-    private val DMS_SORT = " order by x.dms "
-    //DMS销量倒序
-    private val DMS_SORT_DESC = " order by x.dms desc"
+    companion object {
+        //订量倒序
+        private val TODAY_SORT_DESC = "order by x.ordActualQuantity desc"
+        //品号倒序
+        private val COMMODIFY_ID_SORT_DESC = "order by x.itemNumber desc"
+        //品名倒序
+        private val COMMODIFY_NAME_SORT_DESC = "order by x.pluName desc"
+        //价格倒序
+        private val MONEY_SORT_DESC = "order by x.storeUnitPrice desc"
+        //订量正序
+        private val TODAY_SORT = "order by x.ordActualQuantity"
+        //品号正序
+        private val COMMODIFY_ID_SORT = "order by x.itemNumber"
+        //品名正序
+        private val COMMODIFY_NAME_SORT = "order by x.pluName"
+        //价格正序
+        private val MONEY_SORT = "order by x.storeUnitPrice"
+        //DMS销量正序
+        private val DMS_SORT = " order by x.dms "
+        //DMS销量倒序
+        private val DMS_SORT_DESC = " order by x.dms desc"
+    }
 
     private var isBack = false
     private val changeData = ArrayList<CategoryItemBean>()//修改的数据
@@ -272,11 +264,10 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             "search" -> mySpinner.visibility = View.GONE
             "unitord" -> mySpinner.visibility = View.GONE
             else -> {
-                var sortAdapter: ArrayAdapter<String>? = null
-                if (whereIsIt == "self") {
-                    sortAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySort))
+                val sortAdapter = if (whereIsIt == "self") {
+                    ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySort))
                 } else {
-                    sortAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySortDMS))
+                    ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.mySortDMS))
                 }
                 sortAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
                 mySpinner.adapter = sortAdapter
@@ -316,7 +307,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         }
     }
 
-    fun goNext() {
+    private fun goNext() {
         my_swipe.isRefreshing=true
         isNext = false
         when (whereIsIt) {
@@ -401,7 +392,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         if (my_swipe.isEnabled) getData()
     }
 
-    fun goLast() {
+    private fun goLast() {
         my_swipe.isRefreshing=true
         isLast = false
         when (whereIsIt) {
@@ -563,18 +554,20 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.changeCount = 0
         }
         changeData.clear()
-        if (isBack) {
-            hideLoading()
-            super.onBackPressed()
-        }
-        else if (isNext) {
-            showPrompt(getString(R.string.saveDone))
-            goNext()
-        } else if (isLast) {
-            showPrompt(getString(R.string.saveDone))
-            goLast()
-        } else {
-            when (whereIsIt) {
+        when {
+            isBack -> {
+                hideLoading()
+                super.onBackPressed()
+            }
+            isNext -> {
+                showPrompt(getString(R.string.saveDone))
+                goNext()
+            }
+            isLast -> {
+                showPrompt(getString(R.string.saveDone))
+                goLast()
+            }
+            else -> when (whereIsIt) {
                 "search" -> {
                     showPrompt(getString(R.string.saveDone))
                     hideLoading()
@@ -644,8 +637,8 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         onTouchChange(0, event.action, adapterView, cb)
     }
 
-    var mt: Thread? = null
-    var pt: Thread? = null
+    private var mt: Thread? = null
+    private var pt: Thread? = null
     var hd: Handler? = null
     var isOnLongClick = false
     private fun onTouchChange(addLess: Int, action: Int, view: CategoryItemAdapter.ViewHolder, cb: CategoryItemBean) {
@@ -796,7 +789,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     //获得相机权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
-    fun judgmentCarmer(): Boolean {
+    private fun judgmentCarmer(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, "请打开权限以操作扫描更新", 1, *perms)
@@ -809,7 +802,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     /**
      * 返回true 表示可以使用  返回false表示不可以使用
      */
-    fun cameraIsCanUse(): Boolean {
+    private fun cameraIsCanUse(): Boolean {
         var isCanUse = true
         var mCamera: Camera? = null
         try {

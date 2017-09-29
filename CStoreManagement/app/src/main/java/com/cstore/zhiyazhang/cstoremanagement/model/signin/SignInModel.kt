@@ -50,9 +50,15 @@ class SignInModel : SignInInterface {
                 }
                 val calendar = CStoreCalendar.setCStoreCalendar()
                 if (calendar == CStoreCalendar.SUCCESS_MSG) {
-                    msg.obj = users[0]
-                    msg.what = SUCCESS
-                    myHandler.sendMessage(msg)
+                    if (!CStoreCalendar.judgmentStatus()){
+                        msg.obj = CStoreCalendar.ERROR_MSG2
+                        msg.what = ERROR1
+                        myHandler.sendMessage(msg)
+                    }else{
+                        msg.obj = users[0]
+                        msg.what = SUCCESS
+                        myHandler.sendMessage(msg)
+                    }
                 } else {
                     msg.obj = calendar
                     msg.what = ERROR1

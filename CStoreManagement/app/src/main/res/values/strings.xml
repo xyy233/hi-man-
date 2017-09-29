@@ -101,7 +101,7 @@
     <string name="self_value">自用品项目</string>
     <string name="nop_value">促销品及新品项目</string>
     <string name="promotion">促销品</string>
-    <string name="loadingCall">请耐心等候操作完成，预计时间2分钟</string>
+    <string name="loadingCall">请耐心等候操作完成，预计时间5分钟</string>
     <string name="wait_loading">请耐心等候运行结束</string>
     <string name="noSaveMessage">无要保存的数据</string>
     <string name="last">上一个</string>

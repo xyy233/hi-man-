@@ -1,11 +1,11 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.adjustment
 
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AdjustmentBean
@@ -21,7 +21,7 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
     private var nowDate:String = CStoreCalendar.getCurrentDate(0)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_adjustment, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_adjustment2, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -29,6 +29,7 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
         holder.adjustmentItemName.text=data[position].itemName
         holder.adjustmentActQty.text=data[position].actStockQTY.toString()
         holder.adjustmentCurrQty.text=data[position].currStockQTY.toString()
+        if (type==1)data[position].isClickClear=false
         if (data[position].isClickClear)holder.adjustmentClear.visibility=View.VISIBLE else holder.adjustmentClear.visibility=View.GONE
         if (type==2&&date==nowDate){
             //只有是操作且时间是营业换日时间才允许监听点击
@@ -67,7 +68,7 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
     }
 
     class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
-        val adjustmentItemBody=itemView.findViewById<CardView>(R.id.adjustment_item_body)!!
+        val adjustmentItemBody=itemView.findViewById<LinearLayout>(R.id.adjustment_item_body)!!
         val adjustmentItemId=itemView.findViewById<TextView>(R.id.adjustment_item_id)!!
         val adjustmentItemName=itemView.findViewById<TextView>(R.id.adjustment_item_name)!!
         val adjustmentActQty=itemView.findViewById<TextView>(R.id.adjustment_act_qty)!!

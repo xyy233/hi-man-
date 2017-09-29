@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.acceptance
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -43,7 +44,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
         MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(3))
         setSupportActionBar(my_toolbar)
         orderRecycler.layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceActivity, LinearLayout.VERTICAL, false)
-        val dividerItemDecoration=DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST)
+        val dividerItemDecoration=DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         dividerItemDecoration.setDivider(R.drawable.divider_bg)
         orderRecycler.addItemDecoration(dividerItemDecoration)
         orderRecycler.itemAnimator= DefaultItemAnimator()

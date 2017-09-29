@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 
 /**
@@ -64,7 +65,7 @@ object MySql {
      * 获得大类信息
      */
     fun getAllCategory(): String {
-        return "select plu.categoryNumber,cat.categoryName,count(*) tot_sku," +
+        /*return "select plu.categoryNumber,cat.categoryName,count(*) tot_sku," +
                 "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku," +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate " +
                 "from cat,plu,ord,cat cat1 " +
@@ -84,7 +85,51 @@ object MySql {
                 "AND trim(cat1.microCategoryNumber) is null " +
                 "AND cat1.GROUP_YN='N' AND cat.categoryNumber<>'99' " +
                 "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName " +
-                "order by PLU.CATEGORYNUMBER\u0004"
+                "order by PLU.CATEGORYNUMBER\u0004"*/
+        return "select plu.categoryNumber,cat.categoryName, " +
+                "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
+                "from cat,plu,ord,cat cat1  " +
+                "WHERE cat.storeid='${User.getUser().storeId}'  " +
+                "AND trim(cat.categoryNumber) is not null  " +
+                "AND trim(cat.midcategoryNumber) is null  " +
+                "AND trim(cat.microcategoryNumber) is null  " +
+                "AND plu.storeID=cat.storeID  " +
+                "AND plu.categoryNumber=cat.categoryNumber  " +
+                "AND plu.storeID=ord.storeID  " +
+                "AND plu.itemNumber=ord.itemNumber  " +
+                "AND ord.orderDate=to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  " +
+                "AND plu.storeID=cat1.storeID  " +
+                "AND plu.categoryNumber=cat1.categoryNumber  " +
+                "AND plu.midCategoryNumber=cat1.midCategoryNumber  " +
+                "AND trim(cat1.midCategoryNumber) is not null  " +
+                "AND trim(cat1.microCategoryNumber) is null  " +
+                "AND cat1.GROUP_YN='N'  " +
+                "AND cat.categoryNumber<>'99'  " +
+                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName  " +
+                "union all " +
+                "select '-1' categorynumber, '一览统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+                "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
+                "from cat,plu,ord,cat cat1  " +
+                "WHERE cat.storeid='${User.getUser().storeId}'  " +
+                "AND trim(cat.categoryNumber) is not null  " +
+                "AND trim(cat.midcategoryNumber) is null  " +
+                "AND trim(cat.microcategoryNumber) is null  " +
+                "AND plu.storeID=cat.storeID  " +
+                "AND plu.categoryNumber=cat.categoryNumber  " +
+                "AND plu.storeID=ord.storeID  " +
+                "AND plu.itemNumber=ord.itemNumber  " +
+                "AND ord.orderDate=to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  " +
+                "AND plu.storeID=cat1.storeID  " +
+                "AND plu.categoryNumber=cat1.categoryNumber  " +
+                "AND plu.midCategoryNumber=cat1.midCategoryNumber  " +
+                "AND trim(cat1.midCategoryNumber) is not null  " +
+                "AND trim(cat1.microCategoryNumber) is null  " +
+                "AND cat1.GROUP_YN='N'  " +
+                "AND cat.categoryNumber<>'99'  " +
+                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName) " +
+                "order by CATEGORYNUMBER"
     }
 
     /**

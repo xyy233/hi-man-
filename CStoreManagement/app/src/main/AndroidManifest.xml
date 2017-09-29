@@ -116,7 +116,7 @@
                   android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <!--成本投资-->
-        <activity android:name=".view.coi.COIActivity"
+        <activity android:name=".view.COIActivity"
                   android:screenOrientation="portrait"/>
 
         <!--库存调整-->
