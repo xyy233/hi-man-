@@ -3,4 +3,5 @@
     <string name="edit_url">请输入网址</string>
     <string name="go">进入</string>
     <string name="adm">传递ADM</string>
+    <string name="back">退出</string>
 </resources>

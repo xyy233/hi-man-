@@ -101,29 +101,29 @@ internal class SocketUtil  {
         fun judgmentIP(ip: String, msg: Message, handler: MyHandler.MyHandler): Boolean {
 
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
-            if (wifiName == null || wifiName == ""){
+            return if (wifiName == null || wifiName == ""){
                 msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
                 msg.what = MyHandler.ERROR1
                 handler.sendMessage(msg)
-                return false
+                false
             }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
                 msg.what = MyHandler.ERROR1
                 handler.sendMessage(msg)
-                return false
-            }else return true
+                false
+            }else true
         }
 
         /**
          * 判断得到的数据是否有值
          */
         fun judgmentNull(data: String, msg: Message, handler: MyHandler.MyHandler): Boolean {
-            if (data == "" || data == "[]") {
+            return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = MyHandler.ERROR1
                 handler.sendMessage(msg)
-                return false
-            }else return true
+                false
+            }else true
         }
 
         fun getUser(data:String):ArrayList<User>{

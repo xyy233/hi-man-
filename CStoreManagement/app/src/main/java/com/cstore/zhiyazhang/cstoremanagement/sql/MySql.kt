@@ -49,7 +49,7 @@ object MySql {
      * 获得大类信息的存储过程
      */
     fun ordT2(): String {
-        return "call scb02_new_p01('${MyTimeUtil.tomorrowDate}','${MyTimeUtil.tomorrowDate}','0')\u000c"
+        return "c0c"
     }
 
     /**
@@ -76,7 +76,7 @@ object MySql {
                 "AND plu.storeID=cat.storeID " +
                 "AND plu.categoryNumber=cat.categoryNumber " +
                 "AND plu.storeID=ord.storeID " +
-                "AND plu.itemNumber=ord.itemNumber " +
+                "AND plu.itemNumber=ord.itemNumber " +all scb02_new_p01('${MyTimeUtil.tomorrowDate}','${MyTimeUtil.tomorrowDate}','0')\u00
                 "AND ord.orderDate=to_date('${MyTimeUtil.tomorrowDate}','YYYY-MM-DD') " +
                 "AND plu.storeID=cat1.storeID " +
                 "AND plu.categoryNumber=cat1.categoryNumber " +
@@ -250,7 +250,7 @@ object MySql {
     val getNewItemId: String
         get() {
             return "select * from (select distinct in_th_code,'第'|| in_th_code ||'期' as title, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt " +
-                    "from (select substr(p.in_th_code,1,3) in_th_code, " +
+            "from (select substr(p.in_th_code,1,3) in_th_code, " +
                     "count(*) tot_sku, " +
                     "sum(decode(sign(p.ordactualquantity+p.ordactualquantity1),1,1,0)) ord_sku, " +
                     "sum((p.ordactualquantity+p.ordactualquantity1)*p.storeunitprice) amt " +

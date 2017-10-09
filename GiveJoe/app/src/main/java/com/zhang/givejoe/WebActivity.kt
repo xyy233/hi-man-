@@ -1,7 +1,6 @@
 package com.zhang.givejoe
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.*
 import kotlinx.android.synthetic.main.activity_web.*
-
 
 
 /**
@@ -85,11 +83,17 @@ class WebActivity : AppCompatActivity() {
         }*/
         click()
         my_web.loadUrl(url)
+        //operateSystemNavigation(false)
     }
 
+    @SuppressLint("ShowToast")
     private fun click() {
         refresh.setOnClickListener {
             my_web.loadUrl(my_web.url)
+        }
+        back.setOnClickListener {
+            onBackPressed()
+            //operateSystemNavigation(true)
         }
         my_web.setIWebViewScroll(object : cbWebView.IWebViewScroll {
             override fun onNotTop() {
@@ -142,39 +146,44 @@ class WebActivity : AppCompatActivity() {
             return true
         }
     }
-/*
-    private var mWakeLock:PowerManager.WakeLock?=null
-    override fun onResume() {
-        super.onResume()
-        val pManager= (getSystemService(POWER_SERVICE) as PowerManager)
-        mWakeLock = pManager.newWakeLock(PowerManager.ON_AFTER_RELEASE, TAG)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (mWakeLock!=null){
-            mWakeLock!!.release()
-        }
-    }*/
-
-    override fun onStart() {
-        super.onStart()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.startLockTask()
-        }
-    }
 
     override fun onBackPressed() {
-        my_web.goBack()
-        backCount++
-        if (backCount == 10) {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    this.stopLockTask()
-                }
-            }catch (e:Exception){}
             my_web.destroy()
             super.onBackPressed()
-        }
     }
+/*
+    *//**
+     * 隐藏或者显示系统下面的导航栏 true为显示。false为隐藏
+     *
+     * @param flag
+     *//*
+    private fun operateSystemNavigation(flag: Boolean) {
+        *//**
+         * droid_5159_hide_systemBar 导航栏显示与隐藏的KEY status 0 隐藏 ，1显示
+         *//*
+        //		getWindow().getDecorView().setSystemUiVisibility(
+        //				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        //						| View.SYSTEM_UI_FLAG_FULLSCREEN);
+        val status = Settings.System.getInt(contentResolver,
+                "droid_5159_hide_systemBar", 1)
+        if (flag) {
+            if (status != 0) {
+                // 如果是隐藏 ,即该软件是全屏状态，不做处理；保持系统当前的bar状态
+                return
+            }
+            Settings.System.putInt(contentResolver,
+                    "droid_5159_hide_systemBar", 1)
+        } else {
+            if (status == 0) {
+                // 如果是隐藏 ,即该软件是全屏状态，不做处理；保持系统当前的bar状态
+                return
+            }
+            Settings.System.putInt(contentResolver,
+                    "droid_5159_hide_systemBar", 0)
+        }
+
+        val intent = Intent("rk.android.systemBar.SHOW")
+        intent.putExtra("display", flag)
+        this.sendBroadcast(intent)
+    }*/
 }

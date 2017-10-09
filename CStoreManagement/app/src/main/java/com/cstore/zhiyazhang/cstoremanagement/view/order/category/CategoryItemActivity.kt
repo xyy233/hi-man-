@@ -78,7 +78,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     private var isLast = false
 
     override fun initView() {
-        my_swipe.setProgressViewEndTarget(true, 300)
         toolbar.setNavigationIcon(R.drawable.ic_action_back)
         when (whereIsIt) {
             "category" -> {
@@ -125,6 +124,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         appbar.addOnOffsetChangedListener { _, verticalOffset ->
             my_swipe.isEnabled = verticalOffset >= 0
         }
+        my_swipe.setProgressViewEndTarget(true, 300)
         swipe_recycler.layoutManager = layoutManager
         initSort()
         initSearch()
@@ -316,8 +316,13 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {
                         if (i == itemIdData.size - 1) {
-                            nowId = itemIdData[0].categoryId
-                            toolbar.title = itemIdData[0].categoryName
+                            if (itemIdData[i].categoryId=="-1"){
+                                nowId = itemIdData[1].categoryId
+                                toolbar.title = itemIdData[1].categoryName
+                            }else{
+                                nowId = itemIdData[0].categoryId
+                                toolbar.title = itemIdData[0].categoryName
+                            }
                         } else {
                             nowId = itemIdData[i + 1].categoryId
                             toolbar.title = itemIdData[i + 1].categoryName
@@ -400,7 +405,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {
-                        if (i == 0) {
+                        if (i == 1) {
                             nowId = itemIdData[itemIdData.size - 1].categoryId
                             toolbar.title = itemIdData[itemIdData.size - 1].categoryName
                         } else {
