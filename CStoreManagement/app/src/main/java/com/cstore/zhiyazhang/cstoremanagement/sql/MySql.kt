@@ -108,7 +108,7 @@ object MySql {
                 "AND cat.categoryNumber<>'99'  " +
                 "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName  " +
                 "union all " +
-                "select '-1' categorynumber, '一览统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+                "select '-1' categorynumber, '统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
                 "from cat,plu,ord,cat cat1  " +
@@ -147,6 +147,20 @@ object MySql {
                 "and x.itemnumber = p.itemnumber(+) " +
                 "and x.categorynumber like '$categoryId' " +
                 "and x.midCategoryNumber like '%' " +
+                "AND Fresh_YN='N' $sort\u0004"
+    }
+    
+    fun getItemByEditCategory(sort:String):String{
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, " +
+                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
+                "substr(p.signType,12,1) s_returntype, " +
+                "round(p.storeunitprice,2) storeunitprice " +
+                "From ord_t2 x,plu p, " +
+                "(select itemnumber item_no from itemgondra where storeid='111112' and gondranumber like '%' " +
+                "group by itemnumber) y " +
+                "where x.itemnumber= y.item_no(+) " +
+                "and x.itemnumber = p.itemnumber(+)  " +
+                "and x.ordactualquantity!=0 " +
                 "AND Fresh_YN='N' $sort\u0004"
     }
 

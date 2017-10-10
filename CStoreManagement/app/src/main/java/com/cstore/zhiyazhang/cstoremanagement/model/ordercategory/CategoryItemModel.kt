@@ -3,17 +3,18 @@ package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
  * on 2017/7/27 16:22.
  */
 class CategoryItemModel : CategoryInterface {
+
     /**
      * 通过categoryId获得item
      */
@@ -22,7 +23,11 @@ class CategoryItemModel : CategoryInterface {
             val msg=Message()
             val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,MySql.getItemByCategoryId(categoryId,orderBy)).inquire()
+
+            val result=
+                    if (categoryId=="-1")SocketUtil.initSocket(ip,MySql.getItemByEditCategory(orderBy)).inquire()
+                    else SocketUtil.initSocket(ip,MySql.getItemByCategoryId(categoryId,orderBy)).inquire()
+
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
 
             val items=ArrayList<CategoryItemBean>()

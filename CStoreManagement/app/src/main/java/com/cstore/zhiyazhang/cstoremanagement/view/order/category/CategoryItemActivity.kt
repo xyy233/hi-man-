@@ -135,20 +135,20 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             if (my_swipe.isEnabled) getData()
         }
         done.setOnClickListener {
-            if (MyTimeUtil.nowHour<18){
+            if (MyTimeUtil.nowHour < 18) {
                 changeData.removeAll(changeData.filter { it.changeCount == 0 })
                 if (changeData.size == 0) {
                     showPrompt(getString(R.string.no_edit_msg))
                     return@setOnClickListener
                 }
                 presenter.updateAllCategory()
-            }else{
+            } else {
                 showPrompt("超出订货时间，不能保存")
             }
         }
         order_item_next.setOnClickListener {
-            my_swipe.isRefreshing=true
-            if (MyTimeUtil.nowHour>18){
+            my_swipe.isRefreshing = true
+            if (MyTimeUtil.nowHour > 18) {
                 goNext()
                 return@setOnClickListener
             }
@@ -168,7 +168,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             else goNext()
         }
         order_item_last.setOnClickListener {
-            if (MyTimeUtil.nowHour>18){
+            if (MyTimeUtil.nowHour > 18) {
                 goLast()
                 return@setOnClickListener
             }
@@ -308,7 +308,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     }
 
     private fun goNext() {
-        my_swipe.isRefreshing=true
+        my_swipe.isRefreshing = true
         isNext = false
         when (whereIsIt) {
             "category" -> {
@@ -316,13 +316,8 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {
                         if (i == itemIdData.size - 1) {
-                            if (itemIdData[i].categoryId=="-1"){
-                                nowId = itemIdData[1].categoryId
-                                toolbar.title = itemIdData[1].categoryName
-                            }else{
-                                nowId = itemIdData[0].categoryId
-                                toolbar.title = itemIdData[0].categoryName
-                            }
+                            nowId = itemIdData[0].categoryId
+                            toolbar.title = itemIdData[0].categoryName
                         } else {
                             nowId = itemIdData[i + 1].categoryId
                             toolbar.title = itemIdData[i + 1].categoryName
@@ -382,7 +377,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                     if (itemIdData[i].categoryId == nowId && itemIdData[i].midId == nowMidId) {
                         if (i == itemIdData.size - 1) {
                             nowId = itemIdData[0].categoryId
-                            nowMidId=itemIdData[0].midId
+                            nowMidId = itemIdData[0].midId
                             toolbar.title = itemIdData[0].name
                         } else {
                             nowId = itemIdData[i + 1].categoryId
@@ -398,14 +393,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     }
 
     private fun goLast() {
-        my_swipe.isRefreshing=true
+        my_swipe.isRefreshing = true
         isLast = false
         when (whereIsIt) {
             "category" -> {
                 val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {
-                        if (i == 1) {
+                        if (i == 0) {
                             nowId = itemIdData[itemIdData.size - 1].categoryId
                             toolbar.title = itemIdData[itemIdData.size - 1].categoryName
                         } else {
@@ -494,7 +489,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     }
 
     private fun judgmentUpdate() {
-        if (MyTimeUtil.nowHour>18){
+        if (MyTimeUtil.nowHour > 18) {
             super.onBackPressed()
             return
         }
@@ -589,19 +584,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         }
     }
 
-    private fun saveCategory() {
-        val preferences = getSharedPreferences("cib", Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString("categoryId", changeCategory!!.categoryId)
-        editor.putInt("ordSku", changeCategory!!.ordSku)
-        //editor.putInt("ordPrice", changeCategory!!.ordPrice)
-        editor.apply()
-    }
-
-    override fun <T> requestSuccess(rData: T) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun showLoading() {
         my_swipe.isRefreshing = true
         order_item_next.isEnabled = false
@@ -659,7 +641,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         if (addLess == 0) {//less
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if(!isOnLongClick){
+                    if (!isOnLongClick) {
                         mt = object : Thread(Runnable {
                             while (isOnLongClick) {
                                 Thread.sleep(200)
@@ -672,7 +654,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                     }
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (mt != null){
+                    if (mt != null) {
                         isOnLongClick = false
                         runOrStopEdit()
                         mt = null
