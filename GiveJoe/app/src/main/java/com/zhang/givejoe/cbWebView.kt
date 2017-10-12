@@ -6,25 +6,21 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.webkit.WebView
+import org.xwalk.core.XWalkNavigationHistory
+import org.xwalk.core.XWalkView
 
 /**
  * Created by zhiya.zhang
  * on 2017/9/20 17:07.
  */
 
-class cbWebView : WebView {
+class cbWebView : XWalkView {
 
     private var gestureDetector: GestureDetector? = null
     private var cb: Context? = null
     private var mIWeb:IWebViewScroll?=null
 
     constructor(context: Context) : super(context) {
-        cb = context
-        gestureDetector = GestureDetector(this.context,
-                onGestureListener)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
         cb = context
         gestureDetector = GestureDetector(this.context,
                 onGestureListener)
@@ -52,7 +48,7 @@ class cbWebView : WebView {
 
             if (x > 500) {
                 // 右滑 事件
-                this@cbWebView.goBack()
+                this@cbWebView.navigationHistory.navigate(XWalkNavigationHistory.Direction.BACKWARD, 1)
             }
 
             return true
