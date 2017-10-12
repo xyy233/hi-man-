@@ -229,13 +229,33 @@
                     android:text="@string/in_stock"/>
 
             </LinearLayout>
-
             <LinearLayout
+                android:id="@+id/gg8"
                 android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
-                tools:ignore="UselessLeaf"/>
+                android:background="@color/white"
+                android:elevation="3dp"
+                android:foreground="@drawable/selector_foreground"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:transitionName="gg7"
+                android:stateListAnimator="@drawable/lift_on_touch"
+                tools:ignore="NestedWeights">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/train"
+                    android:src="@drawable/no_img"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/personnel"/>
+
+            </LinearLayout>
             <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -118,7 +118,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     }
 
     override fun hideLoading() {
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         progress.visibility = View.GONE
         wifi_hints.visibility = View.VISIBLE
         login.isEnabled = true

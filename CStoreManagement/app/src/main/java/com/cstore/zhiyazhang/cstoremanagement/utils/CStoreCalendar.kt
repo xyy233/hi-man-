@@ -4,7 +4,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -99,7 +99,7 @@ object CStoreCalendar{
     /**
      * 判断是否能执行创建或修改操作
      */
-    fun judgmentCalender(date:String, msg: Message, handler: MyHandler.MyHandler, type:Int):Boolean{
+    fun judgmentCalender(date:String, msg: Message, handler: MyHandler.OnlyMyHandler, type:Int):Boolean{
         if (CStoreCalendar.setCStoreCalendar()!= SUCCESS_MSG){
             msg.obj= ERROR_MSG
             msg.what= ERROR1

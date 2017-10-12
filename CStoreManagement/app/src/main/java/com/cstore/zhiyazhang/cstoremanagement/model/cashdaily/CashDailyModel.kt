@@ -6,8 +6,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.cashdaily.CashDailyFragment
 
@@ -16,7 +16,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.cashdaily.CashDailyFragment
  * on 2017/9/5 9:25.
  */
 class CashDailyModel:CashDailyInterface{
-    override fun getAllCashDaily(date: String, handler: MyHandler.MyHandler) {
+    override fun getAllCashDaily(date: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -53,7 +53,7 @@ class CashDailyModel:CashDailyInterface{
         }).start()
     }
 
-    override fun updateCashDaily(date: String, value: String, cd: CashDailyBean, handler: MyHandler.MyHandler) {
+    override fun updateCashDaily(date: String, value: String, cd: CashDailyBean, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -81,7 +81,7 @@ class CashDailyModel:CashDailyInterface{
 }
 
 interface CashDailyInterface{
-    fun getAllCashDaily(date:String, handler:MyHandler.MyHandler)
+    fun getAllCashDaily(date:String, handler:MyHandler.OnlyMyHandler)
 
-    fun updateCashDaily(date:String, value:String, cd:CashDailyBean,handler:MyHandler.MyHandler)
+    fun updateCashDaily(date:String, value:String, cd:CashDailyBean,handler:MyHandler.OnlyMyHandler)
 }

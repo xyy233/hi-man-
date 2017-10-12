@@ -10,7 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.acceptance.AcceptanceModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
@@ -26,7 +26,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun getAcceptanceList(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getAcceptanceList(date, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getAcceptanceList(date, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -44,7 +44,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun getReturnAcceptanceList(date:String){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getReturnAcceptanceList(date, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getReturnAcceptanceList(date, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -62,7 +62,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun updateAcceptance(date:String, ab:AcceptanceBean){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.updateAcceptance(date, ab, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.updateAcceptance(date, ab, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
                 gView.updateDone(data)
@@ -80,7 +80,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun updateReturnAcceptance(date:String, rab:ReturnAcceptanceBean){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.updateReturnAcceptance(date, rab, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.updateReturnAcceptance(date, rab, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
                 gView.updateDone(data)
@@ -98,7 +98,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun getVendor(){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getVendor(MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getVendor(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -116,7 +116,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun getCommodity(ab: AcceptanceBean?, vendorId:String){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getCommodity(ab, vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getCommodity(ab, vendorId, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -131,7 +131,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
 
     fun getReturnCommodity(rab:ReturnAcceptanceBean?,vendorId: String){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.getReturnCommodity(rab, vendorId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.getReturnCommodity(rab, vendorId, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -149,7 +149,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun createAcceptance(date:String, ab: AcceptanceBean?,aib:ArrayList<AcceptanceItemBean>){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.createAcceptance(date,ab,aib, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.createAcceptance(date,ab,aib, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
                 gView.hideLoading()
@@ -167,7 +167,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val co
      */
     fun createReturnAcceptance(date:String, rab:ReturnAcceptanceBean?, raib:ArrayList<ReturnAcceptanceItemBean>){
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.createReturnAcceptance(date, rab, raib, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        model.createReturnAcceptance(date, rab, raib, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
                 gView.hideLoading()

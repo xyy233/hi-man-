@@ -56,8 +56,7 @@ class ContractSearchActivity : AppCompatActivity() {
     private var analyzeCallback: CodeUtils.AnalyzeCallback = object : CodeUtils.AnalyzeCallback {
         override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
             val datas=result.split("|")
-            var data=""
-            data = if (datas.size>1){
+            val data = if (datas.size>1){
                 datas[datas.size-1]
             }else{
                 result

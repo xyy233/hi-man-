@@ -1,4 +1,4 @@
-package com.cstore.zhiyazhang.cstoremanagement.view.scrap
+package com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap
 
 import android.os.Handler
 import android.support.v4.content.ContextCompat
@@ -28,14 +28,10 @@ import kotlinx.android.synthetic.main.activity_contract.*
 class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), GenericView {
 
     val presenter = ScrapHotPresenter(this, this)
-    val hotMid: ArrayList<ScrapHotBean>
+    private val hotMid: ArrayList<ScrapHotBean>
         get() = intent.getSerializableExtra("hotMid") as ArrayList<ScrapHotBean>
     var nowPosition: Int = 0
-        get() = field
-        set(value) {
-            field = value
-        }
-    val changeData = ArrayList<ScrapContractBean>()
+    private val changeData = ArrayList<ScrapContractBean>()
     /**
      * 0==none 1==finish 2==next 3==last
      */
@@ -324,7 +320,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
@@ -332,7 +328,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun <T> showView(aData: T) {

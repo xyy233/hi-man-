@@ -76,7 +76,7 @@ class ContractModel : ContractInterface {
         val nowList = cbs as ArrayList<ContractBean>//使用一个新的list
         try {
             if (nowList.size>1){
-                for (i in 0..nowList.size - 1) {//遍历list
+                for (i in 0 until nowList.size) {//遍历list
                     (nowList.size - 1 downTo i + 1)//遍历内部遍历一遍
                             .filter { nowList[i].cId == nowList[it].cId }//查到品号相等的
                             .forEach { nowList.removeAt(it) }//遍历删掉

@@ -18,6 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.personnel.PersonnelActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -88,6 +89,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         gg7.setOnClickListener {
             startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg3").toBundle())
+        }
+        gg8.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg8, "gg3").toBundle())
         }
     }
 

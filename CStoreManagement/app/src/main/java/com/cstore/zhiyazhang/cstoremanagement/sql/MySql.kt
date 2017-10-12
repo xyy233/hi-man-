@@ -39,7 +39,7 @@ object MySql {
      * *
      * @return 新的sql语句
      */
-    fun SignIn(uid: String): String {
+    fun signIn(uid: String): String {
         return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr from employee A,store B) where employeeid='$uid'\u0004"
     }
 
@@ -49,7 +49,8 @@ object MySql {
      * 获得大类信息的存储过程
      */
     fun ordT2(): String {
-        return "c0c"
+        val date=CStoreCalendar.getCurrentDate(2)
+        return "call scb02_new_p01('$date','$date','0')"
     }
 
     /**
@@ -663,7 +664,6 @@ object MySql {
      */
     fun getNowNum(date:String): String {
         var month=""
-        val x=date.substring(5,7).toInt()
         when(date.substring(5,7).toInt()){
             1->month="A"
             2->month="B"
@@ -916,7 +916,7 @@ object MySql {
                 "Values " +
                 "('${User.getUser().storeId}',to_date('$date','yyyy-MM-dd'),$recordNumber,'${ab.itemId}',${ab.shipNumber},${ab.storeUnitPrice}, " +
                 "${ab.unitCost}, ${ab.adjQTY}, ${ab.actStockQTY}, ${ab.adjReasonNumber}, ${User.getUser().uId}, sysdate);"
-        //更新库存
+        //更新库存,为了更好分辨就多加一个+=
         result+=
                 "update inv set accAdjQuantity=accAdjQuantity + ${ab.adjQTY} " +
                 "where storeID='${User.getUser().storeId}' " +
@@ -924,5 +924,22 @@ object MySql {
                 "and ItemNumber='${ab.itemId}' " +
                 "and shipNumber='${ab.shipNumber}';"
         return result
+    }
+
+    /*******************************************考勤*******************************************************/
+
+    /**
+     * 得到创建签到的sql语句
+     * @param uId 输入的UserId，并不是登录用户的id
+     */
+    fun getInsCheckIn(uId:String):String{
+        val nowTime=MyTimeUtil.nowTimeString
+        return " insert into arrtime  " +
+                " values( " +
+                " to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd'), " +//营业日
+                " '${User.getUser().storeId}','$uId', " +
+                " to_date('$nowTime','yyyy-MM-dd HH24:MI:SS'), " +
+                " '${User.getUser().uId}', " +
+                " to_date('$nowTime','yyyy-MM-dd HH24:MI:SS'))"
     }
 }

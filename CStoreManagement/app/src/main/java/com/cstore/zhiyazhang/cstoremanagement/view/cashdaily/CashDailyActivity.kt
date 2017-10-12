@@ -184,11 +184,9 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                     return@run
                 }
                 val textYear=year.toString()+"年"
-                var mm = ""
-                mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
                 else (monthOfYear + 1).toString()+"月"
-                var dd = ""
-                dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
+                val dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
                 else dayOfMonth.toString()
                 date_util.year.text=textYear
                 date_util.month.text=mm
@@ -217,7 +215,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     }
 
     override fun hideLoading() {
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         loading.visibility=View.GONE
     }
 
@@ -241,6 +239,6 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         }else{
             loading_retry.visibility=View.VISIBLE
         }
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 }

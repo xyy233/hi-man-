@@ -578,7 +578,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 }
                 else -> {
                     showPrompt(getString(R.string.saveDone))
-                    if (my_swipe.isEnabled) getData()
+                    getData()
                 }
             }
         }
@@ -589,7 +589,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
@@ -597,7 +597,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun <T> showView(aData: T) {

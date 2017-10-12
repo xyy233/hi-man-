@@ -8,8 +8,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -18,7 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class AcceptanceModel : AcceptanceInterface {
 
-    override fun getAcceptanceList(date: String, handler: MyHandler.MyHandler) {
+    override fun getAcceptanceList(date: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -61,7 +61,7 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-    override fun getReturnAcceptanceList(date: String, handler: MyHandler.MyHandler) {
+    override fun getReturnAcceptanceList(date: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -109,7 +109,7 @@ class AcceptanceModel : AcceptanceInterface {
     /**
      * 得到退货验收单下的商品
      */
-    private fun getReturnAcceptanceItemList(rab: ReturnAcceptanceBean, date: String, handler: MyHandler.MyHandler, msg: Message, ip: String): ArrayList<ReturnAcceptanceItemBean> {
+    private fun getReturnAcceptanceItemList(rab: ReturnAcceptanceBean, date: String, handler: MyHandler.OnlyMyHandler, msg: Message, ip: String): ArrayList<ReturnAcceptanceItemBean> {
         val raibs = ArrayList<ReturnAcceptanceItemBean>()
         val result = SocketUtil.initSocket(ip, MySql.getReturnAcceptanceItemList(rab, date)).inquire()
         if (result == "[]") return raibs
@@ -125,7 +125,7 @@ class AcceptanceModel : AcceptanceInterface {
         return raibs
     }
 
-    override fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler) {
+    override fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -143,7 +143,7 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-    override fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.MyHandler) {
+    override fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -233,7 +233,7 @@ class AcceptanceModel : AcceptanceInterface {
         return result.toString()
     }
 
-    override fun getVendor(handler: MyHandler.MyHandler) {
+    override fun getVendor(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -258,7 +258,7 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-    override fun getCommodity(ab: AcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler) {
+    override fun getCommodity(ab: AcceptanceBean?, vendorId: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -287,7 +287,7 @@ class AcceptanceModel : AcceptanceInterface {
         }).start()
     }
 
-    override fun getReturnCommodity(rab: ReturnAcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler) {
+    override fun getReturnCommodity(rab: ReturnAcceptanceBean?, vendorId: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -317,7 +317,7 @@ class AcceptanceModel : AcceptanceInterface {
     }
 
     private var newAB: AcceptanceBean? = null
-    override fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.MyHandler) {
+    override fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -360,7 +360,7 @@ class AcceptanceModel : AcceptanceInterface {
     }
 
     private var newRAB: ReturnAcceptanceBean? = null
-    override fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ArrayList<ReturnAcceptanceItemBean>, handler: MyHandler.MyHandler) {
+    override fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ArrayList<ReturnAcceptanceItemBean>, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -522,45 +522,45 @@ interface AcceptanceInterface {
     /**
      * 得到配送列表
      */
-    fun getAcceptanceList(date: String, handler: MyHandler.MyHandler)
+    fun getAcceptanceList(date: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 更新验收
      */
-    fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.MyHandler)
+    fun updateAcceptance(date: String, ab: AcceptanceBean, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 得到配送商
      */
-    fun getVendor(handler: MyHandler.MyHandler)
+    fun getVendor(handler: MyHandler.OnlyMyHandler)
 
     /**
      * 得到商品
      */
-    fun getCommodity(ab: AcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler)
+    fun getCommodity(ab: AcceptanceBean?, vendorId: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 得到商品
      */
-    fun getReturnCommodity(rab: ReturnAcceptanceBean?, vendorId: String, handler: MyHandler.MyHandler)
+    fun getReturnCommodity(rab: ReturnAcceptanceBean?, vendorId: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 创建配送
      */
-    fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.MyHandler)
+    fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 得到退货验收列表
      */
-    fun getReturnAcceptanceList(date: String, handler: MyHandler.MyHandler)
+    fun getReturnAcceptanceList(date: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 更新退货验收
      */
-    fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.MyHandler)
+    fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 创建退货验收
      */
-    fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ArrayList<ReturnAcceptanceItemBean>, handler: MyHandler.MyHandler)
+    fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ArrayList<ReturnAcceptanceItemBean>, handler: MyHandler.OnlyMyHandler)
 }

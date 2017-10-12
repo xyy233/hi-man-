@@ -9,9 +9,9 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.inventory.InventoryAdjustmentActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapHotActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
 import kotlinx.android.synthetic.main.toolbar_layout.*

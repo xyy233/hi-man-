@@ -1,4 +1,4 @@
-package com.cstore.zhiyazhang.cstoremanagement.view.scrap
+package com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap
 
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager

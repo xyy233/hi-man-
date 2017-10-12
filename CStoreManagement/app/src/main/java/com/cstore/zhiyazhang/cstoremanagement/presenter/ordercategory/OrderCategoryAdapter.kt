@@ -35,7 +35,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
                 holder.bindSelf((data as ArrayList<SelfBean>)[position], listener)
             }
             "nop" -> {
-                holder.bindNOP((data as ArrayList<NOPBean>)[position], type, listener)
+                holder.bindNOP((data as ArrayList<NOPBean>)[position], listener)
             }
             "fresh" -> {
                 holder.bindFresh((data as ArrayList<FreshGroup>)[position], listener)
@@ -109,7 +109,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
             setOnClickListener { listener(sb) }
         }
 
-        fun bindNOP(nb: NOPBean, enterType: String, listener: (NOPBean) -> Unit) = with(itemView) {
+        fun bindNOP(nb: NOPBean, listener: (NOPBean) -> Unit) = with(itemView) {
             type_h.text = nb.nopName
             inventory_h.text = nb.allSku.toString()
             tonightCount_h.text = nb.ordSku.toString()

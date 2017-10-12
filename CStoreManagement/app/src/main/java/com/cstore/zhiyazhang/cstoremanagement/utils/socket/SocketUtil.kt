@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils.socket
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -48,7 +49,7 @@ internal class SocketUtil  {
         private val NULL_HOST = "host为空"
         private var message = ""
         private var loadingTime:Int=10
-        lateinit private var myHandler: MyHandler.MyHandler
+        lateinit private var myHandler: MyHandler.OnlyMyHandler
         lateinit private var host: String
         private var os: OutputStream? = null
         private var bw: BufferedWriter? = null
@@ -78,7 +79,6 @@ internal class SocketUtil  {
             try {
                 socket.close()
             } catch (e: Exception) { }
-
         }
 
         /**
@@ -98,7 +98,7 @@ internal class SocketUtil  {
         /**
          * 判断ip是否正确
          */
-        fun judgmentIP(ip: String, msg: Message, handler: MyHandler.MyHandler): Boolean {
+        fun judgmentIP(ip: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
 
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
             return if (wifiName == null || wifiName == ""){
@@ -117,7 +117,7 @@ internal class SocketUtil  {
         /**
          * 判断得到的数据是否有值
          */
-        fun judgmentNull(data: String, msg: Message, handler: MyHandler.MyHandler): Boolean {
+        fun judgmentNull(data: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
             return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = MyHandler.ERROR1
@@ -213,6 +213,36 @@ internal class SocketUtil  {
             bw!!.write(message)
             bw!!.flush()
             mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
+            var receive: String? = null
+            while (receive == null) {
+                receive = br!!.readLine()
+            }
+            return receive
+        } catch (ste: SocketTimeoutException) {
+            return REQUEST_ERROR
+        } catch (ioe: IOException) {
+            return SOCKET_ERROR
+        } catch (e: Exception) {
+            return e.message!!
+        } finally {
+            closeSocket(mySocket)
+        }
+    }
+
+    /**
+     * 发送图片
+     */
+    fun inquire(bmp:Bitmap, address:String):String {
+        try {
+            mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
+            mySocket.soTimeout = loadingTime * 1000
+            os = mySocket.getOutputStream()
+            os!!.write(address.toByteArray())
+            bmp.compress(Bitmap.CompressFormat.JPEG,100, os)
+            bw = BufferedWriter(OutputStreamWriter(os!!))
+            `is` = mySocket.getInputStream()
+            br = BufferedReader(InputStreamReader(`is`!!))
+            mySocket.shutdownOutput()
             var receive: String? = null
             while (receive == null) {
                 receive = br!!.readLine()

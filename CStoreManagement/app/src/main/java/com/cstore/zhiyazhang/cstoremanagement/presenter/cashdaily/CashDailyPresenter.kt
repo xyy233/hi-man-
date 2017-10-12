@@ -11,7 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.cashdaily.CashDailyInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.cashdaily.CashDailyModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
@@ -23,7 +23,7 @@ class CashDailyPresenter(private val gView:GenericView,private val context: Cont
     private val mInterface:CashDailyInterface=CashDailyModel()
     fun getAllCashDaily(date:String){
         if(!PresenterUtil.judgmentInternet(gView))return
-        mInterface.getAllCashDaily(date,MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        mInterface.getAllCashDaily(date,OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -38,7 +38,7 @@ class CashDailyPresenter(private val gView:GenericView,private val context: Cont
 
     fun updateCashDaily(date:String, view:View, cd:CashDailyBean, value:String) {
         if(!PresenterUtil.judgmentInternet(gView))return
-        mInterface.updateCashDaily(date, value,cd, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        mInterface.updateCashDaily(date, value,cd, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 if (cd.cdId=="1097"){
                     try {

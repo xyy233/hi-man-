@@ -138,22 +138,20 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@PurchaseAcceptanceActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
-                val calendar = Calendar.getInstance()
-                calendar.timeInMillis = System.currentTimeMillis()
+                val myCalendar = Calendar.getInstance()
+                myCalendar.timeInMillis = System.currentTimeMillis()
                 if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(3)) {
                     //换日了要加一天
-                    calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1)
+                    myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 1)
                 }
-                if (year > calendar.get(Calendar.YEAR) || monthOfYear > calendar.get(Calendar.MONTH) || dayOfMonth > calendar.get(Calendar.DAY_OF_MONTH)) {
+                if (year > myCalendar.get(Calendar.YEAR) || monthOfYear > myCalendar.get(Calendar.MONTH) || dayOfMonth > myCalendar.get(Calendar.DAY_OF_MONTH)) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear = year.toString() + "年"
-                var mm = ""
-                mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
                 else (monthOfYear + 1).toString() + "月"
-                var dd = ""
-                dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
+                val dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
                 else dayOfMonth.toString()
                 date_util.year.text = textYear
                 date_util.month.text = mm

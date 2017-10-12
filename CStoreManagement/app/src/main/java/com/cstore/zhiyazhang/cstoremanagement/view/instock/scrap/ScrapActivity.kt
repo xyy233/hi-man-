@@ -1,4 +1,4 @@
-package com.cstore.zhiyazhang.cstoremanagement.view.scrap
+package com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap
 
 import android.Manifest
 import android.app.DatePickerDialog
@@ -276,19 +276,17 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@ScrapActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
-                val calendar=Calendar.getInstance()
-                calendar.timeInMillis=System.currentTimeMillis()
-                if (year>calendar.get(Calendar.YEAR)||monthOfYear>calendar.get(Calendar.MONTH)||dayOfMonth>calendar.get(Calendar.DAY_OF_MONTH)){
+                val myCalendar=Calendar.getInstance()
+                myCalendar.timeInMillis=System.currentTimeMillis()
+                if (year>myCalendar.get(Calendar.YEAR)||monthOfYear>myCalendar.get(Calendar.MONTH)||dayOfMonth>myCalendar.get(Calendar.DAY_OF_MONTH)){
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear=year.toString()+"年"
-                var mm = ""
-                if (monthOfYear + 1 < 10) mm = "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else mm = (monthOfYear + 1).toString()+"月"
-                var dd = ""
-                if (dayOfMonth < 10) dd = "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dd = dayOfMonth.toString()
+                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
+                else (monthOfYear + 1).toString()+"月"
+                val dd  = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
+                else dayOfMonth.toString()
                 date_util.year.text=textYear
                 date_util.month.text=mm
                 date_util.day.text=dd
@@ -360,7 +358,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
 
     override fun <T> requestSuccess(rData: T) {
         val handler = Handler()
-        val myThread = Thread(Runnable {
+        Thread(Runnable {
             rData as ArrayList<ScrapContractBean>
             if (rData.size != 0) {
                 //检查数据中的时间
@@ -453,7 +451,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun hideLoading() {
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         loading.visibility = View.GONE
     }
 

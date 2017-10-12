@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -24,6 +25,7 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryItemAdapter.ViewHolder =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_order_category, parent, false))
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (isType) {
             "self" -> {
@@ -72,11 +74,11 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
                 .error(R.mipmap.load_error)
                 .crossFade()
                 .into(holder.orderImg)
-        holder.add.setOnTouchListener { v, event ->
+        holder.add.setOnTouchListener { _, event ->
             onTouch.onTouchAddListener(data[position], event, position)
             true
         }
-        holder.less.setOnTouchListener { v, event ->
+        holder.less.setOnTouchListener { _, event ->
             onTouch.onTouchLessListener(data[position], event, position)
             true
         }

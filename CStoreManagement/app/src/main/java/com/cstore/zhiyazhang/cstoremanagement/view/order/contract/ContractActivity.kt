@@ -24,6 +24,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
@@ -31,7 +32,6 @@ import com.cstore.zhiyazhang.cstoremanagement.view.ImageActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import kotlinx.android.synthetic.main.activity_contract.*
 
 /**

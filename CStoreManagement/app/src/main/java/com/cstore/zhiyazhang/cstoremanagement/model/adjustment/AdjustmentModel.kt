@@ -15,7 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class AdjustmentModel:AdjustmentInterface{
     private val TAG="AdjustmentModel"
-    override fun getAllAdjustmentList(date: String, handler: MyHandler.MyHandler) {
+    override fun getAllAdjustmentList(date: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -45,7 +45,7 @@ class AdjustmentModel:AdjustmentInterface{
         }).start()
     }
 
-    override fun searchAdjustment(searchMsg: String, handler: MyHandler.MyHandler) {
+    override fun searchAdjustment(searchMsg: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -70,7 +70,7 @@ class AdjustmentModel:AdjustmentInterface{
         }).start()
     }
 
-    override fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler.MyHandler) {
+    override fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -98,9 +98,9 @@ class AdjustmentModel:AdjustmentInterface{
     /**
      * 得到最大的id用于创建
      */
-    private fun getMaxRecodeNumber(date:String, ip: String, msg: Message, handler: MyHandler.MyHandler): Int {
+    private fun getMaxRecodeNumber(date:String, ip: String, msg: Message, handler: MyHandler.OnlyMyHandler): Int {
         val result=SocketUtil.initSocket(ip,MySql.getAdjustmentMaxId(date)).inquire()
-        var id=0
+        val id: Int
         try {
             val ids=SocketUtil.getUtilBean(result)
             if (ids[0].value==null)return 0
@@ -135,15 +135,15 @@ interface AdjustmentInterface{
     /**
      * 得到某天所有的库调信息
      */
-    fun getAllAdjustmentList(date:String, handler:MyHandler.MyHandler)
+    fun getAllAdjustmentList(date:String, handler:MyHandler.OnlyMyHandler)
 
     /**
      * 搜索库调商品
      */
-    fun searchAdjustment(searchMsg:String, handler:MyHandler.MyHandler)
+    fun searchAdjustment(searchMsg:String, handler:MyHandler.OnlyMyHandler)
 
     /**
      * 创建库调
      */
-    fun createAdjustment(data:ArrayList<AdjustmentBean>,handler: MyHandler.MyHandler)
+    fun createAdjustment(data:ArrayList<AdjustmentBean>,handler: MyHandler.OnlyMyHandler)
 }

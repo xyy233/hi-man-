@@ -47,7 +47,6 @@ class CashDailyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //获得类型和数据
-        val type= resources.getStringArray(R.array.cashDailyTags)[arguments.getInt(PAGE_POSITION)]
         data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<CashDailyBean>)
         date=arguments.getString(PAGE_DATE)
     }

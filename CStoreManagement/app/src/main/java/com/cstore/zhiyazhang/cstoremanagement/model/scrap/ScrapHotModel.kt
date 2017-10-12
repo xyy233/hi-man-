@@ -5,11 +5,11 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapHotBean
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapModel.Companion.RECODE_ERROR
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
-import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
  * Created by zhiya.zhang
@@ -17,7 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
  */
 class ScrapHotModel : ScrapHotInterface {
 
-    override fun getMidCategory(handler: MyHandler.MyHandler) {
+    override fun getMidCategory(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -42,7 +42,7 @@ class ScrapHotModel : ScrapHotInterface {
         }).start()
     }
 
-    override fun getHotItem(midId: String, handler: MyHandler.MyHandler) {
+    override fun getHotItem(midId: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -66,7 +66,7 @@ class ScrapHotModel : ScrapHotInterface {
         }).start()
     }
 
-    override fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.MyHandler) {
+    override fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -111,15 +111,15 @@ interface ScrapHotInterface {
     /**
      * 得到热食的中类
      */
-    fun getMidCategory(handler: MyHandler.MyHandler)
+    fun getMidCategory(handler: MyHandler.OnlyMyHandler)
 
     /**
      * 得到热食的商品
      */
-    fun getHotItem(midId: String, handler: MyHandler.MyHandler)
+    fun getHotItem(midId: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 提交报废信息
      */
-    fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.MyHandler)
+    fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.OnlyMyHandler)
 }

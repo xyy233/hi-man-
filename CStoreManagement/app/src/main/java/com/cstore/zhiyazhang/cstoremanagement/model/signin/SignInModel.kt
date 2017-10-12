@@ -9,8 +9,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -19,13 +19,13 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class SignInModel : SignInInterface {
 
-    override fun login( uid:String, password:String, myHandler: MyHandler.MyHandler) {
+    override fun login( uid:String, password:String, myHandler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             Looper.prepare()
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, myHandler)) return@Runnable
-            val data = SocketUtil.initSocket(ip, MySql.SignIn(uid), 10).inquire()
+            val data = SocketUtil.initSocket(ip, MySql.signIn(uid)).inquire()
             if (!SocketUtil.judgmentNull(data, msg, myHandler)) return@Runnable
 
             val users = ArrayList<User>()
@@ -71,5 +71,5 @@ class SignInModel : SignInInterface {
 }
 
 interface SignInInterface {
-    fun login( uid:String, password:String, myHandler: MyHandler.MyHandler)
+    fun login( uid:String, password:String, myHandler: MyHandler.OnlyMyHandler)
 }

@@ -5,7 +5,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapHotModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil.judgmentInternet
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
@@ -22,7 +22,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
      */
     fun getScrapHotMid() {
         if (!judgmentInternet(gView)) return
-        anInterface.getMidCategory(MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        anInterface.getMidCategory(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     gView.requestSuccess(data)
@@ -42,7 +42,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
 
     fun getAllScraphot(midId: String) {
         if (!judgmentInternet(gView)) return
-        anInterface.getHotItem(midId, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        anInterface.getHotItem(midId, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     gView.requestSuccess(data)
@@ -62,7 +62,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
 
     fun submitScrap(data: ArrayList<ScrapContractBean>) {
         if (!judgmentInternet(gView)) return
-        anInterface.submitScrap(data, MyHandler.writeActivity(activity).writeListener(object : MyListener {
+        anInterface.submitScrap(data, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     gView.requestSuccess(data)

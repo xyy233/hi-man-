@@ -3,7 +3,6 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 import android.annotation.SuppressLint
 import android.app.Application
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.squareup.leakcanary.LeakCanary
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
@@ -73,7 +72,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        LeakCanary.install(this)
+//        LeakCanary.install(this)
         instance = this
         ZXingLibrary.initDisplayOpinion(this)
         val okHttp: OkHttpClient = OkHttpClient.Builder()

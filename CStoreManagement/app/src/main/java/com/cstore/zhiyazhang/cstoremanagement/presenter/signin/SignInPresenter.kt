@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.signin.SignInInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.signin.SignInModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
@@ -21,7 +21,7 @@ class SignInPresenter(private val signInView: SignInView, private val genericVie
 
     fun login() {
         if (!PresenterUtil.judgmentInternet(genericView))return
-        signInInterface.login(signInView.uid,signInView.password, MyHandler.writeActivity(myActivity).writeListener(object : MyListener {
+        signInInterface.login(signInView.uid,signInView.password, OnlyMyHandler.writeActivity(myActivity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User
                 signInView.saveUser(data)

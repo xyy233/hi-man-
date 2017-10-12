@@ -81,18 +81,18 @@
 
         <!--报废-->
         <activity
-            android:name=".view.scrap.ScrapActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <!--热食报废-->
         <activity
-            android:name=".view.scrap.ScrapHotActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotActivity"
             android:screenOrientation="portrait"/>
 
         <!--热食报废商品页-->
         <activity
-            android:name=".view.scrap.ScrapHotItemActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotItemActivity"
             android:screenOrientation="portrait"/>
 
         <!--现金日报-->
@@ -123,6 +123,16 @@
         <activity android:name=".view.inventory.InventoryAdjustmentActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <!--人事页面-->
+        <activity android:name=".view.personnel.PersonnelActivity"
+                  android:screenOrientation="portrait"/>
+
+        <!--签到-->
+        <activity android:name=".view.personnel.checkin.CheckInActivity"
+                  android:screenOrientation="portrait"/>
+
+        <activity android:name=".view.personnel.checkin.test"/>
 
     </application>
 

@@ -5,8 +5,8 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -18,7 +18,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 通过categoryId获得item
      */
-    override fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.MyHandler) {
+    override fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -49,7 +49,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 根据货架id获得商品
      */
-    override fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.MyHandler) {
+    override fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -76,7 +76,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 根据关键字获得单品
      */
-    override fun getUnitItemByKeywords(keywords: String, handler: MyHandler.MyHandler) {
+    override fun getUnitItemByKeywords(keywords: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
         val msg=Message()
         val ip= MyApplication.getIP()
@@ -103,7 +103,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      *根据自用品种类id获得商品
      */
-    override fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.MyHandler) {
+    override fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -130,7 +130,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 根据新品档期获得商品
      */
-    override fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.MyHandler) {
+    override fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -157,7 +157,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 获得鲜食
      */
-    override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.MyHandler) {
+    override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg=Message()
             val ip= MyApplication.getIP()
@@ -184,7 +184,7 @@ class CategoryItemModel : CategoryInterface {
     /**
      * 更新item
      */
-    override fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.MyHandler) {
+    override fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             //把数据变成sql语句
             val sql: StringBuilder = StringBuilder()
@@ -216,35 +216,35 @@ interface CategoryInterface {
     /**
      * 通过categoryId获得item
      */
-    fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.MyHandler)
+    fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 根据货架id获得商品
      */
-    fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.MyHandler)
+    fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 根据关键字获得单品
      */
-    fun getUnitItemByKeywords(keywords: String, handler: MyHandler.MyHandler)
+    fun getUnitItemByKeywords(keywords: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      *根据自用品种类id获得商品
      */
-    fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.MyHandler)
+    fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 根据新品档期获得商品或直接获得促销品
      */
-    fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.MyHandler)
+    fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 获得鲜食
      */
-    fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.MyHandler)
+    fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.OnlyMyHandler)
 
     /**
      * 更新item
      */
-    fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.MyHandler)
+    fun updateAllCategory(categoryList: ArrayList<CategoryItemBean>, handler: MyHandler.OnlyMyHandler)
 }

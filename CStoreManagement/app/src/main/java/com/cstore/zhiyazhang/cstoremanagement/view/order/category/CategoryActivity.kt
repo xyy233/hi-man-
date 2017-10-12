@@ -39,7 +39,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
 
     override fun initClick() {
         category_retry.setOnClickListener {
-            MyHandler.removeCallbacksAndMessages(null)
+            MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
             category_retry.visibility = View.GONE
             when (whereIsIt) {
                 "category" -> {
@@ -177,7 +177,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     }
 
     override fun hideLoading() {
-        MyHandler.removeCallbacksAndMessages(null)
+        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         category_loading.visibility = View.GONE
     }
 

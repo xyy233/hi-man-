@@ -196,7 +196,7 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
 
     //获得相机权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
-    fun judgmentCarmer(): Boolean {
+    private fun judgmentCarmer(): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, "请打开权限以操作扫描更新", 1, *perms)
@@ -208,7 +208,7 @@ class ContractTypeActivity(override val layoutId: Int = R.layout.activity_contra
     /**
      * 返回true 表示可以使用  返回false表示不可以使用
      */
-    fun cameraIsCanUse(): Boolean {
+    private fun cameraIsCanUse(): Boolean {
         var isCanUse = true
         var mCamera: Camera? = null
         try {

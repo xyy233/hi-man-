@@ -5,8 +5,8 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.ERROR1
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.MyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -16,7 +16,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class OrderCategoryModel() : OrderCategoryInterface {
 
-    override fun getAllCategory(handler: MyHandler.MyHandler) {
+    override fun getAllCategory(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -40,7 +40,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getAllShelf(handler: MyHandler.MyHandler) {
+    override fun getAllShelf(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -64,7 +64,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getNewItemId(handler: MyHandler.MyHandler) {
+    override fun getNewItemId(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -88,7 +88,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getSelf(handler: MyHandler.MyHandler) {
+    override fun getSelf(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -112,12 +112,11 @@ class OrderCategoryModel() : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getFresh(freshType: Int, handler: MyHandler.MyHandler) {
+    override fun getFresh(freshType: Int, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val user=User.getUser()
             val result=SocketUtil.initSocket(ip,if (freshType==1)MySql.getFreshGroup1 else MySql.getFreshGroup2).inquire()
              if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
 
@@ -139,9 +138,9 @@ class OrderCategoryModel() : OrderCategoryInterface {
 }
 
 interface OrderCategoryInterface {
-    fun getAllCategory(handler:MyHandler.MyHandler)
-    fun getAllShelf(handler:MyHandler.MyHandler)
-    fun getNewItemId(handler:MyHandler.MyHandler)
-    fun getSelf(handler:MyHandler.MyHandler)
-    fun getFresh(freshType: Int, handler:MyHandler.MyHandler)
+    fun getAllCategory(handler:MyHandler.OnlyMyHandler)
+    fun getAllShelf(handler:MyHandler.OnlyMyHandler)
+    fun getNewItemId(handler:MyHandler.OnlyMyHandler)
+    fun getSelf(handler:MyHandler.OnlyMyHandler)
+    fun getFresh(freshType: Int, handler:MyHandler.OnlyMyHandler)
 }
