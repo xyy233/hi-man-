@@ -33,17 +33,46 @@
             android:layout_weight="1.3"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_gravity="center"
-                android:id="@+id/scrap_id"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                card_view:ignore="NestedWeights"/>
+                card_view:ignore="NestedWeights">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:id="@+id/scrap_id"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|start"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    card_view:ignore="NestedWeights"/>
+
+                <TextView
+                    android:text="@string/price"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    card_view:ignore="NestedWeights"/>
+                <TextView
+                    android:id="@+id/scrap_unit_price"
+                    android:layout_marginStart="6dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    card_view:ignore="NestedWeights"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_gravity="center"

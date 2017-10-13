@@ -19,7 +19,7 @@ data class ScrapContractBean(
         @SerializedName("pluname")
         val scrapName: String, //品名
         @SerializedName("storeunitprice")
-        val unitPrice: Double, //商品单价
+        val unitPrice: Double, //零售价
         @SerializedName("unitcost")
         val unitCost: Double, //成本
         @SerializedName("sell_cost")

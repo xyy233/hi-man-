@@ -267,7 +267,8 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.editCount=nowEditCount
         }
         if (i==0)changeData.add(scb.copy())
-        handler.post { view.scrapCount.text=scb.mrkCount.toString() }
+        handler.post { view.scrapCount.text=scb.mrkCount.toString()
+            view.scrapPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
     }
 
     private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
@@ -295,7 +296,10 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             //如果不是新建的修改动作为删除
             if (scb.action!=0)scb.action = 2
             if (i == 0) changeData.add(scb.copy())
-            handler.post { view.scrapCount.text = scb.mrkCount.toString() }
+            handler.post {
+                view.scrapCount.text = scb.mrkCount.toString()
+                view.scrapPrice.text=scb.unitPrice.toString()
+            }
             return
         }
         scb.mrkCount = nowCount
@@ -307,7 +311,8 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.editCount = nowEditCount
         }
         if (i == 0) changeData.add(scb.copy())
-        handler.post { view.scrapCount.text = scb.mrkCount.toString() }
+        handler.post { view.scrapCount.text = scb.mrkCount.toString()
+            view.scrapPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
     }
 
     private fun runOrStopEdit() {

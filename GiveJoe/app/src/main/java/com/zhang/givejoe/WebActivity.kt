@@ -3,13 +3,17 @@ package com.zhang.givejoe
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
-import android.webkit.*
+import android.webkit.WebSettings
+import android.webkit.WebView
 import kotlinx.android.synthetic.main.activity_web.*
 import org.xwalk.core.XWalkPreferences
+import org.xwalk.core.XWalkView
+import org.xwalk.core.internal.XWalkViewBridge
+
+
 
 
 /**
@@ -36,6 +40,7 @@ class WebActivity : AppCompatActivity() {
         //配置userAgent
         val ua = my_web.settings.userAgentString + "ADM"
         my_web.settings.userAgentString = ua
+        //setCacheMode()
         XWalkPreferences.setValue("enable-javascript", true)
 
         if (Build.VERSION.SDK_INT>=21){
@@ -53,6 +58,19 @@ class WebActivity : AppCompatActivity() {
 
         click()
         my_web.load(url,null)
+    }
+
+    /**
+     * 设置缓存
+     */
+    private fun setCacheMode() {
+        try {
+            val _getBridge = XWalkView::class.java.getDeclaredMethod("getBridge")
+            _getBridge.isAccessible = true
+            var xWalkViewBridge: XWalkViewBridge? = null
+            xWalkViewBridge = _getBridge.invoke(my_web) as XWalkViewBridge
+            xWalkViewBridge.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        }catch (e:Exception){}
     }
 
     override fun onPause() {

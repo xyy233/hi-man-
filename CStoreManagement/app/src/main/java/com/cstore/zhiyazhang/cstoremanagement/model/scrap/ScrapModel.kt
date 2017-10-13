@@ -125,13 +125,13 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
         fun getRecodeNumber(ip: String): String {
             val result = SocketUtil.initSocket(ip, MySql.getRecodeNumber).inquire()
             if (result==""||result=="[]")return "0"
-            try {
+            return try {
                 val count=result.substring(0,result.length-2).substring(17).toInt()
-                if (count==0)return "0" else{
-                    return count.toString()
+                if (count==0) "0" else{
+                    count.toString()
                 }
             }catch (e:Exception){
-                return RECODE_ERROR + result + e.message
+                RECODE_ERROR + result + e.message
             }
 
         }

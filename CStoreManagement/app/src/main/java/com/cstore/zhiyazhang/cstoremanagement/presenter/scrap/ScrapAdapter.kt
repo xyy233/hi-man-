@@ -11,9 +11,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.onMoveAndSwipedListener
 import java.util.*
 
@@ -27,6 +27,10 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, val onClick: Recycler
         holder.scrapCount.text = data[position].mrkCount.toString()
         holder.scrapName.text = data[position].scrapName
         holder.scrapId.text = data[position].scrapId
+        val price=if(data[position].mrkCount==0) (data[position].unitPrice*data[position].mrkCount).toFloat().toString() else (data[position].unitPrice*data[position].mrkCount).toFloat().toString()
+        holder.scrapPrice.text=
+                if(data[position].mrkCount==0) data[position].unitPrice.toString()
+                else (data[position].unitPrice*data[position].mrkCount).toFloat().toString()
         when (data[position].busiDate) {
             null -> {
                 holder.scrapAdd.visibility = View.VISIBLE
@@ -96,6 +100,7 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, val onClick: Recycler
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val scrapId = itemView.findViewById<TextView>(R.id.scrap_id)!!
+        val scrapPrice=itemView.findViewById<TextView>(R.id.scrap_unit_price)!!
         val scrapName = itemView.findViewById<TextView>(R.id.scrap_name)!!
         val scrapLess = itemView.findViewById<ImageButton>(R.id.scrap_less)!!
         val scrapCount = itemView.findViewById<TextView>(R.id.scrap_count)!!

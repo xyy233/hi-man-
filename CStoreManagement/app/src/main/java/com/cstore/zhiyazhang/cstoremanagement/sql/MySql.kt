@@ -486,6 +486,18 @@ object MySql {
         get() {
             return "select midcategorynumber,categoryname from cat where categorynumber='80' and midcategorynumber!=' ' and microcategorynumber=' ' order by midcategorynumber\u0004"
         }
+    //最新的
+    /*select a.midcategorynumber,a.categoryname,b.price,b.count
+    from cat a,
+    (select a.Midcategorynumber,
+    round(sum(b.mrkquantity)*avg(b.storeunitprice),1) price , sum(b.mrkquantity) count
+    from app_mrkitem_view a,mrk b where a.CATEGORYNUMBER = '80' and a.ITEMNUMBER = b.itemnumber --and a.microcategorynumber=' '
+    and busidate=trunc(sysdate)
+    group by a.Midcategorynumber) b
+    where a.categorynumber='80'
+    and a.midcategorynumber=b.midcategorynumber
+    and a.microcategorynumber=' '
+    order by a.midcategorynumber*/
 
     /**
      * 报废80大类里的中类的item
