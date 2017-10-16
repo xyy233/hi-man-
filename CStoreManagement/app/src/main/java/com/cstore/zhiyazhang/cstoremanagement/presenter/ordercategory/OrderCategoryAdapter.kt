@@ -82,10 +82,10 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
         }
 
         fun bindShelf(sb: ShelfBean, listener: (ShelfBean) -> Unit) = with(itemView) {
-            type_v.text = sb.shelfName
-            inventory_v.text = sb.allSku.toString()
-            tonightCount_v.text = sb.ordSku.toString()
-            todayCount_v.text = sb.ordPrice.toString()
+            item_text1.text = sb.shelfName
+            item_text2.text = sb.allSku.toString()
+            item_text3.text = sb.ordSku.toString()
+            item_text4.text = sb.ordPrice.toString()
             if (sb.ordSku != 0) {
                 type_tag_v.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_v.visibility = View.VISIBLE

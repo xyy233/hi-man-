@@ -3,6 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@color/white"
              android:orientation="vertical">
 
     <LinearLayout
@@ -13,12 +14,15 @@
         <include
             layout="@layout/toolbar_layout"/>
 
+        <View
+            android:background="@color/windowBackground"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/orderRecycler"
-            android:layout_marginTop="5dp"
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 

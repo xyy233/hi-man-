@@ -6,11 +6,11 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil.judgmentInternet
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -32,6 +32,7 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
 
             override fun listenerFailed(errorMessage: String) {
                 handler.post {
+                    gView.errorDealWith()
                     gView.showPrompt(errorMessage)
                     gView.hideLoading()
                 }

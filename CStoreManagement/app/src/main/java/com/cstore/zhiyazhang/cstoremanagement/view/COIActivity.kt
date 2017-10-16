@@ -3,8 +3,8 @@ package com.cstore.zhiyazhang.cstoremanagement.view
 import android.content.Intent
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
-import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
@@ -37,7 +37,7 @@ class COIActivity(override val layoutId: Int = R.layout.activity_coi) : MyActivi
         setData(data)
         coi_recycler.layoutManager = GridLayoutManager(this@COIActivity, 3, GridLayoutManager.VERTICAL, false)
         coi_recycler.adapter=LogoAdapter(this@COIActivity, data, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when(data[position].position){
                     0->{startActivity(Intent(this@COIActivity, CashDailyActivity::class.java))}
                     1->{val intent=Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)

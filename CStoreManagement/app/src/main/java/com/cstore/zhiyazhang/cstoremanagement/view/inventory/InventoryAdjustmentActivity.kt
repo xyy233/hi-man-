@@ -138,7 +138,10 @@ class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity
             val calendar1 = Calendar.getInstance()
             calendar1.timeInMillis = System.currentTimeMillis()
             if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(0)) calendar1.set(Calendar.DATE, calendar1.get(Calendar.DATE) + 1)
-            if (year > calendar1.get(Calendar.YEAR) || month > calendar1.get(Calendar.MONTH) || day > calendar1.get(Calendar.DAY_OF_MONTH)) {
+
+            val selectDate=(year.toString()+month.toString()+day.toString()).toInt()
+            val nowDate=(calendar1.get(Calendar.YEAR).toString()+calendar1.get(Calendar.MONTH).toString()+calendar1.get(Calendar.DAY_OF_MONTH).toString()).toInt()
+            if (selectDate>nowDate){
                 showPrompt("不能选择未来日期")
                 return@OnDateSetListener
             }

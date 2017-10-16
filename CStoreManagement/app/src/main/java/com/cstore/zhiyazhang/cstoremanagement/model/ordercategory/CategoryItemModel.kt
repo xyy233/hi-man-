@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -196,6 +197,7 @@ class CategoryItemModel : CategoryInterface {
             val msg=Message()
             val ip= MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            if (!CStoreCalendar.judgmentCalender(CStoreCalendar.getCurrentDate(2), msg, handler, 2)) return@Runnable
             val result=SocketUtil.initSocket(ip,sql.toString()).inquire()
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
 

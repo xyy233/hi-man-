@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -91,7 +92,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 if (type==1){rData as ArrayList<AcceptanceBean>
             rData} else {rData as ArrayList<ReturnAcceptanceBean>
             rData}, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceItemActivity::class.java)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
                 i.putExtra("type",type)
@@ -102,7 +103,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 startActivity(i)
             }
 
-            override fun onItemLongClick(view: View, position: Int) {
+            override fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i=Intent(this@PurchaseAcceptanceActivity,PurchaseAcceptanceCreate::class.java)
                 i.putExtra("type",type)
                 i.putExtra("date",MyTimeUtil.getTextViewDate(date_util))
@@ -144,7 +145,10 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                     //换日了要加一天
                     myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 1)
                 }
-                if (year > myCalendar.get(Calendar.YEAR) || monthOfYear > myCalendar.get(Calendar.MONTH) || dayOfMonth > myCalendar.get(Calendar.DAY_OF_MONTH)) {
+
+                val selectDate=(year.toString()+monthOfYear.toString()+dayOfMonth.toString()).toInt()
+                val nowDate=(myCalendar.get(Calendar.YEAR).toString()+myCalendar.get(Calendar.MONTH).toString()+myCalendar.get(Calendar.DAY_OF_MONTH).toString()).toInt()
+                if (selectDate>nowDate){
                     showPrompt("不能选择未来日期")
                     return@run
                 }

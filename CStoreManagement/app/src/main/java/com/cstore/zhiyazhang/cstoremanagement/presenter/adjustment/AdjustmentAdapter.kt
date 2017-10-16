@@ -35,7 +35,7 @@ class AdjustmentAdapter(private val type:Int, val date:String, val data:ArrayLis
             //只有是操作且时间是营业换日时间才允许监听点击
             holder.adjustmentItemBody.setOnClickListener {
                 holder.adjustmentClear.visibility=View.GONE
-                onClick.onItemClick(holder.adjustmentItemBody,position)
+                onClick.onItemClick(holder,position)
             }
             holder.adjustmentItemBody.setOnLongClickListener {
                 data[position].isClickClear=true

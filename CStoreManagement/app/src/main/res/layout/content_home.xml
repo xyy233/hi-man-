@@ -229,7 +229,7 @@
                     android:text="@string/in_stock"/>
 
             </LinearLayout>
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/gg8"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -255,7 +255,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/personnel"/>
 
-            </LinearLayout>
+            </LinearLayout>-->
+            <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            tools:ignore="UselessLeaf"/>
             <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

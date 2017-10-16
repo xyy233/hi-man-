@@ -21,7 +21,7 @@ class ScrapHotAdapter(val data: ArrayList<ScrapHotBean>, val onClick: ItemClickL
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.scrapHotName.text = data[position].sName
         holder.hotItem.setOnClickListener {
-            onClick.onItemClick(holder.hotItem, position)
+            onClick.onItemClick(holder, position)
         }
     }
 

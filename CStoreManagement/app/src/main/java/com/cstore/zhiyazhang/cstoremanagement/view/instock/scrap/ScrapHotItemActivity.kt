@@ -4,6 +4,7 @@ import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -17,8 +18,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_contract.*
 
 /**
@@ -193,10 +194,14 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             3 -> toolbar.title = hotMid[nowPosition].sName
         }
         noMessage.visibility = View.GONE
-        swipe_recycler.adapter = ScrapAdapter(rData as ArrayList<ScrapContractBean>, recyclerTouch)
+        swipe_recycler.adapter = ScrapAdapter(rData as ArrayList<ScrapContractBean>, recyclerClick)
     }
 
-    val recyclerTouch = object : RecyclerOnTouch {
+    private val recyclerClick = object : ItemClickListener {
+        override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+/*
         override fun <T> onClickImage(objects: T, position: Int) {
         }
 
@@ -208,7 +213,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
         override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
             val adapterView = swipe_recycler.findViewHolderForAdapterPosition(position) as ScrapAdapter.ViewHolder
             onTouchChange(0, event.action, adapterView, objects as ScrapContractBean)
-        }
+        }*/
     }
 
     companion object {
@@ -267,8 +272,8 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.editCount=nowEditCount
         }
         if (i==0)changeData.add(scb.copy())
-        handler.post { view.scrapCount.text=scb.mrkCount.toString()
-            view.scrapPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
+        handler.post { view.mrkCount.text=scb.mrkCount.toString()
+            view.allPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
     }
 
     private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
@@ -297,8 +302,8 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             if (scb.action!=0)scb.action = 2
             if (i == 0) changeData.add(scb.copy())
             handler.post {
-                view.scrapCount.text = scb.mrkCount.toString()
-                view.scrapPrice.text=scb.unitPrice.toString()
+                view.mrkCount.text = scb.mrkCount.toString()
+                view.allPrice.text=scb.unitPrice.toString()
             }
             return
         }
@@ -311,8 +316,8 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             it.editCount = nowEditCount
         }
         if (i == 0) changeData.add(scb.copy())
-        handler.post { view.scrapCount.text = scb.mrkCount.toString()
-            view.scrapPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
+        handler.post { view.mrkCount.text = scb.mrkCount.toString()
+            view.allPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
     }
 
     private fun runOrStopEdit() {
@@ -322,6 +327,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     override fun showLoading() {
         my_swipe.isRefreshing = true
+        done.isEnabled=false
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
@@ -330,6 +336,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     override fun hideLoading() {
         my_swipe.isRefreshing = false
+        done.isEnabled=true
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)

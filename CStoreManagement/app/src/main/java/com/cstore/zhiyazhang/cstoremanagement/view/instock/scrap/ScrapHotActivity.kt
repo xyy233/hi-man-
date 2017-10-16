@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap
 
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -51,15 +52,11 @@ class ScrapHotActivity(override val layoutId: Int = R.layout.activity_contract_t
     override fun <T> requestSuccess(rData: T) {
         rData as ArrayList<ScrapHotBean>
         val adapter = ScrapHotAdapter(rData, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i = Intent(this@ScrapHotActivity, ScrapHotItemActivity::class.java)
                 i.putExtra("hotMid", rData)
                 i.putExtra("position", position)
                 startActivity(i)
-            }
-
-            override fun onItemLongClick(view: View, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
         type_list.adapter=adapter

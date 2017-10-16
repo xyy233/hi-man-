@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +74,7 @@ class InventoryAdjustmentFragment : Fragment(){
         adjustment_recycler.itemAnimator= DefaultItemAnimator()
         //在创建的时候传入的data就会相应type==1传该有的值type==2传空list
         adapter=AdjustmentAdapter(type, date, data, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 mActivity!!.updateDate(data[position])
             }
         })

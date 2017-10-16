@@ -3,8 +3,8 @@ package com.cstore.zhiyazhang.cstoremanagement.view.personnel
 import android.content.Intent
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
-import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
@@ -36,7 +36,7 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
         setData(data)
         inv_recycler.layoutManager = GridLayoutManager(this@PersonnelActivity, 3, GridLayoutManager.VERTICAL, false)
         inv_recycler.adapter= LogoAdapter(this@PersonnelActivity, data, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when(data[position].position){
                     0->{startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))}
                     1->{MyToast.getShortToast(getString(R.string.in_development))}

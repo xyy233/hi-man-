@@ -82,7 +82,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     }
 
     var dialogView:View?= null
-    fun updateData(view:View, cd:CashDailyBean){
+    fun updateData(view: View, cd:CashDailyBean){
         if (dialog==null){
             val builder=AlertDialog.Builder(this@CashDailyActivity)
             dialogView = View.inflate(this,R.layout.dialog_cashdaily,null)!!
@@ -179,7 +179,10 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                     //换日了要加一天
                     calendar1.set(Calendar.DATE, calendar1.get(Calendar.DATE) + 1)
                 }
-                if (year>calendar1.get(Calendar.YEAR)||monthOfYear>calendar1.get(Calendar.MONTH)||dayOfMonth>calendar1.get(Calendar.DAY_OF_MONTH)){
+
+                val selectDate=(year.toString()+monthOfYear.toString()+dayOfMonth.toString()).toInt()
+                val nowDate=(calendar1.get(Calendar.YEAR).toString()+calendar1.get(Calendar.MONTH).toString()+calendar1.get(Calendar.DAY_OF_MONTH).toString()).toInt()
+                if (selectDate>nowDate){
                     showPrompt("不能选择未来日期")
                     return@run
                 }

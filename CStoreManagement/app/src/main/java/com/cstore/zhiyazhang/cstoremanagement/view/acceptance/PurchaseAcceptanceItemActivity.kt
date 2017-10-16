@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.acceptance
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
@@ -142,7 +143,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
 
     override fun initData() {
         adapter= PurchaseAcceptanceItemAdapter(type, if (type==1)ab.allItems else rab.allItems, date, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when(CStoreCalendar.getNowStatus(1)){
                     1->{
                         showPrompt(getString(R.string.huanri))
@@ -169,7 +170,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                 dialog.show()
             }
 
-            override fun onItemLongClick(view: View, position: Int) {
+            override fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i= Intent(this@PurchaseAcceptanceItemActivity,PurchaseAcceptanceCreate::class.java)
                 i.putExtra("date",date)
                 i.putExtra("type",type)

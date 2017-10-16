@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,8 +56,10 @@ class CashDailyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         cash_recycler.layoutManager=MyLinearlayoutManager(activity,LinearLayoutManager.VERTICAL,false)
         cash_recycler.adapter=CashDailyAdapter(data, object : ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                mActivity!!.updateData(view,data[position])
+            override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
+                view as CashDailyAdapter.ViewHolder
+                val itemNumView=view.itemNum
+                mActivity!!.updateData(itemNumView,data[position])
             }
         },date)
     }

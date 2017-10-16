@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/orange"
         android:textColor="@color/white"
+        android:maxLines="1"
         android:gravity="center"
         android:padding="10dp"
         android:textSize="18sp" />

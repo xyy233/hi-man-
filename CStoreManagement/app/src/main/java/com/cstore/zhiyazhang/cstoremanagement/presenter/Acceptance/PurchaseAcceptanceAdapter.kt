@@ -39,7 +39,7 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
             holder.add.visibility=View.VISIBLE
             holder.acceptanceItem.setOnClickListener {
                 //用长按替代加
-                onClick.onItemLongClick(holder.acceptanceItem,position)
+                onClick.onItemLongClick(holder,position)
             }
             //全被隐藏了就不需要再管别的了直接结束
             return
@@ -67,7 +67,7 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                     3->{holder.acceptanceStatus.setImageResource(R.drawable.tomorrow)}
                 }
                 holder.acceptanceItem.setOnClickListener {
-                    onClick.onItemClick(holder.acceptanceItem,position)
+                    onClick.onItemClick(holder,position)
                 }
 
         }else{
@@ -93,7 +93,7 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
                     3->{holder.acceptanceStatus.setImageResource(R.drawable.tomorrow)}
                 }
                 holder.acceptanceItem.setOnClickListener {
-                    onClick.onItemClick(holder.acceptanceItem,position)
+                    onClick.onItemClick(holder,position)
                 }
         }
     }

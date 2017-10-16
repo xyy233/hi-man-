@@ -55,7 +55,7 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
         }
         //设置点击事件
         holder.item.setOnClickListener {
-            onClick.onItemClick(holder.itemNum,position)
+            onClick.onItemClick(holder,position)
         }
     }
 

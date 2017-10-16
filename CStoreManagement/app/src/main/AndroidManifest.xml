@@ -83,7 +83,8 @@
         <activity
             android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            />
 
         <!--热食报废-->
         <activity

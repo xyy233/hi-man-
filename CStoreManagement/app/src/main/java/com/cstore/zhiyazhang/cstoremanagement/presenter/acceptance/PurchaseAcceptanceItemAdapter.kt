@@ -37,7 +37,7 @@ class PurchaseAcceptanceItemAdapter(private val type:Int, private val data: Arra
             holder.add.visibility=View.VISIBLE
             holder.acceptanceData.visibility=View.GONE
             holder.item.setOnClickListener {
-                onClick.onItemLongClick(holder.item,position)
+                onClick.onItemLongClick(holder,position)
             }
             return
         }
@@ -62,7 +62,7 @@ class PurchaseAcceptanceItemAdapter(private val type:Int, private val data: Arra
             holder.retail.text=data[position].storeUnitPrice.toString()
             if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
                 holder.item.setOnClickListener {
-                    onClick.onItemClick(holder.item, position)
+                    onClick.onItemClick(holder, position)
                 }
             }
         }else{
@@ -84,7 +84,7 @@ class PurchaseAcceptanceItemAdapter(private val type:Int, private val data: Arra
             holder.dlvQuantity.text=data[position].storeUnitPrice.toString()
             if (date==CStoreCalendar.getCurrentDate(3)&&CStoreCalendar.getNowStatus(3)==0){
                 holder.item.setOnClickListener {
-                    onClick.onItemClick(holder.item, position)
+                    onClick.onItemClick(holder, position)
                 }
             }
         }

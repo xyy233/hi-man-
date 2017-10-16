@@ -41,6 +41,8 @@
     <string name="open_tutorial">开启教程</string>
     <string name="open_tutorial_done">已开启教程！</string>
     <string name="photo">照片</string>
+    <string name="unit_price">单价</string>
+    <string name="all_price">总金额</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
@@ -118,7 +120,10 @@
     <string name="scrap2">热食报废</string>
     <string name="submit_scrap">提交报废信息</string>
     <string name="freshGroup">群组</string>
+    <string name="mrk_count">报废数量</string>
     <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
+    <string name="all_scrap_count">总报废品项:</string>
+    <string name="all_scrap_price">总报废金额:</string>
 
     <string name="cash_daily">现金日报</string>
 
@@ -169,4 +174,5 @@
     <string name="scheduling">排班</string>
     <string name="access">出入</string>
     <string name="edit_user_id">请输入工号</string>
+    <string name="cnt_not_use">非承包店不能使用此功能!</string>
 </resources>

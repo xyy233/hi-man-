@@ -6,8 +6,8 @@
               android:background="@color/touminghui"
               android:elevation="5dp"
               android:animateLayoutChanges="true"
-              android:gravity="center"
               android:visibility="gone"
+              android:gravity="center"
               android:orientation="vertical">
 
     <ProgressBar

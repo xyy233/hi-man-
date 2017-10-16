@@ -27,7 +27,7 @@ class LogoAdapter(private val context: Context, val data: ArrayList<LogoBean>, p
             is ViewHolder -> {
                 Glide.with(context).load(data[position].img).crossFade().into(holder.orderImg)
                 holder.orderMsg.text = data[position].msg
-                holder.orderItem.setOnClickListener { itemClick.onItemClick(holder.orderItem, position) }
+                holder.orderItem.setOnClickListener { itemClick.onItemClick(holder, position) }
             }
         }
 

@@ -48,9 +48,15 @@ object MySql {
     /**
      * 获得大类信息的存储过程
      */
-    fun ordT2(): String {
-        val date=CStoreCalendar.getCurrentDate(2)
-        return "call scb02_new_p01('$date','$date','0')"
+    fun appOrdT2(): String {
+        return "call scb02_new_p07('${CStoreCalendar.getCurrentDate(0)}','${CStoreCalendar.getCurrentDate(2)}','0')"
+    }
+
+    /**
+     * 按建议量自动下单存储过程
+     */
+    fun autoOrd():String{
+        return "call scb02_new_p08('${CStoreCalendar.getCurrentDate(2)}')"
     }
 
     /**
@@ -58,7 +64,7 @@ object MySql {
      */
     val judgmentOrdt2: String
         get() {
-            return "select distinct to_char(orderdate,'yyyy-mm-dd') orderdate from ord_t2\u0004"
+            return "select distinct to_char(orderdate,'yyyy-mm-dd') orderdate from appord_t2\u0004"
         }
 
 
@@ -66,27 +72,6 @@ object MySql {
      * 获得大类信息
      */
     fun getAllCategory(): String {
-        /*return "select plu.categoryNumber,cat.categoryName,count(*) tot_sku," +
-                "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku," +
-                "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate " +
-                "from cat,plu,ord,cat cat1 " +
-                "WHERE cat.storeid='${User.getUser().storeId}' " +
-                "AND trim(cat.categoryNumber) is not null " +
-                "AND trim(cat.midcategoryNumber) is null " +
-                "AND trim(cat.microcategoryNumber) is null " +
-                "AND plu.storeID=cat.storeID " +
-                "AND plu.categoryNumber=cat.categoryNumber " +
-                "AND plu.storeID=ord.storeID " +
-                "AND plu.itemNumber=ord.itemNumber " +all scb02_new_p01('${MyTimeUtil.tomorrowDate}','${MyTimeUtil.tomorrowDate}','0')\u00
-                "AND ord.orderDate=to_date('${MyTimeUtil.tomorrowDate}','YYYY-MM-DD') " +
-                "AND plu.storeID=cat1.storeID " +
-                "AND plu.categoryNumber=cat1.categoryNumber " +
-                "AND plu.midCategoryNumber=cat1.midCategoryNumber " +
-                "AND trim(cat1.midCategoryNumber) is not null " +
-                "AND trim(cat1.microCategoryNumber) is null " +
-                "AND cat1.GROUP_YN='N' AND cat.categoryNumber<>'99' " +
-                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName " +
-                "order by PLU.CATEGORYNUMBER\u0004"*/
         return "select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
@@ -134,6 +119,33 @@ object MySql {
     }
 
     /**
+     * 得到所有修改过的数据统计
+     */
+    fun getAllEditData():String{
+        return "select '-1' categorynumber, '统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+                "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate " +
+                "from cat,plu,ord,cat cat1 " +
+                "WHERE cat.storeid='${User.getUser().storeId}' " +
+                "AND trim(cat.categoryNumber) is not null " +
+                "AND trim(cat.midcategoryNumber) is null " +
+                "AND trim(cat.microcategoryNumber) is null " +
+                "AND plu.storeID=cat.storeID " +
+                "AND plu.categoryNumber=cat.categoryNumber " +
+                "AND plu.storeID=ord.storeID " +
+                "AND plu.itemNumber=ord.itemNumber " +
+                "AND ord.orderDate=to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD') " +
+                "AND plu.storeID=cat1.storeID " +
+                "AND plu.categoryNumber=cat1.categoryNumber " +
+                "AND plu.midCategoryNumber=cat1.midCategoryNumber " +
+                "AND trim(cat1.midCategoryNumber) is not null " +
+                "AND trim(cat1.microCategoryNumber) is null " +
+                "AND cat1.GROUP_YN='N' " +
+                "AND cat.categoryNumber<>'99' " +
+                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName)"
+    }
+
+    /**
      * 通过大类id获得商品
      */
     fun getItemByCategoryId(categoryId: String, sort: String): String {
@@ -141,7 +153,7 @@ object MySql {
                 " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p," +
+                "From appord_t2 x,plu p," +
                 "(select itemnumber item_no from itemgondra where storeid='${User.getUser().storeId}' and gondranumber like '%' " +
                 "group by itemnumber) y " +
                 "where x.itemnumber= y.item_no(+) " +
@@ -156,7 +168,7 @@ object MySql {
                 "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p, " +
+                "From appord_t2 x,plu p, " +
                 "(select itemnumber item_no from itemgondra where storeid='111112' and gondranumber like '%' " +
                 "group by itemnumber) y " +
                 "where x.itemnumber= y.item_no(+) " +
@@ -190,7 +202,7 @@ object MySql {
                 " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p," +
+                "From appord_t2 x,plu p," +
                 "(select itemnumber item_no from itemgondra where storeid='${User.getUser().storeId}' and gondranumber like '$shelfId' " +
                 "group by itemnumber) y " +
                 "where x.itemnumber= y.item_no(+) " +
@@ -204,7 +216,7 @@ object MySql {
      * 更新单品语句配合事务头和脚使用
      */
     fun updateOrdItem(itemId: String, value: Int): String {
-        return "update ord set updateuserid='${User.getUser().uId}', updatedate=sysdate, ordstatus='1', ordactualquantity=$value where storeid='${User.getUser().storeId}' and orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId'; update ord_t2 set ordactualquantity=$value,status='1' where orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId';"
+        return "update ord set updateuserid='${User.getUser().uId}', updatedate=sysdate, ordstatus='1', ordactualquantity=$value where storeid='${User.getUser().storeId}' and orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId'; update appord_t2 set ordactualquantity=$value,status='1' where orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId';"
     }
 
     /**
@@ -216,7 +228,7 @@ object MySql {
                 "x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.ordertype,x.pro_yn, " +
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p, itemplu i " +
+                "From appord_t2 x,plu p, itemplu i " +
                 "where x.itemnumber = p.itemnumber " +
                 "and i.itemnumber=x.itemnumber " +
                 "and (x.itemnumber like '%$value%' or x.pluname like'%$value%' or i.plunumber like '%$value%')) " +
@@ -270,7 +282,7 @@ object MySql {
                     "sum(decode(sign(p.ordactualquantity+p.ordactualquantity1),1,1,0)) ord_sku, " +
                     "sum((p.ordactualquantity+p.ordactualquantity1)*p.storeunitprice) amt " +
                     "from (select a.in_th_code,a.itemnumber,b.ordActualQuantity,b.ordActualQuantity1,b.storeUnitPrice " +
-                    "from plu a,ord b,ord_t2 c " +
+                    "from plu a,ord b,appord_t2 c " +
                     "where a.itemnumber = b.itemnumber " +
                     "and c.itemnumber=b.itemnumber " +
                     "and c.orderdate=b.orderdate " +
@@ -288,7 +300,7 @@ object MySql {
                     "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.ordactualquantity1,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, " +
                     "substr(p.signType,12,1) s_returntype, " +
                     "round(p.storeunitprice,2) storeunitprice " +
-                    "From ord_t2 x,plu p " +
+                    "From appord_t2 x,plu p " +
                     "where x.itemnumber = p.itemnumber(+) " +
                     "and x.pro_yn ='Y') " +
                     "order by 1 desc\u0004"
@@ -299,7 +311,7 @@ object MySql {
      */
     fun getNewItemById(id: String, orderBy: String): String {
         return "Select to_char(x.sell_cost, '999999990.00') sell_cost,x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, substr(p.signType,12,1) s_returntype, round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p " +
+                "From appord_t2 x,plu p " +
                 "where x.itemnumber = p.itemnumber(+) " +
                 "AND nvl(x.market_date,TO_DATE('1970-01-01','YYYY-MM-DD'))>=(sysdate-60 ) " +
                 "AND x.item_level='L0' " +
@@ -310,7 +322,7 @@ object MySql {
      * 获得促销品
      */
     fun getPromotion(orderBy: String): String {
-        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From ord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy\u0004"
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From appord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy\u0004"
     }
 
     /**
@@ -373,7 +385,7 @@ object MySql {
                 "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, x.dms,x.ordertype,x.pro_yn," +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
-                "From ord_t2 x,plu p " +
+                "From appord_t2 x,plu p " +
                 "where x.itemnumber = p.itemnumber " +
                 "and x.categorynumber = '$categoryId' " +
                 "and x.midCategoryNumber = '$midId' $orderBy\u0004"

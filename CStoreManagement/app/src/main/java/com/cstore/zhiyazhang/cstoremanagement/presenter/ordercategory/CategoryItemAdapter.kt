@@ -94,22 +94,22 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
             data.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val orderItemId = itemView.findViewById<TextView>(R.id.orderItemId)
-        val orderItemName = itemView.findViewById<TextView>(R.id.orderItemName)
-        val orderPrice = itemView.findViewById<TextView>(R.id.orderPrice)
-        val price = itemView.findViewById<TextView>(R.id.price)
-        val sell = itemView.findViewById<TextView>(R.id.sell)
-        val orderInv = itemView.findViewById<TextView>(R.id.orderInv)
-        val orderExpected = itemView.findViewById<TextView>(R.id.orderExpected)
-        val dlvQTY = itemView.findViewById<TextView>(R.id.dlvQTY)
-        val orderTomorrow = itemView.findViewById<TextView>(R.id.orderTomorrow)
-        val arriveDate = itemView.findViewById<TextView>(R.id.arriveDate)
-        val editOrderQTY = itemView.findViewById<TextView>(R.id.editOrderQTY)
-        val orderImg = itemView.findViewById<ImageView>(R.id.orderImg)
-        val less = itemView.findViewById<ImageButton>(R.id.less)
-        val add = itemView.findViewById<ImageButton>(R.id.add)
-        val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)
-        val isNoBuy = itemView.findViewById<ImageView>(R.id.is_nobuy)
-        val isPro = itemView.findViewById<ImageView>(R.id.is_pro)
+        val orderItemId = itemView.findViewById<TextView>(R.id.orderItemId)!!
+        val orderItemName = itemView.findViewById<TextView>(R.id.orderItemName)!!
+        val orderPrice = itemView.findViewById<TextView>(R.id.orderPrice)!!
+        val price = itemView.findViewById<TextView>(R.id.price)!!
+        val sell = itemView.findViewById<TextView>(R.id.sell)!!
+        val orderInv = itemView.findViewById<TextView>(R.id.orderInv)!!
+        val orderExpected = itemView.findViewById<TextView>(R.id.orderExpected)!!
+        val dlvQTY = itemView.findViewById<TextView>(R.id.dlvQTY)!!
+        val orderTomorrow = itemView.findViewById<TextView>(R.id.orderTomorrow)!!
+        val arriveDate = itemView.findViewById<TextView>(R.id.arriveDate)!!
+        val editOrderQTY = itemView.findViewById<TextView>(R.id.editOrderQTY)!!
+        val orderImg = itemView.findViewById<ImageView>(R.id.orderImg)!!
+        val less = itemView.findViewById<ImageButton>(R.id.less)!!
+        val add = itemView.findViewById<ImageButton>(R.id.add)!!
+        val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)!!
+        val isNoBuy = itemView.findViewById<ImageView>(R.id.is_nobuy)!!
+        val isPro = itemView.findViewById<ImageView>(R.id.is_pro)!!
     }
 }

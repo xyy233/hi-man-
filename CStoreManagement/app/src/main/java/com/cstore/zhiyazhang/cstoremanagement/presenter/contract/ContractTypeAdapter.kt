@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_type_horizontal.view.*
  * Created by zhiya.zhang
  * on 2017/6/12 15:10.
  */
-class ContractTypeAdapter(val sqliteData: ArrayList<ContractTypeBean>, val isJustLook: Boolean, val ctbs: List<ContractTypeBean>, val listener: (ContractTypeBean) -> Unit) :
+class ContractTypeAdapter(private val sqliteData: ArrayList<ContractTypeBean>, val isJustLook: Boolean, val ctbs: List<ContractTypeBean>, private val listener: (ContractTypeBean) -> Unit) :
         RecyclerView.Adapter<ContractTypeAdapter.ViewHolder>() {
 
 

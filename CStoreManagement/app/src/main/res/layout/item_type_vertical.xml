@@ -3,9 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="75dp"
-              android:foreground="@drawable/selector_foreground"
-              android:orientation="horizontal"
-              android:stateListAnimator="@drawable/lift_on_touch">
+              android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -26,16 +24,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="1.5dp"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:clickable="true"
             android:layout_marginEnd="3dp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="1.5dp"
-            android:background="@color/windowBackground"
             android:elevation="1dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusable="true">
 
             <TextView
-                android:id="@+id/type_v"
+                android:id="@+id/item_text1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -50,11 +51,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginTop="1dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/inventory_v"
+                    android:id="@+id/item_text2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -65,10 +65,9 @@
                     tools:ignore="NestedWeights"/>
 
                 <TextView
-                    android:id="@+id/tonightCount_v"
+                    android:id="@+id/item_text3"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="1dp"
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:gravity="center"
@@ -76,10 +75,9 @@
                     android:textSize="14sp"/>
 
                 <TextView
-                    android:id="@+id/todayCount_v"
+                    android:id="@+id/item_text4"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="1dp"
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:gravity="center"
@@ -90,9 +88,5 @@
 
             </LinearLayout>
         </LinearLayout>
-
-
     </FrameLayout>
-
-
 </LinearLayout>

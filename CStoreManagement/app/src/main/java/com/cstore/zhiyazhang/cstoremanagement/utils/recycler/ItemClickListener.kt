@@ -1,6 +1,6 @@
 package com.zhiyazhang.mykotlinapplication.utils.recycler
 
-import android.view.View
+import android.support.v7.widget.RecyclerView
 
 /**
  * Created by zhiya.zhang
@@ -10,10 +10,12 @@ interface ItemClickListener {
     /**
      * 点击一下
      */
-    fun onItemClick(view: View, position: Int)
+    fun onItemClick(view: RecyclerView.ViewHolder, position: Int)
 
     /**
      * 长按
      */
-    fun onItemLongClick(view: View, position: Int){}
+    fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int){}
+
+    fun <T> onItemRemove(data:T, position: Int){}
 }
