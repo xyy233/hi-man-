@@ -45,5 +45,9 @@ data class ScrapHotBean(
         @SerializedName("midcategorynumber")
         val sId:String,
         @SerializedName("categoryname")
-        val sName:String
+        val sName:String,
+        @SerializedName("price")
+        val sPrice:Float,
+        @SerializedName("count")
+        val sCount:Int
 ):Serializable

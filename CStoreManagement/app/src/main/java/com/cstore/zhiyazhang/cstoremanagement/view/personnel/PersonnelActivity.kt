@@ -48,10 +48,10 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
     }
 
     private fun setData(data: ArrayList<LogoBean>) {
-        data.add(LogoBean(R.drawable.no_img,getString(R.string.check_in),0))
-        data.add(LogoBean(R.drawable.no_img,getString(R.string.attendance),1))
-        data.add(LogoBean(R.drawable.no_img,getString(R.string.attendance_record),2))
-        data.add(LogoBean(R.drawable.no_img,getString(R.string.scheduling),3))
+        data.add(LogoBean(R.mipmap.ic_check_in,getString(R.string.check_in),0))
+        data.add(LogoBean(R.mipmap.ic_attendance,getString(R.string.attendance),1))
+        data.add(LogoBean(R.mipmap.ic_attendance_record,getString(R.string.attendance_record),2))
+        data.add(LogoBean(R.mipmap.ic_scheduling,getString(R.string.scheduling),3))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -29,6 +29,9 @@
                 android:id="@+id/check_in_edit"
                 android:hint="@string/edit_user_id"
                 android:textSize="16sp"
+                android:maxLength="8"
+                android:inputType="number"
+                android:digits="1234567890"
                 android:layout_width="200dp"
                 android:layout_height="50dp"/>
 

@@ -43,7 +43,7 @@ class MyImage{
             //文字矩阵区域
             val textBounds=Rect()
             //水印字体大小
-            mPaint.textSize=20f
+            mPaint.textSize=10f
             //阴影
             mPaint.setShadowLayer(0.5f,0f,1f,Color.BLACK)
             //抗锯齿
@@ -52,7 +52,7 @@ class MyImage{
             mPaint.getTextBounds(markText,0,markText.length,textBounds)
             //水印颜色
             mPaint.color=Color.WHITE
-            //图片小鱼水印不绘制水印,虽然不可能
+            //图片小鱼水印不绘制水印
             if (textBounds.width()>bmp.width||textBounds.height()>bmp.height)return bmp
             //文字开始的坐标
             val textX=bmp.width-textBounds.width()-10f

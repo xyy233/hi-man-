@@ -1,13 +1,13 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap
 
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.util.TypedValue
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
@@ -20,31 +20,42 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
-import kotlinx.android.synthetic.main.activity_contract.*
+import kotlinx.android.synthetic.main.activity_scrap_hot_item.*
+import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 
 /**
  * Created by zhiya.zhang
  * on 2017/9/1 15:17.
  */
-class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), GenericView {
+class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_scrap_hot_item) : MyActivity(), GenericView {
 
     val presenter = ScrapHotPresenter(this, this)
     private val hotMid: ArrayList<ScrapHotBean>
         get() = intent.getSerializableExtra("hotMid") as ArrayList<ScrapHotBean>
-    var nowPosition: Int = 0
+    private var nowPosition: Int = 0
     private val changeData = ArrayList<ScrapContractBean>()
     /**
      * 0==none 1==finish 2==next 3==last
      */
-    var activityAction = 0
+    private var activityAction = 0
     val layoutManager = MyLinearlayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    private lateinit var dialogView: View
+    private lateinit var dialog: AlertDialog
+    private lateinit var adapter: ScrapAdapter
+
+    private fun initDialog(): AlertDialog {
+        val builder = AlertDialog.Builder(this@ScrapHotItemActivity)
+        builder.setView(dialogView)
+        builder.setCancelable(true)
+        dialogView.dialog_cancel.setOnClickListener { dialog.cancel() }
+        return builder.create()
+    }
 
     override fun initView() {
         nowPosition = intent.getIntExtra("position", 0)
         toolbar.title = hotMid[nowPosition].sName
         toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(toolbar)
-        mySpinner.visibility = View.GONE
         swipe_recycler.layoutManager = layoutManager
         my_swipe.setProgressViewEndTarget(true, 500)
         //设置loading样式
@@ -52,13 +63,19 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
         my_swipe.setProgressViewOffset(false, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt())
         my_swipe.setColorSchemeColors(
                 ContextCompat.getColor(this@ScrapHotItemActivity, R.color.cstore_red),
-                ContextCompat.getColor(this@ScrapHotItemActivity, R.color.yellow),
+                ContextCompat.getColor(this@ScrapHotItemActivity, R.color.sure),
                 ContextCompat.getColor(this@ScrapHotItemActivity, R.color.blue),
                 ContextCompat.getColor(this@ScrapHotItemActivity, R.color.cstore_green))
         //设置下拉刷新是否能用
         appbar.addOnOffsetChangedListener { _, verticalOffset ->
             my_swipe.isEnabled = verticalOffset >= 0
         }
+        dialogView = View.inflate(this@ScrapHotItemActivity, R.layout.dialog_cashdaily, null)
+        dialog = initDialog()
+        header_text1_v.text = getString(R.string.idorname)
+        header_text2_v.text = getString(R.string.unit_price)
+        header_text3_v.text = getString(R.string.mrk_count)
+        header_text4_v.text = getString(R.string.all_price)
     }
 
     override fun initClick() {
@@ -126,15 +143,15 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->onBackPressed()
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
         }
         return true
     }
 
     override fun onBackPressed() {
-        if (MyTimeUtil.nowHour<23) {
-            if (changeData.size!=0){
+        if (MyTimeUtil.nowHour < 23) {
+            if (changeData.size != 0) {
                 AlertDialog.Builder(this@ScrapHotItemActivity)
                         .setTitle("提示")
                         .setMessage("您修改的报废尚未确认，是否放弃修改？")
@@ -144,11 +161,15 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
                         })
                         .setNegativeButton("放弃", { _, _ ->
                             changeData.clear()
-                            super.onBackPressed()
+                            finish()
                         })
                         .show()
-            }else super.onBackPressed()
-        }else super.onBackPressed()
+            } else {
+                finish()
+            }
+        } else {
+            finish()
+        }
     }
 
     private fun goLast() {
@@ -183,7 +204,7 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
                 1 -> onBackPressed()
                 2 -> goNext()
                 3 -> goLast()
-                else->initData()
+                else -> initData()
             }
             showPrompt(getString(R.string.saveDone))
             return
@@ -194,140 +215,66 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
             3 -> toolbar.title = hotMid[nowPosition].sName
         }
         noMessage.visibility = View.GONE
-        swipe_recycler.adapter = ScrapAdapter(rData as ArrayList<ScrapContractBean>, recyclerClick)
+        adapter = ScrapAdapter(rData as ArrayList<ScrapContractBean>, recyclerClick)
+        swipe_recycler.adapter = adapter
     }
 
     private val recyclerClick = object : ItemClickListener {
         override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-/*
-        override fun <T> onClickImage(objects: T, position: Int) {
-        }
-
-        override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
-            val adapterView = swipe_recycler.findViewHolderForAdapterPosition(position) as ScrapAdapter.ViewHolder
-            onTouchChange(1, event.action, adapterView, objects as ScrapContractBean)
-        }
-
-        override fun <T> onTouchLessListener(objects: T, event: MotionEvent, position: Int) {
-            val adapterView = swipe_recycler.findViewHolderForAdapterPosition(position) as ScrapAdapter.ViewHolder
-            onTouchChange(0, event.action, adapterView, objects as ScrapContractBean)
-        }*/
-    }
-
-    companion object {
-        var isOnLongClick = false
-        var thread: Thread? = null
-        val handler: Handler = Handler()
-    }
-
-    override fun onDestroy() {
-        isOnLongClick=false
-        thread=null
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroy()
-    }
-
-    private fun onTouchChange(addLess: Int, action: Int, view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-        when (action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (!isOnLongClick) {
-                    thread = Thread(Runnable {
-                        while (isOnLongClick) {
-                            Thread.sleep(200)
-                            if (addLess == 0) lessCount(view, scb) else addCount(view, scb)
-                        }
-                    })
-                    isOnLongClick = true
-                    runOrStopEdit()
-                    thread!!.start()
-                }
+            view as ScrapAdapter.ViewHolder
+            dialogView.dialog_title.text = view.idName.text
+            dialogView.dialog_edit.setText(view.mrkCount.text)
+            dialogView.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
+            dialogView.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
+            dialogView.dialog_edit.setSelection(dialogView.dialog_edit.text.length)
+            dialogView.dialog_save.setOnClickListener {
+                if (dialogView.dialog_edit.text.toString() == "") dialogView.dialog_edit.setText("0")
+                editCount(dialogView.dialog_edit.text.toString().toInt(), view, position)
+                if (done.visibility == View.GONE) done.visibility = View.VISIBLE
+                dialog.cancel()
             }
-            MotionEvent.ACTION_UP -> {
-                if (thread != null) {
-                    isOnLongClick = false
-                    thread = null
-                    runOrStopEdit()
-                }
-            }
+            dialog.show()
         }
     }
 
-    private fun addCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-        val nowCount=scb.mrkCount+1
-        val nowEditCount=scb.editCount+1
-        if (nowCount>999){
-            handler.post { showPrompt(getString(R.string.maxCNoAdd)) }
-            return
-        }
-        if (scb.action==2)scb.action=1
-        scb.mrkCount=nowCount
-        scb.editCount=nowEditCount
-        var i=0
-        changeData.filter { it.scrapId==scb.scrapId }.forEach {
-            i++
-            if (it.action==2)scb.action=1
-            it.mrkCount=nowCount
-            it.editCount=nowEditCount
-        }
-        if (i==0)changeData.add(scb.copy())
-        handler.post { view.mrkCount.text=scb.mrkCount.toString()
-            view.allPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
-    }
-
-    private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-        val nowCount = scb.mrkCount - 1
-        val nowEditCount = scb.editCount - 1
-        if (nowCount < 0) {
-            handler.post { showPrompt(getString(R.string.minCNoLess)) }
-            return
-        }
-        if (nowCount == 0) {
-            var i = 0
-            changeData.filter { it.scrapId == scb.scrapId }.forEach {
-                when (it.action) {
-                    0 -> {
-                        changeData.remove(it)
-                    }//如果是创建就代表是新的直接删除
-                    1 -> {
-                        i++
-                        it.action = 2
-                    }//如果是更新就代表是数据库中的，需要修改动作为delete去处理
-                }
+    private fun editCount(nowCount: Int, view: ScrapAdapter.ViewHolder, position: Int) {
+        val scb = adapter.data[position]
+        when {
+            nowCount > 999 -> {
+                showPrompt(getString(R.string.maxCNoAdd))
+                return
             }
-            scb.mrkCount = nowCount
-            scb.editCount = nowEditCount
-            //如果不是新建的修改动作为删除
-            if (scb.action!=0)scb.action = 2
-            if (i == 0) changeData.add(scb.copy())
-            handler.post {
-                view.mrkCount.text = scb.mrkCount.toString()
-                view.allPrice.text=scb.unitPrice.toString()
+            nowCount < 0 -> {
+                showPrompt(getString(R.string.minCNoLess))
+                return
             }
-            return
+            nowCount == 0 -> {
+                //只有更新动作的数据才需要改为删除动作
+                if (scb.action == 1) scb.action = 2
+            }
+            nowCount > 0 -> {
+                //只有删除动作的数据才需要改为更新动作
+                if (scb.action == 2) scb.action = 1
+            }
+            nowCount == view.mrkCount.text.toString().toInt() -> return
         }
         scb.mrkCount = nowCount
-        scb.editCount = nowEditCount
+        scb.editCount = nowCount
         var i = 0
         changeData.filter { it.scrapId == scb.scrapId }.forEach {
             i++
-            it.mrkCount = nowCount
-            it.editCount = nowEditCount
+            it.action = scb.action
+            it.mrkCount = scb.mrkCount
+            it.editCount = scb.editCount
         }
         if (i == 0) changeData.add(scb.copy())
-        handler.post { view.mrkCount.text = scb.mrkCount.toString()
-            view.allPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()}
-    }
-
-    private fun runOrStopEdit() {
-        layoutManager.setScrollEnabled(!isOnLongClick)
-        my_swipe.isEnabled = !isOnLongClick
+        view.mrkCount.text = nowCount.toString()
+        view.allPrice.text = (scb.unitPrice * nowCount).toFloat().toString()
     }
 
     override fun showLoading() {
         my_swipe.isRefreshing = true
-        done.isEnabled=false
+        done.isEnabled = false
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
@@ -336,14 +283,11 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     override fun hideLoading() {
         my_swipe.isRefreshing = false
-        done.isEnabled=true
+        done.isEnabled = true
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
         MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
-    }
-
-    override fun <T> showView(aData: T) {
     }
 
     override fun errorDealWith() {

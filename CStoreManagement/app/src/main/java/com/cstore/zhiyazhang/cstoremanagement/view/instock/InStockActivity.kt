@@ -10,7 +10,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.inventory.InventoryAdjustmentActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
@@ -40,8 +39,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when(data[position].position){
                     0->{startActivity(Intent(this@InStockActivity, ScrapActivity::class.java))}
-                    1->{startActivity(Intent(this@InStockActivity,ScrapHotActivity::class.java))}
-                    2->{startActivity(Intent(this@InStockActivity,InventoryAdjustmentActivity::class.java))}
+                    1->{startActivity(Intent(this@InStockActivity,InventoryAdjustmentActivity::class.java))}
                 }
             }
         })
@@ -49,8 +47,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
 
     private fun setData(data: ArrayList<LogoBean>) {
         data.add(LogoBean(R.mipmap.ic_scrap,getString(R.string.scrap1),0))
-        data.add(LogoBean(R.mipmap.ic_scrap2,getString(R.string.scrap2),1))
-        data.add(LogoBean(R.mipmap.ic_inventory_adjustment,getString(R.string.inventory_adjustment),2))
+        data.add(LogoBean(R.mipmap.ic_inventory_adjustment,getString(R.string.inventory_adjustment),1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

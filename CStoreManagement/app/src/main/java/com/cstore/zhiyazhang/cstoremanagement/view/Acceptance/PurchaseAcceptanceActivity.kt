@@ -17,7 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAccep
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DividerItemDecoration
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
@@ -45,7 +45,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
         MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(3))
         setSupportActionBar(my_toolbar)
         orderRecycler.layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceActivity, LinearLayout.VERTICAL, false)
-        val dividerItemDecoration=DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
+        val dividerItemDecoration= MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         dividerItemDecoration.setDivider(R.drawable.divider_bg)
         orderRecycler.addItemDecoration(dividerItemDecoration)
         orderRecycler.itemAnimator= DefaultItemAnimator()

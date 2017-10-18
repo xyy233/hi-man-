@@ -43,13 +43,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         val intentFilter = IntentFilter()
         intentFilter.addAction("com.cstore.zhiyazhang.UPDATE")
         registerReceiver(updateReceiver, intentFilter)
+        this.startService(Intent(this, UpdateService::class.java))
     }
 
     override fun onStart() {
         super.onStart()
-        if (MyApplication.getVersion()!!.indexOf("Alpha") == -1) {
-            this.startService(Intent(this, UpdateService::class.java))
-        }
     }
 
     override fun onDestroy() {

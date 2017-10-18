@@ -96,7 +96,7 @@
         android:layout_marginStart="0dp"
         android:visibility="gone"
         android:animateLayoutChanges="true"
-        android:background="@color/contract_sure"
+        android:background="@color/sure"
         android:text="@string/save"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

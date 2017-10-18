@@ -15,7 +15,7 @@ import android.widget.Button
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AdjustmentBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.adjustment.AdjustmentAdapter
-import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DividerItemDecoration
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.fragment_adjustment.*
@@ -68,7 +68,7 @@ class InventoryAdjustmentFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adjustment_recycler.layoutManager=MyLinearlayoutManager(mActivity as Context,LinearLayoutManager.VERTICAL,false)
-        val dividerItemDecoration= DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        val dividerItemDecoration= MyDividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         dividerItemDecoration.setDivider(R.drawable.divider_bg2)
         adjustment_recycler.addItemDecoration(dividerItemDecoration)
         adjustment_recycler.itemAnimator= DefaultItemAnimator()

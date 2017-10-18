@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/scrap_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:layout_marginEnd="3dp"
+        android:layout_marginStart="3dp"
+        android:animateLayoutChanges="true"
+        android:background="@color/contract_bg"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:gravity="center|start"
+            android:id="@+id/scrap_count_statistics"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="1"
+            android:text="@string/all_scrap_hot_count"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:gravity="center|start"
+            android:id="@+id/scrap_price_statistics"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/all_scrap_hot_price"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scrap_hot_header"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrap_statistics">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/contract_bg"
+            android:gravity="center"
+            android:text="@string/scrap_mid_category"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:background="@color/contract_bg"
+            android:gravity="center"
+            android:text="@string/scrap_count"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:background="@color/contract_bg"
+            android:gravity="center"
+            android:text="@string/scrap_price"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <com.cstore.zhiyazhang.cstoremanagement.utils.MySwipeRefresh
+        android:id="@+id/scrap_hot_refresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrap_hot_header">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/scrap_hot_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.cstore.zhiyazhang.cstoremanagement.utils.MySwipeRefresh>
+
+</android.support.constraint.ConstraintLayout>

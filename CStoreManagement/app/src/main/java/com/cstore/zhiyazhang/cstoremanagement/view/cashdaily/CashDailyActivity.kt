@@ -102,7 +102,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
             dialogView!!.dialog_edit.visibility=View.VISIBLE
             dialogView!!.dialog_edit.isEnabled=false
             dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
-            dialogView!!.dialog_edit.gravity=Gravity.TOP
+//            dialogView!!.dialog_edit.gravity=Gravity.TOP
             dialogView!!.dialog_edit.setSingleLine(false)
             dialogView!!.dialog_edit.setHorizontallyScrolling(false)
         }else{
@@ -144,7 +144,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                 //设置输入类型
                 if (cd.cdId=="1100"){
                     dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
-                    dialogView!!.dialog_edit.gravity=Gravity.TOP
+                    dialogView!!.dialog_edit.gravity= Gravity.TOP
                     dialogView!!.dialog_edit.setSingleLine(false)
                     dialogView!!.dialog_edit.setHorizontallyScrolling(false)
                 }else{

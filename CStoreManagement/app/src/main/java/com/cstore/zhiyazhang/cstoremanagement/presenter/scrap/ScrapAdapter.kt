@@ -46,8 +46,10 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, private val onClick: 
             }
         }
 
-        if (data[position].action==0)holder.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.add_bg))
-        else holder.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
+        if (data[position].action==0)
+            holder.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.add_bg))
+        else
+            holder.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
 
         if (isClick){
             holder.itemBg.setOnClickListener {
@@ -78,6 +80,7 @@ class ScrapAdapter(val data: ArrayList<ScrapContractBean>, private val onClick: 
 
     fun addItems(newDates: ArrayList<ScrapContractBean>) {
         data.addAll(newDates)
+        data.sortByDescending { it.action }
         notifyDataSetChanged()
     }
 

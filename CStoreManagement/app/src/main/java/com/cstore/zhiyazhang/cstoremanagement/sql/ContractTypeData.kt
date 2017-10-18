@@ -14,9 +14,9 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDBHelper.Companion
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CONTRACT_TYPE_TABLE_NAME
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CREATE_DAY
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.TYPE_ID
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -61,7 +61,7 @@ class ContractTypeDBHelper(context: Context) : SQLiteOpenHelper(context, Contrac
 }
 
 class ContractTypeDao(context: Context) {
-    private val CONTRACT_TYPE_COLUMNS = arrayOf<String>(TYPE_ID, CREATE_DAY)
+    private val CONTRACTTYPECOLUMNS = arrayOf<String>(TYPE_ID, CREATE_DAY)
     private val ctdbh: ContractTypeDBHelper = ContractTypeDBHelper(context)
 
     fun editSQL(ctb: ContractTypeBean?, type: String) {
@@ -140,7 +140,7 @@ class ContractTypeDao(context: Context) {
             var cursor: Cursor? = null
             try {
                 db = ctdbh.readableDatabase
-                cursor = db!!.query(CONTRACT_TYPE_TABLE_NAME, CONTRACT_TYPE_COLUMNS, null, null, null, null, null)
+                cursor = db!!.query(CONTRACT_TYPE_TABLE_NAME, CONTRACTTYPECOLUMNS, null, null, null, null, null)
                 if (cursor!!.count > 0) {
                     val result = ArrayList<ContractTypeBean>(cursor.count)
                     while (cursor.moveToNext()) {

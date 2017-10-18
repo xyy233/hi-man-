@@ -131,7 +131,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         my_swipe.setProgressViewOffset(false, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt())
         my_swipe.setColorSchemeColors(
                 ContextCompat.getColor(this@ContractActivity, R.color.cstore_red),
-                ContextCompat.getColor(this@ContractActivity, R.color.yellow),
+                ContextCompat.getColor(this@ContractActivity, R.color.sure),
                 ContextCompat.getColor(this@ContractActivity, R.color.blue),
                 ContextCompat.getColor(this@ContractActivity, R.color.cstore_green))
         //设置下拉刷新是否能用

@@ -8,7 +8,7 @@
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
+        android:background="@color/sure"
         android:textColor="@color/white"
         android:maxLines="1"
         android:gravity="center"
@@ -25,6 +25,9 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:id="@+id/dialog_edit"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/please_edit_value"/>
@@ -57,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/white"
-            android:background="@color/orange"
+            android:background="@color/sure"
             android:layout_weight="1"
             android:text="@string/cancel" />
 
@@ -69,7 +72,7 @@
         <Button
             android:id="@+id/dialog_save"
             android:textColor="@color/white"
-            android:background="@color/orange"
+            android:background="@color/sure"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

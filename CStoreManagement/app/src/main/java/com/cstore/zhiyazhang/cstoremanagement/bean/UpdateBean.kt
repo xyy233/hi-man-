@@ -10,4 +10,8 @@ import java.io.Serializable
 data class UpdateBean(
         val version: String,
         @SerializedName("ver_number")val versionNumber:Int,
-        val downloadUrl: String) : Serializable
+        val downloadUrl: String,
+        @SerializedName("alpha_version") val alphaVersion:String,
+        @SerializedName("alpha_ver_number") val alphaVerNumber:Int,
+        @SerializedName("alpha_downloadUrl") val alphaDownloadUrl:String
+        ) : Serializable

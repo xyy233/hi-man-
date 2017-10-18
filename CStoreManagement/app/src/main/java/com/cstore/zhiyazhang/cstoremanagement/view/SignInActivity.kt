@@ -177,6 +177,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             if (judgmentPermissions()) {
                 deleteDownload()
+                deleteAlphaDownload()
             }
         } else {
             if (!cameraIsCanUse()) {
@@ -188,6 +189,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                 this@SignInActivity.startActivity(intent)
             }
             deleteDownload()
+            deleteAlphaDownload()
         }
     }
 
@@ -244,11 +246,22 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     //获取权限成功
     override fun onPermissionsGranted(requestCode: Int, list: List<String>) {
         deleteDownload()
+        deleteAlphaDownload()
     }
 
     //检查删除安装包
     private fun deleteDownload() {
         val versionName = "CStoreManagement.apk"
+        val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
+        val f = File(downloadPath)
+        if (f.exists()) {
+            f.delete()
+        }
+    }
+
+    //删除预览版安装包
+    private fun deleteAlphaDownload(){
+        val versionName = "CStoreManagementAlpha.apk"
         val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
         val f = File(downloadPath)
         if (f.exists()) {

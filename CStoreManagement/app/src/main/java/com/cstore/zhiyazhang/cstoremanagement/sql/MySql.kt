@@ -1,7 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
+import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 
 /**
@@ -72,7 +74,7 @@ object MySql {
      * 获得大类信息
      */
     fun getAllCategory(): String {
-        return "select plu.categoryNumber,cat.categoryName, " +
+        val result="select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
                 "from cat,plu,ord,cat cat1  " +
@@ -94,7 +96,7 @@ object MySql {
                 "AND cat.categoryNumber<>'99'  " +
                 "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName  " +
                 "union all " +
-                "select '-1' categorynumber, '统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+                "select '-1' categorynumber, '${MyApplication.instance().getString(R.string.statistics)} ' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
                 "from cat,plu,ord,cat cat1  " +
@@ -115,14 +117,15 @@ object MySql {
                 "AND cat1.GROUP_YN='N'  " +
                 "AND cat.categoryNumber<>'99'  " +
                 "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName) " +
-                "order by CATEGORYNUMBER"
+                "order by CATEGORYNUMBER\u0004"
+        return result
     }
 
     /**
      * 得到所有修改过的数据统计
      */
     fun getAllEditData():String{
-        return "select '-1' categorynumber, '统计' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+        return "select '-1' categorynumber, '${MyApplication.instance().getString(R.string.statistics)}' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate " +
                 "from cat,plu,ord,cat cat1 " +
@@ -142,7 +145,7 @@ object MySql {
                 "AND trim(cat1.microCategoryNumber) is null " +
                 "AND cat1.GROUP_YN='N' " +
                 "AND cat.categoryNumber<>'99' " +
-                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName)"
+                "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName)\u0004"
     }
 
     /**
@@ -470,7 +473,7 @@ object MySql {
     /**
      * 得到指定某天的所有报废信息
      */
-    fun AllScrap(date: String): String {
+    fun allScrap(date: String): String {
         return "select a.itemnumber,to_char(m.busidate,'yyyy-mm-dd') busidate,a.pluname,a.STOREUNITPRICE,a.UNITCOST,a.SELL_COST,a.CITEM_YN,a.recycle_yn,a.barcode_yn, m.mrkquantity,m.recordnumber from app_mrkitem_view a, mrk m where a.itemnumber=m.itemnumber and busidate=to_date('$date','yyyy-mm-dd') order by itemnumber\u0004"
     }
 
@@ -496,20 +499,20 @@ object MySql {
      */
     val getScrap80: String
         get() {
-            return "select midcategorynumber,categoryname from cat where categorynumber='80' and midcategorynumber!=' ' and microcategorynumber=' ' order by midcategorynumber\u0004"
+            //老版：select midcategorynumber,categoryname from cat where categorynumber='80' and midcategorynumber!=' ' and microcategorynumber=' ' order by midcategorynumber
+            return "select a.midcategorynumber,a.categoryname,nvl(b.price,0) price,nvl(b.count,0) count " +
+                    "from cat a, " +
+                    "(select a.Midcategorynumber, " +
+                    "round(sum(b.mrkquantity)*avg(b.storeunitprice),1) price , count(b.itemnumber) count " +
+                    "from app_mrkitem_view a,mrk b where a.CATEGORYNUMBER = '80' and a.ITEMNUMBER = b.itemnumber " +
+                    "and busidate=trunc(sysdate) " +
+                    "group by a.Midcategorynumber) b " +
+                    "where a.categorynumber='80' " +
+                    "and a.midcategorynumber=b.midcategorynumber(+) " +
+                    "and a.midcategorynumber!=' '  " +
+                    "and a.microcategorynumber=' ' " +
+                    "order by a.midcategorynumber\u0004"
         }
-    //最新的
-    /*select a.midcategorynumber,a.categoryname,b.price,b.count
-    from cat a,
-    (select a.Midcategorynumber,
-    round(sum(b.mrkquantity)*avg(b.storeunitprice),1) price , sum(b.mrkquantity) count
-    from app_mrkitem_view a,mrk b where a.CATEGORYNUMBER = '80' and a.ITEMNUMBER = b.itemnumber --and a.microcategorynumber=' '
-    and busidate=trunc(sysdate)
-    group by a.Midcategorynumber) b
-    where a.categorynumber='80'
-    and a.midcategorynumber=b.midcategorynumber
-    and a.microcategorynumber=' '
-    order by a.midcategorynumber*/
 
     /**
      * 报废80大类里的中类的item

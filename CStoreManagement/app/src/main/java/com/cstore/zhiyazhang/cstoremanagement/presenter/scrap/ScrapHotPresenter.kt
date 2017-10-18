@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.scrap
 
 import android.os.Handler
+import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapHotModel
@@ -25,8 +26,12 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         anInterface.getMidCategory(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
-                    gView.requestSuccess(data)
-                    gView.hideLoading()
+                    try {
+                        gView.requestSuccess(data)
+                        gView.hideLoading()
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
                 }
             }
 
@@ -45,8 +50,12 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         anInterface.getHotItem(midId, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
-                    gView.requestSuccess(data)
-                    gView.hideLoading()
+                    try {
+                        gView.requestSuccess(data)
+                        gView.hideLoading()
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
                 }
             }
 
@@ -65,8 +74,12 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         anInterface.submitScrap(data, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
-                    gView.requestSuccess(data)
-                    gView.hideLoading()
+                    try {
+                        gView.requestSuccess(data)
+                        gView.hideLoading()
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
                 }
             }
 

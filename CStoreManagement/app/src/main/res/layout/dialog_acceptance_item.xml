@@ -8,7 +8,7 @@
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
+        android:background="@color/sure"
         android:textColor="@color/white"
         android:gravity="center"
         android:padding="10dp"
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/white"
-            android:background="@color/orange"
+            android:background="@color/sure"
             android:layout_weight="1"
             android:text="@string/cancel" />
 
@@ -90,7 +90,7 @@
         <Button
             android:id="@+id/dialog_save"
             android:textColor="@color/white"
-            android:background="@color/orange"
+            android:background="@color/sure"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

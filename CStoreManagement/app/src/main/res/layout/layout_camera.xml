@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.cstore.zhiyazhang.cstoremanagement.utils.camera.FindFaceView
+        android:id="@+id/my_face_surface"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <ImageView
         android:visibility="gone"
         android:background="@color/black"

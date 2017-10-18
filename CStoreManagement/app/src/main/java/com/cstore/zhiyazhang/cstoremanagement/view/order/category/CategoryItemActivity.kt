@@ -117,7 +117,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         my_swipe.setProgressViewOffset(false, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt())
         my_swipe.setColorSchemeColors(
                 ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_red),
-                ContextCompat.getColor(this@CategoryItemActivity, R.color.yellow),
+                ContextCompat.getColor(this@CategoryItemActivity, R.color.sure),
                 ContextCompat.getColor(this@CategoryItemActivity, R.color.blue),
                 ContextCompat.getColor(this@CategoryItemActivity, R.color.cstore_green))
         //设置下拉刷新是否能用

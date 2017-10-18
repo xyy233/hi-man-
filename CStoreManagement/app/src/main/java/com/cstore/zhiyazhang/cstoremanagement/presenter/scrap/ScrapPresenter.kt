@@ -27,7 +27,13 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
         if (!judgmentInternet(gView)) return
         anInterface.getAllScrap(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                handler.post { gView.requestSuccess(data as ArrayList<ScrapContractBean>) }
+                handler.post {
+                    try {
+                        gView.requestSuccess(data as ArrayList<ScrapContractBean>)
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
+                }
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -47,7 +53,13 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
         if (!judgmentInternet(gView)) return
         anInterface.searchScrap(message, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                handler.post { gView.requestSuccess(data as ArrayList<ScrapContractBean>) }
+                handler.post {
+                    try {
+                        gView.requestSuccess(data as ArrayList<ScrapContractBean>)
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
+                }
             }
 
             override fun listenerFailed(errorMessage: String) {
@@ -64,9 +76,13 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
         anInterface.submitScraps(data, reCode, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
-                    sView.updateDone()
-                    gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.done))
-                    gView.hideLoading()
+                    try {
+                        sView.updateDone()
+                        gView.showPrompt(MyApplication.instance().applicationContext.getString(R.string.done))
+                        gView.hideLoading()
+                    } catch (e: Exception) {
+                        listenerFailed(activity.getString(R.string.socketError))
+                    }
                 }
             }
 

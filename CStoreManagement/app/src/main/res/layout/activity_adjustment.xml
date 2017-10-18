@@ -25,7 +25,7 @@
         app:tabBackground="@color/line"
         app:tabGravity="center"
         app:tabMode="fixed"
-        app:tabIndicatorColor="@color/orange"
+        app:tabIndicatorColor="@color/sure"
         app:tabSelectedTextColor="@color/white"
         app:tabTextAppearance="@style/MyMenuTextStyle"
         app:tabTextColor="@color/black"/>

@@ -43,6 +43,7 @@
     <string name="photo">照片</string>
     <string name="unit_price">单价</string>
     <string name="all_price">总金额</string>
+    <string name="statistics">统计</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
@@ -114,6 +115,7 @@
     <string name="noSaveMessage">无要保存的数据</string>
     <string name="fresh1">即期鲜食订货</string>
     <string name="fresh2">其他鲜食订货</string>
+    <string name="under_order">一键下单</string>
     <!--报废-->
     <string name="scrap">报废</string>
     <string name="scrap1">一般商品报废</string>
@@ -122,8 +124,13 @@
     <string name="freshGroup">群组</string>
     <string name="mrk_count">报废数量</string>
     <string name="mrk_time">报废时间为0:00~23:00，现在不能进行报废操作</string>
-    <string name="all_scrap_count">总报废品项:</string>
-    <string name="all_scrap_price">总报废金额:</string>
+    <string name="all_scrap_count">总报废品项：</string>
+    <string name="all_scrap_price">总报废金额：</string>
+    <string name="scrap_mid_category">品类</string>
+    <string name="scrap_count">报废品项数</string>
+    <string name="scrap_price">报废金额</string>
+    <string name="all_scrap_hot_count">热食总报废品项：</string>
+    <string name="all_scrap_hot_price">热食总报废金额：</string>
 
     <string name="cash_daily">现金日报</string>
 

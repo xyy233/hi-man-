@@ -15,7 +15,7 @@ import android.view.View;
  */
 
 @SuppressLint("DuplicateDivider")
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class MyDividerItemDecoration extends RecyclerView.ItemDecoration {
     //    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
     private static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
@@ -25,7 +25,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Context mContext;
     private int mOrientation;
 
-    public DividerItemDecoration(Context context, int orientation) {
+    public MyDividerItemDecoration(Context context, int orientation) {
         //        final TypedArray a = context.obtainStyledAttributes(ATTRS);
         //        mDivider = a.getDrawable(0);
         //        a.recycle();

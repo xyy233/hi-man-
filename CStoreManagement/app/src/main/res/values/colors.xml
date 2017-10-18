@@ -33,20 +33,20 @@
     <color name="cstore_red">#e1241f</color>
     <color name="cstore_green">#15833b</color>
     <color name="cstore_white">#feeeed</color>
-    <color name="yellow">#ffd400</color>
+
+    <color name="sure">#f8b62c</color>
+
     <color name="blue">#145b7d</color>
     <color name="xinqiaose">#50b7c1</color>
     <color name="delete_red">#88ff0000</color>
 
     <color name="contract_bg">#d7ebf0</color>
     <color name="item_bg">#b4b5b5</color>
-    <color name="contract_sure">#f8b62c</color>
     <color name="add_less">#5bc1d5</color>
     <color name="less_bg">#c4e0ce</color>
     <color name="add_bg">#faf8cb</color>
     <color name="is_edit">#eeefef</color>
     <color name="type_name">#48b7c5</color>
-    <color name="orange">#fea400</color>
 
     <!--现金日报-->
     <color name="item_green1">#8fed8f</color>

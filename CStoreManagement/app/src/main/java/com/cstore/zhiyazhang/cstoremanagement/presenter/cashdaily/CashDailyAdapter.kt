@@ -32,15 +32,15 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
                 "Y"->{
                     //谁都可以修改
                     holder.item.isEnabled=true
-                    holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.orange))
-                    holder.itemNum.setBackgroundResource(R.drawable.bg_orange)
+                    holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
+                    holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
                 }
                 "S"->{
                     //只有管理员能修改
                     if (User.getUser().uId=="99999990"){
                         holder.item.isEnabled=true
-                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.orange))
-                        holder.itemNum.setBackgroundResource(R.drawable.bg_orange)
+                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
+                        holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
                     }else {
                         holder.item.isEnabled=false
                         holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.gray))

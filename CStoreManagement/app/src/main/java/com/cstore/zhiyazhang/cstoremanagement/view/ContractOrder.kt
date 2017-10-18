@@ -152,7 +152,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
         data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
         data.add(LogoBean(R.drawable.ic_transparent,"",9))
-        data.add(LogoBean(R.drawable.aaaaa,"",10))
+        data.add(LogoBean(R.mipmap.ic_under_order,getString(R.string.under_order),10))
         data.add(LogoBean(R.drawable.ic_transparent,"",11))
         data.sortBy { it.position }
     }

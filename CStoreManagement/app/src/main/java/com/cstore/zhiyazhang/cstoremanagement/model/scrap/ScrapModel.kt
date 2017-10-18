@@ -23,7 +23,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val data = SocketUtil.initSocket(ip, MySql.AllScrap(sView.getDate())).inquire()
+            val data = SocketUtil.initSocket(ip, MySql.allScrap(sView.getDate())).inquire()
             if (!SocketUtil.judgmentNull(data, msg, handler)) return@Runnable
 
             val scraps = ArrayList<ScrapContractBean>()
@@ -141,7 +141,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
          * 有可能多人操作造成数据不同步
          */
         fun judgmentData(ip: String, data: ArrayList<ScrapContractBean>): String {
-            val result = SocketUtil.initSocket(ip, MySql.AllScrap(MyTimeUtil.nowDate)).inquire()
+            val result = SocketUtil.initSocket(ip, MySql.allScrap(MyTimeUtil.nowDate)).inquire()
             if (result == "" || result == "0") return ""
             val allScraps = ArrayList<ScrapContractBean>()
             try {
