@@ -19,7 +19,6 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.presenter.personnel.CheckInPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyImage
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_check_in.*
 import kotlinx.android.synthetic.main.layout_camera.*
@@ -36,10 +35,10 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
         ///为了使照片竖直显示
         init {
-            ORIENTATIONS.append(Surface.ROTATION_0, 270)
-            ORIENTATIONS.append(Surface.ROTATION_90, 0)
-            ORIENTATIONS.append(Surface.ROTATION_180, 270)
-            ORIENTATIONS.append(Surface.ROTATION_270, 180)
+            ORIENTATIONS.append(Surface.ROTATION_0, 0)
+            ORIENTATIONS.append(Surface.ROTATION_90, 90)
+            ORIENTATIONS.append(Surface.ROTATION_180, 180)
+            ORIENTATIONS.append(Surface.ROTATION_270, 270)
         }
     }
 
@@ -109,8 +108,7 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
         buffer.get(bytes)
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         if (bitmap != null) {
-            val watermarkText = check_in_edit.text.toString() + "     " + MyTimeUtil.nowTimeString
-            val newBitmap = MyImage.createWatermark(MyImage.reverseBitmap(bitmap, 0), watermarkText)
+            val newBitmap = MyImage.reverseBitmap(bitmap, 0)
             if (newBitmap != null) {
                 my_camera_img.setImageBitmap(newBitmap)
                 presenter.checkInUser(check_in_edit.text.toString(),newBitmap)
@@ -149,8 +147,10 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
         if (mCameraDevice == null) return
         // 创建拍照需要的CaptureRequest.Builder
         val captureRequestBuilder: CaptureRequest.Builder
+        val cameraCharacteristics: CameraCharacteristics
         try {
             captureRequestBuilder = mCameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
+            cameraCharacteristics = mCameraManager!!.getCameraCharacteristics("1")
             // 将imageReader的surface作为CaptureRequest.Builder的目标
             captureRequestBuilder.addTarget(mImageReader!!.surface)
             // 自动对焦
@@ -160,13 +160,26 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
             // 获取手机方向
             val rotation = windowManager.defaultDisplay.rotation
             // 根据设备方向计算设置照片的方向
-            captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation))
+            captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorToDeviceRotation(cameraCharacteristics,rotation))
             //拍照
             val mCaptureRequest = captureRequestBuilder.build()
             mCameraCaptureSession!!.capture(mCaptureRequest, null, childHandler)
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * 获得方向,
+     * 三星有问题,设置方向后的图是旋转的
+     */
+    private fun sensorToDeviceRotation(c: CameraCharacteristics, rotation: Int): Int {
+        val sensorOrientation = c.get(CameraCharacteristics.SENSOR_ORIENTATION)
+        var deviceOrientation = ORIENTATIONS.get(rotation)
+        if (c.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT) {
+            deviceOrientation = -deviceOrientation
+        }
+        return (sensorOrientation + deviceOrientation + 360) % 360
     }
 
     /**
@@ -236,25 +249,26 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
     override fun showLoading() {
         loading.visibility = View.VISIBLE
+        check_in_access.isEnabled = false
     }
 
     //这里不继承父类的方法，手动控制
     override fun hideLoading() {
         //MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         loading.visibility = View.GONE
+        check_in_access.isEnabled = true
     }
 
     override fun errorDealWith() {
         my_camera_surface.visibility = View.VISIBLE
         my_camera_img.visibility = View.GONE
-        takePreview()
+        //takePreview()
     }
 
     override fun <T> requestSuccess(rData: T) {
         showPrompt(getString(R.string.saveDone))
         my_camera_surface.visibility = View.VISIBLE
         my_camera_img.visibility = View.GONE
-        takePreview()
     }
 
 }

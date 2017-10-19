@@ -1,6 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.graphics.*
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 
 /**
  * Created by zhiya.zhang
@@ -30,16 +33,15 @@ class MyImage{
         /**
          * 创建水印
          */
-        fun createWatermark(bmp: Bitmap?, markText: String):Bitmap?{
-            if (bmp==null)return null
+        fun createWatermark(bmp: Bitmap, markText: String):Bitmap{
             //创建相同大小图
             val markBmp = Bitmap.createBitmap(bmp.width,bmp.height,Bitmap.Config.ARGB_8888)
             //画图
             val canvas=Canvas(markBmp)
             canvas.drawBitmap(bmp,0f,0f,null)
             //文字开始的坐标，默认左上角
-            //创建画笔
-            val mPaint=Paint()
+            //创建画笔,因为用StaticLayout显示换行，所以环卫TextPaint
+            val mPaint=TextPaint()
             //文字矩阵区域
             val textBounds=Rect()
             //水印字体大小
@@ -52,16 +54,21 @@ class MyImage{
             mPaint.getTextBounds(markText,0,markText.length,textBounds)
             //水印颜色
             mPaint.color=Color.WHITE
-            //图片小鱼水印不绘制水印
+
+            //图片小于水印不绘制水印
             if (textBounds.width()>bmp.width||textBounds.height()>bmp.height)return bmp
             //文字开始的坐标
-            val textX=bmp.width-textBounds.width()-10f
-            val textY=bmp.height-textBounds.height()+6f
+            val textX=bmp.width-textBounds.width()+40f
+            val textY=bmp.height-textBounds.height()-20f
+            val myStaticLayout=StaticLayout(markText,mPaint,canvas.width, Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false)
             //画文字
-            canvas.drawText(markText,textX,textY,mPaint)
+//            canvas.drawText(markText,textX,textY,mPaint)
             //保存图片
-            canvas.save(Canvas.ALL_SAVE_FLAG)
-            canvas.restore()
+            //canvas.save(Canvas.ALL_SAVE_FLAG)
+//            canvas.save()
+            canvas.translate(textX,textY)
+            myStaticLayout.draw(canvas)
+//            canvas.restore()
             return markBmp
         }
     }

@@ -42,19 +42,23 @@ object MyTimeUtil {
      * *
      * @return string
      */
-    fun getStringByDate(date: Date): String {
+    private fun getStringByDate(date: Date): String {
         return SimpleDateFormat("yyyy-MM-dd HH.mm.ss", Locale.CHINA).format(date)
     }
 
-    fun getYMDStringByDate(date: Date): String {
+    private fun getStringByDate2(date: Date): String {
+        return SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(date)
+    }
+
+    private fun getYMDStringByDate(date: Date): String {
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(date)
     }
 
-    fun getYMDStringByDate2(date: Date): String {
+    private fun getYMDStringByDate2(date: Date): String {
         return SimpleDateFormat("yyyy/MM/dd", Locale.CHINA).format(date)
     }
 
-    fun getYMDStringByDate3(date: Date): String {
+    private fun getYMDStringByDate3(date: Date): String {
         return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(date)
     }
 
@@ -108,21 +112,24 @@ object MyTimeUtil {
     val nowHour: Int
         get() = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
 
-    val nowMonth:Int
-    get() {
-        return Calendar.getInstance().get(Calendar.MONTH)+1
-    }
+    val nowMonth: Int
+        get() {
+            return Calendar.getInstance().get(Calendar.MONTH) + 1
+        }
 
-    val nowYear:Int
-    get() {
-        return Calendar.getInstance().get(Calendar.YEAR)
-    }
+    val nowYear: Int
+        get() {
+            return Calendar.getInstance().get(Calendar.YEAR)
+        }
 
     /**
      * @return 获得当前时间
      */
     val nowTimeString: String
         get() = getStringByDate(Date(System.currentTimeMillis()))
+
+    val nowTimeString2: String
+        get() = getStringByDate2(Date(System.currentTimeMillis()))
 
     val nowDate: String
         get() = getYMDStringByDate(Date(System.currentTimeMillis()))
@@ -142,6 +149,15 @@ object MyTimeUtil {
             return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
         }
 
+    val tomorrowDate2: String
+        get() {
+            val date = Date()//取时间
+            val calendar: Calendar = GregorianCalendar()
+            calendar.time = date
+            calendar.add(Calendar.DATE, 1)//把日期往后增加一天.整数往后推,负数往前移动
+            return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(calendar.time)
+        }
+
     /**
      * 通过String日期得到Calendar格式的日期
      */
@@ -159,10 +175,10 @@ object MyTimeUtil {
         val calendar = getCalendarByString(nowDate)
         val year = "${calendar.get(Calendar.YEAR)}年"
 
-        val month = if (calendar.get(Calendar.MONTH) + 1<10) "0${calendar.get(Calendar.MONTH) + 1}月"
+        val month = if (calendar.get(Calendar.MONTH) + 1 < 10) "0${calendar.get(Calendar.MONTH) + 1}月"
         else "${calendar.get(Calendar.MONTH) + 1}月"
 
-        val day = if (calendar.get(Calendar.DAY_OF_MONTH)<10) "0${calendar.get(Calendar.DAY_OF_MONTH)}"
+        val day = if (calendar.get(Calendar.DAY_OF_MONTH) < 10) "0${calendar.get(Calendar.DAY_OF_MONTH)}"
         else calendar.get(Calendar.DAY_OF_MONTH).toString()
 
         dateUtil.year.text = year
@@ -173,7 +189,7 @@ object MyTimeUtil {
     /**
      * 得到TextView插件的日期
      */
-    fun getTextViewDate(dateUtil: LinearLayout):String{
-        return "${dateUtil.year.text.toString().replace("年","")}-${dateUtil.month.text.toString().replace("月","")}-${dateUtil.day.text}"
+    fun getTextViewDate(dateUtil: LinearLayout): String {
+        return "${dateUtil.year.text.toString().replace("年", "")}-${dateUtil.month.text.toString().replace("月", "")}-${dateUtil.day.text}"
     }
 }

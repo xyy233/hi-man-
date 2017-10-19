@@ -131,7 +131,7 @@
 
         <!--签到-->
         <activity android:name=".view.personnel.checkin.CheckInActivity"
-                  android:screenOrientation="portrait"/>
+                  android:windowSoftInputMode="adjustResize|stateHidden"/>
 
     </application>
 

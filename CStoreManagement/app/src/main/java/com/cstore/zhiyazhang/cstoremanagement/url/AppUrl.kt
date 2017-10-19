@@ -13,7 +13,7 @@ object AppUrl {
     val CONNECTION_SWITCH = "close"
     val IS_JUST_LOOK = "is_just_look"
 
-    var appIp: String = "http://watchstore.rt-store.com:8086/app/"
+    private var appIp: String = "http://watchstore.rt-store.com:8086/app/"
     val CONTRACT_TYPE_URL = appIp + "order/getGroups.do"
     val CONTRACT_URL = appIp + "order/getItemsByGroupId.do"
     val ALL_EDITT_CONTRACT = appIp + "order/getUpdatedItems.do"
