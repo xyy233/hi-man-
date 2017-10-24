@@ -183,7 +183,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/coi"
-                    android:src="@mipmap/ic_home_invest"/>
+                    android:src="@mipmap/ic_home_invest_black"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -221,7 +221,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_home_instock"/>
+                    android:src="@mipmap/ic_home_instock_black"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -248,7 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_personnel"/>
+                    android:src="@mipmap/ic_personnel_black"/>
 
                 <TextView
                     android:layout_width="wrap_content"

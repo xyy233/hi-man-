@@ -17,8 +17,6 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.personnel.PersonnelActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -74,23 +72,36 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
     }
 
     override fun initClick() {
-        gg1.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg2.setOnClickListener { MyToast.getShortToast("未完成") }
+        gg1.setOnClickListener {
+            MyToast.getShortToast(getString(R.string.noDone))
+        }
+        gg2.setOnClickListener {
+            MyToast.getShortToast(getString(R.string.noDone))
+        }
         gg3.setOnClickListener {
             startActivity(Intent(this@HomeActivity, ContractOrder::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg3, "gg3").toBundle())
         }
-        gg4.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg5.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg6.setOnClickListener { startActivity(Intent(this@HomeActivity, COIActivity::class.java),
-                ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg6, "gg3").toBundle()) }
+        gg4.setOnClickListener {
+            MyToast.getShortToast(getString(R.string.noDone))
+        }
+        gg5.setOnClickListener {
+            MyToast.getShortToast(getString(R.string.noDone))
+        }
+        gg6.setOnClickListener {
+            /*startActivity(Intent(this@HomeActivity, COIActivity::class.java),
+                ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg6, "gg3").toBundle())*/
+            MyToast.getShortToast(getString(R.string.noOpen))
+        }
         gg7.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
-                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg3").toBundle())
+            /*startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg3").toBundle())*/
+            MyToast.getShortToast(getString(R.string.noOpen))
         }
         gg8.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
-                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg8, "gg3").toBundle())
+            /*startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg8, "gg3").toBundle())*/
+            MyToast.getShortToast(getString(R.string.noOpen))
         }
     }
 

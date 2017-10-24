@@ -18,8 +18,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
@@ -38,7 +36,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.VERTICAL))
         orderRecycler.addItemDecoration(DividerItemDecoration(this@ContractOrder, DividerItemDecoration.HORIZONTAL))
 
-        orderLoading.visibility = View.VISIBLE
+        orderLoading.visibility = View.GONE
     }
 
     override fun initClick() {
@@ -59,31 +57,6 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     1 -> {
-                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt, "category")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
-                    }
-                    2 -> {
-                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt, "shelf")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
-                    }
-                    3 -> {
-                        val intent = Intent(this@ContractOrder, CategoryItemActivity::class.java)
-                        intent.putExtra(whereIsIt, "search")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
-                    }
-                    4 -> {
-                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt, "nop")//new or Promotion
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
-                    }
-                    5 -> {
-                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt, "self")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
-                    }
-                    6 -> {
                         if (User.getUser().cnt == 0){
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
                             return
@@ -92,19 +65,52 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         intent.putExtra("is_just_look", true)
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
+                    2 -> {
+                        /*val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "category")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
+                    }
+                    3 -> {
+                        /*val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "shelf")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
+                    }
+                    4 -> {
+                        /*val intent = Intent(this@ContractOrder, CategoryItemActivity::class.java)
+                        intent.putExtra(whereIsIt, "search")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
+                    }
+                    5 -> {
+                        /*val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "nop")//new or Promotion
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
+                    }
+                    6 -> {
+                        /*val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "self")
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
+                    }
                     7->{
-                        val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
+                        /*val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
                         intent.putExtra(whereIsIt,"fresh1")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
                     }
                     8->{
-                        val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
+                        /*val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
                         intent.putExtra(whereIsIt,"fresh2")
-                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
                     }
                     10->{
-                        orderLoading.visibility=View.VISIBLE
-                        runAutoOrd()
+                        /*orderLoading.visibility=View.VISIBLE
+                        runAutoOrd()*/
+                        MyToast.getShortToast(getString(R.string.noOpen))
                     }
                 }
             }
@@ -122,7 +128,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
     }
 
     override fun initData() {
-        runOrdT2()
+        //runOrdT2()
     }
 
     val whereIsIt ="whereIsIt"
@@ -139,20 +145,20 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         //保持顺序，手动插入
         if (User.getUser().cnt == 0) {
             data.add(LogoBean(R.mipmap.ic_contract_order_close, getString(R.string.contract_order), 0))
-            data.add(LogoBean(R.mipmap.ic_contract_see_order_close, getString(R.string.contract_order_toview), 6))
+            data.add(LogoBean(R.mipmap.ic_contract_see_order_close, getString(R.string.contract_order_toview), 1))
         } else {
             data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
-            data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 6))
+            data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 1))
         }
-        data.add(LogoBean(R.mipmap.ic_categroy_order, getString(R.string.category_order), 1))
-        data.add(LogoBean(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 2))
-        data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 3))
-        data.add(LogoBean(R.mipmap.ic_new_order, getString(R.string.new_order), 4))
-        data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 5))
-        data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
-        data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
+        data.add(LogoBean(R.mipmap.ic_categroy_order_black, getString(R.string.category_order), 2))
+        data.add(LogoBean(R.mipmap.ic_shelf_order_black, getString(R.string.shelf_order), 3))
+        data.add(LogoBean(R.mipmap.ic_unit_order_black, getString(R.string.unit_order), 4))
+        data.add(LogoBean(R.mipmap.ic_new_order_black, getString(R.string.new_order), 5))
+        data.add(LogoBean(R.mipmap.ic_supplies_order_black, getString(R.string.supplies_order), 6))
+        data.add(LogoBean(R.mipmap.ic_order_fresh1_black,getString(R.string.fresh1),7))
+        data.add(LogoBean(R.mipmap.ic_order_fresh2_black,getString(R.string.fresh2),8))
         data.add(LogoBean(R.drawable.ic_transparent,"",9))
-        data.add(LogoBean(R.mipmap.ic_under_order,getString(R.string.under_order),10))
+        data.add(LogoBean(R.mipmap.ic_under_order_black,getString(R.string.under_order),10))
         data.add(LogoBean(R.drawable.ic_transparent,"",11))
         data.sortBy { it.position }
     }

@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.item_loading.view.*
  * Created by zhiya.zhang
  * on 2017/6/14 15:58.
  */
-class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch: RecyclerOnTouch, var isJustLook: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ContractAdapter(val cr: ContractResult, val context: Context, private val onTouch: RecyclerOnTouch, var isJustLook: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TYPE_ITEM = 0  //普通Item View
     private val TYPE_FOOTER = 1  //底部FootView
@@ -95,11 +95,15 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
                 } else {
                     //提示不用管，只是说touch覆盖了辅助提示
                     holder.add.setOnTouchListener { _, event ->
-                        onTouch.onTouchAddListener(cr.detail[position], event, position)
+                        if (load_more_status==TYPE_ITEM){
+                            onTouch.onTouchAddListener(cr.detail[position], event, position)
+                        }
                         true
                     }
                     holder.less.setOnTouchListener { _, event ->
-                        onTouch.onTouchLessListener(cr.detail[position], event, position)
+                        if (load_more_status==TYPE_ITEM){
+                            onTouch.onTouchLessListener(cr.detail[position], event, position)
+                        }
                         true
                     }
                 }
@@ -114,14 +118,14 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
 
     override fun getItemViewType(position: Int): Int {
         //确认是添加正常view还是底部加载view
-        if (position + 1 == itemCount) {
-            if (cr.total > 10 && cr.detail.size < cr.total) {
-                return TYPE_FOOTER
+        return if (position + 1 == itemCount) {
+            return if (cr.total > 10 && cr.detail.size < cr.total) {
+                TYPE_FOOTER
             } else {
-                return TYPE_ITEM
+                TYPE_ITEM
             }
         } else {
-            return TYPE_ITEM
+            TYPE_ITEM
         }
     }
 

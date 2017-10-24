@@ -44,6 +44,8 @@
     <string name="unit_price">单价</string>
     <string name="all_price">总金额</string>
     <string name="statistics">统计</string>
+    <string name="noOpen">暂不开放</string>
+    <string name="noDone">未完成</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
