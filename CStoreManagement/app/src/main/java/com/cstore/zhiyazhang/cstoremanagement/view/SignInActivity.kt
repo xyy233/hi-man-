@@ -158,18 +158,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             editor.remove("pwd")
         }
         editor.apply()
-        val userShared = getSharedPreferences("user", Context.MODE_PRIVATE)
-        val ue = userShared.edit()
-        ue.putString("storeId", user.storeId)
-        ue.putString("uid", user.uId)
-        ue.putString("uName", user.name)
-        ue.putString("telphone", user.telphone)
-        ue.putString("storeName", user.storeName)
-        ue.putString("address", user.address)
-        ue.putInt("storeAttr",user.storeAttr)
-        ue.putInt("cnt", user.cnt)
-        ue.apply()
-        User.refreshUser()
+        User.saveUser(user)
     }
 
 

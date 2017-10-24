@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
-import android.annotation.SuppressLint
 import android.app.Application
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
@@ -22,8 +21,7 @@ class MyApplication : Application() {
         /**
          * 你爸爸的！明明是kotlin官方推荐的静态单列application还提示会导致内存泄漏逗我哈？
          */
-        @SuppressLint("StaticFieldLeak")
-        private var instance: Application? = null
+        private var instance: MyApplication? = null
         fun instance() = instance!!
 
         fun getIP(): String {

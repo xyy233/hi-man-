@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.utils.socket
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -27,6 +28,11 @@ import java.net.SocketTimeoutException
 
 internal class SocketUtil  {
     private var mySocket: Socket
+    private var os: OutputStream? = null
+    private var bw: BufferedWriter? = null
+    private var `is`: InputStream? = null
+    private var br: BufferedReader? = null
+    private var loadingTime:Int
 
     private constructor(ip: String, msg: String){
         mySocket = Socket()
@@ -46,40 +52,8 @@ internal class SocketUtil  {
         private val PORT = 50000//49999
         private val REQUEST_ERROR = "服务器连接超时"
         private val SOCKET_ERROR = "服务器异常，确定连在内网中，确定服务器正常"
-        private val NULL_HOST = "host为空"
         private var message = ""
-        private var loadingTime:Int=10
-        lateinit private var myHandler: MyHandler.OnlyMyHandler
         lateinit private var host: String
-        private var os: OutputStream? = null
-        private var bw: BufferedWriter? = null
-        private var `is`: InputStream? = null
-        private var br: BufferedReader? = null
-
-        /**
-         * 关闭各种流
-         */
-        private fun closeSocket(socket:Socket) {
-            try {
-                bw!!.close()
-            } catch (e: Exception) { }
-
-            try {
-                br!!.close()
-            } catch (e: Exception) { }
-
-            try {
-                os!!.close()
-            } catch (e: Exception) { }
-
-            try {
-                `is`!!.close()
-            } catch (e: Exception) { }
-
-            try {
-                socket.close()
-            } catch (e: Exception) { }
-        }
 
         /**
          * 初始化Socket
@@ -200,6 +174,31 @@ internal class SocketUtil  {
     }
 
     /**
+     * 关闭各种流
+     */
+    private fun closeSocket(socket:Socket) {
+        try {
+            bw!!.close()
+        } catch (e: Exception) { }
+
+        try {
+            br!!.close()
+        } catch (e: Exception) { }
+
+        try {
+            os!!.close()
+        } catch (e: Exception) { }
+
+        try {
+            `is`!!.close()
+        } catch (e: Exception) { }
+
+        try {
+            socket.close()
+        } catch (e: Exception) { }
+    }
+
+    /**
      * 执行Socket操作,这不是异步，在外层要开thread
      */
     fun inquire():String {
@@ -254,6 +253,65 @@ internal class SocketUtil  {
             return SOCKET_ERROR
         } catch (e: Exception) {
             return e.message!!
+        } finally {
+            closeSocket(mySocket)
+        }
+    }
+
+    /**
+     * 得到文件下所有文件名
+     */
+    fun getAllFileName(address:String):String{
+        try {
+            mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
+            mySocket.soTimeout = loadingTime * 1000
+            os = mySocket.getOutputStream()
+            bw = BufferedWriter(OutputStreamWriter(os!!))
+            `is` = mySocket.getInputStream()
+            br = BufferedReader(InputStreamReader(`is`!!))
+            os!!.write(address.toByteArray())
+            mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
+            var receive: String? = null
+            while (receive == null) {
+                receive = br!!.readLine()
+            }
+            return receive
+        } catch (ste: SocketTimeoutException) {
+            return REQUEST_ERROR
+        } catch (ioe: IOException) {
+            return SOCKET_ERROR
+        } catch (e: Exception) {
+            return e.message!!
+        } finally {
+            closeSocket(mySocket)
+        }
+    }
+
+    /**
+     * 得到图片
+     */
+    fun inquire(address:String):ByteArray?{
+        try {
+            mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
+            mySocket.soTimeout = loadingTime * 1000
+            os = mySocket.getOutputStream()
+            bw = BufferedWriter(OutputStreamWriter(os!!))
+            `is` = mySocket.getInputStream()
+            br = BufferedReader(InputStreamReader(`is`!!))
+            os!!.write(address.toByteArray())
+            mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
+            val b=BitmapFactory.decodeStream(`is`)
+            val bs=ByteArrayOutputStream()
+            b.compress(Bitmap.CompressFormat.JPEG,100,bs)
+            val result=bs.toByteArray()
+            bs.close()
+            return result
+        } catch (ste: SocketTimeoutException) {
+            return null
+        } catch (ioe: IOException) {
+            return null
+        } catch (e: Exception) {
+            return null
         } finally {
             closeSocket(mySocket)
         }

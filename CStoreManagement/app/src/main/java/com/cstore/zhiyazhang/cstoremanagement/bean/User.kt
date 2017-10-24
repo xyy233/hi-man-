@@ -68,7 +68,22 @@ data class User(
             return staticUser!!
         }
 
-        fun refreshUser(){
+        fun saveUser(user:User){
+            val userShared = MyApplication.instance().getSharedPreferences("user", Context.MODE_PRIVATE)
+            val ue = userShared.edit()
+            ue.putString("storeId", user.storeId)
+            ue.putString("uid", user.uId)
+            ue.putString("uName", user.name)
+            ue.putString("telphone", user.telphone)
+            ue.putString("storeName", user.storeName)
+            ue.putString("address", user.address)
+            ue.putInt("storeAttr",user.storeAttr)
+            ue.putInt("cnt", user.cnt)
+            ue.apply()
+            User.refreshUser()
+        }
+
+        private fun refreshUser(){
             val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
             staticUser = User(
                     sp.getString("storeId", ""),
