@@ -45,7 +45,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.zhy:okhttputils:2.6.2'
     //扫描二维码
-    compile 'cn.yipianfengye.android:zxing-library:2.1'
+    compile 'cn.yipianfengye.android:zxing-library:2.2'
     //oom检测
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 }

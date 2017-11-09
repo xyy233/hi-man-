@@ -5,6 +5,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.pay.PayModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
+import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
 
 /**
  * Created by zhiya.zhang

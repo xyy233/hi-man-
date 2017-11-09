@@ -22,7 +22,7 @@
 
         <!--登录页-->
         <activity
-            android:name=".view.SignInActivity"
+            android:name=".view.pay.PayActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -145,8 +145,8 @@
         <activity android:name=".view.order.returnpurchase.ReturnPurchaseCreateActivity"
                   android:screenOrientation="portrait"/>
 
-        <activity android:name=".view.pay.PayActivity"
-                  android:screenOrientation="portrait"/>
+       <!-- <activity android:name=".view.pay.PayActivity"
+                  android:screenOrientation="portrait"/>-->
     </application>
 
 </manifest>

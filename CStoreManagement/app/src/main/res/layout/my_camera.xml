@@ -22,7 +22,6 @@
         app:inner_margintop="80dp"
         app:inner_scan_bitmap="@drawable/scan_icon_scanline"
         app:inner_scan_iscircle="true"
-        app:inner_scan_speed="50"
-        />
+        app:inner_scan_speed="50"/>
 
 </FrameLayout>
