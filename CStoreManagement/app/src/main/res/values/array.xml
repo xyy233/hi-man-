@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="mySort">
-        <item>订量倒序</item>
-        <item>订量正序</item>
-        <item>品号倒序</item>
-        <item>品号正序</item>
-        <item>品名倒序</item>
-        <item>品名正序</item>
-        <item>售价倒序</item>
-        <item>售价正序</item>
+        <item>订量从大到小</item>
+        <item>订量从小到大</item>
+        <item>品号从大到小</item>
+        <item>品号从小到大</item>
+        <item>品名从Z到A</item>
+        <item>品名从A到Z</item>
+        <item>售价从大到小</item>
+        <item>售价从小到大</item>
     </string-array>
 
     <string-array name="mySortDMS">
-        <item>订量倒序</item>
-        <item>订量正序</item>
-        <item>品号倒序</item>
-        <item>品号正序</item>
-        <item>品名倒序</item>
-        <item>品名正序</item>
-        <item>售价倒序</item>
-        <item>售价正序</item>
-        <item>DMS销量正序</item>
-        <item>DMS销量倒序</item>
+        <item>订量从多到少</item>
+        <item>订量从少到多</item>
+        <item>品号从大到小</item>
+        <item>品号从小到大</item>
+        <item>品名从Z到A</item>
+        <item>品名从A到Z</item>
+        <item>DMS从多到少</item>
+        <item>DMS从少到多</item>
+        <item>DMA从多到少</item>
+        <item>DMA从少到多</item>
     </string-array>
 
     <string-array name="cashDailyTags">

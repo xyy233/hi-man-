@@ -4,6 +4,7 @@ import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -26,7 +27,7 @@ class CashDailyModel:CashDailyInterface{
 
             val cds=ArrayList<CashDailyBean>()
             try {
-                cds.addAll(SocketUtil.getCashDaily(result))
+                cds.addAll(GsonUtil.getCashDaily(result))
             }catch (e:Exception){}
             if (cds.isEmpty()){
                 msg.obj=result

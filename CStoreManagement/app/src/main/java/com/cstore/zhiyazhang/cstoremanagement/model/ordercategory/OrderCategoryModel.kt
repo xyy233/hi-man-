@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -26,7 +27,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
 
             val category=ArrayList<OrderCategoryBean>()
             try {
-                category.addAll(SocketUtil.getCategory(result))
+                category.addAll(GsonUtil.getCategory(result))
             }catch (e:Exception){}
             if (category.isEmpty()){
                 msg.obj=result
@@ -50,7 +51,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
 
             val shelf=ArrayList<ShelfBean>()
             try {
-                shelf.addAll(SocketUtil.getShelf(result))
+                shelf.addAll(GsonUtil.getShelf(result))
             }catch (e:Exception){}
             if (shelf.isEmpty()){
                 msg.obj=result
@@ -74,7 +75,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
 
             val nop=ArrayList<NOPBean>()
             try {
-                nop.addAll(SocketUtil.getNOP(result))
+                nop.addAll(GsonUtil.getNOP(result))
             }catch (e:Exception){}
             if (nop.isEmpty()){
                 msg.obj=result
@@ -98,7 +99,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
 
             val self=ArrayList<SelfBean>()
             try {
-                self.addAll(SocketUtil.getSelf(result))
+                self.addAll(GsonUtil.getSelf(result))
             }catch (e:Exception){}
             if (self.isEmpty()){
                 msg.obj=result
@@ -122,7 +123,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
 
             val fresh=ArrayList<FreshGroup>()
             try {
-                fresh.addAll(SocketUtil.getFresh(result))
+                fresh.addAll(GsonUtil.getFresh(result))
             }catch (e:Exception){}
             if (fresh.isEmpty()){
                 msg.obj=result

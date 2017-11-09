@@ -11,6 +11,8 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.acceptance.PurchaseAcceptanceActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.cashdaily.CashDailyActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.inventory.InventoryAdjustmentActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_coi.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -33,28 +35,42 @@ class COIActivity(override val layoutId: Int = R.layout.activity_coi) : MyActivi
     }
 
     override fun initData() {
-        val data=ArrayList<LogoBean>()
+        val data = ArrayList<LogoBean>()
         setData(data)
         coi_recycler.layoutManager = GridLayoutManager(this@COIActivity, 3, GridLayoutManager.VERTICAL, false)
-        coi_recycler.adapter=LogoAdapter(this@COIActivity, data, object : ItemClickListener {
+        coi_recycler.adapter = LogoAdapter(this@COIActivity, data, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
-                when(data[position].position){
-                    0->{startActivity(Intent(this@COIActivity, CashDailyActivity::class.java))}
-                    1->{val intent=Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
-                        intent.putExtra("type",1)
-                        startActivity(intent)}
-                    2->{val intent=Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
-                        intent.putExtra("type",2)
-                        startActivity(intent)}
+                when (data[position].position) {
+                    0 -> {
+                        startActivity(Intent(this@COIActivity, CashDailyActivity::class.java))
+                    }
+                    1 -> {
+                        val intent = Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
+                        intent.putExtra("type", 1)
+                        startActivity(intent)
+                    }
+                    2 -> {
+                        val intent = Intent(this@COIActivity, PurchaseAcceptanceActivity::class.java)
+                        intent.putExtra("type", 2)
+                        startActivity(intent)
+                    }
+                    3 -> {
+                        startActivity(Intent(this@COIActivity, ScrapActivity::class.java))
+                    }
+                    4 -> {
+                        startActivity(Intent(this@COIActivity, InventoryAdjustmentActivity::class.java))
+                    }
                 }
             }
         })
     }
 
     private fun setData(data: ArrayList<LogoBean>) {
-        data.add(LogoBean(R.mipmap.ic_cashdaily,getString(R.string.cash_daily),0))
-        data.add(LogoBean(R.mipmap.ic_acceptance,getString(R.string.purchase_acceptance),1))
-        data.add(LogoBean(R.mipmap.ic_return_acceptance,getString(R.string.return_purchase_acceptance),2))
+        data.add(LogoBean(R.mipmap.ic_cashdaily, getString(R.string.cash_daily), 0))
+        data.add(LogoBean(R.mipmap.ic_acceptance, getString(R.string.purchase_acceptance), 1))
+        data.add(LogoBean(R.mipmap.ic_return_acceptance, getString(R.string.return_purchase_acceptance), 2))
+        data.add(LogoBean(R.mipmap.ic_scrap, getString(R.string.scrap1), 3))
+        data.add(LogoBean(R.mipmap.ic_inventory_adjustment, getString(R.string.inventory_adjustment), 4))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

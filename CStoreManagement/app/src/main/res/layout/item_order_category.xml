@@ -21,7 +21,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,13 +66,14 @@
 
                 <LinearLayout
                     android:layout_width="120dp"
-                    android:layout_height="100dp"
+                    android:layout_height="110dp"
                     android:orientation="vertical">
 
                     <ImageView
+                        android:layout_marginStart="1dp"
                         android:id="@+id/orderImg"
                         android:layout_width="match_parent"
-                        android:layout_height="72dp"
+                        android:layout_height="80dp"
                         android:transitionName="image"/>
 
                     <LinearLayout
@@ -120,11 +122,52 @@
                         android:layout_weight="1.2"
                         android:orientation="vertical">
 
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            tools:ignore="NestedWeights">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/dms"
+                                android:textColor="@color/black"/>
+
+                            <TextView
+                                android:id="@+id/order_dms"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/dma"
+                                android:textColor="@color/black"/>
+
+                            <TextView
+                                android:id="@+id/order_dma"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/black"/>
+
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="2dp"
                             android:layout_weight="1"
                             android:orientation="horizontal">
 
@@ -163,10 +206,9 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/to_view_table"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="2dp"
                             android:layout_weight="1"
                             android:orientation="horizontal">
 
@@ -175,12 +217,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
-                                android:text="@string/on_the_way"
+                                android:text="@string/today_arrival"
                                 android:textColor="@color/black"/>
 
                             <TextView
                                 android:id="@+id/dlvQTY"
-                                android:layout_width="80dp"
+                                android:layout_width="55dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="start"
                                 android:ellipsize="end"
@@ -191,11 +233,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
-                                android:text="@string/tomorrow"
+                                android:text="@string/tomorrow_arrival"
                                 android:textColor="@color/black"/>
 
                             <TextView
-                                android:id="@+id/orderTomorrow"
+                                android:id="@+id/tomorrow_arrival"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
@@ -204,6 +246,33 @@
                                 android:textStyle="bold"/>
 
                         </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/to_view_table"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+
+                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:text="@string/tomorrow"
+                                android:textColor="@color/black"/>
+
+                            <TextView
+                                android:id="@+id/orderTomorrow"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/black"/>
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <View
@@ -214,7 +283,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.9"
+                        android:layout_weight="0.7"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -262,8 +331,8 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/add_less"
                                 android:foreground="@drawable/selector_foreground"
-                                android:src="@mipmap/ic_less"
-                                android:stateListAnimator="@drawable/lift_on_touch"/>
+                                android:stateListAnimator="@drawable/lift_on_touch"
+                                android:src="@mipmap/ic_less"/>
 
                             <View
                                 android:id="@+id/al_line"

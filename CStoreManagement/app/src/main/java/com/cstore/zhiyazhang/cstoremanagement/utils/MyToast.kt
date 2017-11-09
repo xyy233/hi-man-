@@ -34,4 +34,15 @@ object MyToast {
         }
         handler.run { toast!!.show() }
     }
+
+    @SuppressLint("ShowToast")
+    fun getEditToast(time:Int, msg:String){
+        if (toast == null) {
+            toast = Toast.makeText(MyApplication.instance().applicationContext, msg, time)
+        } else {
+            toast!!.setText(msg)
+            toast!!.duration = time
+        }
+        handler.run { toast!!.show() }
+    }
 }

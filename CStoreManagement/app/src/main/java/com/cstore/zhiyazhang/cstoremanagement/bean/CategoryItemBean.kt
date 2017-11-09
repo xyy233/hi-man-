@@ -33,9 +33,18 @@ data class CategoryItemBean(
          */
         @SerializedName("ordactualquantity") var orderQTY: Int,
         /**
-         * 在途
+         * 今日未验收
+         * 在途 2017-10-30修改为 今日未验收
          */
         @SerializedName("dlv_qty") val dlvQTY: Int,
+        /**
+         * 今晚到货
+         */
+        @SerializedName("dlv_qty1") val dlvQTY1: Int,
+        /**
+         * 明晚到货
+         */
+        @SerializedName("dlv_qty2") val dlvQTY2: Int,
         /**
          * 明日预测
          */
@@ -60,6 +69,14 @@ data class CategoryItemBean(
          * 是否是促销品，String=Y\N
          */
         @SerializedName("pro_yn") val proYN:String,
+        /**
+         * DMS量
+         */
+        val dms:Double=0.0,
+        /**
+         * DMA量
+         */
+        val dma:Double=0.0,
         /**
          * 修改次数
          */

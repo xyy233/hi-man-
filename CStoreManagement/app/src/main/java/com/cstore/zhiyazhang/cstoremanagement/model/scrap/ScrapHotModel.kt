@@ -5,6 +5,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapHotBean
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapModel.Companion.RECODE_ERROR
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -27,7 +28,7 @@ class ScrapHotModel : ScrapHotInterface {
 
             val scrapHots = ArrayList<ScrapHotBean>()
             try {
-                scrapHots.addAll(SocketUtil.getScrapHot(result))
+                scrapHots.addAll(GsonUtil.getScrapHot(result))
             } catch (e: Exception) {
             }
             if (scrapHots.isEmpty()) {
@@ -52,7 +53,7 @@ class ScrapHotModel : ScrapHotInterface {
 
             val scraps = ArrayList<ScrapContractBean>()
             try {
-                scraps.addAll(SocketUtil.getScrap(result))
+                scraps.addAll(GsonUtil.getScrap(result))
             } catch (e: Exception) {
                 msg.obj = result
                 msg.what = ERROR1

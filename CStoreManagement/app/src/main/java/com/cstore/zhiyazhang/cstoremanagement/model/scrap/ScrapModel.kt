@@ -4,6 +4,7 @@ import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -28,7 +29,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
 
             val scraps = ArrayList<ScrapContractBean>()
             try {
-                scraps.addAll(SocketUtil.getScrap(data))
+                scraps.addAll(GsonUtil.getScrap(data))
             } catch (e: Exception) {
             }
             if (scraps.isEmpty()) {
@@ -53,7 +54,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
 
             val scraps = ArrayList<ScrapContractBean>()
             try {
-                scraps.addAll(SocketUtil.getScrap(data))
+                scraps.addAll(GsonUtil.getScrap(data))
             } catch (e: Exception) {
             }
             if (scraps.isEmpty()) {
@@ -145,7 +146,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             if (result == "" || result == "0") return ""
             val allScraps = ArrayList<ScrapContractBean>()
             try {
-                allScraps.addAll(SocketUtil.getScrap(result))
+                allScraps.addAll(GsonUtil.getScrap(result))
             } catch (e: Exception) {
                 return result
             }

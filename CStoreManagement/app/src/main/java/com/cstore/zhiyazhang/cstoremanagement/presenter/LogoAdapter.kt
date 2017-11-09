@@ -41,3 +41,4 @@ class LogoAdapter(private val context: Context, val data: ArrayList<LogoBean>, p
         val orderItem = itemView.findViewById<LinearLayout>(R.id.orderItem)!!
     }
 }
+

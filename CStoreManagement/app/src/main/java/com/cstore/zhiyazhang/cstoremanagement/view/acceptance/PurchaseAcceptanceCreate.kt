@@ -25,12 +25,12 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_acceptance_create) : MyActivity(), GenericView {
 
     private lateinit var date: String
-    private var ab: AcceptanceBean? = null
+    private var ab: AcceptanceBean? = null//上一页传过来的，如果上一页实在单子里面创建的就是空的，如果是在商品内就有，查询商品的时候要检查是否为空,如果内部有数据那就去除掉那些
     private var rab: ReturnAcceptanceBean? = null
     private var type = 1
     private val aib = ArrayList<AcceptanceItemBean>()
     private val raib = ArrayList<ReturnAcceptanceItemBean>()
-    private val presenter = PurchaseAcceptancePresenter(this, this, this)
+    private val presenter = PurchaseAcceptancePresenter(this, this)
     private var vendor: ArrayList<VendorBean>? = null
     private val layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceCreate, LinearLayout.VERTICAL, false)
     private var adapter: PurchaseAcceptanceCreateAdapter? = null
@@ -223,22 +223,6 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     }
 
     override fun <T> updateDone(uData: T) {
-        if (type == 1) {
-            if (ab == null) {
-                //记录创建好的
-                ab = uData as AcceptanceBean
-            }
-            /*else{
-                ab!!.allItems=((uData as AcceptanceBean).allItems)
-            }*/
-        } else {
-            if (rab == null) {
-                rab = uData as ReturnAcceptanceBean
-            }
-            /*else{
-                rab!!.allItems=((uData as ReturnAcceptanceBean).allItems)
-            }*/
-        }
         if (type==1){
             val a=(adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange }
             aib.addAll(a)

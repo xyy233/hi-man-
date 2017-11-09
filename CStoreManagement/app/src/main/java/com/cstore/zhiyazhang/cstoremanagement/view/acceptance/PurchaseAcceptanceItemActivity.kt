@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -36,7 +37,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
 
     private lateinit var dialog: AlertDialog
     private lateinit var dialogView:View
-    private val presenter=PurchaseAcceptancePresenter(this,this,this)
+    private val presenter=PurchaseAcceptancePresenter(this,this)
     private lateinit var date:String
     private lateinit var ab:AcceptanceBean
     private lateinit var rab:ReturnAcceptanceBean
@@ -201,7 +202,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
      */
     private fun judgmentFinish() {
         if (if (type==1)ab.dlvStatus==0||ab.isChange else rab.rtnStatus==0||rab.isChange) {
-                AlertDialog.Builder(this)
+            AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("您未进行验收，是否放弃？")
                         .setPositiveButton("验收", { _, _ ->

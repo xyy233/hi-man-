@@ -47,25 +47,25 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
 
     companion object {
         //订量倒序
-        private val TODAY_SORT_DESC = "order by x.ordActualQuantity desc"
+        private val TODAY_SORT_DESC = "order by ordActualQuantity desc"
         //品号倒序
-        private val COMMODIFY_ID_SORT_DESC = "order by x.itemNumber desc"
+        private val COMMODIFY_ID_SORT_DESC = "order by itemNumber desc"
         //品名倒序
-        private val COMMODIFY_NAME_SORT_DESC = "order by x.pluName desc"
-        //价格倒序
-        private val MONEY_SORT_DESC = "order by x.storeUnitPrice desc"
+        private val COMMODIFY_NAME_SORT_DESC = "order by pluName desc"
         //订量正序
-        private val TODAY_SORT = "order by x.ordActualQuantity"
+        private val TODAY_SORT = "order by ordActualQuantity"
         //品号正序
-        private val COMMODIFY_ID_SORT = "order by x.itemNumber"
+        private val COMMODIFY_ID_SORT = "order by itemNumber"
         //品名正序
-        private val COMMODIFY_NAME_SORT = "order by x.pluName"
-        //价格正序
-        private val MONEY_SORT = "order by x.storeUnitPrice"
+        private val COMMODIFY_NAME_SORT = "order by pluName"
         //DMS销量正序
-        private val DMS_SORT = " order by x.dms "
+        private val DMS_SORT = " order by dms "
         //DMS销量倒序
-        private val DMS_SORT_DESC = " order by x.dms desc"
+        private val DMS_SORT_DESC = " order by dms desc"
+        //DMS销量正序
+        private val DMA_SORT = " order by dma "
+        //DMS销量倒序
+        private val DMA_SORT_DESC = " order by dma desc"
     }
 
     private var isBack = false
@@ -271,7 +271,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 }
                 sortAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
                 mySpinner.adapter = sortAdapter
-                if (whereIsIt == "self") mySpinner.setSelection(3, false) else mySpinner.setSelection(9, false)
+                if (whereIsIt == "self") mySpinner.setSelection(3, false) else mySpinner.setSelection(8, false)
                 mySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
                         getData()
@@ -536,10 +536,10 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             3 -> COMMODIFY_ID_SORT
             4 -> COMMODIFY_NAME_SORT_DESC
             5 -> COMMODIFY_NAME_SORT
-            6 -> MONEY_SORT_DESC
-            7 -> MONEY_SORT
-            8 -> DMS_SORT
-            9 -> DMS_SORT_DESC
+            6 -> DMA_SORT_DESC
+            7 -> DMA_SORT
+            8 -> DMS_SORT_DESC
+            9 -> DMS_SORT
             else -> COMMODIFY_ID_SORT_DESC
         }
 

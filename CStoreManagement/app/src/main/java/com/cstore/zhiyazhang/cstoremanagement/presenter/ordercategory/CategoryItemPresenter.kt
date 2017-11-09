@@ -29,7 +29,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "category")
+                    val adapter = getAdapter(data, "category")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -52,7 +52,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "shelf")
+                    val adapter = getAdapter(data, "shelf")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -75,7 +75,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "search")
+                    val adapter = getAdapter(data, "search")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -99,7 +99,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "self")
+                    val adapter = getAdapter(data, "self")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -122,7 +122,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "nop")
+                    val adapter = getAdapter(data, "nop")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -145,7 +145,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.errorDealWith()
                     gView.hideLoading()
                 } else {
-                    val adapter = GetAdapter(data, "fresh")
+                    val adapter = getAdapter(data, "fresh")
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
@@ -174,7 +174,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         }))
     }
 
-    private fun GetAdapter(data: ArrayList<CategoryItemBean>, isType: String): CategoryItemAdapter {
+    private fun getAdapter(data: ArrayList<CategoryItemBean>, isType: String): CategoryItemAdapter {
         return CategoryItemAdapter(data, context, object : RecyclerOnTouch {
             override fun <T> onClickImage(objects: T, position: Int) {}
 

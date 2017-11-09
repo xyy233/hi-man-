@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -134,6 +135,12 @@ class ContractTypeDao(context: Context) {
         }
     }
 
+    @SuppressLint("Recycle")
+    fun test(userName:String){
+        val db=ctdbh.readableDatabase
+        val cursor=db.rawQuery("select * from userinfo where username = '$userName'",null)
+    }
+
     val allDate: ArrayList<ContractTypeBean>
         get() {
             var db: SQLiteDatabase? = null
@@ -146,7 +153,7 @@ class ContractTypeDao(context: Context) {
                     while (cursor.moveToNext()) {
                         result.add(parseContractType(cursor))
                     }
-                    if (result.size > 0 && result.filter { it.createDay != MyTimeUtil.todayDay }.isNotEmpty()) {
+                    if (result.size > 0 && result.any { it.createDay != MyTimeUtil.todayDay }) {
                         delete(MyTimeUtil.todayDay)
                         result.removeAll(result.filter { it.createDay != MyTimeUtil.todayDay })
                     }
@@ -162,13 +169,12 @@ class ContractTypeDao(context: Context) {
         }
 
     private fun parseContractType(cursor: Cursor): ContractTypeBean {
-        val c = ContractTypeBean(
+        return ContractTypeBean(
                 cursor.getString(cursor.getColumnIndex(TYPE_ID)),
                 "",
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true,
                 cursor.getInt(cursor.getColumnIndex(CREATE_DAY))
         )
-        return c
     }
 
     companion object {

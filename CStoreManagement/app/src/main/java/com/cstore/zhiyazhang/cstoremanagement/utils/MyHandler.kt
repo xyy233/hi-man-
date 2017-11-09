@@ -88,7 +88,12 @@ class MyHandler:Handler() {
         return this
     }
 
-    fun cleanAL() {
+    fun cleanAll(){
+        cleanAL()
+        this.removeCallbacksAndMessages(null)
+    }
+
+    private fun cleanAL() {
         if (!isRun){//还在运行就不允许清空
             mActivity = null
             mListener = null

@@ -32,6 +32,7 @@ class PurchaseAcceptanceAdapter(private val type:Int, private val date:String, p
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //position 0=1   size 0=0,
         if (position==data.size){
             //没有数据了，现在是+,隐藏数据页和状态，显示+
             holder.acceptanceData.visibility=View.GONE

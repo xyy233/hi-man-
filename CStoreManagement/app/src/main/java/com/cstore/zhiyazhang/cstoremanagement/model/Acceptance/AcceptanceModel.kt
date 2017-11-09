@@ -6,6 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -33,7 +34,7 @@ class AcceptanceModel : AcceptanceInterface {
                 return@Runnable
             }
             try {
-                abs.addAll(SocketUtil.getAcceptance(result))
+                abs.addAll(GsonUtil.getAcceptance(result))
             } catch (e: Exception) {
                 Log.e("AcceptanceModel", e.message)
             }
@@ -75,7 +76,7 @@ class AcceptanceModel : AcceptanceInterface {
                 return@Runnable
             }
             try {
-                rabs.addAll(SocketUtil.getReturnAcceptance(result))
+                rabs.addAll(GsonUtil.getReturnAcceptance(result))
             } catch (e: Exception) {
             }
             if (rabs.isEmpty()) {
@@ -102,7 +103,7 @@ class AcceptanceModel : AcceptanceInterface {
         val abs = ArrayList<AcceptanceItemBean>()
         val result = SocketUtil.initSocket(ip, MySql.getAcceptanceItemList(ab, date)).inquire()
         if (result == "[]") return abs
-        abs.addAll(SocketUtil.getAcceptanceItem(result))
+        abs.addAll(GsonUtil.getAcceptanceItem(result))
         return abs
     }
 
@@ -114,7 +115,7 @@ class AcceptanceModel : AcceptanceInterface {
         val result = SocketUtil.initSocket(ip, MySql.getReturnAcceptanceItemList(rab, date)).inquire()
         if (result == "[]") return raibs
         try {
-            raibs.addAll(SocketUtil.getReturnAcceptanceItem(result))
+            raibs.addAll(GsonUtil.getReturnAcceptanceItem(result))
         } catch (e: Exception) {
         }
         if (raibs.isEmpty()) {
@@ -242,7 +243,7 @@ class AcceptanceModel : AcceptanceInterface {
             if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
             val vb = ArrayList<VendorBean>()
             try {
-                vb.addAll(SocketUtil.getVendor(result))
+                vb.addAll(GsonUtil.getVendor(result))
             } catch (e: Exception) {
             }
             if (vb.isEmpty()) {
@@ -272,7 +273,7 @@ class AcceptanceModel : AcceptanceInterface {
                 return@Runnable
             }
             try {
-                aib.addAll(SocketUtil.getAcceptanceItem(result))
+                aib.addAll(GsonUtil.getAcceptanceItem(result))
             } catch (e: Exception) {
             }
             if (aib.isEmpty()) {
@@ -301,7 +302,7 @@ class AcceptanceModel : AcceptanceInterface {
                 return@Runnable
             }
             try {
-                aib.addAll(SocketUtil.getReturnAcceptanceItem(result))
+                aib.addAll(GsonUtil.getReturnAcceptanceItem(result))
             } catch (e: Exception) {
             }
             if (aib.isEmpty()) {
@@ -327,7 +328,7 @@ class AcceptanceModel : AcceptanceInterface {
             val commoditySql = SocketUtil.initSocket(ip, MySql.getJudgmentCommodity(aib, date)).inquire()
             val commodity = ArrayList<AcceptanceItemBean>()
             try {
-                commodity.addAll(SocketUtil.getAcceptanceItem(commoditySql))
+                commodity.addAll(GsonUtil.getAcceptanceItem(commoditySql))
             } catch (e: Exception) {
             }
             if (commodity.isNotEmpty()) {
@@ -369,7 +370,7 @@ class AcceptanceModel : AcceptanceInterface {
             val commoditySql = SocketUtil.initSocket(ip, MySql.getJudgmentReturnCommodity(raib, date)).inquire()
             val commodity = ArrayList<ReturnAcceptanceItemBean>()
             try {
-                commodity.addAll(SocketUtil.getReturnAcceptanceItem(commoditySql))
+                commodity.addAll(GsonUtil.getReturnAcceptanceItem(commoditySql))
             } catch (e: Exception) {
             }
             if (commodity.isNotEmpty()) {
@@ -504,13 +505,13 @@ class AcceptanceModel : AcceptanceInterface {
             //有数据
             val ub = ArrayList<UtilBean>()
             try {
-                ub.addAll(SocketUtil.getUtilBean(result))
+                ub.addAll(GsonUtil.getUtilBean(result))
             } catch (e: Exception) {
                 //出错了
                 Log.e("AcceptanceModel", e.message)
             }
             if (ub[0].value == null) {
-                //没有数据
+                //没有数据,验收是9000，退货是0000
                 return num + "9000"
             }
             return ub[0].value!!

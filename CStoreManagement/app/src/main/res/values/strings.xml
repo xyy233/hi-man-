@@ -43,16 +43,20 @@
     <string name="photo">照片</string>
     <string name="unit_price">单价</string>
     <string name="all_price">总金额</string>
-    <string name="statistics">统计</string>
+    <string name="statistics">汇总</string>
+    <string name="di">第</string>
+    <string name="qi">期新品</string>
+    <string name="add">添加</string>
+    <string name="settle">结算</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
-    <string name="order">订货</string>
+    <string name="order">订/退货</string>
     <string name="train">培训</string>
     <string name="maintain">维修</string>
     <string name="in_stock">库存管理</string>
     <string name="personnel">人事</string>
-    <string name="coi">成本投资</string>
+    <string name="coi">进销存管理</string>
     <!--登录-->
     <string name="pwdError">密码错误</string>
     <string name="idError">查询不到此帐号</string>
@@ -105,6 +109,8 @@
     <string name="expected_count">预计强配：</string>
     <string name="on_the_way">在途：</string>
     <string name="tomorrow">明日预测：</string>
+    <string name="today_arrival">今日到货：</string>
+    <string name="tomorrow_arrival">明日到货：</string>
     <string name="shelf_name">货架名</string>
     <string name="no_edit_msg">无修改数据</string>
     <string name="self_value">自用品项目</string>
@@ -116,6 +122,8 @@
     <string name="fresh1">即期鲜食订货</string>
     <string name="fresh2">其他鲜食订货</string>
     <string name="under_order">一键下单</string>
+    <string name="dms">DMS：</string>
+    <string name="dma">DMA：</string>
     <!--报废-->
     <string name="scrap">报废</string>
     <string name="scrap1">一般商品报废</string>
@@ -182,4 +190,15 @@
     <string name="access">出入</string>
     <string name="edit_user_id">请输入工号</string>
     <string name="cnt_not_use">非承包店不能使用此功能!</string>
+    <!--库存-->
+    <string name="unitInvSearch">单品库存查询</string>
+    <string name="fiveError">五大异常</string>
+    <string name="point">盘点</string>
+    <!--退货-->
+    <string name="return_purchase">一般预约退货</string>
+    <string name="return_id">退货单号：</string>
+    <string name="return_date">退货验收日：</string>
+    <string name="lsjjhlj">历史净进货累计：</string>
+    <string name="reason">原因：</string>
+    <string name="plnrtn_quantity">预退数</string>
 </resources>

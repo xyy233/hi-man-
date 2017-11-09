@@ -5,12 +5,9 @@ import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyImage
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -37,7 +34,7 @@ class CheckInModel : CheckInInterface {
                 handler.sendMessage(msg)
                 return@Runnable
             }
-            val user = SocketUtil.getUser(userData)[0]
+            val user = GsonUtil.getUser(userData)[0]
             val watermarkText = uId + "  ${user.name}" + "\n" + MyTimeUtil.nowTimeString
             val waterBmp = MyImage.createWatermark(bmp, watermarkText)
             val address = "fileput C:\\rtcvs\\arr_photo\\${MyTimeUtil.tomorrowDate2}\\${User.getUser().storeId + uId + MyTimeUtil.nowTimeString2}.jpg\u0004"

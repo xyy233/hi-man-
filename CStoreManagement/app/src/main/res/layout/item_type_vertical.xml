@@ -3,6 +3,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="75dp"
+              android:layout_marginTop="1dp"
+              android:elevation="2dp"
               android:orientation="horizontal">
 
     <FrameLayout
@@ -10,30 +12,20 @@
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
-        <ImageView
-            android:id="@+id/type_tag_v"
-            android:layout_width="45dp"
-            android:layout_height="25dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="70dp"
-            android:elevation="2dp"
-            android:visibility="gone"/>
-
         <LinearLayout
             android:id="@+id/typebg_v"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="1.5dp"
-            android:foreground="@drawable/selector_foreground"
-            android:stateListAnimator="@drawable/lift_on_touch"
-            android:clickable="true"
             android:layout_marginEnd="3dp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="1.5dp"
-            android:elevation="1dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/selector_foreground"
             android:gravity="center"
             android:orientation="vertical"
-            android:focusable="true">
+            android:stateListAnimator="@drawable/lift_on_touch">
 
             <TextView
                 android:id="@+id/item_text1"
@@ -83,6 +75,60 @@
                     android:textStyle="bold"/>
 
             </LinearLayout>
+        </LinearLayout>
+
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/type_tag_v"
+            android:layout_width="45dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="70dp"
+            android:elevation="2dp"/>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/less_img"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/ic_less"/>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/add_img"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/ic_add"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/add_less_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/less"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                tools:ignore="ButtonStyle"/>
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                tools:ignore="ButtonStyle"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

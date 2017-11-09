@@ -10,15 +10,18 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG
+import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG2
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.view.instock.InStockActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.personnel.PersonnelActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -47,10 +50,6 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         this.startService(Intent(this, UpdateService::class.java))
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onDestroy() {
         unregisterReceiver(updateReceiver)
         super.onDestroy()
@@ -74,28 +73,53 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
     }
 
     override fun initClick() {
-        gg1.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg2.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg3.setOnClickListener {
+        gg1.setOnClickListener {
             startActivity(Intent(this@HomeActivity, ContractOrder::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg1, "gg3").toBundle())
+        }
+        gg2.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, COIActivity::class.java),
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg2, "gg3").toBundle())
+        }
+        gg3.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg3, "gg3").toBundle())
         }
-        gg4.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg5.setOnClickListener { MyToast.getShortToast("未完成") }
-        gg6.setOnClickListener { startActivity(Intent(this@HomeActivity, COIActivity::class.java),
-                ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg6, "gg3").toBundle()) }
-        gg7.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, InStockActivity::class.java),
-                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg7, "gg3").toBundle())
-        }
-        gg8.setOnClickListener {
+        gg4.setOnClickListener {
             startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
-                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg8, "gg3").toBundle())
+                    ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg4, "gg3").toBundle())
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (!CStoreCalendar.judgmentStatus()){
+            val data=CStoreCalendar.getCStoreCalendar()
+            if (data==null){
+                home_notice.text=ERROR_MSG//没获得换日数据
+            }else{
+                home_notice.text=ERROR_MSG2//换日失败
+            }
+            closeOperating()
+        }
+    }
+
+    private fun closeOperating() {
+        gg1.setOnClickListener(errorListener)
+        gg2.setOnClickListener(errorListener)
+        gg3.setOnClickListener(errorListener)
+        gg4.setOnClickListener(errorListener)
+    }
+
+    /**
+     * 错误异常不允许点击
+     */
+    private val errorListener= View.OnClickListener {
+        MyToast.getShortToast(home_notice.text.toString())
+    }
+
     override fun onBackPressed() {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
                 .setTitle("提示")
                 .setMessage("请确认退出系统？")
                 .setPositiveButton("退出") { _, _ ->
@@ -114,11 +138,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_manage -> {
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("是否在相关人员提示下操作？此步骤会对正常使用造成不可预知影响！")
                         .setPositiveButton("确认清空", { _, _ ->
-                            AlertDialog.Builder(this)
+                            AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
                                     .setTitle("提示")
                                     .setMessage("请确认是否清空")
                                     .setPositiveButton("确认", { _, _ ->

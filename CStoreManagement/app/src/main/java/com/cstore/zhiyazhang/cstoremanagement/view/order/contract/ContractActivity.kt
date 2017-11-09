@@ -22,6 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter
+import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter.Companion.LOADING_MORE
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
@@ -466,7 +467,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == aData.itemCount) {
-                    aData.changeMoreStatus(aData.LOADING_MORE)
+                    aData.changeMoreStatus(LOADING_MORE)
                     pullLoading(aData)
                 }
             }

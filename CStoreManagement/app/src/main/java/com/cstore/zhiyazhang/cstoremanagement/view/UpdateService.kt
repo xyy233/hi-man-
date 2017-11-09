@@ -179,11 +179,16 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
 
     //下载到本地后执行安装
     private fun installAPK(file: File) {
-        if (!file.exists()) return
-        val intent = Intent(Intent.ACTION_VIEW)
-        val uri = Uri.parse("file://" + file.toString())
-        intent.setDataAndType(uri, "application/vnd.android.package-archive")
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(intent)
+        try {
+            if (!file.exists()) return
+            val intent = Intent(Intent.ACTION_VIEW)
+            val uri = Uri.parse("file://" + file.toString())
+            intent.setDataAndType(uri, "application/vnd.android.package-archive")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        }catch (e:Exception){
+            MyToast.getEditToast(10000,"自动更新失败，请到手机目录Download下手动安装或联系系统部！${e.message}")
+        }
+
     }
 }

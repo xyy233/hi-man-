@@ -54,4 +54,9 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!--提示框字体大小设置-->
+    <style name="AlertDialogCustom" parent="Animation.AppCompat.Dialog">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

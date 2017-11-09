@@ -18,11 +18,8 @@ import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
  * Created by zhiya.zhang
  * on 2017/9/5 11:29.
  */
-class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickListener,val date:String): RecyclerView.Adapter<CashDailyAdapter.ViewHolder>() {
+class CashDailyAdapter(val data:ArrayList<CashDailyBean>, private val onClick:ItemClickListener, val date:String): RecyclerView.Adapter<CashDailyAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //变色,UI重新设计-取消变色
-        /*if (position%2==1)holder.item.setBackgroundColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.item_green2))
-        else holder.item.setBackgroundColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.item_green1))*/
         //设置显示
         holder.itemName.text=data[position].cdName
         holder.itemNum.text=data[position].cdValue
@@ -32,15 +29,25 @@ class CashDailyAdapter(val data:ArrayList<CashDailyBean>, val onClick:ItemClickL
                 "Y"->{
                     //谁都可以修改
                     holder.item.isEnabled=true
-                    holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
-                    holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                    if (data[position].cdId=="1003"){
+                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.delete_red))
+                        holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                    }else{
+                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
+                        holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                    }
                 }
                 "S"->{
                     //只有管理员能修改
                     if (User.getUser().uId=="99999990"){
                         holder.item.isEnabled=true
-                        holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
-                        holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                        if (data[position].cdId=="1003"){
+                            holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.delete_red))
+                            holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                        }else{
+                            holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.sure))
+                            holder.itemNum.setBackgroundResource(R.drawable.bg_orange_line)
+                        }
                     }else {
                         holder.item.isEnabled=false
                         holder.itemNum.setTextColor(ContextCompat.getColor(MyApplication.instance().applicationContext,R.color.gray))

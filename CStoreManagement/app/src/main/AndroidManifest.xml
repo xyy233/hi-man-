@@ -22,7 +22,7 @@
 
         <!--登录页-->
         <activity
-            android:name=".view.TestActivity"
+            android:name=".view.SignInActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -76,24 +76,24 @@
 
         <!--库存管理页-->
         <activity
-            android:name=".view.instock.InStockActivity"
+            android:name=".view.InStockActivity"
             android:screenOrientation="portrait"/>
 
         <!--报废-->
         <activity
-            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize"
             />
 
         <!--热食报废-->
         <activity
-            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapHotActivity"
             android:screenOrientation="portrait"/>
 
         <!--热食报废商品页-->
         <activity
-            android:name="com.cstore.zhiyazhang.cstoremanagement.view.instock.scrap.ScrapHotItemActivity"
+            android:name="com.cstore.zhiyazhang.cstoremanagement.view.scrap.ScrapHotItemActivity"
             android:screenOrientation="portrait"/>
 
         <!--现金日报-->
@@ -126,14 +126,27 @@
                   android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <!--人事页面-->
-        <activity android:name=".view.personnel.PersonnelActivity"
+        <activity android:name=".view.PersonnelActivity"
                   android:screenOrientation="portrait"/>
 
         <!--签到-->
-        <activity android:name=".view.personnel.checkin.CheckInActivity"
+        <activity android:name="com.cstore.zhiyazhang.cstoremanagement.view.checkin.CheckInActivity"
                   android:windowSoftInputMode="adjustResize|stateHidden"/>
 
+        <!--退货首页-->
+        <activity android:name=".view.order.returnpurchase.ReturnPurchaseActivity"
+                  android:screenOrientation="portrait"/>
 
+        <!--退货商品页-->
+        <activity android:name=".view.order.returnpurchase.ReturnPurchaseItemActivity"
+                  android:screenOrientation="portrait"/>
+
+        <!--退货创建页-->
+        <activity android:name=".view.order.returnpurchase.ReturnPurchaseCreateActivity"
+                  android:screenOrientation="portrait"/>
+
+        <activity android:name=".view.pay.PayActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

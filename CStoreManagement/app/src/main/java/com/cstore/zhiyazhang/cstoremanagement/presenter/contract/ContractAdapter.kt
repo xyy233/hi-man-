@@ -24,11 +24,13 @@ import kotlinx.android.synthetic.main.item_loading.view.*
  */
 class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch: RecyclerOnTouch, var isJustLook: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val TYPE_ITEM = 0  //普通Item View
-    private val TYPE_FOOTER = 1  //底部FootView
-    private var load_more_status = 0//上拉加载更多状态-默认为0
-    val PULLUP_LOAD_MORE = 0//上拉加载更多
-    val LOADING_MORE = 1//正在加载中
+    companion object {
+        private val TYPE_ITEM = 0  //普通Item View
+        private val TYPE_FOOTER = 1  //底部FootView
+        private var load_more_status = 0//上拉加载更多状态-默认为0
+        val PULLUP_LOAD_MORE = 0//上拉加载更多
+        val LOADING_MORE = 1//正在加载中
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? =
@@ -87,7 +89,6 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
                 }
                 if (isJustLook) {
                     holder.alLine.visibility = View.GONE
-                    holder.toViewTable.visibility = View.VISIBLE
                     holder.csCount.text = cr.detail[position].cSug.toString()
                     holder.cType.text = cr.detail[position].cType
                     holder.add.visibility = View.GONE
@@ -114,14 +115,14 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
 
     override fun getItemViewType(position: Int): Int {
         //确认是添加正常view还是底部加载view
-        if (position + 1 == itemCount) {
+        return if (position + 1 == itemCount) {
             if (cr.total > 10 && cr.detail.size < cr.total) {
-                return TYPE_FOOTER
+                TYPE_FOOTER
             } else {
-                return TYPE_ITEM
+                TYPE_ITEM
             }
         } else {
-            return TYPE_ITEM
+            TYPE_ITEM
         }
     }
 
@@ -147,21 +148,20 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cid = itemView.findViewById<TextView>(R.id.cid)
-        val cname = itemView.findViewById<TextView>(R.id.cname)
-        val cin = itemView.findViewById<TextView>(R.id.cin)
-        val cnc = itemView.findViewById<TextView>(R.id.cnc)
-        val cprice = itemView.findViewById<TextView>(R.id.cprice)
-        val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)
-        val commodifyImg = itemView.findViewById<ImageView>(R.id.commodify_img)
-        val less = itemView.findViewById<ImageButton>(R.id.less)
-        val add = itemView.findViewById<ImageButton>(R.id.add)
-        val editCdc = itemView.findViewById<TextView>(R.id.edit_cdc)
-        val arriveDate = itemView.findViewById<TextView>(R.id.arriveDate)
-        val toViewTable = itemView.findViewById<LinearLayout>(R.id.to_view_table)
-        val cType = itemView.findViewById<TextView>(R.id.ctype)
-        val csCount = itemView.findViewById<TextView>(R.id.cs_count)
-        val alLine = itemView.findViewById<View>(R.id.al_line)
+        val cid = itemView.findViewById<TextView>(R.id.cid)!!
+        val cname = itemView.findViewById<TextView>(R.id.cname)!!
+        val cin = itemView.findViewById<TextView>(R.id.cin)!!
+        val cnc = itemView.findViewById<TextView>(R.id.cnc)!!
+        val cprice = itemView.findViewById<TextView>(R.id.cprice)!!
+        val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)!!
+        val commodifyImg = itemView.findViewById<ImageView>(R.id.commodify_img)!!
+        val less = itemView.findViewById<ImageButton>(R.id.less)!!
+        val add = itemView.findViewById<ImageButton>(R.id.add)!!
+        val editCdc = itemView.findViewById<TextView>(R.id.edit_cdc)!!
+        val arriveDate = itemView.findViewById<TextView>(R.id.arriveDate)!!
+        val cType = itemView.findViewById<TextView>(R.id.ctype)!!
+        val csCount = itemView.findViewById<TextView>(R.id.cs_count)!!
+        val alLine = itemView.findViewById<View>(R.id.al_line)!!
     }
 
     private inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

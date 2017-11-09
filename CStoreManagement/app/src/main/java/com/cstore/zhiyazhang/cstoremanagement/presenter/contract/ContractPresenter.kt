@@ -10,13 +10,14 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractModel
+import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter.Companion.PULLUP_LOAD_MORE
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 
 /**
  * Created by zhiya.zhang
@@ -158,7 +159,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
             mHandler.post { gView.showView(result) }
         }else{
             adapter.addItem(cr.detail)
-            mHandler.post { adapter.changeMoreStatus(adapter.PULLUP_LOAD_MORE) }
+            mHandler.post { adapter.changeMoreStatus(PULLUP_LOAD_MORE) }
         }
         mHandler.post {
             cView.setPage(cr.page)

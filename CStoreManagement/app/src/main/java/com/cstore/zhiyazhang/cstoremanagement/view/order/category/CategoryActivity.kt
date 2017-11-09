@@ -35,7 +35,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     override fun showUsaTime(isShow: Boolean) {
     }
 
-    val mPresenter = OrderCategoryPresenter(this,this)
+    private val mPresenter = OrderCategoryPresenter(this,this)
 
     override fun initClick() {
         category_retry.setOnClickListener {

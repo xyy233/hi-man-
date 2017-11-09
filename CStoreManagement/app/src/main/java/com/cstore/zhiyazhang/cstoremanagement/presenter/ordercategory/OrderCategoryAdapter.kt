@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DataClickListener
 import kotlinx.android.synthetic.main.item_type_horizontal.view.*
 import kotlinx.android.synthetic.main.item_type_vertical.view.*
 
@@ -14,7 +16,7 @@ import kotlinx.android.synthetic.main.item_type_vertical.view.*
  * Created by zhiya.zhang
  * on 2017/7/25 16:10.
  */
-class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) -> Unit) :
+class OrderCategoryAdapter(val type: String, val data: Any, private val listener: DataClickListener) :
         RecyclerView.Adapter<OrderCategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -65,7 +67,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindCategory(ocb: OrderCategoryBean, listener: (OrderCategoryBean) -> Unit) = with(itemView) {
+        fun bindCategory(ocb: OrderCategoryBean, listener: DataClickListener) = with(itemView) {
             type_h.text = ocb.categoryName
             inventory_h.text = ocb.allSku.toString()
             tonightCount_h.text = ocb.ordSku.toString()
@@ -78,24 +80,25 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
                 }
                 else -> type_tag_h.visibility = View.GONE
             }
-            setOnClickListener { listener(ocb) }
+            setOnClickListener { listener.click(ocb) }
         }
 
-        fun bindShelf(sb: ShelfBean, listener: (ShelfBean) -> Unit) = with(itemView) {
+        fun bindShelf(sb: ShelfBean, listener: DataClickListener) = with(itemView) {
             item_text1.text = sb.shelfName
             item_text2.text = sb.allSku.toString()
             item_text3.text = sb.ordSku.toString()
             item_text4.text = sb.ordPrice.toString()
+            typebg_v.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
             if (sb.ordSku != 0) {
                 type_tag_v.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_v.visibility = View.VISIBLE
             } else {
                 type_tag_v.visibility = View.GONE
             }
-            setOnClickListener { listener(sb) }
+            typebg_v.setOnClickListener { listener.click(sb) }
         }
 
-        fun bindSelf(sb: SelfBean, listener: (SelfBean) -> Unit) = with(itemView) {
+        fun bindSelf(sb: SelfBean, listener: DataClickListener) = with(itemView) {
             type_h.text = sb.selfName
             inventory_h.text = sb.allSku.toString()
             tonightCount_h.text = sb.ordSku.toString()
@@ -106,10 +109,10 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
             } else {
                 type_tag_h.visibility = View.GONE
             }
-            setOnClickListener { listener(sb) }
+            setOnClickListener { listener.click(sb) }
         }
 
-        fun bindNOP(nb: NOPBean, listener: (NOPBean) -> Unit) = with(itemView) {
+        fun bindNOP(nb: NOPBean, listener: DataClickListener) = with(itemView) {
             type_h.text = nb.nopName
             inventory_h.text = nb.allSku.toString()
             tonightCount_h.text = nb.ordSku.toString()
@@ -121,10 +124,10 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
                 type_tag_h.visibility = View.GONE
             }
 
-            setOnClickListener { listener(nb) }
+            setOnClickListener { listener.click(nb) }
         }
 
-        fun bindFresh(fg: FreshGroup, listener: (FreshGroup) -> Unit) = with(itemView) {
+        fun bindFresh(fg: FreshGroup, listener: DataClickListener) = with(itemView) {
             type_h.text = fg.name
             inventory_h.text = fg.allSku.toString()
             tonightCount_h.text = fg.ordSku.toString()
@@ -135,7 +138,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, val listener: (Any) 
             } else {
                 type_tag_h.visibility = View.GONE
             }
-            setOnClickListener { listener(fg) }
+            setOnClickListener { listener.click(fg) }
         }
     }
 

@@ -52,4 +52,6 @@
     <!--现金日报-->
     <color name="item_green1">#8fed8f</color>
     <color name="item_green2">#fefedf</color>
+
+    <color name="count_text">#009943</color>
 </resources>

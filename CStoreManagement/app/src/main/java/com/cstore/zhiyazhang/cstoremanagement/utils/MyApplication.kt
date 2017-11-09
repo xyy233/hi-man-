@@ -1,6 +1,8 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.provider.Settings
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
@@ -65,6 +67,14 @@ class MyApplication : Application() {
             val manager = instance().packageManager
             val info = manager.getPackageInfo(instance().packageName, 0)
             return info.versionCode
+        }
+
+        /**
+         * 获得手机序列号
+         */
+        @SuppressLint("HardwareIds")
+        fun getOnlyid():String{
+            return Settings.Secure.getString(instance().contentResolver, Settings.Secure.ANDROID_ID)
         }
     }
 

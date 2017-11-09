@@ -15,12 +15,15 @@ import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
+import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
  * on 2017/7/27 11:43.
  */
-class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Context, val onTouch: RecyclerOnTouch, val isType: String) : RecyclerView.Adapter<CategoryItemAdapter.ViewHolder>() {
+class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Context, private val onTouch: RecyclerOnTouch, private val isType: String) : RecyclerView.Adapter<CategoryItemAdapter.ViewHolder>() {
+
+    private val df = DecimalFormat("#####.####")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryItemAdapter.ViewHolder =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_order_category, parent, false))
@@ -63,12 +66,26 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         }
         holder.orderItemId.text = data[position].itemId
         holder.orderItemName.text = data[position].itemName
-        holder.orderInv.text = data[position].itemInv.toString()
+        holder.orderInv.text =
+                if (data[position].dlvQTY != 0) {
+                    data[position].itemInv.toString() + "+${data[position].dlvQTY}"
+                } else {
+                    data[position].itemInv.toString()
+                }
+        if (data[position].dlvQTY2 == 0) {
+            holder.dlvQty2.visibility = View.GONE
+        } else {
+            holder.dlvQty2.visibility = View.VISIBLE
+            holder.dlvQty2.text = data[position].dlvQTY2.toString()
+        }
         holder.orderExpected.text = data[position].itemExpected.toString()
-        holder.dlvQTY.text = data[position].dlvQTY.toString()
+        holder.dlvQTY.text = data[position].dlvQTY1.toString()
         holder.orderTomorrow.text = data[position].itemTomorrow.toString()
         holder.orderPrice.text = data[position].itemPrice.toString()
         holder.editOrderQTY.text = data[position].orderQTY.toString()
+        //这里double会变成1.0E-4。需要转换成string
+        holder.dms.text = df.format(data[position].dms)
+        holder.dma.text = df.format(data[position].dma)
         Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${data[position].itemId}.do")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)
@@ -81,6 +98,11 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         holder.less.setOnTouchListener { _, event ->
             onTouch.onTouchLessListener(data[position], event, position)
             true
+        }
+        if (data[position].dlvQTY2 == 0) {
+            //D+1
+        } else {
+            //D+2
         }
         holder.arriveDate.text = context.getString(R.string.tomorrow_count)
         holder.arriveDate.setTextColor(ContextCompat.getColor(context, R.color.cstore_red))
@@ -111,5 +133,8 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)!!
         val isNoBuy = itemView.findViewById<ImageView>(R.id.is_nobuy)!!
         val isPro = itemView.findViewById<ImageView>(R.id.is_pro)!!
+        val dms = itemView.findViewById<TextView>(R.id.order_dms)!!
+        val dma = itemView.findViewById<TextView>(R.id.order_dma)!!
+        val dlvQty2 = itemView.findViewById<TextView>(R.id.tomorrow_arrival)!!
     }
 }

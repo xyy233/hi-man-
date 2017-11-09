@@ -4,6 +4,7 @@ import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -33,7 +34,7 @@ class CategoryItemModel : CategoryInterface {
 
             val items=ArrayList<CategoryItemBean>()
             try {
-                items.addAll(SocketUtil.getCategoryItem(result))
+                items.addAll(GsonUtil.getCategoryItem(result))
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
@@ -60,7 +61,7 @@ class CategoryItemModel : CategoryInterface {
 
             val items=ArrayList<CategoryItemBean>()
             try {
-                items.addAll(SocketUtil.getCategoryItem(result))
+                items.addAll(GsonUtil.getCategoryItem(result))
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
@@ -87,7 +88,7 @@ class CategoryItemModel : CategoryInterface {
 
         val items=ArrayList<CategoryItemBean>()
         try {
-            items.addAll(SocketUtil.getCategoryItem(result))
+            items.addAll(GsonUtil.getCategoryItem(result))
         }catch (e:Exception){}
         if (items.isEmpty()){
             msg.obj=result
@@ -114,7 +115,7 @@ class CategoryItemModel : CategoryInterface {
 
             val items=ArrayList<CategoryItemBean>()
             try {
-                items.addAll(SocketUtil.getCategoryItem(result))
+                items.addAll(GsonUtil.getCategoryItem(result))
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
@@ -141,7 +142,7 @@ class CategoryItemModel : CategoryInterface {
 
             val items=ArrayList<CategoryItemBean>()
             try {
-                items.addAll(SocketUtil.getCategoryItem(result))
+                items.addAll(GsonUtil.getCategoryItem(result))
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
@@ -168,7 +169,7 @@ class CategoryItemModel : CategoryInterface {
 
             val items=ArrayList<CategoryItemBean>()
             try {
-                items.addAll(SocketUtil.getCategoryItem(result))
+                items.addAll(GsonUtil.getCategoryItem(result))
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result

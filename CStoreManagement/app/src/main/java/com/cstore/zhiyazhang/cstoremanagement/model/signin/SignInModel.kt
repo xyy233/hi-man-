@@ -7,6 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
@@ -30,7 +31,7 @@ class SignInModel : SignInInterface {
 
             val users = ArrayList<User>()
             try {
-                users.addAll(SocketUtil.getUser(data))
+                users.addAll(GsonUtil.getUser(data))
             } catch (e: Exception) { //不进行操作，无法转换就代表数据错误，直接在下面的错误抛出
             }
             if (users.isEmpty()) {//不是用户信息

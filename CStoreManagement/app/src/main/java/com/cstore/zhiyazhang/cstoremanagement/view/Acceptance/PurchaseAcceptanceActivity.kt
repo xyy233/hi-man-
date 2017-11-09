@@ -33,22 +33,22 @@ import java.util.*
  * order页布局简单刚好用于此处
  */
 class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity(), GenericView {
-    private val presenter = PurchaseAcceptancePresenter(this, this, this)
-    private var type=1
+    private val presenter = PurchaseAcceptancePresenter(this,this)
+    private var type = 1
 
     override fun initView() {
-        type=intent.getIntExtra("type",1)
-        my_toolbar.title = if (type==1)getString(R.string.purchase_acceptance) else getString(R.string.return_purchase_acceptance)
+        type = intent.getIntExtra("type", 1)
+        my_toolbar.title = if (type == 1) getString(R.string.purchase_acceptance) else getString(R.string.return_purchase_acceptance)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         date_util.visibility = View.VISIBLE
         //不用管换不换日直接从换日表拿时间
         MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(3))
         setSupportActionBar(my_toolbar)
         orderRecycler.layoutManager = MyLinearlayoutManager(this@PurchaseAcceptanceActivity, LinearLayout.VERTICAL, false)
-        val dividerItemDecoration= MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL)
+        val dividerItemDecoration = MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         dividerItemDecoration.setDivider(R.drawable.divider_bg)
         orderRecycler.addItemDecoration(dividerItemDecoration)
-        orderRecycler.itemAnimator= DefaultItemAnimator()
+        orderRecycler.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -63,7 +63,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
             orderpro.visibility = View.VISIBLE
             orderprotext.visibility = View.VISIBLE
             orderretry.visibility = View.GONE
-            if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+            if (type == 1) presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
             else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
         }
         date_util.setOnTouchListener { _, event ->
@@ -82,31 +82,37 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
 
     override fun onStart() {
         super.onStart()
-        if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+        if (type == 1) presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
         else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
     }
 
     override fun <T> requestSuccess(rData: T) {
 
         val adapter = PurchaseAcceptanceAdapter(type, MyTimeUtil.getTextViewDate(date_util),
-                if (type==1){rData as ArrayList<AcceptanceBean>
-            rData} else {rData as ArrayList<ReturnAcceptanceBean>
-            rData}, object : ItemClickListener {
+                if (type == 1) {
+                    rData as ArrayList<AcceptanceBean>
+                } else {
+                    rData as ArrayList<ReturnAcceptanceBean>
+                }, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceItemActivity::class.java)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
-                i.putExtra("type",type)
+                i.putExtra("type", type)
                 i.putExtra("data",
-                        if (type==1){rData as ArrayList<AcceptanceBean>
-                    rData[position]} else {rData as ArrayList<ReturnAcceptanceBean>
-                    rData[position]})
+                        if (type == 1) {
+                            rData as ArrayList<AcceptanceBean>
+                            rData[position]
+                        } else {
+                            rData as ArrayList<ReturnAcceptanceBean>
+                            rData[position]
+                        })
                 startActivity(i)
             }
 
             override fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int) {
-                val i=Intent(this@PurchaseAcceptanceActivity,PurchaseAcceptanceCreate::class.java)
-                i.putExtra("type",type)
-                i.putExtra("date",MyTimeUtil.getTextViewDate(date_util))
+                val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceCreate::class.java)
+                i.putExtra("type", type)
+                i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
                 startActivity(i)
             }
         })
@@ -146,9 +152,9 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                     myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 1)
                 }
 
-                val selectDate=(year.toString()+monthOfYear.toString()+dayOfMonth.toString()).toInt()
-                val nowDate=(myCalendar.get(Calendar.YEAR).toString()+myCalendar.get(Calendar.MONTH).toString()+myCalendar.get(Calendar.DAY_OF_MONTH).toString()).toInt()
-                if (selectDate>nowDate){
+                val selectDate = (year.toString() + monthOfYear.toString() + dayOfMonth.toString()).toInt()
+                val nowDate = (myCalendar.get(Calendar.YEAR).toString() + myCalendar.get(Calendar.MONTH).toString() + myCalendar.get(Calendar.DAY_OF_MONTH).toString()).toInt()
+                if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
@@ -160,7 +166,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 date_util.year.text = textYear
                 date_util.month.text = mm
                 date_util.day.text = dd
-                if (type==1)presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
+                if (type == 1) presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
                 else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
                 orderRecycler.adapter = null
             }

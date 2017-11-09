@@ -5,6 +5,7 @@ import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.AdjustmentBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
@@ -29,7 +30,7 @@ class AdjustmentModel:AdjustmentInterface{
                 return@Runnable
             }
             try {
-                abs.addAll(SocketUtil.getAdjustment(result))
+                abs.addAll(GsonUtil.getAdjustment(result))
             }catch (e:Exception){
                 Log.e(TAG,e.message)
             }
@@ -54,7 +55,7 @@ class AdjustmentModel:AdjustmentInterface{
             if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
             val abs=ArrayList<AdjustmentBean>()
             try {
-                abs.addAll(SocketUtil.getAdjustment(result))
+                abs.addAll(GsonUtil.getAdjustment(result))
             }catch (e:Exception){
                 Log.e(TAG,e.message)
             }
@@ -102,7 +103,7 @@ class AdjustmentModel:AdjustmentInterface{
         val result=SocketUtil.initSocket(ip,MySql.getAdjustmentMaxId(date)).inquire()
         val id: Int
         try {
-            val ids=SocketUtil.getUtilBean(result)
+            val ids=GsonUtil.getUtilBean(result)
             if (ids[0].value==null)return 0
             id=ids[0].value!!.toInt()
         }catch (e:Exception){

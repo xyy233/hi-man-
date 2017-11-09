@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="DisableBaselineAlignment">
 
             <LinearLayout
                 android:id="@+id/gg1"
@@ -31,64 +32,10 @@
                 android:background="@color/white"
                 android:elevation="3dp"
                 android:foreground="@drawable/selector_foreground"
+                android:stateListAnimator="@drawable/lift_on_touch"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg1"
                 tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/store_photo"
-                    android:src="@mipmap/ic_home_photo_black"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/store_photo"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg2">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/commerce"
-                    android:src="@mipmap/ic_home_business_black"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/commerce"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:gravity="center"
-                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -103,71 +50,8 @@
 
             </LinearLayout>
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="true"
-            android:orientation="horizontal">
-
             <LinearLayout
-                android:id="@+id/gg4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_home_train_black"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/train"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/maintain"
-                    android:src="@mipmap/ic_home_service_black"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/maintain"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg6"
+                android:id="@+id/gg2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -192,18 +76,8 @@
 
             </LinearLayout>
 
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="100dp"
-            android:baselineAligned="true"
-            android:orientation="horizontal">
-
             <LinearLayout
-                android:id="@+id/gg7"
+                android:id="@+id/gg3"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -229,8 +103,19 @@
                     android:text="@string/in_stock"/>
 
             </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
             <LinearLayout
-                android:id="@+id/gg8"
+                android:id="@+id/gg4"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -256,19 +141,41 @@
                     android:text="@string/personnel"/>
 
             </LinearLayout>
-           <!-- <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            tools:ignore="UselessLeaf"/>-->
-            <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            tools:ignore="UselessLeaf"/>
 
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf"/>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginBottom="100dp"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/home_notice"
+                android:gravity="center"
+                android:textColor="@color/delete_red"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.text.InputFilter
 import android.text.InputType
 import android.text.method.DigitsKeyListener
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -76,7 +77,7 @@ class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity
             //只要确保有数据就行，不用检查时间，因为提取的就是换日时间
             if (nowData.isNotEmpty()) {
                 //有需要保存的数据
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("您有未提交的修改，是否放弃？")
                         .setPositiveButton("提交修改", { _, _ ->
