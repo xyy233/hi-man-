@@ -7,7 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -38,7 +38,7 @@ class CategoryItemModel : CategoryInterface {
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=items
@@ -65,7 +65,7 @@ class CategoryItemModel : CategoryInterface {
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=items
@@ -92,7 +92,7 @@ class CategoryItemModel : CategoryInterface {
         }catch (e:Exception){}
         if (items.isEmpty()){
             msg.obj=result
-            msg.what=ERROR1
+            msg.what= ERROR
             handler.sendMessage(msg)
         }else{
             msg.obj=items
@@ -119,7 +119,7 @@ class CategoryItemModel : CategoryInterface {
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=items
@@ -146,7 +146,7 @@ class CategoryItemModel : CategoryInterface {
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=items
@@ -173,7 +173,7 @@ class CategoryItemModel : CategoryInterface {
             }catch (e:Exception){}
             if (items.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=items
@@ -208,7 +208,7 @@ class CategoryItemModel : CategoryInterface {
                 handler.sendMessage(msg)
             }else{
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }
         }).start()

@@ -28,7 +28,7 @@ class ContractTypePresenter(val gView: GenericView, val tView: ContractTypeView,
                 mHandler.post(
                         Runnable {
                     kotlin.run {
-                        val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allDate, tView.isJustLook, contracts.detail) {
+                        val adapter: ContractTypeAdapter = ContractTypeAdapter(ctd.allData, tView.isJustLook, contracts.detail) {
                             gView.requestSuccess(it)
                         }
                         gView.showView(adapter)

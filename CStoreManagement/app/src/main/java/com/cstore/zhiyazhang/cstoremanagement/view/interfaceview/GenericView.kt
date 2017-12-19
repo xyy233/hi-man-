@@ -43,5 +43,7 @@ interface GenericView {
 
     fun errorDealWith(){}
 
+    fun <T> errorDealWith(eData:T){}
+
     fun <T> updateDone(uData:T){}
 }

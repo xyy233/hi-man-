@@ -10,38 +10,32 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.PayBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 
 /**
  * Created by zhiya.zhang
  * on 2017/11/8 14:33.
  */
-class PayAdapter(val data: ArrayList<PayBean>) : RecyclerView.Adapter<PayAdapter.ViewHolder>() {
+class PayAdapter(val data: ArrayList<PayBean>, private val listener: ItemClickListener) : RecyclerView.Adapter<PayAdapter.ViewHolder>() {
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = data[position].itemName
+        holder.quantity.text = data[position].quantity.toString()
         val price = "￥${data[position].storePrice}"
         holder.price.text = price
-        holder.quantity.text = if (data[position].quantity == 0) {
-            "1"
-        } else {
-            data[position].quantity.toString()
-        }
+
         val discount = "￥${data[position].discAmt}"
         holder.discount.text = discount
+
         holder.less.setOnClickListener {
-            if (data[position].quantity > 0) {
-                data[position].quantity--
-                holder.quantity.text = data[position].quantity.toString()
-            } else {
+            if (data[position].quantity!=0){
+                listener.onItemRemove(data[position].barCode,0)
+            }else{
                 MyToast.getShortToast(MyApplication.instance().getString(R.string.minCNoLess))
             }
         }
         holder.add.setOnClickListener {
-            if (data[position].quantity < 999) {
-                data[position].quantity++
-                holder.quantity.text = data[position].quantity.toString()
-            } else {
-                MyToast.getShortToast(MyApplication.instance().getString(R.string.maxCNoAdd))
-            }
+            listener.onItemRemove(data[position].barCode,1)
         }
     }
 
@@ -55,7 +49,12 @@ class PayAdapter(val data: ArrayList<PayBean>) : RecyclerView.Adapter<PayAdapter
 
     fun addItem(newData: ArrayList<PayBean>) {
         data.addAll(newData)
+        data.sortBy { it.itemName }
         notifyDataSetChanged()
+    }
+
+    fun removeItem(newData: ArrayList<PayBean>) {
+        data.removeAll(newData)
     }
 
     fun removeItem() {

@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SurfaceView
         android:id="@+id/preview_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <com.uuzuche.lib_zxing.view.ViewfinderView
         android:id="@+id/viewfinder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:inner_corner_color="@color/pink"
-        app:inner_corner_length="20dp"
-        app:inner_corner_width="3dp"
-        app:inner_height="100dp"
-        app:inner_width="300dp"
-        app:inner_scan_bitmap="@drawable/scan_icon_scanline"
+        app:inner_corner_color="@color/black"
+        app:inner_corner_length="1dp"
+        app:inner_corner_width="1dp"
+        app:inner_margintop="1dp"
+        app:inner_height="250dp"
+        app:inner_width="360dp"
+        app:inner_scan_bitmap="@drawable/scan_icon_scanline2"
         app:inner_scan_iscircle="true"
-        app:inner_scan_speed="50"/>
+        app:inner_scan_speed="20"/>
 
 </FrameLayout>

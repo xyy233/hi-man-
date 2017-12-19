@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity
  */
 abstract class MyActivity : AppCompatActivity() {
     protected val EXIT_APP_ACTION = "finish"
+
     private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (context is AppCompatActivity?) context?.finish()

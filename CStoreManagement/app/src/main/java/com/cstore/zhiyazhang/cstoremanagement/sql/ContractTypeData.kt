@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -11,10 +10,13 @@ import android.provider.BaseColumns
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
-import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDBHelper.Companion.DB_VERSION
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CONTRACT_TYPE_TABLE_NAME
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CREATE_DAY
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.TYPE_ID
+import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_NAME
+import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_VERSION
+import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.INT_TYPE
+import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.TEXT_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
@@ -33,7 +35,7 @@ object ContractTypeData {
     }
 }
 
-class ContractTypeDBHelper(context: Context) : SQLiteOpenHelper(context, ContractTypeDBHelper.DB_NAME, null, ContractTypeDBHelper.DB_VERSION) {
+class ContractTypeDBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQLITE_CREATE)
     }
@@ -48,16 +50,10 @@ class ContractTypeDBHelper(context: Context) : SQLiteOpenHelper(context, Contrac
     }
 
     companion object {
-        private val DB_NAME = "app_cstore.db"
-        val DB_VERSION = 1
-        private val TEXT_TYPE = " TEXT"
-        private val COMMA_SEP = ","
-        private val DOUBLE_TYPE = " REAL"
-        private val INT_TYPE = " INTEGER"
         private val SQLITE_CREATE = "create table if not exists " + CONTRACT_TYPE_TABLE_NAME + " ( " +
                 TYPE_ID + TEXT_TYPE + " PRIMARY KEY, " +
                 CREATE_DAY + INT_TYPE + ")"
-        val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + CONTRACT_TYPE_TABLE_NAME
+        private val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + CONTRACT_TYPE_TABLE_NAME
     }
 }
 
@@ -135,13 +131,7 @@ class ContractTypeDao(context: Context) {
         }
     }
 
-    @SuppressLint("Recycle")
-    fun test(userName:String){
-        val db=ctdbh.readableDatabase
-        val cursor=db.rawQuery("select * from userinfo where username = '$userName'",null)
-    }
-
-    val allDate: ArrayList<ContractTypeBean>
+    val allData: ArrayList<ContractTypeBean>
         get() {
             var db: SQLiteDatabase? = null
             var cursor: Cursor? = null

@@ -9,7 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -40,7 +40,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (abs.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 try {
@@ -51,7 +51,7 @@ class AcceptanceModel : AcceptanceInterface {
                     }
                 } catch (e: Exception) {
                     msg.obj = e.message
-                    msg.what = ERROR1
+                    msg.what = ERROR
                     handler.sendMessage(msg)
                     return@Runnable
                 }
@@ -81,7 +81,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (rabs.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 rabs.forEach {
@@ -120,7 +120,7 @@ class AcceptanceModel : AcceptanceInterface {
         }
         if (raibs.isEmpty()) {
             msg.obj = result
-            msg.what = ERROR1
+            msg.what = ERROR
             handler.sendMessage(msg)
         }
         return raibs
@@ -137,7 +137,7 @@ class AcceptanceModel : AcceptanceInterface {
             if (result == "0") {
                 msg.what = SUCCESS
             } else {
-                msg.what = ERROR1
+                msg.what = ERROR
             }
             msg.obj = result
             handler.sendMessage(msg)
@@ -155,7 +155,7 @@ class AcceptanceModel : AcceptanceInterface {
             if (result == "0") {
                 msg.what = SUCCESS
             } else {
-                msg.what = ERROR1
+                msg.what = ERROR
             }
             msg.obj = result
             handler.sendMessage(msg)
@@ -248,7 +248,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (vb.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = vb
@@ -278,7 +278,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (aib.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = aib
@@ -307,7 +307,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (aib.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = aib
@@ -333,7 +333,7 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (commodity.isNotEmpty()) {
                 msg.obj = "已有此商品的配送单，不能重复创建！"
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -341,7 +341,7 @@ class AcceptanceModel : AcceptanceInterface {
             val sql = getCreateAcceptance(date, ip, aib, ab)
             if (sql == "0") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -349,7 +349,7 @@ class AcceptanceModel : AcceptanceInterface {
             if (result == "0") {
                 msg.what = SUCCESS
             } else {
-                msg.what = ERROR1
+                msg.what = ERROR
             }
             if (ab == null && newAB != null) {
                 msg.obj = newAB
@@ -375,14 +375,14 @@ class AcceptanceModel : AcceptanceInterface {
             }
             if (commodity.isNotEmpty()) {
                 msg.obj = "已有此商品的退货单，不能重复创建！"
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
             val sql = getCreateReturnAcceptance(date, ip, raib, rab)
             if (sql == "0") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -390,7 +390,7 @@ class AcceptanceModel : AcceptanceInterface {
             if (result == "0") {
                 msg.what = SUCCESS
             } else {
-                msg.what = ERROR1
+                msg.what = ERROR
             }
             if (rab == null && newRAB != null) {
                 msg.obj = newRAB

@@ -75,6 +75,7 @@
     <string name="price">零售价:￥</string>
     <string name="sell">成本价:￥</string>
     <string name="prompt_qrcode">将二维码/条码放入框内，即可自动扫描</string>
+    <string name="prompt_qrcode2">扫描距离远一些更容易扫描成功</string>
     <string name="prompt_code">扫描条形码请正对条形码扫描</string>
     <string name="noMessage">未查询到内容</string>
     <string name="original_sales">原始订量：</string>
@@ -201,4 +202,19 @@
     <string name="lsjjhlj">历史净进货累计：</string>
     <string name="reason">原因：</string>
     <string name="plnrtn_quantity">预退数</string>
+    <string name="cash_receipt">现金付款</string>
+
+    <!--收款-->
+    <string name="please_edit_money">请输入收款金额</string>
+    <string name="collect_money">现金收款</string>
+    <string name="confirm_refund">确认退款</string>
+    <string name="pay_error1">无法得到商户订单号</string>
+    <string name="pay_all_money">总金额：</string>
+    <string name="pay_discount">优惠：</string>
+    <string name="pay_discount2">优惠</string>
+    <string name="receivable">应收：</string>
+    <string name="cant_qrcode">不能辨识的码！</string>
+    <string name="pay_done">完成收款，正在保存数据，请稍后！</string>
+    <string name="idorcode">品号/条码</string>
+    <string name="edit_out_tran_no">请输入商户订单号</string>
 </resources>

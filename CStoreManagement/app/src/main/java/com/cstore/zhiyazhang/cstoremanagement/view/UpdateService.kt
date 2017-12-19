@@ -34,6 +34,7 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
     private val versionName: String = "CStoreManagement.apk"
     private var downloadPath: String? = null
     private val context = MyApplication.instance().applicationContext!!
+
     override fun onHandleIntent(intent: Intent) {
         try {
             judgmentVersion()

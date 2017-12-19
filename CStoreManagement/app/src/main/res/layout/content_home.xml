@@ -144,11 +144,14 @@
 
 
             <LinearLayout
+                android:id="@+id/test111"
+                android:background="@color/delete_red"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                tools:ignore="UselessLeaf"/>
+                tools:ignore="UselessLeaf"
+                android:orientation="horizontal"/>
 
 
             <LinearLayout

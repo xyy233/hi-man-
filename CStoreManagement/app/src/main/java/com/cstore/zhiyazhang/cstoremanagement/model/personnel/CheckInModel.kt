@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -25,12 +25,12 @@ class CheckInModel : CheckInInterface {
             val userData = SocketUtil.initSocket(ip, MySql.signIn(uId)).inquire()
             if (userData == "" || userData == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.idError)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             } else if (userData == "0") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -44,12 +44,12 @@ class CheckInModel : CheckInInterface {
                 if (nowResult=="1")
                     msg.what = SUCCESS
                 else
-                    msg.what = ERROR1
+                    msg.what = ERROR
 
                 msg.obj = nowResult
             } else {
                 msg.obj = data
-                msg.what = ERROR1
+                msg.what = ERROR
             }
             handler.sendMessage(msg)
         }).start()
@@ -62,12 +62,12 @@ class CheckInModel : CheckInInterface {
         val data = SocketUtil.initSocket(ip, MySql.signIn(uId)).inquire()
         return if (data == "" || data == "[]") {
             msg.obj = MyApplication.instance().applicationContext.getString(R.string.idError)
-            msg.what = MyHandler.ERROR1
+            msg.what = MyHandler.ERROR
             handler.sendMessage(msg)
             false
         } else if (data == "0") {
             msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
-            msg.what = MyHandler.ERROR1
+            msg.what = MyHandler.ERROR
             handler.sendMessage(msg)
             false
         } else true

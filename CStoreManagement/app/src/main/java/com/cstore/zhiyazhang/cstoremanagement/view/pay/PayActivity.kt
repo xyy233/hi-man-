@@ -1,11 +1,22 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.pay
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Message
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.bean.PayBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -13,23 +24,58 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecora
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
+import com.uuzuche.lib_zxing.camera.CameraManager
+import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_pay.*
+import kotlinx.android.synthetic.main.layout_search_line.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
+import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
  * on 2017/11/8 16:11.
+ *
+ * 去PayCollectActivity的时候intent传递参数action，0=收款，1=退款
  */
 class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivity(), GenericView {
 
-    val presenter = PayPresenter(this)
+    private val presenter = PayPresenter(this)
 
-    val adapter = PayAdapter(ArrayList())
+    private val listener = object : ItemClickListener {
+        override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {}
+        override fun <T> onItemRemove(data: T, position: Int) {
+            if (position == 0) {
+                //减少
+                presenter.updateCommodity(data as String, -1)
+            } else {
+                //添加
+                presenter.updateCommodity(data as String, 1)
+            }
+        }
+    }
 
-    private val analyzeCallback= object : CodeUtils.AnalyzeCallback {
-        override fun onAnalyzeSuccess(mBitmap: Bitmap?, result: String) {
-            showPrompt(result)
+    private val adapter = PayAdapter(ArrayList(), listener)
+
+    private var isOk = true
+
+    private val handler = Handler()
+
+    private val captureFragment = CaptureFragment()
+
+    private val analyzeCallback = object : CodeUtils.AnalyzeCallback {
+        override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
+            if (pay_search_line.visibility == View.VISIBLE) return
+            if (isOk) {
+                isOk = false
+                val datas = result.split("|")
+                val data = if (datas.size > 1) {
+                    datas[datas.size - 1]
+                } else {
+                    result
+                }
+                presenter.getCommodity(data)
+            }
         }
 
         override fun onAnalyzeFailed() {
@@ -39,8 +85,13 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     }
 
     override fun initView() {
+        search_edit.hint = getString(R.string.idorcode)
+        search_edit.inputType = InputType.TYPE_CLASS_NUMBER
+        search_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
         my_toolbar.title = "收款"
+        toolbar_time.text = "退款"
         toolbar_btn.text = "清空"
+        toolbar_time.visibility = View.VISIBLE
         toolbar_btn.visibility = View.VISIBLE
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
@@ -50,11 +101,9 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         pay_recycler.addItemDecoration(dividerItemDecoration)
         pay_recycler.itemAnimator = DefaultItemAnimator()
         pay_recycler.adapter = adapter
-
-        val captureFragment=CaptureFragment()
-        CodeUtils.setFragmentArgs(captureFragment,R.layout.pay_camera)
-        captureFragment.analyzeCallback=analyzeCallback
-        supportFragmentManager.beginTransaction().replace(R.id.fl_my_container,captureFragment).commit()
+        CodeUtils.setFragmentArgs(captureFragment, R.layout.pay_camera)
+        captureFragment.analyzeCallback = analyzeCallback
+        supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -64,15 +113,125 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         return true
     }
 
-    override fun initClick() {
-        toolbar_btn.setOnClickListener {
-            adapter.removeItem()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null) {
+            when (requestCode) {
+                0 -> {
+                    adapter.removeItem()
+                    pay_receivable.text = "0.0"
+                    pay_all_money.text = "0.0"
+                    pay_all_discount.text = "0.0"
+                }
+            }
         }
     }
 
-    override fun initData() {
+    override fun onStart() {
+        super.onStart()
+/*
+        adapter.removeItem()
+        pay_receivable.text="0.0"
+        pay_all_money.text="0.0"
+        pay_all_discount.text = "0.0"*/
 
+        Thread(Runnable {
+            //10s
+            var i = 10 * 1000
+            while (i > 100) {
+                i -= 50
+                val manager = CameraManager.get()
+                if (manager == null) {
+                    Thread.sleep(50)
+                    continue
+                } else {
+                    if (manager.camera == null) {
+                        Thread.sleep(50)
+                        continue
+                    }
+                    Thread.sleep(50)
+                    CodeUtils.isLightEnable(true)
+                    break
+                }
+            }
+        }).start()
     }
+
+    override fun onDestroy() {
+        CodeUtils.isLightEnable(false)
+        super.onDestroy()
+    }
+
+    override fun initClick() {
+        toolbar_time.setOnClickListener {
+            val intent = Intent(this@PayActivity, PayCollectActivity::class.java)
+            intent.putExtra("action", 1)
+            startActivity(intent)
+        }
+        toolbar_btn.setOnClickListener {
+            presenter.deleteData()
+            adapter.removeItem()
+            updateAllData()
+        }
+        switch_camera.setOnClickListener {
+            cover.visibility = View.GONE
+            pay_search_line.visibility = View.VISIBLE
+            isOk = false
+            CodeUtils.isLightEnable(false)
+        }
+        qrcode.setOnClickListener {
+            cover.visibility = View.VISIBLE
+            pay_search_line.visibility = View.GONE
+            refreshCamera()
+            CodeUtils.isLightEnable(true)
+        }
+        search_btn.setOnClickListener {
+            presenter.searchCommodity(search_edit.text.toString())
+            val imm = getSystemService(
+                    Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+            search_edit.setText("")
+        }
+        search_edit.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                presenter.searchCommodity(search_edit.text.toString())
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+                search_edit.setText("")
+                true
+            } else {
+                false
+            }
+        }
+        pay_settle.setOnClickListener {
+            if (adapter.data.size == 0) {
+                AlertDialog.Builder(this@PayActivity)
+                        .setTitle("提示")
+                        .setMessage("无商品，请扫描商品后结账")
+                        .setPositiveButton("确定", { _, _ ->
+                        })
+                        .show()
+                return@setOnClickListener
+            }
+            //要给camera切换时间，直接finish
+            val intent = Intent(this@PayActivity, PayCollectActivity::class.java)
+            intent.putExtra("money", pay_receivable.text)
+            intent.putExtra("action", 0)
+            startActivityForResult(intent, 0)
+        }
+    }
+
+    private fun refreshCamera() {
+        if (cover.visibility == View.VISIBLE) {
+            isOk = true
+            val handler = captureFragment.handler
+            val msg = Message.obtain()
+            msg.what = R.id.restart_preview
+            handler!!.sendMessageDelayed(msg, 500)
+        }
+    }
+
+    override fun initData() {}
 
     override fun showLoading() {
         loading.visibility = View.VISIBLE
@@ -82,4 +241,64 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         loading.visibility = View.GONE
     }
 
+    private val df = DecimalFormat("######0.00")
+    override fun <T> showView(aData: T) {
+        if (!toolbar_btn.isEnabled) toolbar_btn.isEnabled = true
+        //aData其实就只有一个，数据量太小，不用开线程
+        aData as ArrayList<PayBean>
+        //如果有值
+        if (aData.isNotEmpty()) {
+            //检查出相同的
+            val newData = adapter.data.filter { it.itemId == aData[0].itemId } as ArrayList<PayBean>
+            //如果有相同就从数据中删除，之后再加入adapter的list中
+            //直接用从数据库得到的最新数据
+            if (newData.isNotEmpty()) {
+                adapter.removeItem(newData)
+            }
+            adapter.addItem(aData)
+            updateAllData()
+        }
+        refreshCamera()
+    }
+
+    /**
+     * 修改页面下放显示的总数据
+     */
+    private fun updateAllData() {
+        //统计所有品项价格与优惠
+        var allMoney = 0.0
+        var allDiscount = 0.0
+        adapter.data.forEach {
+            //所有总价 += 单价 * 数量
+            allMoney += (it.storePrice * it.quantity)
+            //所有优惠 += 优惠
+            allDiscount += it.discAmt
+        }
+        pay_all_money.text = df.format(allMoney)
+        pay_all_discount.text = df.format(allDiscount)
+        val receivable = allMoney - allDiscount
+        pay_receivable.text = df.format(receivable)
+    }
+
+    override fun errorDealWith() {
+        refreshCamera()
+    }
+
+    //清空数据成功
+    override fun <T> requestSuccess(rData: T) {
+        toolbar_btn.isEnabled = false
+    }
+
+    //清空数据错误
+    override fun <T> errorDealWith(eData: T) {
+        AlertDialog.Builder(this@PayActivity)
+                .setTitle("提示")
+                .setMessage("清空数据失败，请重试！")
+                .setPositiveButton("重试", { _, _ ->
+                    presenter.deleteData()
+                })
+                .setNegativeButton("取消", { _, _ ->
+                })
+                .show()
+    }
 }

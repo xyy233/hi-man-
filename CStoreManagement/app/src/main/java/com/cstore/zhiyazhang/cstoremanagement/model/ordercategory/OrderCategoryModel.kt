@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -31,7 +31,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
             }catch (e:Exception){}
             if (category.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=category
@@ -55,7 +55,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
             }catch (e:Exception){}
             if (shelf.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=shelf
@@ -79,7 +79,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
             }catch (e:Exception){}
             if (nop.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=nop
@@ -103,7 +103,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
             }catch (e:Exception){}
             if (self.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=self
@@ -127,7 +127,7 @@ class OrderCategoryModel() : OrderCategoryInterface {
             }catch (e:Exception){}
             if (fresh.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=fresh

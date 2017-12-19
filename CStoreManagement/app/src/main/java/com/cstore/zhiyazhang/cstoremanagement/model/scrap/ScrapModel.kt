@@ -7,7 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
@@ -34,7 +34,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             }
             if (scraps.isEmpty()) {
                 msg.obj = data
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = scraps
@@ -59,7 +59,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             }
             if (scraps.isEmpty()) {
                 msg.obj = data
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = scraps
@@ -74,7 +74,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             val msg = Message()
             if (data.size < 1) {
                 msg.obj = MyApplication.instance().applicationContext.resources.getString(R.string.noEditMsg)
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -85,7 +85,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             val judgment = judgmentData(ip, data)
             if (judgment == SCRAP_DATA_ERROR) {
                 msg.obj = judgment
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -94,7 +94,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
             val recodeNumber = ScrapModel.getRecodeNumber(ip)
             if (recodeNumber.contains(RECODE_ERROR)) {
                 msg.obj = recodeNumber
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.handleMessage(msg)
                 return@Runnable
             }
@@ -110,7 +110,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
                 handler.sendMessage(msg)
             } else {
                 msg.obj = sqlData
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             }
         }).start()

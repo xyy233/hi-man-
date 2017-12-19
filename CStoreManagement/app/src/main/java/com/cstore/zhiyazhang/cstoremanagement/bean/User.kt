@@ -44,12 +44,43 @@ data class User(
         /**
          * 0是非承包店，1是承包店
          */
-        val cnt: Int
+        val cnt: Int,
+        /**
+         * 微信分配的公众账号ID
+         */
+        @SerializedName("weixinappid")val wxAppId:String,
+        /**
+         * 微信支付分配的商户号
+         */
+        @SerializedName("weixinmchid")val wxMCHId:String,
+        /**
+         * 签名密钥
+         */
+        @SerializedName("weixinpartnerkey")val wxKey:String,
+        /**
+         * 微信证书名称
+         */
+        @SerializedName("weixinkeystore")val wxKeyStore:String,
+        /**
+         * 微信证书密码
+         */
+        @SerializedName("weixinkeypassword")val wxKeyPassword:String,
+        /**
+         * 支付宝钱包partner_id
+         */
+        @SerializedName("alipay_partner_id")val aliPartnerId:String,
+        /**
+         * 支付宝钱包安全码
+         */
+        @SerializedName("alipay_security_code")val aliSecurityCode:String
 ) : Serializable {
     companion object {
 
         private var staticUser:User?=null
 
+        /**
+         * 得到人
+         */
         fun getUser(): User{
             if (staticUser==null){
                 val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
@@ -62,12 +93,22 @@ data class User(
                         sp.getString("storeName", ""),
                         sp.getString("address", ""),
                         sp.getInt("storeAttr",1),
-                        sp.getInt("cnt", 0)
+                        sp.getInt("cnt", 0),
+                        sp.getString("wxAppId",""),
+                        sp.getString("wxMCHId",""),
+                        sp.getString("wxKey",""),
+                        sp.getString("wxKeyStore",""),
+                        sp.getString("wxKeyPassword",""),
+                        sp.getString("aliPartnerId",""),
+                        sp.getString("aliSecurityCode","")
                 )
             }
             return staticUser!!
         }
 
+        /**
+         * 保存人
+         */
         fun saveUser(user:User){
             val userShared = MyApplication.instance().getSharedPreferences("user", Context.MODE_PRIVATE)
             val ue = userShared.edit()
@@ -79,10 +120,20 @@ data class User(
             ue.putString("address", user.address)
             ue.putInt("storeAttr",user.storeAttr)
             ue.putInt("cnt", user.cnt)
+            ue.putString("wxAppId",user.wxAppId)
+            ue.putString("wxMCHId",user.wxMCHId)
+            ue.putString("wxKey",user.wxKey)
+            ue.putString("wxKeyStore",user.wxKeyStore)
+            ue.putString("wxKeyPassword",user.wxKeyPassword)
+            ue.putString("aliPartnerId",user.aliPartnerId)
+            ue.putString("aliSecurityCode",user.aliSecurityCode)
             ue.apply()
             User.refreshUser()
         }
 
+        /**
+         * 刷新人到static中
+         */
         private fun refreshUser(){
             val sp = MyApplication.instance().applicationContext.getSharedPreferences("user", Context.MODE_PRIVATE)
             staticUser = User(
@@ -94,13 +145,15 @@ data class User(
                     sp.getString("storeName", ""),
                     sp.getString("address", ""),
                     sp.getInt("storeAttr",1),
-                    sp.getInt("cnt", 0)
+                    sp.getInt("cnt", 0),
+                    sp.getString("wxAppId",""),
+                    sp.getString("wxMCHId",""),
+                    sp.getString("wxKey",""),
+                    sp.getString("wxKeyStore",""),
+                    sp.getString("wxKeyPassword",""),
+                    sp.getString("aliPartnerId",""),
+                    sp.getString("aliSecurityCode","")
             )
         }
     }
 }
-
-/**
- * 人的list
- */
-data class UserResult(val total: Int, val users: List<User>)

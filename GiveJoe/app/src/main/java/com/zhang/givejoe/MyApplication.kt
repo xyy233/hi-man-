@@ -1,5 +1,6 @@
 package com.zhang.givejoe
 
+import android.annotation.SuppressLint
 import android.app.Application
 
 
@@ -10,6 +11,7 @@ import android.app.Application
 class MyApplication : Application() {
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         private var instance: Application? = null
         fun instance() = instance!!
     }

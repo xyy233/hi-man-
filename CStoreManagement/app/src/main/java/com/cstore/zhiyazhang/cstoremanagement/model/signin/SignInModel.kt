@@ -10,7 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -36,11 +36,11 @@ class SignInModel : SignInInterface {
             }
             if (users.isEmpty()) {//不是用户信息
                 msg.obj = data
-                msg.what = ERROR1
+                msg.what = ERROR
                 myHandler.sendMessage(msg)
             } else if (users[0].password != password) {
                 msg.obj = MyApplication.instance().applicationContext.resources.getString(R.string.pwdError)//密码错误
-                msg.what = ERROR1
+                msg.what = ERROR
                 myHandler.sendMessage(msg)
             } else {
                 //判断和之前的用户店号是否一样，不一样要删除本地数据库
@@ -53,7 +53,7 @@ class SignInModel : SignInInterface {
                 if (calendar == CStoreCalendar.SUCCESS_MSG) {
                     if (!CStoreCalendar.judgmentStatus()){
                         msg.obj = CStoreCalendar.ERROR_MSG2
-                        msg.what = ERROR1
+                        msg.what = ERROR
                         myHandler.sendMessage(msg)
                     }else{
                         msg.obj = users[0]
@@ -62,7 +62,7 @@ class SignInModel : SignInInterface {
                     }
                 } else {
                     msg.obj = calendar
-                    msg.what = ERROR1
+                    msg.what = ERROR
                     myHandler.sendMessage(msg)
                 }
             }

@@ -9,7 +9,7 @@ import okhttp3.Response
  * Created by zhiya.zhang
  * on 2017/6/2 16:45.
  */
-abstract class MyStringCallBack(val listener: MyListener) : Callback<String>() {
+abstract class MyStringCallBack(private val listener: MyListener) : Callback<String>() {
     var string: String? = null
     var code: Int? = null
 

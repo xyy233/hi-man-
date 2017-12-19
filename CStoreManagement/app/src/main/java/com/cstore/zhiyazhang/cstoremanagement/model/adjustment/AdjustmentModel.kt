@@ -36,7 +36,7 @@ class AdjustmentModel:AdjustmentInterface{
             }
             if (abs.isEmpty()){
                 msg.obj=result
-                msg.what= MyHandler.ERROR1
+                msg.what= MyHandler.ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=abs
@@ -61,7 +61,7 @@ class AdjustmentModel:AdjustmentInterface{
             }
             if (abs.isEmpty()){
                 msg.obj=result
-                msg.what=MyHandler.ERROR1
+                msg.what=MyHandler.ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=abs
@@ -90,7 +90,7 @@ class AdjustmentModel:AdjustmentInterface{
                 handler.sendMessage(msg)
             }else{
                 msg.obj=result
-                msg.what=MyHandler.ERROR1
+                msg.what=MyHandler.ERROR
                 handler.sendMessage(msg)
             }
         }).start()
@@ -108,7 +108,7 @@ class AdjustmentModel:AdjustmentInterface{
             id=ids[0].value!!.toInt()
         }catch (e:Exception){
             msg.obj=result
-            msg.what=MyHandler.ERROR1
+            msg.what=MyHandler.ERROR
             handler.sendMessage(msg)
             return -1
         }

@@ -11,7 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -50,7 +50,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             } catch (e: Exception) { }
             if (rps.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 try {
@@ -60,7 +60,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
                     }
                 } catch (e: Exception) {
                     msg.obj = e.message
-                    msg.what = ERROR1
+                    msg.what = ERROR
                     handler.sendMessage(msg)
                     return@Runnable
                 }
@@ -96,7 +96,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             }
             if (vb.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = vb
@@ -126,7 +126,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             }catch (e:Exception){}
             if (rpib.isEmpty()){
                 msg.obj=result
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
             }else{
                 msg.obj=rpib
@@ -150,7 +150,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             }catch (e:Exception){}
             if (returnPurchase.isNotEmpty()){
                 msg.obj="已有此商品的退货单，不能重复创建！"
-                msg.what=ERROR1
+                msg.what= ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -158,7 +158,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             val sql=getCreateReturnPurchaseSql(ip, date, rpb, 0)
             if (sql=="0"){
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -166,7 +166,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             if (result=="0"){
                 msg.what=SUCCESS
             }else{
-                msg.what=ERROR1
+                msg.what= ERROR
             }
             msg.obj=result
             handler.sendMessage(msg)
@@ -263,7 +263,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             if (result=="0"){
                 msg.what=SUCCESS
             }else{
-                msg.what=ERROR1
+                msg.what= ERROR
             }
             msg.obj=result
             handler.sendMessage(msg)

@@ -42,7 +42,7 @@ object MySql {
      * @return 新的sql语句
      */
     fun signIn(uid: String): String {
-        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr from employee A,store B) where employeeid='$uid'\u0004"
+        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt, WEIXINAPPID ,WEIXINMCHID,WEIXINPARTNERKEY,WEIXINKEYSTORE,WEIXINKEYPASSWORD,ALIPAY_PARTNER_ID,ALIPAY_SECURITY_CODE from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr,B.WEIXINAPPID,B.WEIXINMCHID,B.WEIXINPARTNERKEY,B.WEIXINKEYSTORE,B.WEIXINKEYPASSWORD,B.ALIPAY_PARTNER_ID,B.ALIPAY_SECURITY_CODE from employee A,store B) where employeeid='$uid'\u0004"
     }
 
 
@@ -1078,7 +1078,7 @@ object MySql {
      * 根据配送商得到近期商品
      */
     fun getRecentlyCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
-        var sql = ""
+        var sql: String
         if (rpb != null) {
             sql = "SELECT A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
                     "round(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
@@ -1089,7 +1089,7 @@ object MySql {
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
                     "and A.RETURNBEGINDATE>SYSDATE-8 " +
                     "AND A.RETURNENDDATE<SYSDATE+7     " +
-                    "AND A.VENDORID='00000000000099999100' " +
+                    "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND A.STOREID = B.STOREID(+) " +
                     "AND A.ITEMNUMBER  = B.ITEMNUMBER(+)    " +
@@ -1113,7 +1113,7 @@ object MySql {
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
                     "and A.RETURNBEGINDATE>SYSDATE-8 " +
                     "AND A.RETURNENDDATE<SYSDATE+7     " +
-                    "AND A.VENDORID='00000000000099999100' " +
+                    "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND A.STOREID = B.STOREID(+) " +
                     "AND A.ITEMNUMBER  = B.ITEMNUMBER(+)    " +
@@ -1140,7 +1140,7 @@ object MySql {
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
                     "AND A.RETURNENDDATE>SYSDATE+7 " +
-                    "AND A.VENDORID='00000000000099999100' " +
+                    "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND NVL(B.FACEQUANTITY,0)=0 " +
                     "AND NVL(C.END_QTY,0)>0 " +
@@ -1163,7 +1163,7 @@ object MySql {
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
                     "AND A.RETURNENDDATE>SYSDATE+7     " +
-                    "AND A.VENDORID='00000000000099999100' " +
+                    "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND NVL(B.FACEQUANTITY,0)=0 " +
                     "AND NVL(C.END_QTY,0)>0 " +
@@ -1188,7 +1188,7 @@ object MySql {
                 "sum(pln.plnRtnQuantity)RtnQuantity,sum(pln.plnRtnQuantity*pln.StoreUnitPrice) Total,pln.vendorID , " +
                 "0.0+count(*) itempln " +
                 "from plnrtn pln, vendor " +
-                "where pln.storeID='111112'  " +
+                "where pln.storeID='${User.getUser().uId}'  " +
                 "and vendor.storeid=pln.storeID  " +
                 "and pln.plnRtnDate0=to_date('2017-10-30','yyyy-MM-dd') " +
                 "and pln.vendorID=vendor.vendorID " +
@@ -1281,20 +1281,149 @@ object MySql {
     /**********************************************收款************************************************************/
 
     /**
-     * 创建shopping_basket_temp表的内容，之后从shopping_basket表中获得详细数据，配合事务使用
+     * 创建shopping_basket_temp表的内容
      */
-    fun insertShoppingBasket(barCode:String, quantity:Int):String{
-        return "insert into shopping_basket_temp (tel_seq, bar_code,quantity) values ('${MyApplication.getOnlyid()}', '$barCode',$quantity)\u0004"
+    fun insertShoppingBasket(barCode: String, quantity: Int): String {
+        return "insert into shopping_basket_temp (tel_seq, bar_code,quantity) values ('${MyApplication.getOnlyid()}', '$barCode',$quantity)\u000c"
+    }
+
+    /**
+     * 先执行insertShoppingBasket再执行callShoppingBasket再getShoppingBasket获得数据
+     */
+    fun callShoppingBasket(): String {
+        return "call ref_Shopping_basket('${MyApplication.getOnlyid()}')\u000c"
     }
 
     /**
      * 获得商品
      */
-    fun getShoppingBasket(barCode: String):String{
-        return "select * from shopping_basket where bar_code='$barCode'\u0004"
+    fun getShoppingBasket(barCode: String): String {
+        return "select * from shopping_basket where bar_code='$barCode' and tel_seq='${MyApplication.getOnlyid()}'\u0004"
     }
 
-    fun callShoppingBasket():String{
-        return "call ref_Shopping_basket('${MyApplication.getOnlyid()}')\u0004"
+    /**
+     * 存储过程用于得到下单单号
+     */
+    fun callPayShopping(): String {
+        return "call pay_Shopping_basket_p01('${MyApplication.getOnlyid()}')\u000c"
+    }
+
+    fun updateAss2(): String {
+        return "update app_pos set next_tranno=next_tranno+1 where tel_seq='${MyApplication.getOnlyid()}' and tran_date=trunc(sysdate)\u000c"
+    }
+
+    /**
+     * 得到下单单号
+     */
+    fun getShoppingId(): String {
+        return "select storeid,ass_pos,next_tranno  " +
+                "from APP_POS a " +
+                "where a.storeid = '${User.getUser().storeId}' " +
+                "and a.tran_date=trunc(sysdate) " +
+                "and a.tel_seq='${MyApplication.getOnlyid()}'\u0004"
+    }
+
+    /**
+     * 搜索商品
+     */
+    fun searchPlunumber(data: String): String {
+        return "select plunumber value from itemplu where (plunumber='$data' or itemnumber='$data')"
+    }
+
+    /**
+     * 收款完毕更新posul_trandtl的存储过程
+     */
+    fun payDoneCall(isWhere: String, amt: Double): String {
+        return "call pay_Shopping_basket_p02('${MyApplication.getOnlyid()}','$isWhere','$amt') \u000c"
+    }
+
+
+    /**
+     * 处理异常2步骤更新到posul_weixin_detail的sql语句
+     */
+    fun createWXPayDone(bean: WXPaySqlBean): String {
+        return "insert into posul_weixin_detail " +
+                "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, openid, coupon_fee, non_coupond_fee) " +
+                "values " +
+                "('${bean.storeId}', '${bean.assPos}', ${bean.nextTranNo}, ${bean.totalFee}, '${bean.transactionId}', sysdate, '${bean.seq}', '${bean.openId}', ${bean.couponFee}, ${bean.totalFee - bean.couponFee}) \u0004"
+    }
+
+    /**
+     * 收款完毕或退款完毕更新到posul_weixin_detail的sql语句
+     * @param isRefund 判断是否是退款的布尔
+     */
+    fun createWXPayDone(posBean: PosBean, payData: Map<String, String>, isRefund: Boolean): String {
+        return try {
+            val storeId = User.getUser().storeId
+            val assPos = posBean.assPos
+            val nextTranNo = posBean.nextTranNo
+            var totalFee = payData["total_fee"]!!.toDouble() / 100
+            val transactionId = payData["transaction_id"]
+            var seq = payData["seq"]
+            if (seq == null) {
+                seq = "01"
+            }
+            val openId = payData["openid"]
+            var couponFee = 0.0
+            if (payData["coupon_fee"] != null) {
+                couponFee = payData["coupon_fee"]!!.toDouble() / 100
+            }
+            val nonCoupondFee = totalFee - couponFee
+            val result = if (isRefund) {
+                //退款记录
+                val refundId = payData["refund_id"]
+                //退款需要负数
+                totalFee = 0 - totalFee
+                "insert into posul_weixin_detail " +
+                        "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, REFUND_ID, openid, coupon_fee, non_coupond_fee) " +
+                        "values " +
+                        "('$storeId', '$assPos', $nextTranNo, $totalFee, '$transactionId', sysdate, '$seq', '$refundId', '$openId', $couponFee, $nonCoupondFee) \u000c"
+            } else {
+                //收款记录
+                "insert into posul_weixin_detail " +
+                        "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, openid, coupon_fee, non_coupond_fee) " +
+                        "values " +
+                        "('$storeId', '$assPos', $nextTranNo, $totalFee, '$transactionId', sysdate, '$seq', '$openId', $couponFee, $nonCoupondFee) \u0004"
+            }
+
+            result
+        } catch (e: Exception) {
+            e.message.toString()
+        }
+    }
+
+    /**
+     * 扫描后取消交易，清空扫描的商品，此时需要把表里的数据也删掉
+     */
+    val deleteBasket: String
+        get() {
+            return "delete from shopping_basket where tel_seq='${MyApplication.getOnlyid()}'\u0004"
+        }
+
+    /**
+     * 撤销订单后需要修改app_pos的next_tranno，不然再次提交订单微信会报错订单号重复
+     * 退款同时需要进行此操作
+     */
+    val updateAppPos: String
+        get() {
+            return "update app_pos set next_tranno=next_tranno+1 where tel_seq='${MyApplication.getOnlyid()}' and tran_date=trunc(sysdate)\u0004"
+        }
+
+    /**
+     * 撤销后执行的sql
+     */
+    val reverseCall: String
+        get() {
+            return "call reverse_shopping_basket_r01('${MyApplication.getOnlyid()}')\u0004"
+        }
+
+    /**
+     * 像微信申请退款成功后执行的存储过程
+     * @param pay_tranno 收款时的交易序号
+     * @param refoundId 微信返回退款单号
+     * @param isWhere 是在微信还是现金还是支付宝执行的退款
+     */
+    fun refoundCall(pay_tranno: Int, refoundId: String, isWhere: String): String {
+        return "call refound_Shopping_basket_r01('${MyApplication.getOnlyid()}',$pay_tranno,'$refoundId','$isWhere')\u0004"
     }
 }

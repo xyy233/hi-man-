@@ -6,12 +6,8 @@ import android.graphics.BitmapFactory
 import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.*
-import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendarBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.io.*
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -77,12 +73,12 @@ internal class SocketUtil  {
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
             return if (wifiName == null || wifiName == ""){
                 msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else true
@@ -96,12 +92,12 @@ internal class SocketUtil  {
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
             return if (wifiName == null || wifiName == ""){
                 msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else true
@@ -113,7 +109,7 @@ internal class SocketUtil  {
         fun judgmentNull(data: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
             return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else true
@@ -125,7 +121,7 @@ internal class SocketUtil  {
         fun judgmentNull(data: String, msg: Message, handler: MyHandler): Boolean {
             return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
-                msg.what = MyHandler.ERROR1
+                msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
             }else true
@@ -159,6 +155,7 @@ internal class SocketUtil  {
 
     /**
      * 执行Socket操作,这不是异步，在外层要开thread
+     * @return 如果是insert这类修改的，修改成功几个就是返回数字字符串几，如果是在事务内的返回的是0
      */
     fun inquire():String {
         try {

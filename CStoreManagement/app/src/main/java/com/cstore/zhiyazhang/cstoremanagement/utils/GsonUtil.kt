@@ -96,4 +96,8 @@ object GsonUtil{
     fun getPay(data: String): ArrayList<PayBean> {
         return Gson().fromJson<ArrayList<PayBean>>(data, object : TypeToken<ArrayList<PayBean>>() {}.type)
     }
+
+    fun getPos(data:String):ArrayList<PosBean>{
+        return Gson().fromJson<ArrayList<PosBean>>(data, object : TypeToken<ArrayList<PosBean>>() {}.type)
+    }
 }

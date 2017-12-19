@@ -82,7 +82,7 @@
         android:layout_marginStart="8dp"
         android:background="@drawable/bg_orange"
         android:gravity="center"
-        android:text="优惠"
+        android:text="@string/pay_discount2"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -102,7 +102,7 @@ object CStoreCalendar {
     fun judgmentCalender(date: String, msg: Message, handler: MyHandler.OnlyMyHandler, type: Int): Boolean {
         if (CStoreCalendar.setCStoreCalendar() != SUCCESS_MSG) {
             msg.obj = ERROR_MSG
-            msg.what = ERROR1
+            msg.what = ERROR
             handler.sendMessage(msg)
             return false
         }
@@ -114,7 +114,7 @@ object CStoreCalendar {
                 else -> "当前日期不能进行操作"
             }
             msg.obj = errorMsg
-            msg.what = ERROR1
+            msg.what = ERROR
             handler.sendMessage(msg)
             return false
         }
@@ -128,7 +128,7 @@ object CStoreCalendar {
     fun judgmentCalender(date: String, msg: Message, handler: MyHandler, type: Int): Boolean {
         if (CStoreCalendar.setCStoreCalendar() != SUCCESS_MSG) {
             msg.obj = ERROR_MSG
-            msg.what = ERROR1
+            msg.what = ERROR
             handler.sendMessage(msg)
             return false
         }
@@ -140,7 +140,7 @@ object CStoreCalendar {
                 else -> "当前日期不能进行操作"
             }
             msg.obj = errorMsg
-            msg.what = ERROR1
+            msg.what = ERROR
             handler.sendMessage(msg)
             return false
         }

@@ -8,7 +8,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR1
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
@@ -33,7 +33,7 @@ class ScrapHotModel : ScrapHotInterface {
             }
             if (scrapHots.isEmpty()) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             } else {
                 msg.obj = scrapHots
@@ -56,7 +56,7 @@ class ScrapHotModel : ScrapHotInterface {
                 scraps.addAll(GsonUtil.getScrap(result))
             } catch (e: Exception) {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -77,7 +77,7 @@ class ScrapHotModel : ScrapHotInterface {
             val judgment = ScrapModel.judgmentData(ip, data)
             if (judgment == ScrapModel.SCRAP_DATA_ERROR) {
                 msg.obj = judgment
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
@@ -86,7 +86,7 @@ class ScrapHotModel : ScrapHotInterface {
             val recodeNumber = ScrapModel.getRecodeNumber(ip)
             if (recodeNumber.contains(RECODE_ERROR)) {
                 msg.obj = recodeNumber
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.handleMessage(msg)
                 return@Runnable
             }
@@ -101,7 +101,7 @@ class ScrapHotModel : ScrapHotInterface {
                 handler.sendMessage(msg)
             } else {
                 msg.obj = result
-                msg.what = ERROR1
+                msg.what = ERROR
                 handler.sendMessage(msg)
             }
         }).start()
