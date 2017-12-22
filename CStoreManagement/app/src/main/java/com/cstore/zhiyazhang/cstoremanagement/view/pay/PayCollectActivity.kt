@@ -16,7 +16,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.PosBean
-import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayMoneyPresenter
+import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.CashPayPresenter
+import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.WXPayPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.qrcode.CaptureFragment
@@ -32,7 +33,8 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  */
 class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_camera) : MyActivity(), GenericView {
 
-    private val presenter = PayMoneyPresenter(this)
+    private val wxPresenter = WXPayPresenter(this)
+    private val cashPresenter = CashPayPresenter(this)
     private val pos = PosBean("", 0, 0)
     private val captureFragment = CaptureFragment()
     private var isWherePay = ""
@@ -52,16 +54,17 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
                             return
                         }
                         val finishMoney = money!!.toDouble()
-                        presenter.wechatCollectMoney(result, finishMoney)
+                        wxPresenter.wechatCollectMoney(result, finishMoney)
                         return
                     } else if (one == "2") {
                         isWherePay = "支付宝"
                         showPrompt("暂不支持支付宝收款！")
+                        refreshCamera()
                         return
                     }
                 } else {
                     //退款
-                    presenter.wechatRefund(result)
+                    wxPresenter.wechatRefund(result)
                     return
                 }
             }
@@ -74,9 +77,8 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
         }
 
     }
+    private lateinit var collectDialog: AlertDialog.Builder
 
-
-    private lateinit var refundErrorDialog: AlertDialog.Builder
 
     //刷新镜头，重新开启扫描
     fun refreshCamera() {
@@ -89,24 +91,23 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
     val handler = Handler()
 
     override fun initView() {
-        refundErrorDialog = AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
-                .setTitle("提示")
-                .setPositiveButton("确定", { _, _ ->
-                    //退款失败后返回也要清空
-                    setResult(1, Intent())
-                    onBackPressed()
-                })!!
+
+        collectDialog = AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+                .setTitle("提示")!!
+
         action = intent.getIntExtra("action", 0)
         if (action == 0) {
             //收款
             collect_money.text = getString(R.string.collect_money)
-            refound_out_tran_no.visibility = View.GONE
+            refund_out_tran_no.visibility = View.GONE
+            refund_money_box.visibility = View.GONE
         } else {
             //退款
+            refund_money_box.visibility = View.VISIBLE
             collect_money.text = getString(R.string.confirm_refund)
-            refound_out_tran_no.visibility = View.VISIBLE
-            refound_out_tran_no.inputType = InputType.TYPE_CLASS_NUMBER
-            refound_out_tran_no.keyListener = DigitsKeyListener.getInstance("1234567890")
+            refund_out_tran_no.visibility = View.VISIBLE
+            refund_out_tran_no.inputType = InputType.TYPE_CLASS_NUMBER
+            refund_out_tran_no.keyListener = DigitsKeyListener.getInstance("1234567890")
         }
         loading_text.setTextColor(ContextCompat.getColor(this, R.color.white))
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
@@ -120,31 +121,49 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
         loading.setOnClickListener {
             showPrompt(getString(R.string.wait_loading))
         }
-        refound_out_tran_no.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId==EditorInfo.IME_ACTION_DONE){
+        refund_out_tran_no.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 refund()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(refound_out_tran_no.windowToken, 0)
+                imm.hideSoftInputFromWindow(refund_out_tran_no.windowToken, 0)
                 true
-            }else false
+            } else false
         }
         collect_money.setOnClickListener {
             if (action == 0) {
-                //收款
-                showPrompt("暂未开发完毕")
+                //现金收款
+                AlertDialog.Builder(ContextThemeWrapper(this@PayCollectActivity, R.style.AlertDialogCustom))
+                        .setTitle("提示")
+                        .setMessage("请确认进行现金收款！")
+                        .setPositiveButton("现金收款") { _, _ ->
+                            isWherePay = "现金"
+                            money = intent.getStringExtra("money")
+                            if (money == null) {
+                                showPrompt("系统错误，获得金额失败，请联系系统部")
+                                return@setPositiveButton
+                            }
+                            val finishMoney = money!!.toDouble()
+                            cashPresenter.cashCollect(finishMoney)
+                        }
+                        .setNegativeButton("取消") { _, _ -> }
+                        .show()
             } else {
-                //退款
+                //条码退款
                 refund()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(refound_out_tran_no.windowToken, 0)
+                imm.hideSoftInputFromWindow(refund_out_tran_no.windowToken, 0)
             }
+        }
+        refund_money.setOnClickListener {
+            //现金退款
+            showPrompt(getString(R.string.not_open_now))
         }
     }
 
-    private fun refund(){
-        val outTranNo = refound_out_tran_no.text.toString()
+    private fun refund() {
+        val outTranNo = refund_out_tran_no.text.toString()
         if (outTranNo.isNotEmpty()) {
-            presenter.wechatRefund(outTranNo)
+            wxPresenter.wechatRefund(outTranNo)
         } else {
             showPrompt("请输入商户订单号或扫描退款码！")
         }
@@ -181,8 +200,35 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
 
     //收款成功
     override fun <T> requestSuccess(rData: T) {
-        rData as Map<String, String>
-        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+        when (isWherePay) {
+            "微信" -> {
+                rData as Map<String, String>
+                collectDialog.setMessage("交易成功！已收到 ${rData["total_fee"]!!.toDouble() / 100}元。")
+                        .setPositiveButton("确定", { _, _ ->
+                            //交易成功才去清空上页的数据
+                            setResult(1, Intent())
+                            super.onBackPressed()
+                            finish()
+                        })
+                        .setNegativeButton("退款", { _, _ ->
+                            wxPresenter.wechatRefund(rData)
+                        })
+                        .show()
+            }
+            "支付宝" -> {
+
+            }
+            "现金" -> {
+                collectDialog.setMessage("交易完成！")
+                        .setPositiveButton("确定", { _, _ ->
+                            //交易成功才去清空上页的数据
+                            setResult(1, Intent())
+                            super.onBackPressed()
+                        })
+                        .show()
+            }
+        }
+/*        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                 .setTitle("提示")
                 .setMessage("交易成功！已收到 ${rData["total_fee"]!!.toDouble() / 100}元。")
                 .setPositiveButton("确定", { _, _ ->
@@ -190,29 +236,27 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
                     setResult(1, Intent())
                     super.onBackPressed()
                 }).setNegativeButton("退款", { _, _ ->
-            presenter.wechatRefund(rData)
+            wxPresenter.wechatRefund(rData)
         })
-                .show()
+                .show()*/
     }
+
 
     //收款失败
     override fun <T> errorDealWith(eData: T) {
-        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
-                .setTitle("提示")
-                .setMessage("交易失败！${eData.toString()}")
+        collectDialog.setMessage("交易失败！${eData.toString()}")
                 .setPositiveButton("确定", { _, _ ->
                     refreshCamera()
                 })
                 .show()
+
     }
 
     /**
      * 退款成功
      */
     fun refundSuccess(data: Map<String, String>) {
-        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
-                .setTitle("提示")
-                .setMessage("退款成功！已退 ${data["refund_fee"]!!.toDouble() / 100}元")
+        collectDialog.setMessage("退款成功！已退 ${data["refund_fee"]!!.toDouble() / 100}元")
                 .setPositiveButton("确定", { _, _ ->
                     //退款成功也晴空
                     setResult(1, Intent())
@@ -225,9 +269,14 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
      * 退款失败
      */
     fun refundError(errorMessage: String, data: Map<String, String>) {
-        refundErrorDialog.setMessage("退款失败！$errorMessage")
+        collectDialog.setMessage("退款失败！$errorMessage")
+                .setPositiveButton("确定", { _, _ ->
+                    //退款失败后返回也要清空
+                    setResult(1, Intent())
+                    onBackPressed()
+                })
                 .setNegativeButton("重试", { _, _ ->
-                    presenter.wechatRefund(data)
+                    wxPresenter.wechatRefund(data)
                 }).show()
     }
 
@@ -235,9 +284,14 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
      * 退款失败
      */
     fun refundError(errorMessage: String, code: String) {
-        refundErrorDialog.setMessage("退款失败！$errorMessage")
+        collectDialog.setMessage("退款失败！$errorMessage")
+                .setPositiveButton("确定", { _, _ ->
+                    //退款失败后返回也要清空
+                    setResult(1, Intent())
+                    onBackPressed()
+                })
                 .setNegativeButton("重试", { _, _ ->
-                    presenter.wechatRefund(code)
+                    wxPresenter.wechatRefund(code)
                 }).show()
     }
 }

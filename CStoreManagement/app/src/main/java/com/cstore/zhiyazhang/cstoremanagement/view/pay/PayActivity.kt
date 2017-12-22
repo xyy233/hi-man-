@@ -19,7 +19,10 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.PayBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayPresenter
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
+import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.uuzuche.lib_zxing.activity.CaptureFragment
@@ -135,6 +138,8 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         pay_all_money.text="0.0"
         pay_all_discount.text = "0.0"*/
 
+        judgmentSqlData()
+
         Thread(Runnable {
             //10s
             var i = 10 * 1000
@@ -155,6 +160,19 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
                 }
             }
         }).start()
+    }
+
+    /**
+     * 判断数据库是否有异常数据
+     */
+    private fun judgmentSqlData() {
+        val wxDao = WXPayDao(this)
+        val cashDao = CashPayDao(this)
+        val wxData = wxDao.getAllData()
+        val cashData = cashDao.getAllData()
+        if (wxData.any { it.isDone == 0 } && cashData.any { it.isDone == 0 }) {
+            MyToast.getLongToast("交易记录异常，正在处理中，请等待处理完毕或联系系统部！")
+        }
     }
 
     override fun onDestroy() {

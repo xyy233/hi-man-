@@ -3,7 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.utils.wechat
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.PosBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
-import com.cstore.zhiyazhang.cstoremanagement.model.pay.PayMoneyModel.Companion.getWXPayBean
+import com.cstore.zhiyazhang.cstoremanagement.model.pay.WXPayModel.Companion.getWXPayBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication

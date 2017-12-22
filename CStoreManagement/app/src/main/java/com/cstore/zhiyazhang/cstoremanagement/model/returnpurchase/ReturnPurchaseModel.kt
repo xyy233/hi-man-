@@ -2,10 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.returnpurchase
 
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnPurchaseItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnedPurchaseBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.UtilBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.VendorBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
@@ -26,9 +23,13 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val result=SocketUtil.initSocket(ip, MySql.getReason).inquire()
+            val result = SocketUtil.initSocket(ip, MySql.getReason).inquire()
             if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
-
+            val rs = ArrayList<ReasonBean>()
+            try {
+                rs.addAll(GsonUtil.getReason(result))
+            }catch (e:Exception){}
+            if (rs.isEmpty())
         }).start()
     }
 
@@ -47,7 +48,8 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             }
             try {
                 rps.addAll(GsonUtil.getReturnPurchase(result))
-            } catch (e: Exception) { }
+            } catch (e: Exception) {
+            }
             if (rps.isEmpty()) {
                 msg.obj = result
                 msg.what = ERROR
@@ -114,61 +116,63 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             val result =
                     if (type == 0) SocketUtil.initSocket(ip, MySql.getRecentlyCommodity(rpb, vendorId)).inquire()
                     else SocketUtil.initSocket(ip, MySql.getLongCommodity(rpb, vendorId)).inquire()
-            val rpib=ArrayList<ReturnPurchaseItemBean>()
-            if (result=="[]"){
-                msg.obj=rpib
-                msg.what= SUCCESS
+            val rpib = ArrayList<ReturnPurchaseItemBean>()
+            if (result == "[]") {
+                msg.obj = rpib
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
                 return@Runnable
             }
             try {
                 rpib.addAll(GsonUtil.getReturnPurchaseItem(result))
-            }catch (e:Exception){}
-            if (rpib.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (rpib.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=rpib
-                msg.what=SUCCESS
+            } else {
+                msg.obj = rpib
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
     }
 
-    override fun createReturnPurchase(date:String, rpb: ArrayList<ReturnPurchaseItemBean>, handler: MyHandler) {
+    override fun createReturnPurchase(date: String, rpb: ArrayList<ReturnPurchaseItemBean>, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             //用的时间是订货换日，type=2
             if (!CStoreCalendar.judgmentCalender(date, msg, handler, 2)) return@Runnable
-            val returnPurchaseSql=SocketUtil.initSocket(ip, MySql.judgmentReturnPurchase(rpb)).inquire()
-            val returnPurchase=ArrayList<ReturnPurchaseItemBean>()
+            val returnPurchaseSql = SocketUtil.initSocket(ip, MySql.judgmentReturnPurchase(rpb)).inquire()
+            val returnPurchase = ArrayList<ReturnPurchaseItemBean>()
             try {
                 returnPurchase.addAll(GsonUtil.getReturnPurchaseItem(returnPurchaseSql))
-            }catch (e:Exception){}
-            if (returnPurchase.isNotEmpty()){
-                msg.obj="已有此商品的退货单，不能重复创建！"
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (returnPurchase.isNotEmpty()) {
+                msg.obj = "已有此商品的退货单，不能重复创建！"
+                msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
             //开始创建，先检测今天是否有配送单得到单号
-            val sql=getCreateReturnPurchaseSql(ip, date, rpb, 0)
-            if (sql=="0"){
+            val sql = getCreateReturnPurchaseSql(ip, date, rpb, 0)
+            if (sql == "0") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
                 msg.what = ERROR
                 handler.sendMessage(msg)
                 return@Runnable
             }
-            val result=SocketUtil.initSocket(ip, sql).inquire()
-            if (result=="0"){
-                msg.what=SUCCESS
-            }else{
-                msg.what= ERROR
+            val result = SocketUtil.initSocket(ip, sql).inquire()
+            if (result == "0") {
+                msg.what = SUCCESS
+            } else {
+                msg.what = ERROR
             }
-            msg.obj=result
+            msg.obj = result
             handler.sendMessage(msg)
         }).start()
     }
@@ -180,32 +184,32 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
      * @param rb 如果是新建则没有，否则就是更新
      */
     private fun getCreateReturnPurchaseSql(ip: String, date: String, rpb: ArrayList<ReturnPurchaseItemBean>, type: Int): String {
-        if (type==0){
+        if (type == 0) {
             //新建
-            val numHeader=MySql.getNowNum(date)
+            val numHeader = MySql.getNowNum(date)
             //得到单号
             val distributionId = getDistribution(ip, date, numHeader)
-            if (distributionId=="0")return distributionId
+            if (distributionId == "0") return distributionId
             //得到最大排序id
-            var maxRecordNumber=getMaxRecordNumber(ip, date)
-            if (maxRecordNumber==0)return "0"
+            var maxRecordNumber = getMaxRecordNumber(ip, date)
+            if (maxRecordNumber == 0) return "0"
             //得到单号尾数
-            val numFoot=distributionId.substring(distributionId.length-4).toInt()
+            val numFoot = distributionId.substring(distributionId.length - 4).toInt()
             //得到当前单号
-            val nowId=numHeader+(numFoot+1).toString()
-            val result=StringBuilder()
+            val nowId = numHeader + (numFoot + 1).toString()
+            val result = StringBuilder()
             result.append(MySql.affairHeader)
             rpb.forEach {
-                it.recordNumber=maxRecordNumber
-                it.requestNumber=nowId
+                it.recordNumber = maxRecordNumber
+                it.requestNumber = nowId
                 maxRecordNumber++
                 result.append(MySql.createReturnPurchase(it))
             }
             result.append(MySql.affairFoot)
             return result.toString()
-        }else{
+        } else {
             //更新
-            val result=StringBuilder()
+            val result = StringBuilder()
             result.append(MySql.affairHeader)
             rpb.forEach {
                 result.append(MySql.updateReturnPurchase(it))
@@ -219,18 +223,19 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
      * 得到最大的RecordNumber,数据库中主键并用来排序的存在
      */
     private fun getMaxRecordNumber(ip: String, date: String): Int {
-        val result=SocketUtil.initSocket(ip, MySql.getMaxRecordNumber(date)).inquire()
-        if (result=="0"){
+        val result = SocketUtil.initSocket(ip, MySql.getMaxRecordNumber(date)).inquire()
+        if (result == "0") {
             return 0
-        }else{
-            val ub=ArrayList<UtilBean>()
+        } else {
+            val ub = ArrayList<UtilBean>()
             try {
                 ub.addAll(GsonUtil.getUtilBean(result))
-            }catch (e:Exception){}
-            if (ub[0].value==null){
+            } catch (e: Exception) {
+            }
+            if (ub[0].value == null) {
                 return 1
             }
-            return ub[0].value!!.toInt()+1
+            return ub[0].value!!.toInt() + 1
         }
     }
 
@@ -238,34 +243,35 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
      * 得到requestID,退货单号
      */
     private fun getDistribution(ip: String, date: String, numHeader: String): String {
-        val result=SocketUtil.initSocket(ip, MySql.getMaxReturnPurchaseId(date, numHeader)).inquire()
-        if (result=="0"){
+        val result = SocketUtil.initSocket(ip, MySql.getMaxReturnPurchaseId(date, numHeader)).inquire()
+        if (result == "0") {
             return result
-        }else{
-            val ub=ArrayList<UtilBean>()
-            try{
+        } else {
+            val ub = ArrayList<UtilBean>()
+            try {
                 ub.addAll(GsonUtil.getUtilBean(result))
-            }catch (e:Exception){}
-            if (ub[0].value==null){
-                return numHeader+"0000"
+            } catch (e: Exception) {
+            }
+            if (ub[0].value == null) {
+                return numHeader + "0000"
             }
             return ub[0].value!!
         }
     }
 
-    override fun updateReturnPurchase(date:String, rpb: ReturnedPurchaseBean, handler: MyHandler) {
+    override fun updateReturnPurchase(date: String, rpb: ReturnedPurchaseBean, handler: MyHandler) {
         Thread(Runnable {
-            val msg=Message()
+            val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             if (!CStoreCalendar.judgmentCalender(date, msg, handler, 2)) return@Runnable
-            val result=SocketUtil.initSocket(ip,getCreateReturnPurchaseSql(ip,date,rpb.allItem,1)).inquire()
-            if (result=="0"){
-                msg.what=SUCCESS
-            }else{
-                msg.what= ERROR
+            val result = SocketUtil.initSocket(ip, getCreateReturnPurchaseSql(ip, date, rpb.allItem, 1)).inquire()
+            if (result == "0") {
+                msg.what = SUCCESS
+            } else {
+                msg.what = ERROR
             }
-            msg.obj=result
+            msg.obj = result
             handler.sendMessage(msg)
         }).start()
     }

@@ -1,7 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.pay
 
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
-import com.cstore.zhiyazhang.cstoremanagement.model.pay.PayMoneyModel
+import com.cstore.zhiyazhang.cstoremanagement.model.pay.WXPayModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayCollectActivity
@@ -10,8 +10,8 @@ import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayCollectActivity
  * Created by zhiya.zhang
  * on 2017/11/16 9:19.
  */
-class PayMoneyPresenter(private val activity: PayCollectActivity) {
-    private val model = PayMoneyModel(activity)
+class WXPayPresenter(private val activity: PayCollectActivity) {
+    private val model = WXPayModel(activity)
 
     fun wechatCollectMoney(key: String, money: Double) {
         if (!PresenterUtil.judgmentInternet(activity)) return

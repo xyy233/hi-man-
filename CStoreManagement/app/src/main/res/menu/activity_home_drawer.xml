@@ -12,6 +12,10 @@
             android:id="@+id/nav_open_tutorial"
             android:icon="@drawable/ic_tutorial"
             android:title="@string/open_tutorial"/>
+        <item
+            android:id="@+id/nav_delete_sql"
+            android:icon="@drawable/ic_delete"
+            android:title="@string/delete_error_pay_data"/>
     </group>
 
     <item android:title="@string/other">

@@ -24,7 +24,7 @@ import com.github.wxpay.sdk.WXPay
  * Created by zhiya.zhang
  * on 2017/11/15 16:38.
  */
-class PayMoneyModel(context: Context) : PayMoneyInterface {
+class WXPayModel(context: Context) : PayMoneyInterface {
     private val dao = WXPayDao(context)
 
     companion object {
@@ -53,12 +53,48 @@ class PayMoneyModel(context: Context) : PayMoneyInterface {
             }
             return WXPaySqlBean(outTradeNo, transactionId, MyApplication.getOnlyid(), totalFee, storeId, assPos, nextTranNo, seq, openId, couponFee, theStep, errorMessage, 0, 0, 0, null)
         }
+
+        /**
+         * 得到下单商户订单号，-1就是出错
+         */
+        fun getShoppingId(activity: PayCollectActivity, ip: String, msg: Message, handler: MyHandler): String {
+            val sql = MySql.callPayShopping() + MySql.getShoppingId()
+            val shoppingIdResult = SocketUtil.initSocket(ip, sql).inquire()
+            if (shoppingIdResult == "" || shoppingIdResult == "[]") {
+                msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
+                msg.what = MyHandler.ERROR
+                handler.sendMessage(msg)
+                return "-1"
+            }
+            val ids = ArrayList<PosBean>()
+            try {
+                ids.addAll(GsonUtil.getPos(shoppingIdResult))
+            } catch (e: Exception) {
+            }
+            return if (ids.isEmpty()) {
+                msg.obj = shoppingIdResult
+                msg.what = MyHandler.ERROR
+                handler.sendMessage(msg)
+                "-1"
+            } else {
+                if (ids.size != 0) {
+                    activity.setPos(ids[0])
+                    User.getUser().storeId + ids[0].assPos + ids[0].nextTranNo + "01"
+                } else {
+                    msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
+                    msg.what = MyHandler.ERROR
+                    handler.sendMessage(msg)
+                    "-1"
+                }
+            }
+        }
     }
 
     override fun wechatCollectMoney(activity: PayCollectActivity, code: String, money: Double, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler))return@Runnable
             val outTradeNo = getShoppingId(activity, ip, msg, handler)
             if (outTradeNo == "-1") {
                 return@Runnable
@@ -199,41 +235,7 @@ class PayMoneyModel(context: Context) : PayMoneyInterface {
         }
     }
 
-    /**
-     * 得到下单商户订单号，-1就是出错
-     */
-    private fun getShoppingId(activity: PayCollectActivity, ip: String, msg: Message, handler: MyHandler): String {
-        if (!SocketUtil.judgmentIP(ip, msg, handler)) return "-1"
-        val sql = MySql.callPayShopping() + MySql.getShoppingId()
-        val shoppingIdResult = SocketUtil.initSocket(ip, sql).inquire()
-        if (shoppingIdResult == "" || shoppingIdResult == "[]") {
-            msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
-            msg.what = MyHandler.ERROR
-            handler.sendMessage(msg)
-            return "-1"
-        }
-        val ids = ArrayList<PosBean>()
-        try {
-            ids.addAll(GsonUtil.getPos(shoppingIdResult))
-        } catch (e: Exception) {
-        }
-        return if (ids.isEmpty()) {
-            msg.obj = shoppingIdResult
-            msg.what = MyHandler.ERROR
-            handler.sendMessage(msg)
-            "-1"
-        } else {
-            if (ids.size != 0) {
-                activity.setPos(ids[0])
-                User.getUser().storeId + ids[0].assPos + ids[0].nextTranNo + "01"
-            } else {
-                msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
-                msg.what = MyHandler.ERROR
-                handler.sendMessage(msg)
-                "-1"
-            }
-        }
-    }
+
 
 
     /**
@@ -265,7 +267,7 @@ class PayMoneyModel(context: Context) : PayMoneyInterface {
             msg.what = MyHandler.SUCCESS
             handler.sendMessage(msg)
         } catch (e: Exception) {
-            Log.e("PayMoneyModel", e.message)
+            Log.e("WXPayModel", e.message)
         }
     }
 

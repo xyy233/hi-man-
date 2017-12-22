@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
@@ -43,6 +44,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
+
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
 

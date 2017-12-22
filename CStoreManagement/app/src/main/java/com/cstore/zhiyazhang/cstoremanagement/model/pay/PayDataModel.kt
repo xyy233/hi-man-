@@ -1,8 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.pay
 
-import android.os.Message
+import com.cstore.zhiyazhang.cstoremanagement.bean.CashPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.WXPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
@@ -16,12 +17,20 @@ import com.github.wxpay.sdk.WXPay
  */
 class PayDataModel : PayDataInterface {
     override fun goWXData(dao: WXPayDao, bean: WXPaySqlBean, listener: MyListener) {
-        val msg = Message()
         val ip = MyApplication.getIP()
         try {
             startWXStep(dao, bean, ip, listener)
-            //这里测试用Other，正式用SUCCESS
-            listener.listenerOther(bean)
+            listener.listenerSuccess(bean)
+        } catch (e: Exception) {
+            stepError(e.message.toString(), dao, bean, listener)
+        }
+    }
+
+    override fun goCashData(dao: CashPayDao, bean: CashPaySqlBean, listener: MyListener) {
+        val ip = MyApplication.getIP()
+        try {
+            startCashStep(dao, bean, ip, listener)
+            listener.listenerSuccess(bean)
         } catch (e: Exception) {
             stepError(e.message.toString(), dao, bean, listener)
         }
@@ -49,6 +58,16 @@ class PayDataModel : PayDataInterface {
                 4 -> {
                     //修改app_pos和清空shopping_basket的存储过程
                     fourthStep(dao, bean, ip, listener)
+                }
+            }
+        }
+    }
+
+    private fun startCashStep(dao: CashPayDao, bean: CashPaySqlBean, ip: String, listener: MyListener) {
+        if (bean.isDone == 0) {
+            when (bean.theStep) {
+                1 -> {
+                    firstStep(dao, bean, ip, listener)
                 }
             }
         }
@@ -135,6 +154,16 @@ class PayDataModel : PayDataInterface {
         }
     }
 
+    private fun firstStep(dao: CashPayDao, bean: CashPaySqlBean, ip: String, listener: MyListener) {
+        val result = SocketUtil.initSocket(ip, MySql.payDoneCall("现金", bean.totalFee)).inquire()
+        if (result == "0") {
+            bean.isDone = 1
+            dao.updateSQL(bean)
+        } else {
+            stepError(result, dao, bean, listener)
+        }
+    }
+
     /**
      * 出错后操作
      */
@@ -147,6 +176,13 @@ class PayDataModel : PayDataInterface {
         listener.listenerOther(bean)
     }
 
+    private fun stepError(message: String, dao: CashPayDao, bean: CashPaySqlBean, listener: MyListener) {
+        bean.uploadCount++
+        bean.errorMessage += ",$message"
+        dao.updateSQL(bean)
+        listener.listenerOther(bean)
+    }
+
 }
 
 interface PayDataInterface {
@@ -154,4 +190,9 @@ interface PayDataInterface {
      * 处理微信数据
      */
     fun goWXData(dao: WXPayDao, bean: WXPaySqlBean, listener: MyListener)
+
+    /**
+     * 处理现金数据
+     */
+    fun goCashData(dao: CashPayDao, bean: CashPaySqlBean, listener: MyListener)
 }

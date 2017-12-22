@@ -188,7 +188,7 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }catch (e:Exception){
-            MyToast.getEditToast(10000,"自动更新失败，请到手机目录Download下手动安装或联系系统部！${e.message}")
+            MyToast.getLongToast("自动更新失败，请到手机目录Download下手动安装或联系系统部！${e.message}")
         }
 
     }

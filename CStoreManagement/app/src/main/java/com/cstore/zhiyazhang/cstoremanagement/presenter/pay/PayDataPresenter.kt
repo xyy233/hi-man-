@@ -1,13 +1,14 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.pay
 
+import com.cstore.zhiyazhang.cstoremanagement.bean.CashPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.WXPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.pay.PayDataModel
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.PayDataService
 import com.google.gson.Gson
 import com.zhy.http.okhttp.OkHttpUtils
 
@@ -15,7 +16,7 @@ import com.zhy.http.okhttp.OkHttpUtils
  * Created by zhiya.zhang
  * on 2017/12/18 15:40.
  */
-class PayDataPresenter(private val service: PayDataService) {
+class PayDataPresenter {
     private val model = PayDataModel()
 
     /**
@@ -38,6 +39,43 @@ class PayDataPresenter(private val service: PayDataService) {
             }
 
         })
+    }
+
+    fun goCashData(bean: CashPaySqlBean, dao: CashPayDao) {
+        model.goCashData(dao,bean, object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                return
+            }
+
+            override fun listenerOther(data: Any) {
+                data as CashPaySqlBean
+                if (data.isUpload==0){
+                    goCashDataHttp(data, dao)
+                }
+            }
+        })
+    }
+
+    private fun goCashDataHttp(bean: CashPaySqlBean, dao: CashPayDao) {
+        if (!ConnectionDetector.getConnectionDetector().isOnline) return
+        val myListener=object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                //成功
+                bean.isUpload=1
+                dao.updateSQL(bean)
+            }
+        }
+        val response = OkHttpUtils
+                .postString()
+                .url(AppUrl.UPLOAD_ERROR)
+                .content("${Gson().toJson(bean)} \r\n 时间：${MyTimeUtil.nowTimeString}\r\n\r\n\r\n\r\n\r\n")
+                .addHeader("fileName", "${bean.storeId}/payError${MyTimeUtil.nowDate}.txt")
+                .build()
+                .execute()
+
+        if (response.isSuccessful){
+            myListener.listenerSuccess("")
+        }
     }
 
     /**
@@ -63,11 +101,5 @@ class PayDataPresenter(private val service: PayDataService) {
         if (response.isSuccessful){
             myListener.listenerSuccess("")
         }
-
-        /*object : MyStringCallBack(myListener) {
-                    override fun onResponse(response: String?, id: Int) {
-                        myListener.listenerSuccess(response!!)
-                    }
-                }*/
     }
 }

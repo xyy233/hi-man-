@@ -10,11 +10,14 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
+import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
@@ -27,6 +30,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.content_home.*
+import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 
 class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +49,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         }
     }
 
-    private lateinit var dialog:AlertDialog.Builder
+    private lateinit var dialog: AlertDialog.Builder
+    private lateinit var dialogView: View
+    private lateinit var deleteDialog: AlertDialog
 
     override fun initData() {
         val intentFilter = IntentFilter()
@@ -80,9 +86,40 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 .setMessage("交易记录异常，正在处理中，请等待处理完毕或联系系统部！")
                 .setPositiveButton("确定", { _, _ ->
                 })
+        val builder = AlertDialog.Builder(this)
+        dialogView = View.inflate(this, R.layout.dialog_cashdaily, null)!!
+        builder.setView(dialogView)
+        builder.setCancelable(true)
+        deleteDialog = builder.create()
+        dialogView.dialog_title.text = getString(R.string.delete_error_pay_data)
+        dialogView.dialog_save.text = getString(R.string.clear)
+        dialogView.dialog_edit.hint = getString(R.string.please_edit_password_by_developer)
+        dialogView.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogView.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
     }
 
     override fun initClick() {
+        dialogView.dialog_cancel.setOnClickListener {
+            deleteDialog.cancel()
+        }
+        dialogView.dialog_save.setOnClickListener {
+            val value = dialogView.dialog_edit.text.toString()
+            if (value.isEmpty()) {
+                MyToast.getShortToast(getString(R.string.please_edit_password_by_developer))
+                return@setOnClickListener
+            }
+            if (value == "666666") {
+                val wxDao = WXPayDao(this@HomeActivity)
+                val cashDao = CashPayDao(this@HomeActivity)
+                wxDao.deleteAll()
+                cashDao.deleteAll()
+                MyToast.getShortToast("清除完毕")
+                dialogView.dialog_edit.setText("")
+                deleteDialog.cancel()
+            } else {
+                MyToast.getShortToast(getString(R.string.pwdError))
+            }
+        }
         gg1.setOnClickListener {
             startActivity(Intent(this@HomeActivity, ContractOrder::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg1, "gg3").toBundle())
@@ -99,14 +136,16 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg4, "gg3").toBundle())
         }
-        val dao = WXPayDao(this)
-        test111.setOnClickListener {
-            val wxData = dao.getAllData()
-            if (wxData.any { it.isDone == 0 }) {
-                    dialog.show()
-            }else{
+        val wxDao = WXPayDao(this)
+        val cashDao = CashPayDao(this)
+        gg5.setOnClickListener {
+            val wxData = wxDao.getAllData()
+            val cashData = cashDao.getAllData()
+            if (wxData.any { it.isDone == 0 } && cashData.any { it.isDone == 0 }) {
+                dialog.show()
+            } else {
                 startActivity(Intent(this@HomeActivity, PayActivity::class.java),
-                        ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, test111, "gg3").toBundle())
+                        ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg5, "gg3").toBundle())
             }
         }
     }
@@ -169,7 +208,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                                         /* val sd = ScrapDao(this@HomeActivity)
                                          sd.editSQL(null, "deleteTable")*/
                                         val cd = ContractTypeDao(this@HomeActivity)
-                                        cd.editSQL(null, "deleteTable")
+                                        cd.editSQL(null, "deleteAll")
                                         Toast.makeText(this@HomeActivity, "清除完毕", Toast.LENGTH_SHORT).show()
                                     })
                                     .setNegativeButton("放弃") { _, _ -> }
@@ -189,6 +228,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 val sp = getSharedPreferences("tutorial", Context.MODE_PRIVATE)
                 sp.edit().clear().apply()
                 MyToast.getLongToast(getString(R.string.open_tutorial_done))
+            }
+            R.id.nav_delete_sql -> {
+                deleteDialog.show()
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)

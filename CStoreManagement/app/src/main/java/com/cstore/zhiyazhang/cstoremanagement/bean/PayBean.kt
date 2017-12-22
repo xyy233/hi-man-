@@ -121,3 +121,32 @@ data class WXPaySqlBean(
         //创建时间
         val createTime: String?
 ) : Serializable
+
+data class CashPaySqlBean(
+        //商户订单号
+        val outTradeNo: String,
+        //手机唯一id
+        val telSeq: String,
+        //总价
+        val totalFee: Double,
+        //店号
+        val storeId: String,
+        //pos号
+        val assPos: Int,
+        //组成单号的
+        val nextTranNo: Int,
+        //请求次数
+        val seq: String,
+        //当前步骤数
+        var theStep: Int,
+        //出错信息
+        var errorMessage: String,
+        //是否处理完毕
+        var isDone: Int,
+        //是否上传完毕
+        var isUpload: Int,
+        //尝试次数
+        var uploadCount: Int,
+        //创建时间
+        val createTime: String?
+):Serializable

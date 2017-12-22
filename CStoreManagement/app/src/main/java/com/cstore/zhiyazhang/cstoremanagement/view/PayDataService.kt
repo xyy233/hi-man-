@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayDataPresenter
+import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 
 /**
@@ -14,11 +15,13 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
  */
 class PayDataService(value: String = "PayDataService") : IntentService(value) {
     private val TAG = "PayDataService"
-    private val presenter = PayDataPresenter(this)
+    private val presenter = PayDataPresenter()
     private val data = ArrayList<Any>()
     // 1=微信 2=支付宝 3=现金 0=非指定方式，需要全部查询
     private var isWhere = 0
     private var isDone = true
+    private lateinit var wxDao: WXPayDao
+    private lateinit var cashDao: CashPayDao
 
     override fun onHandleIntent(intent: Intent?) {
         try {
@@ -29,9 +32,8 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
                     data.addAll(incData as ArrayList<*>)
                 }
 
-                //测试用
-                val wxDao = WXPayDao(this)
-                wxDao.testFun()
+                cashDao = CashPayDao(this)
+                wxDao = WXPayDao(this)
 
                 goTry(isWhere)
             }
@@ -80,7 +82,6 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
             wxCount = 0
             return
         }
-        val wxDao = WXPayDao(this)
         val wxData = wxDao.getAllData()
         if (wxData.size == 0) return
         //找出所有未处理的,循环处理
@@ -100,10 +101,24 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
     private fun judgmentAli() {
     }
 
+    private var cashCount = 0
     /**
      * 查询现金的数据库
      */
     private fun judgmentCash() {
+        if (cashCount++ >= 4) {
+            cashCount = 0
+            return
+        }
+        val cashData = cashDao.getAllData()
+        if (cashData.size == 0) return
+        cashData.filter { it.isDone == 0 }.forEach {
+            presenter.goCashData(it, cashDao)
+        }
+        if (cashDao.getAllData().any { it.isDone == 0 }) {
+            isDone = false
+            judgmentCash()
+        }
     }
 
 }

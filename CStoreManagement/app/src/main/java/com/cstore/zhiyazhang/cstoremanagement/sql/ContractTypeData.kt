@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -13,7 +12,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CONTRACT_TYPE_TABLE_NAME
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.CREATE_DAY
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeData.ContractTypeEntry.Companion.TYPE_ID
-import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_NAME
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_VERSION
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.INT_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.TEXT_TYPE
@@ -31,41 +29,24 @@ object ContractTypeData {
             val CONTRACT_TYPE_TABLE_NAME = "contractType"
             val TYPE_ID = "typeId"//类id
             val CREATE_DAY = "createDay"//创建时间
+            val SQLITE_CREATE = "create table if not exists " + CONTRACT_TYPE_TABLE_NAME + " ( " +
+                    TYPE_ID + TEXT_TYPE + " PRIMARY KEY, " +
+                    CREATE_DAY + INT_TYPE + ")"
+            val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + CONTRACT_TYPE_TABLE_NAME
         }
-    }
-}
-
-class ContractTypeDBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQLITE_CREATE)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL(SQLITE_DELETE_ENTRIES)
-        onCreate(db)
-    }
-
-    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        onUpgrade(db, oldVersion, newVersion)
-    }
-
-    companion object {
-        private val SQLITE_CREATE = "create table if not exists " + CONTRACT_TYPE_TABLE_NAME + " ( " +
-                TYPE_ID + TEXT_TYPE + " PRIMARY KEY, " +
-                CREATE_DAY + INT_TYPE + ")"
-        private val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + CONTRACT_TYPE_TABLE_NAME
     }
 }
 
 class ContractTypeDao(context: Context) {
     private val CONTRACTTYPECOLUMNS = arrayOf<String>(TYPE_ID, CREATE_DAY)
-    private val ctdbh: ContractTypeDBHelper = ContractTypeDBHelper(context)
+    private val ctdbh = SQLDBHelper(context)
 
     fun editSQL(ctb: ContractTypeBean?, type: String) {
         try {
             when (type) {
                 "insert" -> insert(ctb!!)
                 "delete" -> delete(ctb!!)
+                "deleteAll"->deleteAll()
                 "deleteTable"->deleteTable()
                 else -> {
                 }
@@ -113,6 +94,18 @@ class ContractTypeDao(context: Context) {
         try {
             db.delete(CONTRACT_TYPE_TABLE_NAME, CREATE_DAY + "!=?", arrayOf(day.toString()))
         } finally {
+            db.setTransactionSuccessful()
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    private fun deleteAll(){
+        val db=ctdbh.writableDatabase
+        db!!.beginTransaction()
+        try {
+            db.delete(CONTRACT_TYPE_TABLE_NAME, TYPE_ID+"!=?", arrayOf("0"))
+        }finally {
             db.setTransactionSuccessful()
             db.endTransaction()
             db.close()

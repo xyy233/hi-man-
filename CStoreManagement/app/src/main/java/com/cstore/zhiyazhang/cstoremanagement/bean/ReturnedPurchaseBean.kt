@@ -121,13 +121,7 @@ class ReturnPurchaseItemBean(
 /**
  * 退货原因
  */
-class ReturnedPurchaseReason(
-        /**
-         * 原因id
-         */
-        @SerializedName("reasonnumber") val reasonNumber: Int,
-        /**
-         * 原因名
-         */
-        @SerializedName("reasonname") val reasonName: String
-) : Serializable
+data class ReasonBean(
+        @SerializedName("reasonnumber") val reasonId:String,
+        @SerializedName("reasonname") val reasonName:String
+):Serializable

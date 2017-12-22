@@ -80,7 +80,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/refound_out_tran_no"
+                android:id="@+id/refund_out_tran_no"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
@@ -92,6 +92,8 @@
                 android:inputType="number"/>
 
             <Button
+                android:foreground="@drawable/selector_foreground"
+                android:stateListAnimator="@drawable/lift_on_touch"
                 android:id="@+id/collect_money"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -122,4 +124,25 @@
         app:layout_constraintBottom_toTopOf="@+id/collect_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/refund_money_box"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/collect_box">
+
+        <Button
+            android:id="@+id/refund_money"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_box_line"
+            android:text="@string/refund_money"/>
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

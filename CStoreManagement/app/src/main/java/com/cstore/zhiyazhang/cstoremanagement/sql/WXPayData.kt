@@ -4,13 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.WXPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.COMMA_SEP
-import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_NAME
-import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DB_VERSION
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DEFAULT
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DOUBLE_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.INT_TYPE
@@ -76,52 +73,33 @@ object WXPayData {
             val IS_UPLOAD = "is_upload"//是否已上传
             val UPLOAD_COUNT = "upload_count"//已尝试执行几次
             val CREATE_TIME = "create_time"//创建时间
+
+            val SQLITE_CREATE = "create table if not exists " + WXPAY_TABLE_NAME + " (" +
+                    OUT_TRADE_NO + TEXT_TYPE + " PRIMARY KEY, " +
+                    TRANSACTION_ID + TEXT_TYPE + COMMA_SEP +
+                    TEL_SEQ + TEXT_TYPE + COMMA_SEP +
+                    TOTAL_FEE + DOUBLE_TYPE + COMMA_SEP +
+                    STORE_ID + TEXT_TYPE + COMMA_SEP +
+                    ASS_POS + INT_TYPE + COMMA_SEP +
+                    NEXT_TRANNO + INT_TYPE + COMMA_SEP +
+                    SEQ + TEXT_TYPE + COMMA_SEP +
+                    OPENID + TEXT_TYPE + COMMA_SEP +
+                    COUPON_FEE + DOUBLE_TYPE + COMMA_SEP +
+                    THE_STEP + INT_TYPE + COMMA_SEP +
+                    ERROR_MESSAGE + TEXT_TYPE + COMMA_SEP +
+                    IS_DONE + INT_TYPE + DEFAULT + COMMA_SEP +
+                    IS_UPLOAD + INT_TYPE + DEFAULT + COMMA_SEP +
+                    UPLOAD_COUNT + INT_TYPE + DEFAULT + COMMA_SEP +
+                    CREATE_TIME + " DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')))"
+
+            val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + WXPAY_TABLE_NAME
         }
     }
 }
 
-class WXPayDBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQLITE_CREATE)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL(SQLITE_DELETE_ENTRIES)
-        onCreate(db)
-    }
-
-    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        onUpgrade(db, oldVersion, newVersion)
-    }
-
-    companion object {
-        private val SQLITE_CREATE = "create table if not exists " + WXPAY_TABLE_NAME + " (" +
-                OUT_TRADE_NO + TEXT_TYPE + " PRIMARY KEY, " +
-                TRANSACTION_ID + TEXT_TYPE + COMMA_SEP +
-                TEL_SEQ + TEXT_TYPE + COMMA_SEP +
-                TOTAL_FEE + DOUBLE_TYPE + COMMA_SEP +
-                STORE_ID + TEXT_TYPE + COMMA_SEP +
-                ASS_POS + INT_TYPE + COMMA_SEP +
-                NEXT_TRANNO + INT_TYPE + COMMA_SEP +
-                SEQ + TEXT_TYPE + COMMA_SEP +
-                OPENID + TEXT_TYPE + COMMA_SEP +
-                COUPON_FEE + DOUBLE_TYPE + COMMA_SEP +
-                THE_STEP + INT_TYPE + COMMA_SEP +
-                ERROR_MESSAGE + TEXT_TYPE + COMMA_SEP +
-                IS_DONE + INT_TYPE + DEFAULT + COMMA_SEP +
-                IS_UPLOAD + INT_TYPE + DEFAULT + COMMA_SEP +
-                UPLOAD_COUNT + INT_TYPE + DEFAULT + COMMA_SEP +
-                CREATE_TIME + " DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')))"
-
-        private val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + WXPAY_TABLE_NAME
-    }
-}
-
 class WXPayDao(context: Context) {
-    private val WXPAY_COLUMNS = arrayOf<String>(OUT_TRADE_NO, TRANSACTION_ID, TEL_SEQ, TOTAL_FEE, STORE_ID,
-            ASS_POS, NEXT_TRANNO, SEQ, OPENID, COUPON_FEE, THE_STEP, ERROR_MESSAGE, IS_DONE, IS_UPLOAD, UPLOAD_COUNT, CREATE_TIME)
 
-    private val payHelper = WXPayDBHelper(context)
+    private val payHelper = SQLDBHelper(context)
 
     /**
      * 修改
@@ -143,6 +121,20 @@ class WXPayDao(context: Context) {
         } catch (e: Exception) {
             Log.e(TAG, e.message)
         } finally {
+            db.setTransactionSuccessful()
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    fun deleteAll(){
+        val db=payHelper.writableDatabase
+        db.beginTransaction()
+        try {
+            db.delete(WXPAY_TABLE_NAME, OUT_TRADE_NO+"!=?", arrayOf("0"))
+        }catch (e:Exception) {
+            Log.e(TAG, e.message)
+        }finally {
             db.setTransactionSuccessful()
             db.endTransaction()
             db.close()
@@ -209,7 +201,7 @@ class WXPayDao(context: Context) {
         var cursor: Cursor? = null
         try {
             db = payHelper.readableDatabase
-            val sql = "select * from $WXPAY_TABLE_NAME where $IS_DONE == ?"
+            val sql = "select * from $WXPAY_TABLE_NAME where $IS_DONE = ?"
             cursor = db.rawQuery(sql, arrayOf("0"))
             if (cursor!!.count > 0) {
                 val result = ArrayList<WXPaySqlBean>(cursor.count)
