@@ -80,10 +80,10 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
             showPrompt(getString(R.string.wait_loading))
         }
         loading_retry.setOnClickListener {
-            saveDate()
+            saveData()
         }
         acceptance_item_save.setOnClickListener {
-            saveDate()
+            saveData()
         }
         judgmentZhuanRi()
         acceptance_search_line.keyListener=DigitsKeyListener.getInstance("1234567890")
@@ -126,7 +126,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                 toolbar_btn.setOnClickListener{
                     if (type==1)ab.isChange=true else rab.isChange=true
                     if (type==1)ab.dlvStatus=0 else rab.rtnStatus=0
-                    saveDate()
+                    saveData()
                 }
             }else{
                 toolbar_btn.visibility=View.VISIBLE
@@ -134,7 +134,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                 toolbar_btn.setOnClickListener {
                     if (type==1)ab.isChange=true else rab.isChange=true
                     if (type==1)ab.dlvStatus=3 else rab.rtnStatus=3
-                    saveDate()
+                    saveData()
                 }
             }
         }else{
@@ -206,7 +206,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
                         .setTitle("提示")
                         .setMessage("您未进行验收，是否放弃？")
                         .setPositiveButton("验收", { _, _ ->
-                            saveDate()
+                            saveData()
                         })
                         .setNegativeButton("放弃") { _, _ ->
                             super.onBackPressed()
@@ -219,7 +219,7 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
         judgmentFinish()
     }
 
-    private fun saveDate(){
+    private fun saveData(){
         if (if (type==1)ab.allItems.isEmpty()else rab.allItems.isEmpty()){
             showPrompt(getString(R.string.noMessage))
             return

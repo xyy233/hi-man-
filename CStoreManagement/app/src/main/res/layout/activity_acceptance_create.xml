@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -23,12 +23,49 @@
             layout="@layout/toolbar_layout"/>
 
         <LinearLayout
+            android:background="@color/line"
+            android:id="@+id/return_time_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckedTextView
+                android:id="@+id/return_recent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+                android:background="?android:attr/selectableItemBackground"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:paddingStart="30dp"
+                android:text="@string/return_recent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="?android:attr/textColorAlertDialogListItem"
+                tools:ignore="RtlSymmetry"/>
+
+            <CheckedTextView
+                android:id="@+id/return_long"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+                android:background="?android:attr/selectableItemBackground"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:paddingStart="30dip"
+                android:text="@string/return_long"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="?android:attr/textColorAlertDialogListItem"
+                tools:ignore="RtlSymmetry"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_cash_daily_dialog">
+            android:background="@drawable/bg_box_line">
 
             <Spinner
                 android:id="@+id/acceptance_spinner"
@@ -38,41 +75,39 @@
         </LinearLayout>
 
         <!--废弃-->
-       <!-- <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center|bottom"
-            android:orientation="horizontal"
-            android:visibility="gone">
+        <!--        <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|bottom"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-            <EditText
-                android:id="@+id/acceptance_order_id"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/please_edit_id"
-                android:imeOptions="actionSearch"
-                android:inputType="number"
-                android:textSize="16sp"/>
+                    <EditText
+                        android:id="@+id/acceptance_order_id"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/please_edit_id"
+                        android:imeOptions="actionSearch"
+                        android:inputType="number"
+                        android:textSize="16sp"/>
 
-            <Button
-                android:id="@+id/acceptance_sure"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_cash_daily_dialog"
-                android:text="@string/sure"/>
-        </LinearLayout>-->
+                    <Button
+                        android:id="@+id/acceptance_sure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_cash_daily_dialog"
+                        android:text="@string/sure"/>
+                </LinearLayout>-->
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_height="4dp"
             android:layout_marginTop="8dp"
-            android:background="@color/add_less"/>
+            android:background="@color/contract_bg"/>
 
     </LinearLayout>
 
@@ -80,8 +115,7 @@
         android:id="@+id/acceptance_create_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
+        android:background="@color/contract_bg"
         app:layout_constraintBottom_toTopOf="@+id/acceptance_save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,11 +128,11 @@
         android:layout_gravity="bottom"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
-        android:visibility="gone"
         android:animateLayoutChanges="true"
         android:background="@color/sure"
         android:text="@string/save"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

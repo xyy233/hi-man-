@@ -53,6 +53,7 @@ class ReturnPurchasePresenter(private val activity: ReturnPurchaseActivity) {
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
+                activity.hideLoading()
                 handler.cleanAll()
             }
 
@@ -138,9 +139,9 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
             }
 
             override fun listenerFailed(errorMessage: String) {
-                activity.commodityError()
+                activity.errorDealWith()
+                activity.showPrompt(activity.getString(R.string.socketError) + "," + errorMessage)
                 activity.hideLoading()
-                activity.showPrompt(errorMessage)
                 handler.cleanAll()
             }
         })
@@ -160,15 +161,14 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
         val handler = MyHandler().writeActivity(activity)
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                activity.updateDone(data)
                 activity.hideLoading()
                 activity.showPrompt(activity.getString(R.string.saveDone))
+                activity.updateDone(data)
                 handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
-                activity.showPrompt(errorMessage)
-                activity.createError()
+                activity.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 activity.hideLoading()
                 handler.cleanAll()
             }

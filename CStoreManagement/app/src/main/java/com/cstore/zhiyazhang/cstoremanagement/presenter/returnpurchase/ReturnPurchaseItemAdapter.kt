@@ -4,15 +4,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReasonBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnPurchaseItemBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
+import kotlinx.android.synthetic.main.item_commodity_return.view.*
 import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
 
 /**
@@ -25,13 +24,21 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
         private val TYPE_FOOTER = 1
     }
 
+    private val adapterResource = ArrayList<String>()
+
+    init {
+        reason.forEach {
+            adapterResource.add(it.reasonName)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ITEM -> {
                 ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_commodity_return, parent, false))
             }
             TYPE_FOOTER -> {
-                ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_acceptance, parent, false))
+                FooterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_acceptance, parent, false))
             }
             else -> {
                 ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_commodity_return, parent, false))
@@ -42,8 +49,10 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolder -> {
+                holder.bind(position)
             }
             is FooterViewHolder -> {
+                holder.bind()
             }
         }
     }
@@ -69,28 +78,93 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
     }
 
     inner class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
-        //品号
-        val commodityId = item.findViewById<TextView>(R.id.commodity_id)!!
-        //商品图片
-        val commodityImg = item.findViewById<ImageView>(R.id.commodity_img)!!
-        //零售价
-        val commodityRetail = item.findViewById<TextView>(R.id.commodity_retail)!!
-        //品名
-        val commodityName = item.findViewById<TextView>(R.id.commodity_name)!!
-        //库存
-        val commodityInv = item.findViewById<TextView>(R.id.commodity_inv)!!
-        //零售小计
-        val commodityRetailTotal = item.findViewById<TextView>(R.id.commodity_retail_total)!!
-        //历史净进货累计
-        val commodityLsjjhlj = item.findViewById<TextView>(R.id.commodity_lsjjhlj)!!
-        //原因
-        val acceptanceSpinner = item.findViewById<Spinner>(R.id.acceptance_spinner)!!
-        //预退数
-        val plnrtnQuantity = item.findViewById<TextView>(R.id.plnrtn_quantity)!!
-        //减
-        val returnLess = item.findViewById<ImageButton>(R.id.return_less)!!
-        //加
-        val returnAdd = item.findViewById<ImageButton>(R.id.return_add)!!
+
+        fun bind(position: Int) = with(itemView) {
+            val rb = data[position]
+            commodity_id.text = rb.itemNumber//品号
+            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${rb.itemNumber}.do")
+                    .placeholder(R.mipmap.loading)
+                    .error(R.mipmap.load_error)
+                    .crossFade()
+                    .into(commodity_img)//商品图片
+            commodity_retail.text = rb.storeUnitPrice.toString()//零售价
+            commodity_name.text = rb.pluName//品名
+            commodity_inv.text = rb.invQuantity.toString()//库存
+            val total = rb.storeUnitPrice * rb.plnRtnQuantity
+            commodity_retail_total.text = total.toString()//零售小计
+            //历史净进货累计
+            val lsjjh = if (rb.lsjjh == -1) {
+                "∞"
+            } else {
+                rb.lsjjh.toString()
+            }
+            commodity_lsjjhlj.text = lsjjh
+            plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()//预退数
+            //原因
+            return_reason.text = rb.reasonName
+            //下拉框原因注释掉，需要再解放
+            /*val adapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, adapterResource)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            acceptance_spinner.adapter = adapter
+            acceptance_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val newId = reason[acceptance_spinner.selectedItemPosition].reasonId
+                    if (rb.reasonNumber != newId) {
+                        rb.reasonNumber = newId
+                        rb.reasonName = reason[acceptance_spinner.selectedItemPosition].reasonName
+                        rb.editCount++
+                    }
+                }
+            }*/
+            //减
+            return_less.setOnClickListener {
+                if (rb.plnRtnQuantity > 0) {
+                    rb.plnRtnQuantity--
+                    rb.editCount--
+                    plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()
+                } else {
+                    MyToast.getShortToast(context.getString(R.string.maxOrMinError))
+                }
+            }
+            //加
+            return_add.setOnClickListener {
+                //测试
+                rb.plnRtnQuantity++
+                rb.editCount++
+                plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()
+
+                /*//lsjjh为空的话写死为-1，判断不为空且加量后lsjjh小与退货量就报错
+                if (rb.lsjjh != -1 && rb.lsjjh < rb.plnRtnQuantity + 1) {
+                    MyToast.getShortToast("退货量不能大于最大退货量，最大退货量为：${rb.lsjjh}")
+                    return@setOnClickListener
+                }
+                if (rb.plnRtnQuantity < rb.invQuantity) {
+                    rb.plnRtnQuantity++
+                    rb.editCount++
+                    plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()
+                } else {
+                    MyToast.getShortToast(context.getString(R.string.rtn_qty_inv))
+                }*/
+            }
+
+            if (CStoreCalendar.getCurrentDate(2) != date) {
+                //不在可操作时间
+                //acceptance_spinner.isEnabled = false
+                return_less.isEnabled = false
+                return_add.isEnabled = false
+                return_add.visibility = View.GONE
+                return_less.visibility = View.GONE
+            } else {
+                //acceptance_spinner.isEnabled = true
+                return_less.isEnabled = true
+                return_add.isEnabled = true
+                return_add.visibility = View.VISIBLE
+                return_less.visibility = View.VISIBLE
+            }
+        }
     }
 
     inner class FooterViewHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -99,8 +173,13 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
             acceptance_status.visibility = View.GONE
             add.visibility = View.VISIBLE
             acceptance_item.setOnClickListener {
-                onClick.onItemLongClick(this@FooterViewHolder, 0)
+                onClick.onItemClick(this@FooterViewHolder, 0)
             }
         }
+    }
+
+    fun addItem(rb: ArrayList<ReturnPurchaseItemBean>) {
+        data.addAll(rb)
+        notifyDataSetChanged()
     }
 }

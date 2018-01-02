@@ -3,48 +3,49 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/return_commodity"
-    android:elevation="2dp"
-    android:orientation="horizontal"
-    android:foreground="@drawable/selector_foreground"
-    android:stateListAnimator="@drawable/lift_on_touch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="6dp"
     android:baselineAligned="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:elevation="2dp"
+    android:foreground="@drawable/selector_foreground"
+    android:orientation="horizontal"
+    android:stateListAnimator="@drawable/lift_on_touch">
 
     <LinearLayout
-        android:background="@color/white"
         android:layout_width="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:layout_marginEnd="3dp"
         android:layout_weight="0.4"
-        android:layout_height="match_parent">
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
-            android:gravity="center"
-             android:text="123456"
             android:id="@+id/commodity_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+
         <ImageView
             android:id="@+id/commodity_img"
-            android:layout_margin="3dp"
-            android:background="@color/black"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:layout_margin="3dp"
             android:contentDescription="@string/commodity_id"/>
+
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
-                android:text="@string/retail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/retail"/>
+
             <TextView
                 android:id="@+id/commodity_retail"
-                android:text="11.00"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -52,55 +53,58 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_weight="0.7"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:layout_marginBottom="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/commodity_name"
-                android:text="测试商品测试商品"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <LinearLayout
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.8"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:text="@string/inventory2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/inventory2"/>
+
                     <TextView
                         android:id="@+id/commodity_inv"
-                        android:text="2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:text="@string/retail_total"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/retail_total"/>
+
                     <TextView
                         android:id="@+id/commodity_retail_total"
-                        android:text="132.00"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -108,36 +112,47 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:text="@string/lsjjhlj"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="@string/lsjjhlj"/>
+
                 <TextView
                     android:id="@+id/commodity_lsjjhlj"
-                    android:text="5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="center"
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="start|center"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:text="@string/reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reason"/>
+
+                <TextView
+                    android:id="@+id/return_reason"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+                <!--王经理说不要下拉框，先GONE如果以后用再激活-->
                 <LinearLayout
-                    android:layout_marginEnd="6dp"
+                    android:id="@+id/return_spinner_box"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_box_line"
-                    android:layout_height="wrap_content">
+                    android:visibility="gone">
+
                     <Spinner
                         android:id="@+id/acceptance_spinner"
                         android:layout_width="match_parent"
@@ -148,55 +163,54 @@
         </LinearLayout>
 
         <LinearLayout
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:gravity="end"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="end"
+            android:orientation="horizontal">
 
             <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/plnrtn_quantity"
                 android:textColor="@color/cstore_red"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/plnrtn_quantity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="12"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:textStyle="bold"/>
 
             <ImageButton
                 android:id="@+id/return_less"
-                android:background="@color/add_less"
-                android:src="@mipmap/ic_less"
-                android:foreground="@drawable/selector_foreground"
-                android:stateListAnimator="@drawable/lift_on_touch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/minCNoLess"/>
+                android:background="@color/add_less"
+                android:contentDescription="@string/minCNoLess"
+                android:foreground="@drawable/selector_foreground"
+                android:src="@mipmap/ic_less"
+                android:stateListAnimator="@drawable/lift_on_touch"/>
 
             <View
-                android:background="@color/gray"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/gray"/>
 
             <ImageButton
                 android:id="@+id/return_add"
-                android:background="@color/add_less"
-                android:src="@mipmap/ic_add"
-                android:foreground="@drawable/selector_foreground"
-                android:stateListAnimator="@drawable/lift_on_touch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/minCNoLess"/>
+                android:background="@color/add_less"
+                android:contentDescription="@string/minCNoLess"
+                android:foreground="@drawable/selector_foreground"
+                android:src="@mipmap/ic_add"
+                android:stateListAnimator="@drawable/lift_on_touch"/>
 
         </LinearLayout>
 

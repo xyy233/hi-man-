@@ -123,7 +123,6 @@ object CStoreCalendar {
 
     /**
      * 判断是否能执行创建或修改操作
-     * 2017年11月2日 10:18:24 以后要想办法让方法通用handler对象和单列的onlyHandler
      */
     fun judgmentCalender(date: String, msg: Message, handler: MyHandler, type: Int): Boolean {
         if (CStoreCalendar.setCStoreCalendar() != SUCCESS_MSG) {

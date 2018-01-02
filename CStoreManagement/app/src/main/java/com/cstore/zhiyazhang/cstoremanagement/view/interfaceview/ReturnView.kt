@@ -8,20 +8,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnedPurchaseBean
  * on 2017/11/3 14:28.
  */
 interface ReturnView{
-    /**
-     * 得到配送商
-     */
-    fun getVendor()
-
-    /**
-     * 获得商品错误
-     */
-    fun commodityError()
-
-    /**
-     * 创建错误
-     */
-    fun createError()
 
     /**
      * 得到ReturnedPurchaseBean，如果有就代表是在之前上添加，没有就是完全新建，model会处理好一切

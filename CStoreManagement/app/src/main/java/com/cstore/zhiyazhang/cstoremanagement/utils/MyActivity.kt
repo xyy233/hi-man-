@@ -32,6 +32,7 @@ abstract class MyActivity : AppCompatActivity() {
      * 不管了，就当做获得未经网络的数据为initView内的部分
      */
     protected abstract fun initView()
+
     protected abstract fun initClick()
     protected abstract fun initData()
 
@@ -43,9 +44,20 @@ abstract class MyActivity : AppCompatActivity() {
         val filter = IntentFilter()
         filter.addAction(EXIT_APP_ACTION)
         registerReceiver(mBroadcastReceiver, filter)
+
+        //开发版本用这个
         initView()
         initClick()
         initData()
+
+        //正式版本用这个
+        /*try {
+            initView()
+            initClick()
+            initData()
+        } catch (e: Exception) {
+            MyToast.getLongToast("系统错误：${e.message}")
+        }*/
     }
 
     override fun onDestroy() {

@@ -22,6 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.order.returnpurchase.ReturnPurchaseActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -46,12 +47,12 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         val data = ArrayList<LogoBean>()
         setData(data)
         orderRecycler.layoutManager = GridLayoutManager(this@ContractOrder, 3, GridLayoutManager.VERTICAL, false)
-        orderRecycler.adapter =  LogoAdapter(this@ContractOrder, data, object : ItemClickListener {
+        orderRecycler.adapter = LogoAdapter(this@ContractOrder, data, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 view as LogoAdapter.ViewHolder
                 when (data[position].position) {
                     0 -> {
-                        if (User.getUser().cnt == 0){
+                        if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
                             return
                         }
@@ -60,7 +61,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     1 -> {
-                        if (User.getUser().cnt == 0){
+                        if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
                             return
                         }
@@ -93,18 +94,22 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         intent.putExtra(whereIsIt, "self")
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
-                    7->{
-                        val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt,"fresh1")
+                    7 -> {
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "fresh1")
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
-                    8->{
-                        val intent=Intent(this@ContractOrder,CategoryActivity::class.java)
-                        intent.putExtra(whereIsIt,"fresh2")
+                    8 -> {
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "fresh2")
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
-                    10->{
-                        orderLoading.visibility=View.VISIBLE
+                    9 -> {
+                        val intent = Intent(this@ContractOrder, ReturnPurchaseActivity::class.java)
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
+                    }
+                    10 -> {
+                        orderLoading.visibility = View.VISIBLE
                         runAutoOrd()
                     }
                 }
@@ -126,7 +131,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         runOrdT2()
     }
 
-    val whereIsIt ="whereIsIt"
+    val whereIsIt = "whereIsIt"
 
     override fun onBackPressed() {
         if (orderLoading.visibility == View.GONE) {
@@ -150,11 +155,11 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 4))
         data.add(LogoBean(R.mipmap.ic_new_order, getString(R.string.new_order), 5))
         data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 6))
-        data.add(LogoBean(R.mipmap.ic_order_fresh1,getString(R.string.fresh1),7))
-        data.add(LogoBean(R.mipmap.ic_order_fresh2,getString(R.string.fresh2),8))
-        data.add(LogoBean(R.drawable.ic_transparent,"",9))
-        data.add(LogoBean(R.mipmap.ic_under_order,getString(R.string.under_order),10))
-        data.add(LogoBean(R.drawable.ic_transparent,"",11))
+        data.add(LogoBean(R.mipmap.ic_order_fresh1, getString(R.string.fresh1), 7))
+        data.add(LogoBean(R.mipmap.ic_order_fresh2, getString(R.string.fresh2), 8))
+        data.add(LogoBean(R.mipmap.ic_return_acceptance, getString(R.string.return_purchase), 9))
+        data.add(LogoBean(R.mipmap.ic_under_order, getString(R.string.under_order), 10))
+        data.add(LogoBean(R.drawable.ic_transparent, "", 11))
         data.sortBy { it.position }
     }
 
@@ -171,15 +176,15 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             MyToast.getShortToast(ip)
             return
         }
-        val handler=Handler()
+        val handler = Handler()
         Thread(Runnable {
             //2017-10-15  修改为每次进入都进行存储过程，保证为最新数据
-            val result = SocketUtil.initSocket(ip,MySql.appOrdT2(),600).inquire()
-            if (result=="0"){
+            val result = SocketUtil.initSocket(ip, MySql.appOrdT2(), 600).inquire()
+            if (result == "0") {
                 handler.post {
-                    orderLoading.visibility=View.GONE
+                    orderLoading.visibility = View.GONE
                 }
-            }else{
+            } else {
                 handler.post {
                     MyToast.getLongToast(result)
                     orderpro.visibility = View.GONE
@@ -221,54 +226,55 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         }).start()
     }
 
-    private fun runAutoOrd(){
+    private fun runAutoOrd() {
         val ip = MyApplication.getIP()
         if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
             MyToast.getShortToast(ip)
             return
         }
-        val handler=Handler()
+        val handler = Handler()
         Thread(Runnable {
-            val result=SocketUtil.initSocket(ip,MySql.autoOrd(),300).inquire()
-            if (result=="0"){
+            val result = SocketUtil.initSocket(ip, MySql.autoOrd(), 300).inquire()
+            if (result == "0") {
                 runAutoOrd2(ip, handler)
-            }else{
+            } else {
                 handler.post {
-                    MyToast.getLongToast(getString(R.string.system_error)+"1"+result)
-                    orderLoading.visibility=View.GONE
+                    MyToast.getLongToast(getString(R.string.system_error) + "1" + result)
+                    orderLoading.visibility = View.GONE
                 }
             }
         }).start()
     }
 
-    private fun runAutoOrd2(ip:String, handler:Handler) {
-        val result=SocketUtil.initSocket(ip,MySql.appOrdT2(),600).inquire()
-        if (result=="0"){
+    private fun runAutoOrd2(ip: String, handler: Handler) {
+        val result = SocketUtil.initSocket(ip, MySql.appOrdT2(), 600).inquire()
+        if (result == "0") {
             getEditDataByAutoOrd(ip, handler)
-        }else{
+        } else {
             handler.post {
-                MyToast.getLongToast(getString(R.string.system_error)+"2"+result)
-                orderLoading.visibility=View.GONE
+                MyToast.getLongToast(getString(R.string.system_error) + "2" + result)
+                orderLoading.visibility = View.GONE
             }
         }
     }
 
-    private fun getEditDataByAutoOrd(ip: String, handler:Handler) {
-        val result=SocketUtil.initSocket(ip,MySql.getAllEditData()).inquire()
-        val category=ArrayList<OrderCategoryBean>()
+    private fun getEditDataByAutoOrd(ip: String, handler: Handler) {
+        val result = SocketUtil.initSocket(ip, MySql.getAllEditData()).inquire()
+        val category = ArrayList<OrderCategoryBean>()
         try {
             category.addAll(GsonUtil.getCategory(result))
-        }catch (e:Exception){}
-        if (category.isEmpty()){
+        } catch (e: Exception) {
+        }
+        if (category.isEmpty()) {
             handler.post {
-                MyToast.getLongToast(getString(R.string.system_error)+"3"+result)
-                orderLoading.visibility=View.GONE
+                MyToast.getLongToast(getString(R.string.system_error) + "3" + result)
+                orderLoading.visibility = View.GONE
             }
-        }else{
+        } else {
             handler.post {
-                val msg=" 已订商品数量：${category[0].ordSku},已订货总金额：${category[0].ordPrice}"
-                MyToast.getLongToast(getString(R.string.saveDone)+msg)
-                orderLoading.visibility=View.GONE
+                val msg = " 已订商品数量：${category[0].ordSku},已订货总金额：${category[0].ordPrice}"
+                MyToast.getLongToast(getString(R.string.saveDone) + msg)
+                orderLoading.visibility = View.GONE
             }
         }
     }

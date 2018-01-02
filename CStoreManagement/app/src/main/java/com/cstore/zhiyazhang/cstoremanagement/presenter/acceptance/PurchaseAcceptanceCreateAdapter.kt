@@ -35,8 +35,8 @@ class PurchaseAcceptanceCreateAdapter(private val type:Int, val data:ArrayList<*
             holder.dlvQuantity.keyListener= DigitsKeyListener.getInstance("1234567890")
             holder.dlvQuantity.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
+                    //输入结束
                     if (holder.dlvQuantity.text.toString()!=""){
-                        //输入结束
                         data[position].dlvQuantity=holder.dlvQuantity.text.toString().toInt()
                         data[position].isChange = data[position].dlvQuantity != 0
                     }else{

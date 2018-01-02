@@ -210,9 +210,9 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
                             super.onBackPressed()
                             finish()
                         })
-                        .setNegativeButton("退款", { _, _ ->
+                        /*.setNegativeButton("退款", { _, _ ->
                             wxPresenter.wechatRefund(rData)
-                        })
+                        })*/
                         .show()
             }
             "支付宝" -> {

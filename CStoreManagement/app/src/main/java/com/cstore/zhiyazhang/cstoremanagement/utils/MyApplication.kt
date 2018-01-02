@@ -64,7 +64,7 @@ class MyApplication : Application() {
          * 得到我自己的ip
          */
         fun getMyIP(): String {
-            var result: String = ""
+            var result = ""
             try {
                 val en = NetworkInterface.getNetworkInterfaces()
                 while (en.hasMoreElements()) {

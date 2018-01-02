@@ -207,6 +207,7 @@
     <string name="reason">原因：</string>
     <string name="plnrtn_quantity">预退数</string>
     <string name="cash_receipt">现金付款</string>
+    <string name="rtn_qty_inv">退货数不能超过库存</string>
 
     <!--收款-->
     <string name="please_edit_money">请输入收款金额</string>
@@ -223,4 +224,6 @@
     <string name="idorcode">品号/条码</string>
     <string name="edit_out_tran_no">请输入商户订单号</string>
     <string name="delete_error_pay_data">清空交易异常数据</string>
+    <string name="return_recent">最近可退</string>
+    <string name="return_long">长期可退</string>
 </resources>

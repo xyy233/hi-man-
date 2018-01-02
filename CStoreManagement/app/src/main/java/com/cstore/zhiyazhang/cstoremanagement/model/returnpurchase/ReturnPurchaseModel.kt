@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.model.returnpurchase
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
+import com.cstore.zhiyazhang.cstoremanagement.bean.ReasonBean.Companion.setReason
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
@@ -18,19 +19,27 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  * 退货，C#里xml用的换日是type=5的订单上传换日，不过实际测下来是订货换日，搞不懂
  */
 class ReturnPurchaseModel : ReturnPurchaseInterface {
-    override fun getReason(handler: MyHandler) {
-        Thread(Runnable {
-            val msg = Message()
-            val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val result = SocketUtil.initSocket(ip, MySql.getReason).inquire()
-            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
-            val rs = ArrayList<ReasonBean>()
-            try {
-                rs.addAll(GsonUtil.getReason(result))
-            }catch (e:Exception){}
-            if (rs.isEmpty())
-        }).start()
+
+    /**
+     * 得到退货原因
+     */
+    private fun getReason(ip: String, msg: Message, handler: MyHandler): Boolean {
+        val result = SocketUtil.initSocket(ip, MySql.getReason).inquire()
+        if (!SocketUtil.judgmentNull(result, msg, handler)) return false
+        val rs = ArrayList<ReasonBean>()
+        try {
+            rs.addAll(GsonUtil.getReason(result))
+        } catch (e: Exception) {
+        }
+        return if (rs.isEmpty()) {
+            msg.obj = result
+            msg.what = ERROR
+            handler.sendMessage(msg)
+            false
+        } else {
+            setReason(rs)
+            true
+        }
     }
 
     override fun getReturnPurchaseList(date: String, handler: MyHandler) {
@@ -38,6 +47,9 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            if (!getReason(ip, msg, handler)) {
+                return@Runnable
+            }
             val result = SocketUtil.initSocket(ip, MySql.getReturnPurchase(date)).inquire()
             val rps = ArrayList<ReturnedPurchaseBean>()
             if (result == "[]") {
@@ -81,6 +93,16 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
         val result = SocketUtil.initSocket(ip, MySql.getReturnPurchaseItem(date, rp.vendorId, rp.requestNumber)).inquire()
         if (result == "[]") return rps
         rps.addAll(GsonUtil.getReturnPurchaseItem(result))
+        rps.forEach {
+            //分配原因
+            val reasonName = ReasonBean.getReason(it.reasonNumber).reasonName
+            if (reasonName == "") {
+                it.reasonName = it.reasonNumber
+            } else {
+                it.reasonName = reasonName
+            }
+        }
+        rps.sortBy { it.itemNumber }
         return rps
     }
 
@@ -125,6 +147,9 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             }
             try {
                 rpib.addAll(GsonUtil.getReturnPurchaseItem(result))
+                if (rpb != null) {
+                    rpib.forEach { it.requestNumber = rpb.requestNumber }
+                }
             } catch (e: Exception) {
             }
             if (rpib.isEmpty()) {
@@ -146,6 +171,7 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             //用的时间是订货换日，type=2
             if (!CStoreCalendar.judgmentCalender(date, msg, handler, 2)) return@Runnable
+            //先判断是否这个商品是否重复,避免两人操作造成冲突
             val returnPurchaseSql = SocketUtil.initSocket(ip, MySql.judgmentReturnPurchase(rpb)).inquire()
             val returnPurchase = ArrayList<ReturnPurchaseItemBean>()
             try {
@@ -158,8 +184,15 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
                 handler.sendMessage(msg)
                 return@Runnable
             }
-            //开始创建，先检测今天是否有配送单得到单号
-            val sql = getCreateReturnPurchaseSql(ip, date, rpb, 0)
+            //开始创建,检测是全新建还是插入老单
+            val sql = if (rpb[0].requestNumber == null) {
+                //新建单子和商品
+                //开始创建，先检测今天是否有配送单得到单号
+                getCreateReturnPurchaseSql(ip, date, rpb, 0)
+            } else {
+                //新商品插入老单
+                getCreateReturnPurchaseSql(ip, date, rpb, 2)
+            }
             if (sql == "0") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.socketError)
                 msg.what = ERROR
@@ -181,41 +214,60 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
      * 创建退货的sql语句
      * @param date 预约日期
      * @param rpb 要保存的数据
-     * @param rb 如果是新建则没有，否则就是更新
+     * @param type 0=新建  1=更新  2=新商品插入老单
      */
     private fun getCreateReturnPurchaseSql(ip: String, date: String, rpb: ArrayList<ReturnPurchaseItemBean>, type: Int): String {
-        if (type == 0) {
-            //新建
-            val numHeader = MySql.getNowNum(date)
-            //得到单号
-            val distributionId = getDistribution(ip, date, numHeader)
-            if (distributionId == "0") return distributionId
-            //得到最大排序id
-            var maxRecordNumber = getMaxRecordNumber(ip, date)
-            if (maxRecordNumber == 0) return "0"
-            //得到单号尾数
-            val numFoot = distributionId.substring(distributionId.length - 4).toInt()
-            //得到当前单号
-            val nowId = numHeader + (numFoot + 1).toString()
-            val result = StringBuilder()
-            result.append(MySql.affairHeader)
-            rpb.forEach {
-                it.recordNumber = maxRecordNumber
-                it.requestNumber = nowId
-                maxRecordNumber++
-                result.append(MySql.createReturnPurchase(it))
+        when (type) {
+            0 -> {
+                //新建
+                val numHeader = MySql.getNowNum(date)
+                //得到单号
+                val distributionId = getDistribution(ip, date, numHeader)
+                if (distributionId == "0") return distributionId
+                //得到最大排序id
+                var maxRecordNumber = getMaxRecordNumber(ip, date)
+                if (maxRecordNumber == 0) return "0"
+                //得到单号尾数
+                val numFoot = distributionId.substring(distributionId.length - 5).toInt()
+                val newHeader = numHeader.substring(0, numHeader.length - 1)
+                //得到当前单号
+                val nowId = newHeader + (numFoot + 1).toString()
+                val result = StringBuilder()
+                result.append(MySql.affairHeader)
+                rpb.forEach {
+                    it.recordNumber = maxRecordNumber
+                    it.requestNumber = nowId
+                    maxRecordNumber++
+                    result.append(MySql.createReturnPurchase(it))
+                }
+                result.append(MySql.affairFoot)
+                return result.toString()
             }
-            result.append(MySql.affairFoot)
-            return result.toString()
-        } else {
-            //更新
-            val result = StringBuilder()
-            result.append(MySql.affairHeader)
-            rpb.forEach {
-                result.append(MySql.updateReturnPurchase(it))
+            1 -> {
+                //更新
+                val result = StringBuilder()
+                result.append(MySql.affairHeader)
+                rpb.forEach {
+                    result.append(MySql.updateReturnPurchase(it))
+                }
+                result.append(MySql.affairFoot)
+                return result.toString()
             }
-            result.append(MySql.affairFoot)
-            return result.toString()
+            else -> {
+                //得到最大排序id
+                var maxRecordNumber = getMaxRecordNumber(ip, date)
+                if (maxRecordNumber == 0) return "0"
+                //新商品插入老单
+                val result = StringBuilder()
+                result.append(MySql.affairHeader)
+                rpb.forEach {
+                    it.recordNumber = maxRecordNumber
+                    maxRecordNumber++
+                    result.append(MySql.createReturnPurchase(it))
+                }
+                result.append(MySql.affairFoot)
+                return result.toString()
+            }
         }
     }
 
@@ -288,11 +340,6 @@ interface ReturnPurchaseInterface {
      * 得到配送商
      */
     fun getVendor(handler: MyHandler)
-
-    /**
-     * 得到退货原因
-     */
-    fun getReason(handler: MyHandler)
 
     /**
      * 得到配送商下的商品

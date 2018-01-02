@@ -1061,7 +1061,7 @@ object MySql {
      */
     val getReturnVendor: String
         get() {
-            return "select ven.vendorID,ven.vendorName || ven.vendorID vendorName " +
+            return "select ven.vendorID,ven.vendorName || ven.vendorID vendorNames " +
                     "from vendor ven,plu b " +
                     "where ven.vendortype='Y' " +
                     "and ven.storeid=b.storeid " +
@@ -1100,7 +1100,7 @@ object MySql {
                     "AND A.STOREID = E.STOREID(+) " +
                     "AND A.TAXID = E.TAXID(+) " +
                     "AND A.ITEMNUMBER not in("
-            rpb.allItem.forEach { sql += "${it.itemNumber}, " }
+            rpb.allItem.forEach { sql += "'${it.itemNumber}'," }
             sql = sql.substring(0, sql.length - 1)
             sql += ") ORDER BY A.ITEMNUMBER\u0004"
         } else {
@@ -1134,12 +1134,14 @@ object MySql {
     fun getLongCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
         var sql = ""
         if (rpb != null) {
-            sql += "SELECT A.RETURNENDDATE,A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.RETURN_ATTR,NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
+            sql += "SELECT A.RETURNENDDATE,A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
+                    "ROUND(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
+                    "NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
                     "NVL(C.END_QTY,0) END_QTY, " +
                     "NVL(D.RTN_QUANTITY_ALLOWED,9999) RTN_QUANTITY_ALLOWED " +
-                    "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D " +
+                    "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
-                    "AND A.RETURNENDDATE>SYSDATE+7 " +
+                    "AND A.RETURNENDDATE>SYSDATE+7     " +
                     "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND NVL(B.FACEQUANTITY,0)=0 " +
@@ -1150,8 +1152,10 @@ object MySql {
                     "AND A.ITEMNUMBER = D.ITEMNUMBER(+)    " +
                     "AND A.STOREID = C.STOREID(+) " +
                     "AND A.ITEMNUMBER = C.ITEMNUMBER(+) " +
+                    "AND A.STOREID = E.STOREID(+) " +
+                    "AND A.TAXID = E.TAXID(+) " +
                     "AND A.ITEMNUMBER not in("
-            rpb.allItem.forEach { sql += "${it.itemNumber}, " }
+            rpb.allItem.forEach { sql += "'${it.itemNumber}'," }
             sql = sql.substring(0, sql.length - 1)
             sql += ") ORDER BY A.ITEMNUMBER\u0004"
         } else {
@@ -1188,9 +1192,9 @@ object MySql {
                 "sum(pln.plnRtnQuantity)RtnQuantity,sum(pln.plnRtnQuantity*pln.StoreUnitPrice) Total,pln.vendorID , " +
                 "0.0+count(*) itempln " +
                 "from plnrtn pln, vendor " +
-                "where pln.storeID='${User.getUser().uId}'  " +
+                "where pln.storeID='${User.getUser().storeId}'  " +
                 "and vendor.storeid=pln.storeID  " +
-                "and pln.plnRtnDate0=to_date('2017-10-30','yyyy-MM-dd') " +
+                "and pln.plnRtnDate0=to_date('$date','yyyy-MM-dd') " +
                 "and pln.vendorID=vendor.vendorID " +
                 "group by pln.RequestNumber, pln.PlnRtnDate,vendor.vendorName,pln.vendorID\u0004"
     }
@@ -1205,12 +1209,14 @@ object MySql {
                 "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
                 "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl " +
                 "(inv.accHqAdjQuantity,0) as InvQuantity, " +
-                "ReasonNumber ,plu.shipNumber,'FromDB' as data_status,pln.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost,pln.sell_cost " +
+                "ReasonNumber ,plu.shipNumber,'FromDB' as data_status,pln.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost,pln.sell_cost, " +
+                "nvl(to_char(decode(sign(rtn_quantity_allowed),-1,0,rtn_quantity_allowed)),-1) lsjjh " +
                 "from plnrtn pln " +
                 "left join plu  on  plu.storeID=pln.storeid and plu.Itemnumber=pln.ItemNumber " +
                 "left join unit  on unit.storeid=plu.storeid and unit.UnitID=plu.SmallunitID " +
                 "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
                 "left join inv on inv.itemnumber=pln.itemnumber and inv.storeid=pln.storeid and inv.busidate=to_date('$date','yyyy-MM-dd') " +
+                " left join hq_rtn_ctl h on h.itemnumber=plu.itemnumber " +
                 "where pln.storeID='${User.getUser().storeId}' " +
                 "and pln.vendorID='$vendorId' " +
                 "and pln.plnRtnDate0=to_date('$date','yyyy-MM-dd') " +
@@ -1225,8 +1231,8 @@ object MySql {
                 "(storeID, plnRtnDate0, recordNumber, plnRtnType, requestNumber, plnRtnStore, itemNumber, shipNumber,storeUnitPrice, " +
                 "unitCost, plnRtnUnitQuantity, plnRtnQuantity, plnRtnDate, vendorID, supplierID, plnRtnStatus, reasonNumber,updateUserID, updateDate, sell_cost) " +
                 "values " +
-                "('${User.getUser().storeId}',to_date('${rpb.plnRtnDate0}','yyyy-MM-dd'),'${rpb.recordNumber}','0','${rpb.requestNumber}','${User.getUser().storeId}','${rpb.itemNumber}', '${rpb.shipNumber}',${rpb.storeUnitPrice}, " +
-                "${rpb.unitCost},${rpb.plnRtnUnitQuantity},${rpb.plnRtnQuantity},to_date('${rpb.plnRtnDate}','yyyy-MM-dd'),'${rpb.vendorId}','${rpb.supplierId}','1','${rpb.reasonNumber}','${User.getUser().uId}',sysdate,${rpb.sellCost});"
+                "('${User.getUser().storeId}',to_date('${rpb.plnRtnDate0}','yyyy-MM-dd'),'${rpb.recordNumber}','0','${rpb.requestNumber}','${User.getUser().storeId}','${rpb.itemNumber}', 0,${rpb.storeUnitPrice}, " +
+                "${rpb.unitCost},${rpb.plnRtnUnitQuantity},${rpb.plnRtnQuantity},to_date('${rpb.plnRtnDate0}','yyyy-MM-dd'),'${rpb.vendorId}','${rpb.supplierId}','1','${rpb.reasonNumber}','${User.getUser().uId}',sysdate,${rpb.sellCost});"
     }
 
     /**
@@ -1258,7 +1264,8 @@ object MySql {
                 "from plnrtn  " +
                 "where plnrtndate0=to_date('${aib[0].plnRtnDate0}','yyyy-MM-dd')  " +
                 "and itemnumber in ("
-        aib.forEach { sql += "${it.itemNumber}, " }
+        //再插入品号查询
+        aib.forEach { sql += "${it.itemNumber}," }
         sql = sql.substring(0, sql.length - 1)
         sql += ")\u0004"
         return sql

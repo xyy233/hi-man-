@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
  * Created by zhiya.zhang
  * on 2017/11/8 9:21.
  */
-class ReturnPurchaseAdapter(private val date: String, private val data: ArrayList<ReturnedPurchaseBean>, private val onClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ReturnPurchaseAdapter(private var date: String, val data: ArrayList<ReturnedPurchaseBean>, private val onClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private val TYPE_ITEM = 0
         private val TYPE_FOOTER = 1
@@ -98,5 +98,28 @@ class ReturnPurchaseAdapter(private val date: String, private val data: ArrayLis
                 onClick.onItemLongClick(this@FooterViewHolder, 0)
             }
         }
+    }
+
+    fun editDate(newDate: String) {
+        date = newDate
+    }
+
+    /**
+     * 更新数据
+     */
+    fun updateData(rb: ReturnedPurchaseBean) {
+        data.removeAll(data.filter { it.requestNumber == rb.requestNumber })
+        data.add(rb)
+        data.sortBy { it.requestNumber }
+        notifyDataSetChanged()
+    }
+
+    fun removeData() {
+        data.clear()
+    }
+
+    fun addItem(aData: java.util.ArrayList<ReturnedPurchaseBean>) {
+        data.addAll(aData)
+        notifyDataSetChanged()
     }
 }

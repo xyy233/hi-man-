@@ -29,7 +29,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
-import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 

@@ -15,7 +15,9 @@ interface ItemClickListener {
     /**
      * 长按
      */
-    fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int){}
+    fun onItemLongClick(view: RecyclerView.ViewHolder, position: Int) {}
 
-    fun <T> onItemRemove(data:T, position: Int){}
+    fun <T> onItemRemove(data: T, position: Int) {}
+
+    fun <T> onItemEdit(data: T, position: Int) {}
 }

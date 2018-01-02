@@ -149,9 +149,11 @@
         <activity android:name=".view.order.returnpurchase.ReturnPurchaseCreateActivity"
                   android:screenOrientation="portrait"/>
 
+        <!--收款添加商品页-->
         <activity android:name=".view.pay.PayActivity"
                   android:screenOrientation="portrait"/>
 
+        <!--收款收钱页-->
         <activity android:name=".view.pay.PayCollectActivity"
                   android:screenOrientation="portrait"/>
     </application>

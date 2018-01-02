@@ -24,11 +24,11 @@ class ReturnedPurchaseBean(
         /**
          * 预退数
          */
-        @SerializedName("rtnquantity") val rtnQuantity: Int,
+        @SerializedName("rtnquantity") var rtnQuantity: Int,
         /**
          * 零售小计
          */
-        val total: Float,
+        var total: Float,
         /**
          * 配送商id
          */
@@ -36,8 +36,8 @@ class ReturnedPurchaseBean(
         /**
          * 品项数
          */
-        @SerializedName("itempln") val itemCount: Int,
-        var allItem:ArrayList<ReturnPurchaseItemBean>
+        @SerializedName("itempln") var itemCount: Int,
+        var allItem: ArrayList<ReturnPurchaseItemBean>
 ) : Serializable
 
 /**
@@ -51,7 +51,7 @@ class ReturnPurchaseItemBean(
         /**
          * 单号
          */
-        @SerializedName("requestnumber") var requestNumber: String,
+        @SerializedName("requestnumber") var requestNumber: String?,
         /**
          * 品号
          */
@@ -71,15 +71,15 @@ class ReturnPurchaseItemBean(
         /**
          * 退货数，备胎
          */
-        @SerializedName("plnrtnunitquantity") val plnRtnUnitQuantity: Double,
+        @SerializedName("plnrtnunitquantity") val plnRtnUnitQuantity: Int,
         /**
          * 退货数，正宫
          */
-        @SerializedName("plnrtnquantity") val plnRtnQuantity: Double,
+        @SerializedName("plnrtnquantity") var plnRtnQuantity: Int,
         /**
          * 预约日期
          */
-        @SerializedName("plnrtndate0") val plnRtnDate0: String,
+        @SerializedName("plnrtndate0") var plnRtnDate0: String?,
         /**
          * 验收日期
          */
@@ -101,9 +101,9 @@ class ReturnPurchaseItemBean(
          */
         @SerializedName("invquantity") val invQuantity: Int,
         /**
-         * 退货原因
+         * 退货原因Id
          */
-        @SerializedName("reasonnumber") val reasonNumber: String,
+        @SerializedName("reasonnumber") var reasonNumber: String,
         /**
          * 什么号来着
          */
@@ -115,13 +115,46 @@ class ReturnPurchaseItemBean(
         /**
          * 卖价
          */
-        @SerializedName("sell_cost") val sellCost: Double
+        @SerializedName("sell_cost") val sellCost: Double,
+        /**
+         * 历史净进货累计
+         */
+        val lsjjh: Int,
+        /**
+         * 退货原因Name,根据id获得
+         */
+        var reasonName: String,
+        /**
+         * 修改次数，用来确认是否有修改，增减量正常+-，修改原因直接+
+         */
+        var editCount: Int
 ) : Serializable
 
 /**
  * 退货原因
  */
 data class ReasonBean(
-        @SerializedName("reasonnumber") val reasonId:String,
-        @SerializedName("reasonname") val reasonName:String
-):Serializable
+        @SerializedName("reasonnumber") val reasonId: String,
+        @SerializedName("reasonname") val reasonName: String
+) : Serializable {
+    companion object {
+        private val staticReason = ArrayList<ReasonBean>()
+
+        fun getAllReason(): ArrayList<ReasonBean> {
+            return staticReason
+        }
+
+        fun getReason(reasonId: String): ReasonBean {
+            val reason = staticReason.filter { it.reasonId == reasonId }
+            if (reason.isEmpty()) {
+                return ReasonBean("", "")
+            }
+            return reason[0]
+        }
+
+        fun setReason(data: ArrayList<ReasonBean>) {
+            staticReason.clear()
+            staticReason.addAll(data)
+        }
+    }
+}

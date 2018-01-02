@@ -410,10 +410,11 @@ class AcceptanceModel : AcceptanceInterface {
             val numHeader = MySql.getNowNum(date)
             val distributionId = getDistribution(ip, date, numHeader, 1)
             if (distributionId == "0") return "0"
-            //获得后四位数字
-            val numFoot = distributionId.substring(distributionId.length - 4).toInt()
+            //获得后五位数字
+            val numFoot = distributionId.substring(distributionId.length - 5).toInt()
+            val newHeader=numHeader.substring(0,numHeader.length-1)
             //获得当前的完整单号
-            val nowId = numHeader + (numFoot + 1).toString()
+            val nowId= numHeader + (numFoot + 1).toString()
             //数据加入
             val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", aib.size, aib.size, 0, 0.00, 0, 0.00, "", "", 2, 0.00, ArrayList())
             val result = StringBuilder()
