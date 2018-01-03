@@ -100,4 +100,8 @@ object GsonUtil{
     fun getPos(data:String):ArrayList<PosBean>{
         return Gson().fromJson<ArrayList<PosBean>>(data, object : TypeToken<ArrayList<PosBean>>() {}.type)
     }
+
+    fun getReturnExpired(data:String): ArrayList<ReturnExpiredBean> {
+        return Gson().fromJson<ArrayList<ReturnExpiredBean>>(data, object : TypeToken<ArrayList<ReturnExpiredBean>>() {}.type)
+    }
 }

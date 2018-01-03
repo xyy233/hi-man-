@@ -6,8 +6,6 @@ import android.content.Intent
 import android.provider.Settings
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.view.PayDataService
-import com.facebook.stetho.Stetho
-import com.squareup.leakcanary.LeakCanary
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
@@ -115,9 +113,9 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        LeakCanary.install(this)
 
-        Stetho.initializeWithDefaults(this)
+/*        LeakCanary.install(this)
+        Stetho.initializeWithDefaults(this)*/
 
         instance = this
 
@@ -131,11 +129,12 @@ class MyApplication : Application() {
 
         //开启交易数据处理服务
         startService(Intent(this, PayDataService::class.java))
+
         //全局错误信息收集先关闭
         //Thread.setDefaultUncaughtExceptionHandler(GlobalException.instance)
     }
-
 }
+
 /*
 */
 /**

@@ -1285,6 +1285,110 @@ object MySql {
         return "select max(recordNumber) value from plnrtn where plnrtndate0=to_date('$date','yyyy-MM-dd')\u0004"
     }
 
+
+    /**********************************************过期品退货*******************************************************/
+
+    /**
+     * 得到今天所有的过期退货商品
+     */
+    fun expiredReturnGetAll():String{
+        return "SELECT pln.plnRtnDate,pln.itemNumber,pln.itemNumber as itemnumber2 ,plu.PluName,pln.vendorID,vendor.vendorName,pln.supplierID,  " +
+                "decode( plnRtnType,'1','1清场品','2','2新/专案','3','3返品','4','4啤酒','5','5总部紧急召回','未设定' )  return_attr,  " +
+                "pln.plnRtnQuantity,pln.StoreUnitprice,pln.UnitCost basic_cost,pln.sell_cost,unit.UnitName,  " +
+                "decode(ReasonNumber,'01','01 涨包漏气','02','02 凹罐','03','03 破包','04','04 品质不良',  " +
+                "'05','05 临近保质期','06','06 过期','07','07 停售','08',  " +
+                "'08 顾客投诉(先行提报采购)','09','09 其它','10','10 特殊需求退货',  " +
+                "'00 预约退货') ReasonNumber,  " +
+                "pln.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost,  " +
+                "nvl((befInvQuantity+accDlvQuantity-  " +
+                "accRtnQuantity-accSaleQuantity+  " +
+                "accSaleRtnQuantity-accMrkQuantity+  " +
+                "accCshDlvQuantity-accCshRtnQuantity+  " +
+                "accTrsQuantity+accLeibianQuantity+  " +
+                "accAdjQuantity+accHqAdjQuantity),0) stock_qty,  " +
+                "sb053.Dlv_qty dlv_qty,  " +
+                "sb053.Sale_qty sale_qty,  " +
+                "sb053.rtn_qty rtn_qty,  " +
+                "sb053.hq_ordqty hq_ordqty,  " +
+                "'FromDB' as data_status ,  " +
+                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate,  " +
+                "decode(plu.vendorid,'00000000000099999100','Y','N') check_yn  " +
+                "FROM plnrtn1 pln  " +
+                "left join plu  on  plu.storeID=pln.storeid and plu.Itemnumber=pln.ItemNumber  " +
+                "left join unit  on unit.storeid=plu.storeid and unit.UnitID=plu.SmallunitID  " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID  " +
+                "left join sb053 on sb053.StoreID=pln.storeID AND sb053.Item_No=pln.itemNumber  " +
+                "left join inv on inv.storeID=pln.storeID AND inv.itemNumber=pln.itemNumber AND inv.busiDate= to_data('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd')  " +
+                "left join sb021 on sb021.storeID=pln.storeID AND sb021.RtnDate>= to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')  " +
+                "AND sb021.RtnType=pln.plnrtntype ,vendor  " +
+                "WHERE pln.storeID='${User.getUser().storeId}'  " +
+                "AND pln.storeID=vendor.storeID  " +
+                "AND pln.vendorID=vendor.vendorID  " +
+                "and pln.plnRtnStatus='0'  " +
+                "GROUP BY pln.plnRtnDate,pln.itemNumber,plu.PluName,pln.vendorID,vendor.vendorName,pln.supplierID,  " +
+                "plnRtnType,pln.plnRtnQuantity,pln.StoreUnitprice,  plu.vendorid,  " +
+                "pln.UnitCost,pln.sell_cost,  " +
+                "unit.UnitName,pln.ReasonNumber,  " +
+                "taxtype.taxRate,  " +
+                "(befInvQuantity+accDlvQuantity-  " +
+                "accRtnQuantity-accSaleQuantity+  " +
+                "accSaleRtnQuantity-accMrkQuantity+  " +
+                "accCshDlvQuantity-accCshRtnQuantity+  " +
+                "accTrsQuantity+accLeibianQuantity+  " +
+                "accAdjQuantity+accHqAdjQuantity),  " +
+                "sb053.Dlv_qty ,  " +
+                "sb053.Sale_qty ,  " +
+                "sb053.rtn_qty ,  " +
+                "sb053.hq_ordqty  " +
+                "order by itemnumber\u0004"
+    }
+
+    /**
+     * 得到商品过期品退货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
+     * @param data 用来搜索的品号或条形码
+     */
+    fun expiredReturnGetCommodity(data:String):String{
+        return "SELECT plu.itemNumber,plu.PluName,plu.vendorID,vendor.vendorName,plu.itemNumber as itemnumber2, " +
+                "decode( plu.return_attr,'1','1清场品','2','2新/专案','3','3返品','4','4啤酒','5','5总部紧急召回','未设定' )  return_attr, " +
+                "nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl " +
+                "(inv.accHqAdjQuantity,0) as stock_qty, " +
+                "sb053.Dlv_qty dlv_qty, " +
+                "sb053.Sale_qty sale_qty, " +
+                "sb053.rtn_qty rtn_qty, " +
+                "sb053.hq_ordqty hq_ordqty, " +
+                "plu.StoreUnitprice,plu.basic_cost,plu.sell_cost, " +
+                "unit.UnitName,plu.shipNumber,plu.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost, " +
+                "plu.returnType,plu.ReturnBeginDate,plu.ReturnEndDate,plu.supplierID, " +
+                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate, " +
+                "decode(plu.vendorid,'00000000000099999100','Y','N') check_yn,Substr(Plu.Signtype, 12, 1) vendor_yn,plu.Stop_Th_Code,plu.Out_Th_Code " +
+                "FROM plu " +
+                "left join unit  on unit.storeid=plu.storeid and unit.UnitID=plu.SmallunitID " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                "left join sb053 on sb053.StoreID=plu.storeID AND sb053.Item_No=plu.itemNumber " +
+                "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.busiDate=to_data('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd') " +
+                "left join sb021 on sb021.storeID=plu.storeID AND sb021.RtnDate>=to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd') AND sb021.RtnType=plu.return_attr " +
+                ",vendor,ITEMPLU " +
+                "WHERE PLU.ITEMNUMBER=ITEMPLU.ITEMNUMBER " +
+                "and plu.StoreID='${User.getUser().storeId}' " +
+                "AND plu.ItemNumber =decode(length('$data'),6,'$data', " +
+                "(select t.itemnumber from ITEMPLU t " +
+                "where t.plunumber='$data')) " +
+                "AND plu.storeID=vendor.storeID " +
+                "AND plu.vendorID=vendor.vendorID " +
+                "GROUP BY plu.itemNumber,plu.PluName,plu.return_attr,plu.vendorID,vendor.vendorName,plu.StoreUnitprice,plu.basic_cost , " +
+                "unit.UnitName,plu.shipNumber,plu.sell_cost,taxtype.taxRate,plu.returnType,plu.ReturnBeginDate, " +
+                "plu.ReturnEndDate,plu.supplierID,sb053.Dlv_qty, " +
+                "sb053.Sale_qty, " +
+                "sb053.rtn_qty, " +
+                "sb053.hq_ordqty, " +
+                "nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl " +
+                "(inv.accHqAdjQuantity,0),Substr(Plu.Signtype, 12, 1),plu.Stop_Th_Code,plu.Out_Th_Code\u0004"
+    }
+
     /**********************************************收款************************************************************/
 
     /**
