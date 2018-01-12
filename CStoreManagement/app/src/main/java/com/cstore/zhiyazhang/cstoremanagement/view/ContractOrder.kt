@@ -22,6 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractTypeActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.order.returnexpired.ReturnExpiredActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.returnpurchase.ReturnPurchaseActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
@@ -32,6 +33,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * on 2017/6/19 15:39.
  */
 class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
+
     override fun initView() {
         my_toolbar.title = getString(R.string.order)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
@@ -112,6 +114,10 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         orderLoading.visibility = View.VISIBLE
                         runAutoOrd()
                     }
+                    11 -> {
+                        val intent = Intent(this@ContractOrder, ReturnExpiredActivity::class.java)
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
+                    }
                 }
             }
 
@@ -157,9 +163,10 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 6))
         data.add(LogoBean(R.mipmap.ic_order_fresh1, getString(R.string.fresh1), 7))
         data.add(LogoBean(R.mipmap.ic_order_fresh2, getString(R.string.fresh2), 8))
-        data.add(LogoBean(R.mipmap.ic_return_acceptance, getString(R.string.return_purchase), 9))
+        data.add(LogoBean(R.mipmap.ic_return_purchase, getString(R.string.return_purchase), 9))
         data.add(LogoBean(R.mipmap.ic_under_order, getString(R.string.under_order), 10))
-        data.add(LogoBean(R.drawable.ic_transparent, "", 11))
+//        data.add(LogoBean(R.drawable.ic_transparent, "", 11))
+        data.add(LogoBean(R.mipmap.ic_return_expired, getString(R.string.return_expired), 11))
         data.sortBy { it.position }
     }
 

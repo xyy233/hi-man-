@@ -23,6 +23,7 @@
             layout="@layout/toolbar_layout"/>
 
         <LinearLayout
+            android:visibility="gone"
             android:background="@color/line"
             android:id="@+id/return_time_box"
             android:layout_width="match_parent"

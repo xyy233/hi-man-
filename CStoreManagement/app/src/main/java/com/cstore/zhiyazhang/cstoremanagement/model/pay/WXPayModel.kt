@@ -107,7 +107,7 @@ class WXPayModel(context: Context) : PayMoneyInterface {
                 val wxResult = MyWXUtil.microPay(ip, activity.getPos(), dao, data, wxPay, msg, handler)
                 //只有不为空且两个返回信息都为成功才是真的成功,这里不用管失败的情况，失败处理已经在内部处理过了
                 if (wxResult != null && wxResult["return_code"] == "SUCCESS" && wxResult["result_code"] == "SUCCESS") {
-                    payDone("微信", activity.getPos(), wxResult, handler, msg, ip)
+                    payDone(activity.getPos(), wxResult, handler, msg, ip)
                 }
             } catch (e: Exception) {
                 msg.obj = e.message
@@ -241,13 +241,12 @@ class WXPayModel(context: Context) : PayMoneyInterface {
     /**
      * 交易完成后的操作,这一步如果出错了也没事，不过要保存记录有机会就执行，因为钱是已经收到了的，只是往数据库中插入的时候失败了
      */
-    private fun payDone(isWhere: String, pos: PosBean, payData: Map<String, String>, handler: MyHandler, msg: Message, ip: String) {
+    private fun payDone(pos: PosBean, payData: Map<String, String>, handler: MyHandler, msg: Message, ip: String) {
         try {
             //先去执行存储过程把数据保存在posul_trandtl表中
-            val oneSql = MySql.payDoneCall(isWhere, payData["total_fee"]!!.toDouble() / 100)
+            val oneSql = MySql.payDoneCall("微信", payData["total_fee"]!!.toDouble() / 100)
             val callResult = SocketUtil.initSocket(ip, oneSql).inquire()
             if (callResult == "0") {
-                if (isWhere == "微信") {
                     //再单独保存在posul_weixin_detail表中
                     val twoSql = MySql.createWXPayDone(pos, payData, false)
                     val wxResult = SocketUtil.initSocket(ip, twoSql).inquire()
@@ -256,7 +255,6 @@ class WXPayModel(context: Context) : PayMoneyInterface {
                         val wxBean = getWXPayBean(pos, payData, 2, wxResult)
                         dao.insertSql(wxBean)
                     }
-                }
             } else {
                 //存储过程就失败了
                 val wxBean = getWXPayBean(pos, payData, 1, callResult)

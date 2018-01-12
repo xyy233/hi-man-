@@ -414,7 +414,7 @@ class AcceptanceModel : AcceptanceInterface {
             val numFoot = distributionId.substring(distributionId.length - 5).toInt()
             val newHeader=numHeader.substring(0,numHeader.length-1)
             //获得当前的完整单号
-            val nowId= numHeader + (numFoot + 1).toString()
+            val nowId= newHeader + (numFoot + 1).toString()
             //数据加入
             val nowAB = AcceptanceBean(nowId, aib[0].vendorId, "", aib.size, aib.size, 0, 0.00, 0, 0.00, "", "", 2, 0.00, ArrayList())
             val result = StringBuilder()

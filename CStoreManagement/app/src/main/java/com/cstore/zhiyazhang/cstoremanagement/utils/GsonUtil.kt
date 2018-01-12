@@ -8,44 +8,44 @@ import com.google.gson.reflect.TypeToken
  * Created by zhiya.zhang
  * on 2017/11/3 17:07.
  */
-object GsonUtil{
-    fun getUser(data:String):ArrayList<User>{
+object GsonUtil {
+    fun getUser(data: String): ArrayList<User> {
         return Gson().fromJson<ArrayList<User>>(data, object : TypeToken<ArrayList<User>>() {}.type)
     }
 
-    fun getScrap(data:String):ArrayList<ScrapContractBean>{
+    fun getScrap(data: String): ArrayList<ScrapContractBean> {
         return Gson().fromJson<ArrayList<ScrapContractBean>>(data, object : TypeToken<ArrayList<ScrapContractBean>>() {}.type)
     }
 
-    fun getCategoryItem(data:String):ArrayList<CategoryItemBean>{
+    fun getCategoryItem(data: String): ArrayList<CategoryItemBean> {
         return Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
     }
 
-    fun getCategory(data:String):ArrayList<OrderCategoryBean>{
+    fun getCategory(data: String): ArrayList<OrderCategoryBean> {
         return Gson().fromJson<ArrayList<OrderCategoryBean>>(data, object : TypeToken<ArrayList<OrderCategoryBean>>() {}.type)
     }
 
-    fun getShelf(data:String):ArrayList<ShelfBean>{
+    fun getShelf(data: String): ArrayList<ShelfBean> {
         return Gson().fromJson<ArrayList<ShelfBean>>(data, object : TypeToken<ArrayList<ShelfBean>>() {}.type)
     }
 
-    fun getSelf(data:String):ArrayList<SelfBean>{
+    fun getSelf(data: String): ArrayList<SelfBean> {
         return Gson().fromJson<ArrayList<SelfBean>>(data, object : TypeToken<ArrayList<SelfBean>>() {}.type)
     }
 
-    fun getFresh(data:String):ArrayList<FreshGroup>{
+    fun getFresh(data: String): ArrayList<FreshGroup> {
         return Gson().fromJson<ArrayList<FreshGroup>>(data, object : TypeToken<ArrayList<FreshGroup>>() {}.type)
     }
 
-    fun getNOP(data:String):ArrayList<NOPBean>{
+    fun getNOP(data: String): ArrayList<NOPBean> {
         return Gson().fromJson<ArrayList<NOPBean>>(data, object : TypeToken<ArrayList<NOPBean>>() {}.type)
     }
 
-    fun getScrapHot(data: String):ArrayList<ScrapHotBean>{
+    fun getScrapHot(data: String): ArrayList<ScrapHotBean> {
         return Gson().fromJson<ArrayList<ScrapHotBean>>(data, object : TypeToken<ArrayList<ScrapHotBean>>() {}.type)
     }
 
-    fun getCashDaily(data: String):ArrayList<CashDailyBean>{
+    fun getCashDaily(data: String): ArrayList<CashDailyBean> {
         return Gson().fromJson<ArrayList<CashDailyBean>>(data, object : TypeToken<ArrayList<CashDailyBean>>() {}.type)
     }
 
@@ -61,11 +61,11 @@ object GsonUtil{
         return Gson().fromJson<ArrayList<CStoreCalendarBean>>(data, object : TypeToken<ArrayList<CStoreCalendarBean>>() {}.type)
     }
 
-    fun  getVendor(data: String): ArrayList<VendorBean> {
+    fun getVendor(data: String): ArrayList<VendorBean> {
         return Gson().fromJson<ArrayList<VendorBean>>(data, object : TypeToken<ArrayList<VendorBean>>() {}.type)
     }
 
-    fun  getUtilBean(data: String): ArrayList<UtilBean> {
+    fun getUtilBean(data: String): ArrayList<UtilBean> {
         return Gson().fromJson<ArrayList<UtilBean>>(data, object : TypeToken<ArrayList<UtilBean>>() {}.type)
     }
 
@@ -97,11 +97,11 @@ object GsonUtil{
         return Gson().fromJson<ArrayList<PayBean>>(data, object : TypeToken<ArrayList<PayBean>>() {}.type)
     }
 
-    fun getPos(data:String):ArrayList<PosBean>{
+    fun getPos(data: String): ArrayList<PosBean> {
         return Gson().fromJson<ArrayList<PosBean>>(data, object : TypeToken<ArrayList<PosBean>>() {}.type)
     }
 
-    fun getReturnExpired(data:String): ArrayList<ReturnExpiredBean> {
+    fun getReturnExpired(data: String): ArrayList<ReturnExpiredBean> {
         return Gson().fromJson<ArrayList<ReturnExpiredBean>>(data, object : TypeToken<ArrayList<ReturnExpiredBean>>() {}.type)
     }
 }

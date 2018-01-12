@@ -94,9 +94,9 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         search_edit.inputType = InputType.TYPE_CLASS_NUMBER
         search_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
         my_toolbar.title = "收款"
-//        toolbar_time.text = "退款"
+        toolbar_time.text = "退款"
         toolbar_btn.text = "清空"
-//        toolbar_time.visibility = View.VISIBLE
+        toolbar_time.visibility = View.VISIBLE
         toolbar_btn.visibility = View.VISIBLE
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
@@ -184,11 +184,11 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     }
 
     override fun initClick() {
-        /*toolbar_time.setOnClickListener {
+        toolbar_time.setOnClickListener {
             val intent = Intent(this@PayActivity, PayCollectActivity::class.java)
             intent.putExtra("action", 1)
             startActivity(intent)
-        }*/
+        }
         toolbar_btn.setOnClickListener {
             presenter.deleteData()
             adapter.removeItem()

@@ -3,9 +3,7 @@
        android:shape="rectangle" >
 
     <stroke
-        android:dashGap="8dp"
         android:width="1dp"
-        android:dashWidth="7dp"
         android:color="@color/white" />
 
     <padding
@@ -14,7 +12,7 @@
         android:right="1dp"
         android:top="1dp" />
 
-    <solid android:color="@color/contract_bg" />
+    <solid android:color="#00000000" />
 
     <corners android:topLeftRadius="1dp"
              android:topRightRadius="1dp"

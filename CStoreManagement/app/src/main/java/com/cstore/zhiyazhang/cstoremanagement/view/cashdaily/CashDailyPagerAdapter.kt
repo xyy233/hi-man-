@@ -10,7 +10,7 @@ import android.support.v4.view.PagerAdapter
  * on 2017/9/4 14:38.
  */
 
-class CashDailyPagerAdapter(private val fm: FragmentManager, private val tabFragments: ArrayList<CashDailyFragment>, private val tabTitle: ArrayList<String>) : FragmentPagerAdapter(fm) {
+class CashDailyPagerAdapter(fm: FragmentManager, private val tabFragments: ArrayList<CashDailyFragment>, private val tabTitle: ArrayList<String>) : FragmentPagerAdapter(fm) {
 
     private var time:Long=0
 

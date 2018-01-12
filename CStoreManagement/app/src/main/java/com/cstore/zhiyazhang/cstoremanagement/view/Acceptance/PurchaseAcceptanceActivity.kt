@@ -143,7 +143,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
      */
     private fun showDatePickDlg() {
         val calendar = Calendar.getInstance()
-        val datePickDialog: DatePickerDialog = DatePickerDialog(this@PurchaseAcceptanceActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+        val datePickDialog = DatePickerDialog(this@PurchaseAcceptanceActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
                 val myCalendar = Calendar.getInstance()
                 myCalendar.timeInMillis = System.currentTimeMillis()
@@ -153,8 +153,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 }
 
                 val selectDate = (year.toString() + monthOfYear.toString() + dayOfMonth.toString()).toInt()
-                val nowDate = (myCalendar.get(Calendar.YEAR).toString() + myCalendar.get(Calendar.MONTH).toString() + myCalendar.get(Calendar.DAY_OF_MONTH).toString()).toInt()
-                if (selectDate > nowDate) {
+                if (selectDate > MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }

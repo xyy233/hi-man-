@@ -11,27 +11,13 @@
                   <entry key="launcherLegacy">
                     <value>
                       <PersistentState>
-                        <option name="children">
-                          <map>
-                            <entry key="image">
-                              <value>
-                                <PersistentState>
-                                  <option name="values">
-                                    <map>
-                                      <entry key="paddingPercent" value="10" />
-                                    </map>
-                                  </option>
-                                </PersistentState>
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
                         <option name="values">
                           <map>
                             <entry key="assetType" value="IMAGE" />
+                            <entry key="cropped" value="true" />
                             <entry key="iconShape" value="CIRCLE" />
-                            <entry key="imageAsset" value="C:\Users\zhiya.zhang.C-STORE\Desktop\icon\pay\flash.png" />
-                            <entry key="outputName" value="ic_flash" />
+                            <entry key="imageAsset" value="C:\Users\zhiya.zhang.C-STORE\Desktop\icon\newIcon\return_purchase_expired.png" />
+                            <entry key="outputName" value="ic_return_expired" />
                           </map>
                         </option>
                       </PersistentState>

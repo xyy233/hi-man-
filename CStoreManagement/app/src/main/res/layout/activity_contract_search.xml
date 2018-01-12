@@ -31,4 +31,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:id="@+id/camera_search_box"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/refund_out_tran_no"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:maxLines="1"
+            android:background="@drawable/bg_box_line"
+            android:hint="@string/please_edit_id"
+            android:imeOptions="actionDone"
+            android:inputType="number"/>
+
+        <Button
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
+            android:id="@+id/collect_money"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_box_line"
+            android:text="@string/sure"/>
+    </LinearLayout>
+
 </FrameLayout>

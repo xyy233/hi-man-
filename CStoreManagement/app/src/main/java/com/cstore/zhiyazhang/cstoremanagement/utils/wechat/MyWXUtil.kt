@@ -347,7 +347,6 @@ object MyWXUtil {
     private fun getRefundData(data: Map<String, String>): Map<String, String> {
         //创建撤销需要的数据，需要商户订单号,商户退款单号,订单金额,退款金额
         val outTradeNo = data["out_trade_no"]
-        val date = MyTimeUtil.nowDate3
         val random = getRandom()
         //退款单号先随便弄一下，用5000+年月日+8位随机数
         val outRefundNo = "5000${MyTimeUtil.nowDate3}$random"
@@ -368,7 +367,7 @@ object MyWXUtil {
         return finalTradeNo
     }
 
-    private fun getRandom(): String {
+    fun getRandom(): String {
         val numberChar = "0123456789"
         val sb = StringBuilder()
         val random = Random()

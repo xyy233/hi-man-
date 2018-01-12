@@ -58,8 +58,12 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyy/MM/dd", Locale.CHINA).format(date)
     }
 
-    private fun getYMDStringByDate3(date: Date): String {
+    fun getYMDStringByDate3(date: Date): String {
         return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(date)
+    }
+
+    fun deleteTime(date: String): String {
+        return getYMDStringByDate(getDateByString(date))
     }
 
     /**
@@ -72,8 +76,8 @@ object MyTimeUtil {
      * @throws ParseException 转换失败
      */
     @Throws(ParseException::class)
-    fun getDateByString(date: String): Date {
-        return SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.CHINA).parse(date)
+    private fun getDateByString(date: String): Date {
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse(date)
     }
 
     /**

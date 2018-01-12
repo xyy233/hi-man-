@@ -1,10 +1,14 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.order.contract
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -30,7 +34,24 @@ class ContractSearchActivity : AppCompatActivity() {
         CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera)
         captureFragment.analyzeCallback = analyzeCallback
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
-        qrcode.setOnClickListener {
+        val isReturn = intent.getStringExtra("whereIsIt")
+        if (isReturn != null && isReturn == "return") {
+            camera_search_box.visibility = View.VISIBLE
+            collect_money.setOnClickListener {
+                val searchMsg = refund_out_tran_no.text.toString()
+                if (searchMsg.trim() != "") {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(refund_out_tran_no.windowToken, 0)
+                    val i = Intent()
+                    i.putExtra("message", searchMsg.trim())
+                    setResult(0, i)
+                    finish()
+                } else {
+                    MyToast.getShortToast(getString(R.string.please_edit_id))
+                }
+            }
+        }
+        /*qrcode.setOnClickListener {
             if (nowLayout != 0) {
                 captureFragment = CaptureFragment()
                 CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera)
@@ -47,7 +68,7 @@ class ContractSearchActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
                 nowLayout = 1
             }
-        }
+        }*/
     }
 
     /**
@@ -55,27 +76,33 @@ class ContractSearchActivity : AppCompatActivity() {
      */
     private var analyzeCallback: CodeUtils.AnalyzeCallback = object : CodeUtils.AnalyzeCallback {
         override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
-            val datas=result.split("|")
-            val data = if (datas.size>1){
-                datas[datas.size-1]
-            }else{
+            val datas = result.split("|")
+            val data = if (datas.size > 1) {
+                datas[datas.size - 1]
+            } else {
                 result
             }
-            when(intent.getStringExtra("whereIsIt")){
-                "unitord"->{
+            when (intent.getStringExtra("whereIsIt")) {
+                "unitord" -> {
                     val i = Intent(this@ContractSearchActivity, CategoryItemActivity::class.java)
                     i.putExtra("whereIsIt", "unitord")
                     i.putExtra("search_message", data)
                     startActivity(i)
                     finish()
                 }
-                "result"->{
-                    val i=Intent()
-                    i.putExtra("message",data)
-                    setResult(0,i)
+                "result" -> {
+                    val i = Intent()
+                    i.putExtra("message", data)
+                    setResult(0, i)
                     finish()
                 }
-                else->{
+                "return"->{
+                    val i = Intent()
+                    i.putExtra("message", data)
+                    setResult(0, i)
+                    finish()
+                }
+                else -> {
                     val i = Intent(this@ContractSearchActivity, ContractActivity::class.java)
                     i.putExtra("is_search", true)
                     i.putExtra("search_message", data)

@@ -12,12 +12,14 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(WXPayData.WXPayEntry.SQLITE_CREATE)
+        db.execSQL(ALIPayData.ALIPayEntry.SQLITE_CREATE)
         db.execSQL(CashPayData.CashPayEntry.SQLITE_CREATE)
         db.execSQL(ContractTypeData.ContractTypeEntry.SQLITE_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL(WXPayData.WXPayEntry.SQLITE_DELETE_ENTRIES)
+        db.execSQL(ALIPayData.ALIPayEntry.SQLITE_DELETE_ENTRIES)
         db.execSQL(CashPayData.CashPayEntry.SQLITE_DELETE_ENTRIES)
         db.execSQL(ContractTypeData.ContractTypeEntry.SQLITE_DELETE_ENTRIES)
         onCreate(db)
@@ -28,12 +30,12 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
     }
 }
 
-object SQLData{
+object SQLData {
     val DB_NAME = "app_cstore.db"
-    val DB_VERSION = 8
+    val DB_VERSION = 9
     val TEXT_TYPE = " TEXT"
     val COMMA_SEP = ","
     val DOUBLE_TYPE = " REAL"
     val INT_TYPE = " INTEGER"
-    val DEFAULT=" DEFAULT 0"
+    val DEFAULT = " DEFAULT 0"
 }

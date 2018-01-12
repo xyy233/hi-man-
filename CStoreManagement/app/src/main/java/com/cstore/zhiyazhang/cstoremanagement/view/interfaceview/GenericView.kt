@@ -46,4 +46,9 @@ interface GenericView {
     fun <T> errorDealWith(eData:T){}
 
     fun <T> updateDone(uData:T){}
+
+    /**
+     * 缺个丢参方法，凑合下
+     */
+    fun <T>requestSuccess2(rData:T){}
 }

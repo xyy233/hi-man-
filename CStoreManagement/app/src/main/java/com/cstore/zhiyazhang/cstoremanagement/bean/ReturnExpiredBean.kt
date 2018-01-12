@@ -62,7 +62,7 @@ data class ReturnExpiredBean(
          */
         @SerializedName("tax_sell_cost") val taxSellCost: Double,
         /**
-         * 股票数量？
+         * 库存
          */
         @SerializedName("stock_qty") val stockQTY: Int,
         /**
@@ -100,10 +100,17 @@ data class ReturnExpiredBean(
         /**
          * 用来判断是否是停售品，是的话不可退
          */
-        @SerializedName("stop_th_code")val stopThCode:String?,
+        @SerializedName("stop_th_code") val stopThCode: String?,
         /**
          * 用来判断退货档期，有的话不可退
          */
-        @SerializedName("out_th_code")val outThCode:String?
+        @SerializedName("out_th_code") val outThCode: String?,
+        /**
+         * 用来判断是否修改
+         */
+        var editCount: Int,
+        /****************************以下为仅查看的数据**********************************/
+        @SerializedName("price_amt") val priceAmt: Double?,
+        @SerializedName("plnrtnstatus2") val rtnStatus: String?
 ) : Serializable
 

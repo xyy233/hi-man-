@@ -1,10 +1,13 @@
 package com.cstore.zhiyazhang.cstoremanagement.sql
 
+import com.alipay.api.response.AlipayTradePayResponse
+import com.alipay.api.response.AlipayTradeQueryResponse
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteTime
 
 /**
  * Created by zhiya.zhang
@@ -1291,14 +1294,15 @@ object MySql {
     /**
      * 得到今天所有的过期退货商品
      */
-    fun expiredReturnGetAll():String{
+    fun expiredReturnGetAll(): String {
+        val context = MyApplication.instance().applicationContext
         return "SELECT pln.plnRtnDate,pln.itemNumber,pln.itemNumber as itemnumber2 ,plu.PluName,pln.vendorID,vendor.vendorName,pln.supplierID,  " +
-                "decode( plnRtnType,'1','1清场品','2','2新/专案','3','3返品','4','4啤酒','5','5总部紧急召回','未设定' )  return_attr,  " +
+                "decode( plnRtnType,'1','${context.getString(R.string.return_sql12)}','2','${context.getString(R.string.return_sql13)}','3','${context.getString(R.string.return_sql14)}','4','${context.getString(R.string.return_sql15)}','5','${context.getString(R.string.return_sql16)}','${context.getString(R.string.return_sql17)}' )  return_attr,  " +
                 "pln.plnRtnQuantity,pln.StoreUnitprice,pln.UnitCost basic_cost,pln.sell_cost,unit.UnitName,  " +
-                "decode(ReasonNumber,'01','01 涨包漏气','02','02 凹罐','03','03 破包','04','04 品质不良',  " +
-                "'05','05 临近保质期','06','06 过期','07','07 停售','08',  " +
-                "'08 顾客投诉(先行提报采购)','09','09 其它','10','10 特殊需求退货',  " +
-                "'00 预约退货') ReasonNumber,  " +
+                "decode(ReasonNumber,'01','01 ${context.getString(R.string.return_sql01)}','02','02 ${context.getString(R.string.return_sql02)}','03','03 ${context.getString(R.string.return_sql03)}','04','04 ${context.getString(R.string.return_sql04)}',  " +
+                "'05','05 ${context.getString(R.string.return_sql05)}','06','06 ${context.getString(R.string.return_sql06)}','07','07 ${context.getString(R.string.return_sql07)}','08',  " +
+                "'08 ${context.getString(R.string.return_sql08)}','09','09 ${context.getString(R.string.return_sql09)}','10','10 ${context.getString(R.string.return_sql10)}',  " +
+                "'00 ${context.getString(R.string.return_sql11)}') ReasonNumber,  " +
                 "pln.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost,  " +
                 "nvl((befInvQuantity+accDlvQuantity-  " +
                 "accRtnQuantity-accSaleQuantity+  " +
@@ -1311,15 +1315,15 @@ object MySql {
                 "sb053.rtn_qty rtn_qty,  " +
                 "sb053.hq_ordqty hq_ordqty,  " +
                 "'FromDB' as data_status ,  " +
-                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate,  " +
+                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate,  " +
                 "decode(plu.vendorid,'00000000000099999100','Y','N') check_yn  " +
                 "FROM plnrtn1 pln  " +
                 "left join plu  on  plu.storeID=pln.storeid and plu.Itemnumber=pln.ItemNumber  " +
                 "left join unit  on unit.storeid=plu.storeid and unit.UnitID=plu.SmallunitID  " +
                 "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID  " +
                 "left join sb053 on sb053.StoreID=pln.storeID AND sb053.Item_No=pln.itemNumber  " +
-                "left join inv on inv.storeID=pln.storeID AND inv.itemNumber=pln.itemNumber AND inv.busiDate= to_data('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd')  " +
-                "left join sb021 on sb021.storeID=pln.storeID AND sb021.RtnDate>= to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')  " +
+                "left join inv on inv.storeID=pln.storeID AND inv.itemNumber=pln.itemNumber AND inv.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd')  " +
+                "left join sb021 on sb021.storeID=pln.storeID AND sb021.RtnDate>= to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')  " +
                 "AND sb021.RtnType=pln.plnrtntype ,vendor  " +
                 "WHERE pln.storeID='${User.getUser().storeId}'  " +
                 "AND pln.storeID=vendor.storeID  " +
@@ -1347,9 +1351,10 @@ object MySql {
      * 得到商品过期品退货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
      * @param data 用来搜索的品号或条形码
      */
-    fun expiredReturnGetCommodity(data:String):String{
+    fun expiredReturnGetCommodity(data: String): String {
+        val context = MyApplication.instance().applicationContext
         return "SELECT plu.itemNumber,plu.PluName,plu.vendorID,vendor.vendorName,plu.itemNumber as itemnumber2, " +
-                "decode( plu.return_attr,'1','1清场品','2','2新/专案','3','3返品','4','4啤酒','5','5总部紧急召回','未设定' )  return_attr, " +
+                "decode( plu.return_attr,'1','${context.getString(R.string.return_sql12)}','2','${context.getString(R.string.return_sql13)}','3','${context.getString(R.string.return_sql14)}','4','${context.getString(R.string.return_sql15)}','5','${context.getString(R.string.return_sql16)}','${context.getString(R.string.return_sql17)}' )  return_attr, " +
                 "nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
                 "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
                 "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl " +
@@ -1361,14 +1366,14 @@ object MySql {
                 "plu.StoreUnitprice,plu.basic_cost,plu.sell_cost, " +
                 "unit.UnitName,plu.shipNumber,plu.sell_cost*(1+nvl(taxtype.taxRate,0)) tax_sell_cost, " +
                 "plu.returnType,plu.ReturnBeginDate,plu.ReturnEndDate,plu.supplierID, " +
-                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate, " +
+                "decode(plu.vendorid,'00000000000099999100',nvl(min(sb021.RtnDate),to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd')),to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd'))RtnDate, " +
                 "decode(plu.vendorid,'00000000000099999100','Y','N') check_yn,Substr(Plu.Signtype, 12, 1) vendor_yn,plu.Stop_Th_Code,plu.Out_Th_Code " +
                 "FROM plu " +
                 "left join unit  on unit.storeid=plu.storeid and unit.UnitID=plu.SmallunitID " +
                 "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
                 "left join sb053 on sb053.StoreID=plu.storeID AND sb053.Item_No=plu.itemNumber " +
-                "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.busiDate=to_data('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd') " +
-                "left join sb021 on sb021.storeID=plu.storeID AND sb021.RtnDate>=to_data('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd') AND sb021.RtnType=plu.return_attr " +
+                "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.busiDate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-MM-dd') " +
+                "left join sb021 on sb021.storeID=plu.storeID AND sb021.RtnDate>=to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd') AND sb021.RtnType=plu.return_attr " +
                 ",vendor,ITEMPLU " +
                 "WHERE PLU.ITEMNUMBER=ITEMPLU.ITEMNUMBER " +
                 "and plu.StoreID='${User.getUser().storeId}' " +
@@ -1387,6 +1392,45 @@ object MySql {
                 "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
                 "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl " +
                 "(inv.accHqAdjQuantity,0),Substr(Plu.Signtype, 12, 1),plu.Stop_Th_Code,plu.Out_Th_Code\u0004"
+    }
+
+    /**
+     * 根据时间范围和选择的状态获得数据
+     */
+    fun getDateExpiredReturnAll(date1: String, date2: String, checkIndex: Int): String {
+        val context = MyApplication.instance().applicationContext
+        var result = "SELECT Pln.Plnrtndate, Pln.Itemnumber, Pln.Storeunitprice, " +
+                "Pln.Plnrtnquantity, Pln.Storeunitprice * Pln.Plnrtnquantity Price_Amt,vendor.vendorName, plu.pluname, " +
+                "decode( pln.plnRtnStatus,'1','${context.getString(R.string.check2)}','2','${context.getString(R.string.check3)}','3',Decode(Sign(5 - (Sysdate - Pln.Updatedate)), 1," +
+                " '${context.getString(R.string.check4)}', '${context.getString(R.string.return_sql1)}'),'9','${context.getString(R.string.check5)}' )  plnRtnStatus2, " +
+                "decode(ReasonNumber,'01','01 ${context.getString(R.string.return_sql01)}','02','02 ${context.getString(R.string.return_sql02)}','03','03 ${context.getString(R.string.return_sql03)}','04','04 ${context.getString(R.string.return_sql04)}', " +
+                "'05','05 ${context.getString(R.string.return_sql05)}','06','06 ${context.getString(R.string.return_sql06)}','07','07 ${context.getString(R.string.return_sql07)}','08', " +
+                "'08 ${context.getString(R.string.return_sql08)}','09','09 ${context.getString(R.string.return_sql09)}','10','10 ${context.getString(R.string.return_sql10)}', " +
+                "'00 ${context.getString(R.string.return_sql11)}') ReasonNumber " +
+                "FROM plnrtn1 pln " +
+                "left join plu  on  plu.storeID=pln.storeid and plu.Itemnumber=pln.ItemNumber " +
+                ",vendor " +
+                "WHERE pln.storeID='${User.getUser().storeId}' "
+        when (checkIndex) {
+            0 -> result += "AND pln.plnrtndate between to_date('$date1','yyyy-mm-dd') and to_date('$date2','yyyy-mm-dd') "
+            1 -> result += "AND pln.plnrtndate between to_date('$date1','yyyy-mm-dd') and to_date('$date2','yyyy-mm-dd') and pln.plnRtnStatus='1' "
+            2 -> result += "AND pln.plnrtndate between to_date('$date1','yyyy-mm-dd') and to_date('$date2','yyyy-mm-dd') and pln.plnRtnStatus='2' "
+            3 -> result += "AND pln.plnrtndate between to_date('$date1','yyyy-mm-dd') and to_date('$date2','yyyy-mm-dd') and pln.plnRtnStatus='9' "
+            4 -> result += "AND pln.Updatedate > Sysdate - 5 and pln.plnRtnStatus='3' "
+        }
+        result += "AND pln.storeID=vendor.storeID " +
+                "AND pln.vendorID=vendor.vendorID " +
+                "and pln.plnRtnStatus in ('1','2','3','9') " +
+                "order by pln.plnrtndate desc\u0004"
+        return result
+    }
+
+    /**
+     * 保存过期品预约退货
+     */
+    fun saveExpiredReturn(data: ReturnExpiredBean): String {
+        val date = deleteTime(data.plnRtnDate)
+        return "call rtn_expired_01('${data.itemNumber}','${User.getUser().uId}',${data.plnRtnQTY}, to_date('$date','yyyy-mm-dd'))\u000c"
     }
 
     /**********************************************收款************************************************************/
@@ -1484,7 +1528,7 @@ object MySql {
                 //退款记录
                 val refundId = payData["refund_id"]
                 //退款需要负数
-                totalFee = 0 - totalFee
+                totalFee *= -1
                 "insert into posul_weixin_detail " +
                         "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, REFUND_ID, openid, coupon_fee, non_coupond_fee) " +
                         "values " +
@@ -1498,6 +1542,46 @@ object MySql {
             }
 
             result
+        } catch (e: Exception) {
+            e.message.toString()
+        }
+    }
+
+    fun createAliPayDone(pos: PosBean, payData: AlipayTradePayResponse, isRefund: Boolean): String {
+        return try {
+            val storeId = User.getUser().storeId
+            val nextTranNo = pos.nextTranNo
+            var totalFee = payData.totalAmount.toDouble()
+            val tradeNo = payData.tradeNo
+            val seq = "01"
+            val buyId = payData.buyerLogonId
+            if (isRefund) {
+                totalFee*=-1
+            }
+            "insert into posul_alipay_detail " +
+                    "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
+                    "values " +
+                    "('$storeId', ,'${pos.assPos}', '$nextTranNo', '$seq', '$tradeNo', '$buyId', $totalFee, sysdate, 'zz')"
+        } catch (e: Exception) {
+            e.message.toString()
+        }
+    }
+
+    fun createAliPayDone(pos: PosBean, payData: AlipayTradeQueryResponse, isRefund: Boolean): String {
+        return try {
+            val storeId = User.getUser().storeId
+            val nextTranNo = pos.nextTranNo
+            var totalFee = payData.totalAmount.toDouble()
+            val tradeNo = payData.tradeNo
+            val seq = "01"
+            val buyId = payData.buyerLogonId
+            if (isRefund) {
+                totalFee*=-1
+            }
+            "insert into posul_alipay_detail " +
+                    "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
+                    "values " +
+                    "('$storeId', ,'${pos.assPos}', '$nextTranNo', '$seq', '$tradeNo', '$buyId', $totalFee, sysdate, 'zz')"
         } catch (e: Exception) {
             e.message.toString()
         }

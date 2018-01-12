@@ -39,7 +39,7 @@ class WXPayPresenter(private val activity: PayCollectActivity) {
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 //退款成功
-                activity.refundSuccess(data as Map<String, String>)
+                activity.refundSuccess(data)
                 activity.hideLoading()
                 handler.cleanAll()
             }
@@ -60,7 +60,7 @@ class WXPayPresenter(private val activity: PayCollectActivity) {
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 //退款成功
-                activity.refundSuccess(data as Map<String, String>)
+                activity.refundSuccess(data)
                 activity.hideLoading()
                 handler.cleanAll()
             }
