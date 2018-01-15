@@ -71,11 +71,18 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
                     }
                 } else {
                     //退款
-                    wxPresenter.wechatRefund(result)
+                    isWherePay = if (switch1.isChecked) {
+                        aliPresenter.aliRefund(result)
+                        "支付宝"
+                    } else {
+                        wxPresenter.wechatRefund(result)
+                        "微信"
+                    }
                     return
                 }
             }
             showPrompt(getString(R.string.cant_qrcode))
+            refreshCamera()
         }
 
         override fun onAnalyzeFailed() {
@@ -115,6 +122,7 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
             refund_out_tran_no.visibility = View.VISIBLE
             refund_out_tran_no.inputType = InputType.TYPE_CLASS_NUMBER
             refund_out_tran_no.keyListener = DigitsKeyListener.getInstance("1234567890")
+            switch1.visibility = View.VISIBLE
         }
         loading_text.setTextColor(ContextCompat.getColor(this, R.color.white))
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)

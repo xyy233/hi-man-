@@ -1561,7 +1561,7 @@ object MySql {
             "insert into posul_alipay_detail " +
                     "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
                     "values " +
-                    "('$storeId', ,'${pos.assPos}', '$nextTranNo', '$seq', '$tradeNo', '$buyId', $totalFee, sysdate, 'zz')"
+                    "('$storeId','${pos.assPos}', '$nextTranNo', '$seq', '$tradeNo', '$buyId', $totalFee, sysdate, 'zz')\u0004"
         } catch (e: Exception) {
             e.message.toString()
         }
@@ -1614,11 +1614,11 @@ object MySql {
 
     /**
      * 像微信申请退款成功后执行的存储过程
-     * @param pay_tranno 收款时的交易序号
+     * @param pay_tranno 收款时的对方交易序号
      * @param refoundId 微信返回退款单号
      * @param isWhere 是在微信还是现金还是支付宝执行的退款
      */
-    fun refoundCall(pay_tranno: Int, refoundId: String, isWhere: String): String {
+    fun refoundCall(pay_tranno: String, refoundId: String, isWhere: String): String {
         return "call refound_Shopping_basket_r01('${MyApplication.getOnlyid()}',$pay_tranno,'$refoundId','$isWhere')\u0004"
     }
 }

@@ -104,4 +104,8 @@ object GsonUtil {
     fun getReturnExpired(data: String): ArrayList<ReturnExpiredBean> {
         return Gson().fromJson<ArrayList<ReturnExpiredBean>>(data, object : TypeToken<ArrayList<ReturnExpiredBean>>() {}.type)
     }
+
+    fun getAli(data:String):AliQueryBean{
+        return Gson().fromJson(data,AliQueryBean::class.java)
+    }
 }

@@ -6,25 +6,24 @@ import android.util.Log
 import com.alipay.api.AlipayClient
 import com.alipay.api.DefaultAlipayClient
 import com.alipay.api.request.AlipayTradeCancelRequest
-import com.alipay.api.request.AlipayTradeFastpayRefundQueryRequest
 import com.alipay.api.request.AlipayTradePayRequest
 import com.alipay.api.request.AlipayTradeQueryRequest
-import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse
+import com.alipay.api.request.AlipayTradeRefundRequest
 import com.alipay.api.response.AlipayTradePayResponse
 import com.alipay.api.response.AlipayTradeQueryResponse
+import com.alipay.api.response.AlipayTradeRefundResponse
 import com.cstore.zhiyazhang.cstoremanagement.bean.ALIPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ALIRequestBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.PosBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.wechat.MyWXUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayCollectActivity
 import com.google.gson.Gson
 
@@ -53,7 +52,8 @@ class ALIPayModel(context: Context) : ALIPayInterface {
                 val request = AlipayTradePayRequest()
                 request.bizContent = data
 
-                val response: AlipayTradePayResponse = aliPay.execute(request)
+                val aliResponse: AlipayTradePayResponse = aliPay.execute(request)
+                val response = GsonUtil.getAli(aliResponse.body).payResponse!!
 
                 //查询是否成功
                 responseIsSuccess(response, aliPay, requestBean, activity, ip, msg, handler)
@@ -72,18 +72,41 @@ class ALIPayModel(context: Context) : ALIPayInterface {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             try {
                 val aliPay = getAliPay()
-                val random = MyWXUtil.getRandom()
-                //退款单号先随便弄一下，用5000+年月日+8位随机数
-                val outRefundNo = "5000${MyTimeUtil.nowDate3}$random"
-                val request = AlipayTradeFastpayRefundQueryRequest()
-                request.bizContent = "{\"out_trade_no\":\"$tradeNo\",\"out_request_no\":\"$outRefundNo\"}"
-
+                var totalFee = ""
+                //查询订单获得金额
                 for (i in 0..2) {
-                    val response = aliPay.execute(request)
+                    val request = AlipayTradeQueryRequest()
+                    request.bizContent = "{\"out_trade_no\":\"$tradeNo\"}"
+                    val aliResponse = aliPay.execute(request)
+                    val nowResponse = GsonUtil.getAli(aliResponse.body).queryResponse!!
+                    if (nowResponse.code == "10000") {
+                        if (nowResponse.tradeStatus == "TRADE_SUCCESS") {
+                            totalFee = nowResponse.totalAmount
+                            break
+                        } else {
+                            msg.obj = nowResponse.tradeStatus
+                            msg.what = ERROR
+                            handler.sendMessage(msg)
+                            return@Runnable
+                        }
+                    } else if (nowResponse.code == "40004") {
+                        msg.obj = nowResponse.subMsg
+                        msg.what = ERROR
+                        handler.sendMessage(msg)
+                        return@Runnable
+                    }
+                    Thread.sleep(1000 * 10)
+                }
+
+                val request = AlipayTradeRefundRequest()
+                request.bizContent = "{\"out_trade_no\":\"$tradeNo\",\"refund_amount\":\"$totalFee\"}"
+                for (i in 0..2) {
+                    val aliResponse = aliPay.execute(request)
+                    val response = GsonUtil.getAli(aliResponse.body).refundResponse!!
                     when {
                         response.code == "10000" ->//退款成功
                         {
-                            refundDone(activity.getPos(), response, handler, msg, ip)
+                            refundDone(response, handler, msg, ip)
                             return@Runnable
                         }
                         else -> {
@@ -115,14 +138,14 @@ class ALIPayModel(context: Context) : ALIPayInterface {
         }).start()
     }
 
-    private fun refundDone(pos: PosBean, response: AlipayTradeFastpayRefundQueryResponse, handler: MyHandler, msg: Message, ip: String) {
-        val sql=MySql.refoundCall(response.outTradeNo.substring(5).toInt(),"","支付宝")
-        val result=SocketUtil.initSocket(ip, sql).inquire()
-        if (result=="0"){
-            msg.obj=response.refundAmount
-            msg.what= SUCCESS
+    private fun refundDone(response: AlipayTradeRefundResponse, handler: MyHandler, msg: Message, ip: String) {
+        val sql = MySql.refoundCall(response.tradeNo, " ", "支付宝")
+        val result = SocketUtil.initSocket(ip, sql).inquire()
+        if (result == "0") {
+            msg.obj = response.refundFee
+            msg.what = SUCCESS
             handler.sendMessage(msg)
-        }else{
+        } else {
             msg.obj = "退款成功，保存数据失败：$result"
             msg.what = ERROR
             handler.sendMessage(msg)
@@ -159,11 +182,28 @@ class ALIPayModel(context: Context) : ALIPayInterface {
             Thread.sleep(1000 * 10)
             val request = AlipayTradeQueryRequest()
             request.bizContent = "{\"out_trade_no\":\"${requestBean.outTradeNo}\"}"
-            val nowResponse = aliPay.execute(request)
+            val aliResponse = aliPay.execute(request)
+            val nowResponse = GsonUtil.getAli(aliResponse.body).queryResponse!!
             when (nowResponse.code) {
                 "10000" -> {
-                    payDone(activity.getPos(), nowResponse, handler, msg, ip)
-                    return
+                    when (nowResponse.tradeStatus) {
+                        "TRADE_CLOSED" -> {
+                            msg.obj = "未付款交易超时关闭，或支付完成后全额退款"
+                            msg.what = ERROR
+                            handler.sendMessage(msg)
+                            return
+                        }
+                        "TRADE_SUCCESS" -> {
+                            payDone(activity.getPos(), nowResponse, handler, msg, ip)
+                            return
+                        }
+                        "TRADE_FINISHED" -> {
+                            msg.obj = "交易结束，不可退款"
+                            msg.what = ERROR
+                            handler.sendMessage(msg)
+                            return
+                        }
+                    }
                 }
                 "40004" -> {
                     msg.obj = nowResponse.subMsg
@@ -187,7 +227,8 @@ class ALIPayModel(context: Context) : ALIPayInterface {
     private fun cancelPay(response: AlipayTradeQueryResponse, aliPay: AlipayClient, requestBean: ALIRequestBean, activity: PayCollectActivity, ip: String, msg: Message, handler: MyHandler) {
         val request = AlipayTradeCancelRequest()
         request.bizContent = "{\"out_trade_no\":\"${requestBean.outTradeNo}\"}"
-        val nowResponse = aliPay.execute(request)
+        val aliResponse = aliPay.execute(request)
+        val nowResponse = GsonUtil.getAli(aliResponse.body).cancelResponse!!
         when (nowResponse.code) {
             "10000" -> {
                 reverseDone(ip, activity.getPos(), response)

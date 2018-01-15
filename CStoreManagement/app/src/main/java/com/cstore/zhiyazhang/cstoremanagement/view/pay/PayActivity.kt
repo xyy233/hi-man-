@@ -3,7 +3,6 @@ package com.cstore.zhiyazhang.cstoremanagement.view.pay
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
@@ -63,8 +62,6 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     private var isFlash = true
 
     private var isOk = true
-
-    private val handler = Handler()
 
     private val captureFragment = CaptureFragment()
 
@@ -184,6 +181,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     }
 
     override fun initClick() {
+        //退款
         toolbar_time.setOnClickListener {
             val intent = Intent(this@PayActivity, PayCollectActivity::class.java)
             intent.putExtra("action", 1)

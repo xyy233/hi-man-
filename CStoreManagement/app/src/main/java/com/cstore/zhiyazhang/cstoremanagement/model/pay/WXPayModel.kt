@@ -140,7 +140,7 @@ class WXPayModel(context: Context) : PayMoneyInterface {
             val wxPay = WXPay(WXPayConfigImpl.getInstance())
             val wxResult = MyWXUtil.wxRefund(data, wxPay, msg, handler)
             if (wxResult.isEmpty()) return
-            val sql = MySql.refoundCall(data["out_trade_no"]!!.substring(5).toInt(), wxResult["refund_id"]!!, "微信")//MySql.createWXPayDone(activity.getPos(), wxResult, true) + MySql.updateAppPos
+            val sql = MySql.refoundCall(data["transaction_id"]!!, wxResult["refund_id"]!!, "微信")//MySql.createWXPayDone(activity.getPos(), wxResult, true) + MySql.updateAppPos
             val result = SocketUtil.initSocket(ip, sql).inquire()
             //如果是之前sql这里是等于2才是执行成功，存储过程无返回也不知道修改数据，所以是0
             if (result == "0") {
@@ -177,7 +177,7 @@ class WXPayModel(context: Context) : PayMoneyInterface {
                 if (!updatePos(activity, ip, msg, handler)) {
                     return@Runnable
                 }*/
-                val sql = MySql.refoundCall(activity.getPos().nextTranNo, wxResult["refund_id"]!!, "微信")//MySql.createWXPayDone(activity.getPos(), wxResult, true) + MySql.updateAppPos
+                val sql = MySql.refoundCall(wxResult["transaction_id"]!!, wxResult["refund_id"]!!, "微信")//MySql.createWXPayDone(activity.getPos(), wxResult, true) + MySql.updateAppPos
                 val result = SocketUtil.initSocket(ip, sql).inquire()
                 //如果是之前sql这里是等于2才是执行成功，存储过程无返回也不知道修改数据，所以是0
                 if (result == "0") {
