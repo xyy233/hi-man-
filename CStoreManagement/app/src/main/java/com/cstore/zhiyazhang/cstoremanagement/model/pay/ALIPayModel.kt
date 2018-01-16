@@ -177,9 +177,8 @@ class ALIPayModel(context: Context) : ALIPayInterface {
      * 查询是否交易完成
      */
     private fun inquirePay(aliPay: AlipayClient, requestBean: ALIRequestBean, activity: PayCollectActivity, ip: String, msg: Message, handler: MyHandler) {
-        //查询12次,每隔10s查一次
-        for (i in 0..11) {
-            Thread.sleep(1000 * 10)
+        //查询24次,每隔5s查一次
+        for (i in 0..23) {
             val request = AlipayTradeQueryRequest()
             request.bizContent = "{\"out_trade_no\":\"${requestBean.outTradeNo}\"}"
             val aliResponse = aliPay.execute(request)
@@ -214,10 +213,11 @@ class ALIPayModel(context: Context) : ALIPayInterface {
             //"10003" -> continue  还在等待用户付款就不管，自动跳出去做
             //"20000" -> continue  未知异常就不管，自动跳出去做
             }
-            if (i == 11) {
+            if (i == 23) {
                 //多次都没有得到结果就去撤销
                 cancelPay(nowResponse, aliPay, requestBean, activity, ip, msg, handler)
             }
+            Thread.sleep(1000 * 5)
         }
     }
 
@@ -322,7 +322,7 @@ class ALIPayModel(context: Context) : ALIPayInterface {
         private val appId = "2013122600002470"
         private val privateKey = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkf4CBnoJe207lg6SoyLyHKoK3m36QzGQdlMjc7bhhEaG1tHvwzxHhAsf/8iXSdo7KTNJ47s1sLPEsJj1ENnOEmeIjJHiEsq5qm9LygSK9ZVqBnT9zUmMGGwcifanczdRHoeOzDRGWRMDjKLZ7aIWQmw1p7suK6/NeE1aij6j/ajZCGkVszj/n+qF1M2WSW712Vzvq5zii2NTfQOMSpGTfIC3wf8949DmNgMQmExPaYbcZM3ohODpH+RzmtiO3j8Rx7Z0EofzQu6RDK6BiFNW9qGvif13eNrLkXwZ2BXuCe9pcwvs7+uh3dX6mUAIdmnaE70C/rLgjrVsXpa9blFItAgMBAAECggEAHimm9Z2MCDqsZ9dQrQZJ03sPBv3DImfn/6iVgDUyttHV1gynIUvG2nx5Ecxj9Qh6PEwD19rp3ekLu+2zFDvryKey2IDKfIKLCs9Ryde1+AaKpvOfe9TihW8VStTB/dPcFdpwdxdxXx1yRPTlKRHMU+yqc/8uYWXMdTaUjzBKa7LRuXswB0CXPx7+7V3wzlVMnsnm/APD+Y+6t5zjxXKs9WFxHIBvgua5m3DDiuo80TqDXHFfsPO6dho+ogEEn3jbwqYTFQSeAgH1FOnsXUFLNZuyaxgFQ6i2V9yg1Cd1Q5odxfXCTSjdJRE708cJUqBlsfBF9gXRbkr6tMlJBUmnvQKBgQDVb9/UGBUL+1xFX7uY54oRGsnX2096BDA0P7mGEp3XJzx5+I171oIfeeRtAt1fKeq14wViEhN0HgO4MeaA0tV+453o5u5GpBEiKpRqjXDCUeJfOemD61xuouu7klEmTYoC33mR3ByJDCLa7tZgVXDvrNebvAeuZEzg5LREQNxTywKBgQDFTUGBJlrG0NAUikamQHiw5LDdjffoQq2QVxs92QKPrVCHxATnG+68XEoGfZqPhtTalwejkQqVbQbz7A6+g2IdQsYcu9zuw349Az6rHzsFJmQpMBtO2Iswc+sLTd+MS6VQFb36FqrgY9Zb8jX4k/8rUZBJVyhiN5pmj/7SefNi5wKBgG1JVG2QSy6QbUWkaDU50WtCsTlStVY/0MLgIkmxPJrPH1tA1okjZAtj6X+b6OfyWZj6fmYh5U4elD77ZhBuZB0NxWxc2oLXPWKmNMp+U89cCDJEP/ppSDHqQBQSLnUTXOhtrxztfLr7uNkrVB+NgD9o3BmE5NX5y5eX42nTYD2TAoGBAKRZ9nbevD9hMfPqO2/BxMeVuL7Vw+x1np7d8JNUcg29EZgGcQ8S9YtyVTeS6W0lo6lypapa57YRW/lUafPI/bHiLaVB2IgL0NyCF3H0UfW4RTcKG7VSLJ/v75s7AzyaxtovQlFREIZao/VzjgHDRouPJeHx+HHYX4WP7XTmoReBAoGAcLCsz96iRu4TohplzUm3z2K2eEKqeIPp9hNVF1lQuWok86Fy1DwxG6OQdzXkllafFZwvZUFS2IqWY4Mjiv+mEZsleK3oesfaQ3Hd6ztEHDZyxOfY8/KhErTLDvnMy9Z0EbXgYAF993QgLapisrBqRPaxGFHCrY3J9gwWgeFnpRc="
         private val publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnHQmuRuog9zNcdb8e+Zfa4BK9uLsQt4YUtA0l38MdNplA13QqrJ0e9ox1ODR024NyJButxNwnB0xi9SEpMsnuSrqC6LRBbkUUQOdsKmpx8GFYOXMoRjLrIMA5A5FiRWoN4/uy2xsAJyPgvOv3qbp1MSjCXQnSWcrxzhkBMMJ8Tf+4dlGOVmnuK6Lf7Ub8UIyhEspomQgEc5J4NYWsgg6CZp7SV0KJt/C6zhokT4Srru0OlkXo+f30sw41YxCFirEdbTs4arSikzUdJs5ALAcFX+9Yigy5Qvq/PiVx/2JcG6DXyfYK7mXJ8/iLzfaTL2YMGRs++OG0VCkrj74klR6MQIDAQAB"
-        private fun getAliPay(): AlipayClient {
+        fun getAliPay(): AlipayClient {
             return DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, privateKey, "json", "UTF-8", publicKey, "RSA2")
         }
 

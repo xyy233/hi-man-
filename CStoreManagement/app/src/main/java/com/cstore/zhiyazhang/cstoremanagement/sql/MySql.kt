@@ -1492,17 +1492,6 @@ object MySql {
         return "call pay_Shopping_basket_p02('${MyApplication.getOnlyid()}','$isWhere','$amt') \u000c"
     }
 
-
-    /**
-     * 处理异常2步骤更新到posul_weixin_detail的sql语句
-     */
-    fun createWXPayDone(bean: WXPaySqlBean): String {
-        return "insert into posul_weixin_detail " +
-                "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, openid, coupon_fee, non_coupond_fee) " +
-                "values " +
-                "('${bean.storeId}', '${bean.assPos}', ${bean.nextTranNo}, ${bean.totalFee}, '${bean.transactionId}', sysdate, '${bean.seq}', '${bean.openId}', ${bean.couponFee}, ${bean.totalFee - bean.couponFee}) \u0004"
-    }
-
     /**
      * 收款完毕或退款完毕更新到posul_weixin_detail的sql语句
      * @param isRefund 判断是否是退款的布尔
@@ -1545,6 +1534,23 @@ object MySql {
         } catch (e: Exception) {
             e.message.toString()
         }
+    }
+
+    /**
+     * 处理异常2步骤更新到posul_weixin_detail的sql语句
+     */
+    fun createWXPayDone(bean: WXPaySqlBean): String {
+        return "insert into posul_weixin_detail " +
+                "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, openid, coupon_fee, non_coupond_fee) " +
+                "values " +
+                "('${bean.storeId}', '${bean.assPos}', ${bean.nextTranNo}, ${bean.totalFee}, '${bean.transactionId}', sysdate, '${bean.seq}', '${bean.openId}', ${bean.couponFee}, ${bean.totalFee - bean.couponFee}) \u0004"
+    }
+
+    fun createAliPayDone(bean:ALIPaySqlBean):String{
+        return "insert into posul_alipay_detail " +
+                "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
+                "values " +
+                "('${bean.storeId}','${bean.assPos}', '${bean.nextTranNo}', '${bean.seq}', '${bean.tradeNo}', '${bean.buyerLogonId}', ${bean.totalFee}, sysdate, 'zz')\u0004"
     }
 
     fun createAliPayDone(pos: PosBean, payData: AlipayTradePayResponse, isRefund: Boolean): String {

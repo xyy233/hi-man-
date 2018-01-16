@@ -1,11 +1,15 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.pay
 
+import com.alipay.api.request.AlipayTradeCancelRequest
+import com.cstore.zhiyazhang.cstoremanagement.bean.ALIPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.WXPaySqlBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
+import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.wechat.WXPayConfigImpl
@@ -30,6 +34,16 @@ class PayDataModel : PayDataInterface {
         val ip = MyApplication.getIP()
         try {
             startCashStep(dao, bean, ip, listener)
+            listener.listenerSuccess(bean)
+        } catch (e: Exception) {
+            stepError(e.message.toString(), dao, bean, listener)
+        }
+    }
+
+    override fun goAliData(dao: ALIPayDao, bean: ALIPaySqlBean, listener: MyListener) {
+        val ip = MyApplication.getIP()
+        try {
+            startAliStep(dao, bean, ip, listener)
             listener.listenerSuccess(bean)
         } catch (e: Exception) {
             stepError(e.message.toString(), dao, bean, listener)
@@ -74,6 +88,28 @@ class PayDataModel : PayDataInterface {
     }
 
     /**
+     * 和微信一样只是换成了支付宝
+     */
+    private fun startAliStep(dao: ALIPayDao, bean: ALIPaySqlBean, ip: String, listener: MyListener) {
+        if (bean.isDone == 0) {
+            when (bean.theStep) {
+                1 -> {
+                    firstStep(dao, bean, ip, listener)
+                }
+                2 -> {
+                    secondStep(dao, bean, ip, listener)
+                }
+                3 -> {
+                    thirdStep(dao, bean, ip, listener)
+                }
+                4 -> {
+                    fourthStep(dao, bean, ip, listener)
+                }
+            }
+        }
+    }
+
+    /**
      * 执行步骤4的操作
      * 修改app_pos和清空shopping_basket的存储过程
      */
@@ -87,6 +123,17 @@ class PayDataModel : PayDataInterface {
             stepError(result, dao, bean, listener)
         }
     }
+
+    private fun fourthStep(dao: ALIPayDao, bean: ALIPaySqlBean, ip: String, listener: MyListener) {
+        val sqlResult = SocketUtil.initSocket(ip, MySql.reverseCall).inquire()
+        if (sqlResult == "0") {
+            bean.isDone = 1
+            dao.updateSQL(bean)
+        } else {
+            stepError(sqlResult, dao, bean, listener)
+        }
+    }
+
 
     /**
      * 执行步骤3的操作
@@ -122,6 +169,24 @@ class PayDataModel : PayDataInterface {
         stepError("超时或连续三次未知", dao, bean, listener)
     }
 
+    private fun thirdStep(dao: ALIPayDao, bean: ALIPaySqlBean, ip: String, listener: MyListener) {
+        val aliPay = ALIPayModel.getAliPay()
+        val request = AlipayTradeCancelRequest()
+        request.bizContent = "{\"out_trade_no\":\"${bean.outTradeNo}\"}"
+        for (i in 0..2) {
+            val aliResponse = aliPay.execute(request)
+            val nowResponse = GsonUtil.getAli(aliResponse.body).cancelResponse!!
+            when (nowResponse.code) {
+                "10000" -> {
+                    bean.theStep = 4
+                    dao.updateSQL(bean)
+                    startAliStep(dao, bean, ip, listener)
+                }
+            }
+        }
+        stepError("iDon'tKnow", dao, bean, listener)
+    }
+
     /**
      * 执行步骤2的操作
      * 单独保存在微信记录中
@@ -134,6 +199,16 @@ class PayDataModel : PayDataInterface {
             dao.updateSQL(bean)
         } else {
             //出错记录数据吐错
+            stepError(result, dao, bean, listener)
+        }
+    }
+
+    private fun secondStep(dao: ALIPayDao, bean: ALIPaySqlBean, ip: String, listener: MyListener) {
+        val result = SocketUtil.initSocket(ip, MySql.createAliPayDone(bean)).inquire()
+        if (result == "1") {
+            bean.isDone = 1
+            dao.updateSQL(bean)
+        } else {
             stepError(result, dao, bean, listener)
         }
     }
@@ -164,6 +239,17 @@ class PayDataModel : PayDataInterface {
         }
     }
 
+    private fun firstStep(dao: ALIPayDao, bean: ALIPaySqlBean, ip: String, listener: MyListener) {
+        val result = SocketUtil.initSocket(ip, MySql.payDoneCall("支付宝", bean.totalFee)).inquire()
+        if (result == "0") {
+            bean.theStep = 2
+            dao.updateSQL(bean)
+            startAliStep(dao, bean, ip, listener)
+        } else {
+            stepError(result, dao, bean, listener)
+        }
+    }
+
     /**
      * 出错后操作
      */
@@ -183,6 +269,12 @@ class PayDataModel : PayDataInterface {
         listener.listenerOther(bean)
     }
 
+    private fun stepError(message: String, dao: ALIPayDao, bean: ALIPaySqlBean, listener: MyListener) {
+        bean.uploadCount++
+        bean.errorMessage += ",$message"
+        dao.updateSQL(bean)
+        listener.listenerOther(bean)
+    }
 }
 
 interface PayDataInterface {
@@ -195,4 +287,9 @@ interface PayDataInterface {
      * 处理现金数据
      */
     fun goCashData(dao: CashPayDao, bean: CashPaySqlBean, listener: MyListener)
+
+    /**
+     * 处理支付宝数据
+     */
+    fun goAliData(dao: ALIPayDao, bean: ALIPaySqlBean, listener: MyListener)
 }

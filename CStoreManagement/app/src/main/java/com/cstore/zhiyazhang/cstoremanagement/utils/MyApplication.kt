@@ -48,7 +48,7 @@ class MyApplication : Application() {
                             val ip = inetAddress.hostAddress
                             val ips = ip.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                             result = ips[0] + "." + ips[1] + "." + ips[2] + ".100"
-                            if (name.indexOf("wlan") != -1 && result != "") {
+                            if (name.indexOf("wlan") != -1 && result !=        "") {
                                 return result
                             }
                         }

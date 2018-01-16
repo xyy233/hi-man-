@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayDataPresenter
+import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 
@@ -14,7 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
  * 每个方向只处理三次。三次后继续重来
  */
 class PayDataService(value: String = "PayDataService") : IntentService(value) {
-    private val TAG = "PayDataService"
+    private val mTag = "PayDataService"
     private val presenter = PayDataPresenter()
     private val data = ArrayList<Any>()
     // 1=微信 2=支付宝 3=现金 0=非指定方式，需要全部查询
@@ -22,6 +23,7 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
     private var isDone = true
     private lateinit var wxDao: WXPayDao
     private lateinit var cashDao: CashPayDao
+    private lateinit var aliDao: ALIPayDao
 
     override fun onHandleIntent(intent: Intent?) {
         try {
@@ -34,11 +36,12 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
 
                 cashDao = CashPayDao(this)
                 wxDao = WXPayDao(this)
+                aliDao = ALIPayDao(this)
 
                 goTry(isWhere)
             }
         } catch (e: Exception) {
-            Log.e(TAG, e.message)
+            Log.e(mTag, e.message)
         }
     }
 
@@ -95,10 +98,24 @@ class PayDataService(value: String = "PayDataService") : IntentService(value) {
         }
     }
 
+    private var aliCount = 0
     /**
      * 查询支付宝的数据库
      */
     private fun judgmentAli() {
+        if (aliCount++ >= 4) {
+            aliCount = 0
+            return
+        }
+        val aliData = aliDao.getAllData()
+        if (aliData.size == 0) return
+        aliData.filter { it.isDone == 0 }.forEach {
+            presenter.goAliData(it, aliDao)
+        }
+        if (aliDao.getAllData().any { it.isDone == 0 }) {
+            isDone = false
+            judgmentAli()
+        }
     }
 
     private var cashCount = 0

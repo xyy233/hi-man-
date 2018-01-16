@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
@@ -110,8 +111,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             if (value == "666666") {
                 val wxDao = WXPayDao(this@HomeActivity)
                 val cashDao = CashPayDao(this@HomeActivity)
+                val aliDao = ALIPayDao(this@HomeActivity)
                 wxDao.deleteAll()
                 cashDao.deleteAll()
+                aliDao.deleteAll()
                 MyToast.getShortToast("清除完毕")
                 dialogView.dialog_edit.setText("")
                 deleteDialog.cancel()
@@ -135,9 +138,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             startActivity(Intent(this@HomeActivity, PersonnelActivity::class.java),
                     ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg4, "gg3").toBundle())
         }
-        val wxDao = WXPayDao(this)
-        val cashDao = CashPayDao(this)
         gg5.setOnClickListener {
+            val wxDao = WXPayDao(this)
+            val cashDao = CashPayDao(this)
             val wxData = wxDao.getAllData()
             val cashData = cashDao.getAllData()
             if (wxData.any { it.isDone == 0 } && cashData.any { it.isDone == 0 }) {
