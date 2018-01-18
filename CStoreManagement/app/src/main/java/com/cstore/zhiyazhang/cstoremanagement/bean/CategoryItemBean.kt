@@ -81,4 +81,4 @@ data class CategoryItemBean(
          * 修改次数
          */
         var changeCount: Int = 0
-) : Serializable
+) :Serializable

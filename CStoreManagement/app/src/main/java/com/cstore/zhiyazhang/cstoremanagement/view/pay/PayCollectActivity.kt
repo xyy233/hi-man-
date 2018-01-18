@@ -178,13 +178,12 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
     private fun refund() {
         val outTranNo = refund_out_tran_no.text.toString()
         if (outTranNo.isNotEmpty()) {
-            when (isWherePay) {
-                "微信" -> {
-                    wxPresenter.wechatRefund(outTranNo)
-                }
-                "支付宝" -> {
-                    aliPresenter.aliRefund(outTranNo)
-                }
+            isWherePay = if (switch1.isChecked) {
+                aliPresenter.aliRefund(outTranNo)
+                "支付宝"
+            } else {
+                wxPresenter.wechatRefund(outTranNo)
+                "微信"
             }
         } else {
             showPrompt("请输入商户订单号或扫描退款码！")
@@ -219,6 +218,8 @@ class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_came
         pos.telSeq = MyApplication.getOnlyid()
         pos.nextTranNo = posBean.nextTranNo
     }
+
+
 
     //收款成功
     override fun <T> requestSuccess(rData: T) {

@@ -65,7 +65,6 @@ object MyTimeUtil {
     fun deleteTime(date: String): String {
         return getYMDStringByDate(getDateByString(date))
     }
-
     /**
      * String转为时间
 
@@ -121,10 +120,18 @@ object MyTimeUtil {
             return Calendar.getInstance().get(Calendar.MONTH) + 1
         }
 
-    val nowYear: Int
+    private val nowYear: Int
         get() {
             return Calendar.getInstance().get(Calendar.YEAR)
         }
+
+    fun dayOfYear():String{
+        return Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString().padStart(3,'0')
+    }
+
+    fun nowYear():String{
+        return nowYear.toString().substring(2)
+    }
 
     /**
      * @return 获得当前时间

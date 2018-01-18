@@ -7,7 +7,9 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.dayOfYear
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteTime
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.nowYear
 
 /**
  * Created by zhiya.zhang
@@ -1546,7 +1548,7 @@ object MySql {
                 "('${bean.storeId}', '${bean.assPos}', ${bean.nextTranNo}, ${bean.totalFee}, '${bean.transactionId}', sysdate, '${bean.seq}', '${bean.openId}', ${bean.couponFee}, ${bean.totalFee - bean.couponFee}) \u0004"
     }
 
-    fun createAliPayDone(bean:ALIPaySqlBean):String{
+    fun createAliPayDone(bean: ALIPaySqlBean): String {
         return "insert into posul_alipay_detail " +
                 "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
                 "values " +
@@ -1562,7 +1564,7 @@ object MySql {
             val seq = "01"
             val buyId = payData.buyerLogonId
             if (isRefund) {
-                totalFee*=-1
+                totalFee *= -1
             }
             "insert into posul_alipay_detail " +
                     "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
@@ -1582,7 +1584,7 @@ object MySql {
             val seq = "01"
             val buyId = payData.buyerLogonId
             if (isRefund) {
-                totalFee*=-1
+                totalFee *= -1
             }
             "insert into posul_alipay_detail " +
                     "(storenumber, posnumber, transactionnumber, seq, trade_no, buyer_logon_id, total_fee, systemdate, fund_channel) " +
@@ -1626,5 +1628,169 @@ object MySql {
      */
     fun refoundCall(pay_tranno: String, refoundId: String, isWhere: String): String {
         return "call refound_Shopping_basket_r01('${MyApplication.getOnlyid()}',$pay_tranno,'$refoundId','$isWhere')\u0004"
+    }
+
+    /**********************************************商品调拨************************************************************/
+
+    /**
+     * 得到指定日期所有调出单
+     */
+    fun getTrs(date: String): String {
+        return "SELECT trsid, " +
+                "trs.busidate, " +
+                "trsStoreID, " +
+                "trsNumber, " +
+                "sum(trsQuantity) trsQuantity, " +
+                "0.0 + Count(*) trsItem, " +
+                "trs.storeID, " +
+                "trs.storeUnitPrice, " +
+                "round(sum(trsQuantity * trs.sell_cost * " +
+                "(1 + nvl(taxtype.taxRate, 0))), " +
+                "6) tax_sell_tot, " +
+                "(nvl(i.befinvquantity, 0) + nvl(i.accDlvQuantity, 0) - " +
+                "nvl(i.accRtnQuantity, 0) - nvl(i.accSaleQuantity, 0) + " +
+                "nvl(i.accSaleRtnQuantity, 0) - nvl(i.accMrkQuantity, 0) + " +
+                "nvl(i.accCshDlvQuantity, 0) - nvl(i.accCshRtnQuantity, 0) + " +
+                "nvl(i.accTrsQuantity, 0) + nvl(i.accLeibianQuantity, 0) + " +
+                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) as inv_qty " +
+                "FROM trs, plu " +
+                "left join taxtype " +
+                "on taxtype.storeID = plu.storeID " +
+                "AND taxtype.taxID = plu.taxID " +
+                "left join inv i " +
+                "on i.storeID = plu.storeID " +
+                "AND i.itemNumber = plu.itemNumber " +
+                "AND i.busiDate = to_date('$date', 'yyyy-mm-dd')) " +
+                "WHERE (trs.storeid = '${User.getUser().storeId}' AND " +
+                "trs.busidate = to_date('$date', 'yyyy-mm-dd')) " +
+                "AND (plu.ItemNumber = trs.ItemNumber AND plu.storeid = trs.storeid) " +
+                "group by trs.storeID, " +
+                "trsNumber, " +
+                "trs.busidate, " +
+                "trsid, " +
+                "trs.storeUnitPrice, " +
+                "trsStoreID, " +
+                "(nvl(i.befinvquantity, 0) + nvl(i.accDlvQuantity, 0) - " +
+                "nvl(i.accRtnQuantity, 0) - nvl(i.accSaleQuantity, 0) + " +
+                "nvl(i.accSaleRtnQuantity, 0) - nvl(i.accMrkQuantity, 0) + " +
+                "nvl(i.accCshDlvQuantity, 0) - nvl(i.accCshRtnQuantity, 0) + " +
+                "nvl(i.accTrsQuantity, 0) + nvl(i.accLeibianQuantity, 0) + " +
+                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) " +
+                "ORDER BY storeid, trs.busidate, trsid, trsNumber"
+    }
+
+    /**
+     * 得到今天最大的TrsNumber
+     */
+    val getMaxTrsNumber: String
+        get() {
+            return "select Max(TrsNumber) value from trs\n" +
+                    "where storeID='111112' and  trsID='O' and\n" +
+                    "trsnumber like '%${nowYear() + dayOfYear()}%'\u0004"
+        }
+
+    /**
+     * 判断是否存在此单号
+     */
+    fun isExistTrs(trsNumber: String): String {
+        return "select * from trs where trsnumber like '%$trsNumber%'\u0004"
+    }
+
+    /**
+     * 得到商品
+     */
+    fun getTrsCommodity(data: String): String {
+        return "select plu.itemNumber, " +
+                "plu.pluName, " +
+                "plu.storeUnitPrice, " +
+                "plu.VendorID, " +
+                "plu.SupplierID, " +
+                "unit.UnitName, " +
+                "plu.shipnumber, " +
+                "substr(plu.SignType, 6, 1) SignType, " +
+                "plu.basic_cost unitCost, " +
+                "plu.sell_cost, " +
+                "plu.sell_cost * (1 + nvl(taxtype.taxRate, 0)) tax_sell_cost, " +
+                "plu.vendorid, " +
+                "plu.supplierid, " +
+                "plu.stocktype, " +
+                "(nvl(i.befinvquantity, 0) + nvl(i.accDlvQuantity, 0) - " +
+                "nvl(i.accRtnQuantity, 0) - nvl(i.accSaleQuantity, 0) + " +
+                "nvl(i.accSaleRtnQuantity, 0) - nvl(i.accMrkQuantity, 0) + " +
+                "nvl(i.accCshDlvQuantity, 0) - nvl(i.accCshRtnQuantity, 0) + " +
+                "nvl(i.accTrsQuantity, 0) + nvl(i.accLeibianQuantity, 0) + " +
+                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) as inv_qty " +
+                "from plu " +
+                "left join unit " +
+                "on unit.storeid = plu.storeid " +
+                "and unit.unitID = plu.SmallUnitID " +
+                "left join taxtype " +
+                "on taxtype.storeID = plu.storeID " +
+                "AND taxtype.taxID = plu.taxID " +
+                "left join inv i " +
+                "on i.storeID = plu.storeID " +
+                "AND i.itemNumber = plu.itemNumber " +
+                "AND i.busiDate = trunc(sysdate) " +
+                "where plu.StoreID = '${User.getUser().storeId}' " +
+                "and plu.ItemNumber = decode(length('$data'),6,'$data'," +
+                "(select t.itemnumber from ITEMPLU t " +
+                "where t.plunumber='$data'))\u0004"
+    }
+
+    /**
+     * 创建调出单
+     */
+    fun createTrs(tib: TrsItemBean): String {
+        return "Insert into trs (Storeid,busidate,trsID,trsNumber,itemnumber,shipnumber,storeUnitPrice,unitCost, " +
+                "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorid,supplierid) " +
+                "values " +
+                "('${User.getUser().storeId}',to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd'),'0','${tib.trsNumber}','${tib.pluId}','${tib.shipNumber}',${tib.storeUnitPrice},${tib.unitCost}," +
+                "'${tib.trsStoreId}',${tib.trsQty},'${User.getUser().uId}',sysdate + 0.001,sysdate,'00',${tib.sellCost},'${tib.vendorId}','${tib.supplierId}')\u000c"
+    }
+
+    /**
+     * 更新调出单
+     */
+    fun updateTrs(tib: TrsItemBean): String {
+        return "update trs  " +
+                "set trsquantity = ${tib.trsQty}  " +
+                "where storeid = '${User.getUser().storeId}'  " +
+                "and busidate = to_date('${CStoreCalendar.getCurrentDate(0)}', 'yyyy-mm-dd')  " +
+                "and trsid = '0'  " +
+                "and trsnumber = '${tib.trsNumber}'  " +
+                "and itemnumber = '${tib.pluId}'\u000c"
+    }
+
+    /**
+     * 查找店号
+     */
+    fun searchStore(storeId: String): String {
+        return "select ostoreid,ostorename,DECODE(ostore_attr,'1','直营','2','委托','3','特I','4','特II','5','2F') ostore_attr from ostore where ostoreid='$storeId' order by ostoreid"
+    }
+
+    val getTrsf: String
+        get() {
+            return "select trsnumber,count(*) cnt from trs_hq t  " +
+                    "where t.status <> '1'  " +
+                    "and t.busidate > sysdate - 31  " +
+                    "group by trsnumber  " +
+                    "order by trsnumber desc\u0004"
+        }
+
+    /**
+     * 创建调入单
+     */
+    fun createTrsf(tib: TrsfItemBean): String {
+        return "insert into trs(STOREID, BUSIDATE, TRSID, TRSNUMBER, ITEMNUMBER, SHIPNUMBER,  " +
+                "STOREUNITPRICE, UNITCOST, TRSSTOREID, TRSQUANTITY, TRSTIME, TRSREASONNUMBER,  " +
+                "UPDATEUSERID, UPDATEDATETIME, SELL_COST, VENDORID, SUPPLIERID)  " +
+                "select P.STOREID,to_date('${CStoreCalendar.getCurrentDate(0)}' ,'yyyy-mm-dd') busidate, 'I' TRSID, TRSNUMBER,P.ITEMNUMBER,SHIPNUMBER,  " +
+                "P.STOREUNITPRICE, T.UNITCOST, TRSSTOREID, TRSQUANTITY, sysdate TRSTIME, '00' TRSREASONNUMBER,  " +
+                "'${User.getUser().uId}',SYSDATE, P.SELL_COST, VENDORID, SUPPLIERID  " +
+                "FROM TRS_HQ T, PLU P  " +
+                "WHERE T.STOREID = P.STOREID  " +
+                "AND T.ITEMNUMBER = P.ITEMNUMBER  " +
+                "AND T.TRSNUMBER = '${tib.trsNumber}'\u000c " +
+                "update trs_hq set status = '1' where trsnumber ='${tib.trsNumber}'\u0004"
     }
 }

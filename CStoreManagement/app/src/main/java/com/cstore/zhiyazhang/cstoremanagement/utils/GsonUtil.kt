@@ -108,4 +108,12 @@ object GsonUtil {
     fun getAli(data:String):AliQueryBean{
         return Gson().fromJson(data,AliQueryBean::class.java)
     }
+
+    fun getTrs(data: String): ArrayList<TrsItemBean> {
+        return Gson().fromJson<ArrayList<TrsItemBean>>(data, object : TypeToken<ArrayList<TrsItemBean>>() {}.type)
+    }
+
+    fun getTrsf(data: String): ArrayList<TrsfItemBean> {
+        return Gson().fromJson<ArrayList<TrsfItemBean>>(data, object : TypeToken<ArrayList<TrsfItemBean>>() {}.type)
+    }
 }
