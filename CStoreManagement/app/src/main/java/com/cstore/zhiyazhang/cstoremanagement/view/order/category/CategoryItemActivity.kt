@@ -39,7 +39,7 @@ import java.io.Serializable
  * Created by zhiya.zhang
  * on 2017/7/26 14:23.
  */
-class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), GenericView, CategoryItemView, EasyPermissions.PermissionCallbacks {
+class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), CategoryItemView, EasyPermissions.PermissionCallbacks {
 
     override var nowMidId: String = ""
 

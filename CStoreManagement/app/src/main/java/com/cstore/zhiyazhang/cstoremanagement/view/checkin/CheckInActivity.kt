@@ -29,7 +29,7 @@ import java.util.*
  * Created by zhiya.zhang
  * on 2017/10/11 15:15.
  */
-class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) : MyActivity(), GenericView {
+class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) : MyActivity() {
     companion object {
         private val ORIENTATIONS = SparseIntArray()
 

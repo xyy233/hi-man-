@@ -260,4 +260,14 @@
     <string name="idorcode">品号/条码</string>
     <string name="edit_out_tran_no">请输入商户订单号</string>
     <string name="delete_error_pay_data">清空交易异常数据</string>
+
+    <!--调拨-->
+    <string name="transfer">调拨</string>
+    <string name="trs_number">调拨单号:</string>
+    <string name="ostore_id">往来店号:</string>
+    <string name="trs_count">调拨项数:</string>
+    <string name="trs_qty">调拨数量:</string>
+    <string name="trs_type">调拨类型:</string>
+    <string name="unit_cost_total">零售合计:</string>
+    <string name="trs_date">调拨业务日:</string>
 </resources>

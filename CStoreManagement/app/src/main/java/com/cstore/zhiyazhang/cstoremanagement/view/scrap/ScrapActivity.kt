@@ -48,7 +48,7 @@ import kotlin.collections.ArrayList
  * Created by zhiya.zhang
  * on 2017/8/21 15:44.
  */
-class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyActivity(), GenericView, ScrapView, EasyPermissions.PermissionCallbacks {
+class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyActivity(), ScrapView, EasyPermissions.PermissionCallbacks {
 
     private val presenter = ScrapPresenter(this, this, this)
     private val editData = ArrayList<ScrapContractBean>()

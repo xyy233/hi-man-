@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * Created by zhiya.zhang
  * on 2017/11/3 14:36.
  */
-class ReturnPurchaseItemActivity(override val layoutId: Int = R.layout.activity_purchase_acceptance_item) : MyActivity(), GenericView {
+class ReturnPurchaseItemActivity(override val layoutId: Int = R.layout.activity_purchase_acceptance_item) : MyActivity() {
 
     private lateinit var data: ReturnedPurchaseBean
     private lateinit var date: String

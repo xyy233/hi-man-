@@ -13,7 +13,6 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAccep
 import com.cstore.zhiyazhang.cstoremanagement.presenter.acceptance.PurchaseAcceptancePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_acceptance_create.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * Created by zhiya.zhang
  * on 2017/9/14 10:22.
  */
-class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_acceptance_create) : MyActivity(), GenericView {
+class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_acceptance_create) : MyActivity() {
 
     private lateinit var date: String
     private var ab: AcceptanceBean? = null//上一页传过来的，如果上一页是在单子里面创建的就是空的，如果是在商品内就有，查询商品的时候要检查是否为空,如果内部有数据那就去除掉那些

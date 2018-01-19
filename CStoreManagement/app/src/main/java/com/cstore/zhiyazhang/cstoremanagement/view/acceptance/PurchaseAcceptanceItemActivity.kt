@@ -33,7 +33,7 @@ import java.text.DecimalFormat
  * Created by zhiya.zhang
  * on 2017/9/12 8:54.
  */
-class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activity_purchase_acceptance_item) : MyActivity(),GenericView{
+class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activity_purchase_acceptance_item) : MyActivity(){
 
     private lateinit var dialog: AlertDialog
     private lateinit var dialogView:View

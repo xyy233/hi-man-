@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
  * Created by zhiya.zhang
  * on 2017/9/1 15:17.
  */
-class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_scrap_hot_item) : MyActivity(), GenericView {
+class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_scrap_hot_item) : MyActivity() {
 
     val presenter = ScrapHotPresenter(this, this)
     private val hotMid: ArrayList<ScrapHotBean>

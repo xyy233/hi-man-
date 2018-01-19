@@ -116,4 +116,8 @@ object GsonUtil {
     fun getTrsf(data: String): ArrayList<TrsfItemBean> {
         return Gson().fromJson<ArrayList<TrsfItemBean>>(data, object : TypeToken<ArrayList<TrsfItemBean>>() {}.type)
     }
+
+    fun getOStore(data:String): ArrayList<OStoreBean> {
+        return Gson().fromJson<ArrayList<OStoreBean>>(data, object : TypeToken<ArrayList<OStoreBean>>() {}.type)
+    }
 }

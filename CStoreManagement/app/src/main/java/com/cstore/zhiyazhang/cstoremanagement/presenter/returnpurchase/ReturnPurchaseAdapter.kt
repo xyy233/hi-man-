@@ -73,7 +73,7 @@ class ReturnPurchaseAdapter(private var date: String, val data: ArrayList<Return
         }
     }
 
-    inner class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
+    class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         val returnItem = item.findViewById<LinearLayout>(R.id.return_item)!!
         //退货单号
         val returnId = item.findViewById<TextView>(R.id.return_id)!!

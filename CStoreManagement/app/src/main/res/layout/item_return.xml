@@ -3,27 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/return_item"
-    android:background="@color/white"
-    android:elevation="2dp"
-    android:orientation="vertical"
-    android:foreground="@drawable/selector_foreground"
-    android:stateListAnimator="@drawable/lift_on_touch"
-    android:padding="8dp"
-    android:baselineAligned="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:baselineAligned="true"
+    android:elevation="2dp"
+    android:foreground="@drawable/selector_foreground"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:stateListAnimator="@drawable/lift_on_touch">
 
     <LinearLayout
         android:id="@+id/return_id_box"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
+
         <TextView
-            android:text="@string/return_id"
+            android:id="@+id/one_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/return_id"/>
+
         <TextView
             android:id="@+id/return_id"
             android:layout_width="wrap_content"
@@ -32,15 +35,18 @@
 
     <LinearLayout
         android:id="@+id/return_vendor_box"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
+
         <TextView
-            android:text="@string/vendor"
+            android:id="@+id/two_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/vendor"/>
+
         <TextView
             android:id="@+id/return_vendor"
             android:layout_width="wrap_content"
@@ -49,36 +55,44 @@
 
     <LinearLayout
         android:id="@+id/return_box"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="UselessParent"
-        android:baselineAligned="true">
+        android:layout_marginTop="3dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
-                android:text="@string/order_count"
+                android:id="@+id/three_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/order_count"/>
+
             <TextView
                 android:id="@+id/return_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
-                android:text="@string/pre_quantity"
+                android:id="@+id/four_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/pre_quantity"/>
+
             <TextView
                 android:id="@+id/return_quantity"
                 android:layout_width="wrap_content"
@@ -89,15 +103,18 @@
 
     <LinearLayout
         android:id="@+id/return_date_box"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
+
         <TextView
-            android:text="@string/return_date"
+            android:id="@+id/five_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/return_date"/>
+
         <TextView
             android:id="@+id/return_date"
             android:layout_width="wrap_content"
@@ -106,19 +123,48 @@
 
     <LinearLayout
         android:id="@+id/return_total_box"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
-        <TextView
-            android:text="@string/retail_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/return_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/six_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/retail_total"/>
+
+            <TextView
+                android:id="@+id/return_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seven_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/seven_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/trs_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
 
 

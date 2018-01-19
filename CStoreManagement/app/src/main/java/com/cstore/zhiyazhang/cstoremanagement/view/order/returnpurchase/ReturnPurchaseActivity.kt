@@ -20,7 +20,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.layout_date.*
@@ -33,7 +32,7 @@ import kotlin.collections.ArrayList
  * Created by zhiya.zhang
  * on 2017/11/3 14:30.
  */
-class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity(), GenericView {
+class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
     private val presenter = ReturnPurchasePresenter(this)
     private val calendar = Calendar.getInstance()!!
     //日期选择器

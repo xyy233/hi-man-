@@ -32,7 +32,7 @@ import java.util.*
  * Created by zhiya.zhang
  * on 2017/9/4 11:29.
  */
-class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) : MyActivity(), GenericView{
+class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) : MyActivity(){
 
     private val tabIndicators = ArrayList<String>()
     private val presenter=CashDailyPresenter(this,this,this)

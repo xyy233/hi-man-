@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * Created by zhiya.zhang
  * on 2017/11/13 17:34.
  */
-class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_camera) : MyActivity(), GenericView {
+class PayCollectActivity(override val layoutId: Int = R.layout.activity_pay_camera) : MyActivity() {
 
     private val wxPresenter = WXPayPresenter(this)
     private val aliPresenter = ALIPayPresenter(this)

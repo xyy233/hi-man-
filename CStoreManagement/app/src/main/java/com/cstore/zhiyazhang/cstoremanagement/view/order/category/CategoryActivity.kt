@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * Created by zhiya.zhang
  * on 2017/7/25 13:37.
  */
-class CategoryActivity(override val layoutId: Int = R.layout.activity_order_category) : MyActivity(), GenericView, ContractTypeView {
+class CategoryActivity(override val layoutId: Int = R.layout.activity_order_category) : MyActivity(), ContractTypeView {
 
 
     var adapter: OrderCategoryAdapter? = null

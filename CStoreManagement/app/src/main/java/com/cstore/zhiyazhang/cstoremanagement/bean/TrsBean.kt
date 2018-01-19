@@ -7,15 +7,28 @@ import java.io.Serializable
  * Created by zhiya.zhang
  * on 2018/1/18 16:26.
  */
+data class TrsBean(
+        @SerializedName("trsid") val trsId: Int,
+        @SerializedName("busidate") val busiDate: String,
+        @SerializedName("trsstoreid") val trsStoreId: String,
+        @SerializedName("trsnumber") var trsNumber: String,
+        @SerializedName("trsquantity") var trsQty: Int,
+        @SerializedName("trsitem") var trsItem: Int,
+        @SerializedName("storeunitprice") var storeUnitPrice: Double,
+        var items: ArrayList<TrsItemBean>
+) : Serializable
+
+
 data class TrsItemBean(
         @SerializedName("trsid") val trsId: Int,
         @SerializedName("trsstoreid") val trsStoreId: String,
-        @SerializedName("trsnumber") val trsNumber: String,
+        @SerializedName("trsnumber") var trsNumber: String,
         @SerializedName("trsquantity") var trsQty: Int,
         @SerializedName("trsitem") var trsItem: Int,
         @SerializedName("tax_sell_tot") val taxSellTot: Double,
         @SerializedName("vendorid") val vendorId: String,
         @SerializedName("supplierid") val supplierId: String,
+        val total: Double,
         var action: Int,
         var changeCount: Int
 ) : PluItemBean()

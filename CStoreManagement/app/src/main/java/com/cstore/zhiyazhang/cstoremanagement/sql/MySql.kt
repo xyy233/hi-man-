@@ -1643,24 +1643,14 @@ object MySql {
                 "sum(trsQuantity) trsQuantity, " +
                 "0.0 + Count(*) trsItem, " +
                 "trs.storeID, " +
-                "trs.storeUnitPrice, " +
+                "sum(trsQuantity*trs.storeUnitPrice) storeUnitPrice, " +
                 "round(sum(trsQuantity * trs.sell_cost * " +
                 "(1 + nvl(taxtype.taxRate, 0))), " +
-                "6) tax_sell_tot, " +
-                "(nvl(i.befinvquantity, 0) + nvl(i.accDlvQuantity, 0) - " +
-                "nvl(i.accRtnQuantity, 0) - nvl(i.accSaleQuantity, 0) + " +
-                "nvl(i.accSaleRtnQuantity, 0) - nvl(i.accMrkQuantity, 0) + " +
-                "nvl(i.accCshDlvQuantity, 0) - nvl(i.accCshRtnQuantity, 0) + " +
-                "nvl(i.accTrsQuantity, 0) + nvl(i.accLeibianQuantity, 0) + " +
-                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) as inv_qty " +
+                "6) tax_sell_tot " +
                 "FROM trs, plu " +
                 "left join taxtype " +
                 "on taxtype.storeID = plu.storeID " +
                 "AND taxtype.taxID = plu.taxID " +
-                "left join inv i " +
-                "on i.storeID = plu.storeID " +
-                "AND i.itemNumber = plu.itemNumber " +
-                "AND i.busiDate = to_date('$date', 'yyyy-mm-dd')) " +
                 "WHERE (trs.storeid = '${User.getUser().storeId}' AND " +
                 "trs.busidate = to_date('$date', 'yyyy-mm-dd')) " +
                 "AND (plu.ItemNumber = trs.ItemNumber AND plu.storeid = trs.storeid) " +
@@ -1669,14 +1659,50 @@ object MySql {
                 "trs.busidate, " +
                 "trsid, " +
                 "trs.storeUnitPrice, " +
-                "trsStoreID, " +
+                "trsStoreID " +
+                "ORDER BY storeid, trs.busidate, trsid, trsNumber"
+    }
+
+    fun getTrsItems(date: String, trsNum: String): String {
+        return "select trsid, " +
+                "trs.trsStoreID, " +
+                "trs.trsNumber, " +
+                "trs.shipnumber, " +
+                "trs.itemnumber, " +
+                "trs.storeUnitPrice, " +
+                "trs.storeunitPrice * trs.trsQuantity Total, " +
+                "0.0 + trs.UnitCost UnitCost, " +
+                "trs.trsQuantity, " +
+                "trs.busidate, " +
+                "trs.sell_cost, " +
+                "'FromDB' dtl_data_status, " +
+                "round(trs.sell_cost * (1 + nvl(taxtype.taxRate, 0)), 6) tax_sell_cost, " +
+                "plu.pluName, " +
+                "plu.vendorid, " +
+                "plu.supplierid, " +
                 "(nvl(i.befinvquantity, 0) + nvl(i.accDlvQuantity, 0) - " +
                 "nvl(i.accRtnQuantity, 0) - nvl(i.accSaleQuantity, 0) + " +
                 "nvl(i.accSaleRtnQuantity, 0) - nvl(i.accMrkQuantity, 0) + " +
                 "nvl(i.accCshDlvQuantity, 0) - nvl(i.accCshRtnQuantity, 0) + " +
                 "nvl(i.accTrsQuantity, 0) + nvl(i.accLeibianQuantity, 0) + " +
-                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) " +
-                "ORDER BY storeid, trs.busidate, trsid, trsNumber"
+                "nvl(i.accAdjQuantity, 0) + nvl(i.accHqAdjQuantity, 0)) as inv_qty " +
+                "FROM trs, plu " +
+                "left join unit " +
+                "on unit.storeid = plu.storeid " +
+                "and unit.unitID = plu.SmallUnitID " +
+                "left join taxtype " +
+                "on taxtype.storeID = plu.storeID " +
+                "AND taxtype.taxID = plu.taxID  " +
+                "left join inv i " +
+                "on i.storeID = plu.storeID " +
+                "AND i.itemNumber = plu.itemNumber " +
+                "AND i.busiDate = to_date('$date', 'yyyy-mm-dd') " +
+                "WHERE (trs.storeid = '${User.getUser().storeId}' and " +
+                "trs.busidate = to_date('$date', 'yyyy-mm-dd')) " +
+                "AND (plu.ItemNumber = trs.ItemNumber) " +
+                "and (plu.storeid = trs.storeid) " +
+                "and trs.trsnumber = '$trsNum' " +
+                " order by trs.itemnumber"
     }
 
     /**

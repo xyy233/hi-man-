@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * Created by zhiya.zhang
  * on 2017/9/1 11:48.
  */
-class ScrapHotActivity(override val layoutId: Int = R.layout.activity_scrap_hot) : MyActivity(), GenericView {
+class ScrapHotActivity(override val layoutId: Int = R.layout.activity_scrap_hot) : MyActivity() {
 
     val presenter = ScrapHotPresenter(this, this)
 

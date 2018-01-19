@@ -40,7 +40,7 @@ import java.text.DecimalFormat
  *
  * 去PayCollectActivity的时候intent传递参数action，0=收款，1=退款
  */
-class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivity(), GenericView {
+class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivity() {
 
     private val presenter = PayPresenter(this)
 

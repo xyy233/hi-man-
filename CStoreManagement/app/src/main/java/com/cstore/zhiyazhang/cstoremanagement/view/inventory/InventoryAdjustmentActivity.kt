@@ -42,7 +42,7 @@ import kotlin.collections.ArrayList
  * Created by zhiya.zhang
  * on 2017/9/25 17:16.
  */
-class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity_adjustment) : MyActivity(), GenericView, EasyPermissions.PermissionCallbacks {
+class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity_adjustment) : MyActivity(), EasyPermissions.PermissionCallbacks {
     private val presenter = AdjustmentPresenter(this, this, this)
     private var dialog: AlertDialog? = null
     private var dialogView: View? = null

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
 /**
  * Created by zhiya.zhang
@@ -13,7 +14,7 @@ import android.support.v7.app.AppCompatActivity
  * 此activity承担setContentView的工作
  * 以及完整退出应用步骤，确认退出时发送广播通知所有注册的activity退出
  */
-abstract class MyActivity : AppCompatActivity() {
+abstract class MyActivity : AppCompatActivity(),GenericView {
     protected val EXIT_APP_ACTION = "finish"
 
     private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

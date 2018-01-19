@@ -19,7 +19,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.layout_date.*
@@ -32,7 +31,7 @@ import java.util.*
  * on 2017/9/11 16:42.
  * order页布局简单刚好用于此处
  */
-class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity(), GenericView {
+class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
     private val presenter = PurchaseAcceptancePresenter(this,this)
     private var type = 1
 

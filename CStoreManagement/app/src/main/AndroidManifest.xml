@@ -172,6 +172,11 @@
         <activity
             android:name=".view.pay.PayCollectActivity"
             android:screenOrientation="portrait"/>
+
+        <!--商品调拨-->
+        <activity
+            android:name=".view.transfer.TransferActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
