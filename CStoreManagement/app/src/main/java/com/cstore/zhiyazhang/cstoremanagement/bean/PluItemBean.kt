@@ -22,4 +22,5 @@ open class PluItemBean : Serializable {
     val sellCost: Double? = null
     @SerializedName("inv_qty")
     val invQty: Int? = null
+    var editCount: Int = 0
 }

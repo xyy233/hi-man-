@@ -140,20 +140,19 @@ class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity
             calendar1.timeInMillis = System.currentTimeMillis()
             if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(0)) calendar1.set(Calendar.DATE, calendar1.get(Calendar.DATE) + 1)
 
-            val selectDate=(year.toString()+month.toString()+day.toString()).toInt()
-            val nowDate=(calendar1.get(Calendar.YEAR).toString()+calendar1.get(Calendar.MONTH).toString()+calendar1.get(Calendar.DAY_OF_MONTH).toString()).toInt()
-            if (selectDate>nowDate){
+            val m=if (month+1<10)"0${month + 1}" else (month + 1).toString()
+            val d= if (day < 10) "0$day" else day.toString()
+            val selectDate = (year.toString() + m + d).toInt()
+            val nowDate=MyTimeUtil.getYMDStringByDate3(calendar1.time).toInt()
+            if (selectDate > nowDate) {
                 showPrompt("不能选择未来日期")
                 return@OnDateSetListener
             }
             val textYear = year.toString() + "年"
-            val mm = if (month + 1 < 10) "0${month + 1}月"//如果小于十月就代表是个位数要手动加上0
-            else (month + 1).toString() + "月"
-            val dd = if (day < 10) "0$day"//如果小于十日就代表是个位数要手动加上0
-            else day.toString()
+            val mm = m + "月"
             date_util.year.text = textYear
             date_util.month.text = mm
-            date_util.day.text = dd
+            date_util.day.text = d
             presenter.getAdjustmentList(MyTimeUtil.getTextViewDate(date_util))
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         datePickDialog.show()

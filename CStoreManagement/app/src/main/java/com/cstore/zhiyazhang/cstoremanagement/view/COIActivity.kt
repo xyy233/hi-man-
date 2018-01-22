@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * on 2017/9/15 9:27.
  */
 class COIActivity(override val layoutId: Int = R.layout.activity_coi) : MyActivity() {
+
     override fun initView() {
         my_toolbar.title = getString(R.string.coi)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)

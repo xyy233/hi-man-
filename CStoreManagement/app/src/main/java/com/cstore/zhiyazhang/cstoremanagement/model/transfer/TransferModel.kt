@@ -24,7 +24,7 @@ class TransferModel : TransferInterface {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val sql = MySql.getTrs(date)
             val result = SocketUtil.initSocket(ip, sql).inquire()
-            val tib = ArrayList<TrsItemBean>()
+            val tib = ArrayList<TrsBean>()
             if (result == "[]") {
                 msg.obj = tib
                 msg.what = SUCCESS
@@ -39,12 +39,36 @@ class TransferModel : TransferInterface {
                 msg.obj = result
                 msg.what = ERROR
             } else {
-                tib.forEach { it.action = 1 }
+                tib.forEach {
+                    val items = getTrsItem(it.trsNumber, date, ip, msg, handler)
+                    if (items.isEmpty()) return@Runnable
+                    it.items = items
+                }
                 msg.obj = tib
                 msg.what = SUCCESS
             }
             handler.sendMessage(msg)
         }).start()
+    }
+
+    /**
+     * 获得调拨单下的商品
+     */
+    private fun getTrsItem(trsNumber: String, date: String, ip: String, msg: Message, handler: MyHandler): ArrayList<TrsItemBean> {
+        val sql = MySql.getTrsItems(date, trsNumber)
+        val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
+        val result = ArrayList<TrsItemBean>()
+        try {
+            result.addAll(GsonUtil.getTrsItem(sqlResult))
+        } catch (e: Exception) {
+        }
+        if (result.isEmpty()) {
+            msg.obj = result
+            msg.what = ERROR
+        } else {
+            result.forEach { it.action = 0 }
+        }
+        return result
     }
 
     override fun searchCommodity(data: String, handler: MyHandler) {
@@ -54,7 +78,7 @@ class TransferModel : TransferInterface {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val sql = MySql.getTrsCommodity(data)
             val result = SocketUtil.initSocket(ip, sql).inquire()
-            val tib = ArrayList<TrsItemBean>()
+            val tib = ArrayList<PluItemBean>()
             if (result == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = ERROR
@@ -62,14 +86,16 @@ class TransferModel : TransferInterface {
                 return@Runnable
             }
             try {
-                tib.addAll(GsonUtil.getTrs(result))
+                tib.addAll(GsonUtil.getPlu(result))
             } catch (e: Exception) {
             }
             if (tib.isEmpty()) {
                 msg.obj = result
                 msg.what = ERROR
             } else {
-                tib.forEach { it.action = 0 }
+                tib.forEach {
+                    //变成TrsItemBean
+                }
                 msg.obj = tib
                 msg.what = SUCCESS
             }

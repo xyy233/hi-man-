@@ -51,7 +51,7 @@ class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_orde
         orderRecycler.addItemDecoration(dividerItemDecoration)
         orderRecycler.itemAnimator = DefaultItemAnimator()
 
-        datePickDialog = DatePickerDialog(this@ReturnPurchaseActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+        datePickDialog = DatePickerDialog(this@ReturnPurchaseActivity, DatePickerDialog.OnDateSetListener { _, year, month, day ->
             run {
                 val myCalendar = Calendar.getInstance()
                 myCalendar.timeInMillis = System.currentTimeMillis()
@@ -60,19 +60,19 @@ class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_orde
                     myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 2)
                 }
 
-                val selectDate = (year.toString() + monthOfYear.toString() + dayOfMonth.toString()).toInt()
-                if (selectDate > MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()) {
+                val m=if (month + 1<10)"0${month + 1}" else (month + 1).toString()
+                val d= if (day < 10) "0$day" else day.toString()
+                val selectDate = (year.toString() + m + d).toInt()
+                val nowDate=MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
+                if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear = year.toString() + "年"
-                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else (monthOfYear + 1).toString() + "月"
-                val dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dayOfMonth.toString()
+                val mm = m + "月"
                 date_util.year.text = textYear
                 date_util.month.text = mm
-                date_util.day.text = dd
+                date_util.day.text = d
                 presenter.getReturnPurchaseList(MyTimeUtil.getTextViewDate(date_util))
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
@@ -161,6 +161,7 @@ class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_orde
                     adapter!!.updateData(rb as ReturnedPurchaseBean)
                 } catch (e: Exception) {
                     Log.e("预约退货", e.message.toString())
+                    showPrompt(e.message.toString())
                 }
             }
             1 -> {
@@ -169,6 +170,7 @@ class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_orde
                     if (isNew) presenter.getReturnPurchaseList(MyTimeUtil.getTextViewDate(date_util))
                 } catch (e: Exception) {
                     Log.e("预约退货", e.message.toString())
+                    showPrompt(e.message.toString())
                 }
             }
         }

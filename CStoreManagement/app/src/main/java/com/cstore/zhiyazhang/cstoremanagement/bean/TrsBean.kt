@@ -29,8 +29,10 @@ data class TrsItemBean(
         @SerializedName("vendorid") val vendorId: String,
         @SerializedName("supplierid") val supplierId: String,
         val total: Double,
-        var action: Int,
-        var changeCount: Int
+        /**
+         * 0=已存在 1=新的
+         */
+        var action: Int
 ) : PluItemBean()
 
 data class TrsfItemBean(

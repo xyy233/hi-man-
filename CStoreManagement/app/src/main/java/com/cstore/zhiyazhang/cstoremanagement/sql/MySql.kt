@@ -1663,6 +1663,9 @@ object MySql {
                 "ORDER BY storeid, trs.busidate, trsid, trsNumber"
     }
 
+    /**
+     * 得到调出单下的商品
+     */
     fun getTrsItems(date: String, trsNum: String): String {
         return "select trsid, " +
                 "trs.trsStoreID, " +

@@ -68,12 +68,6 @@ class TransferAdapter(private var date: String, val data: ArrayList<TrsBean>, pr
         }
     }
 
-    fun addItem(aData: TrsBean) {
-        data.add(aData)
-        data.sortByDescending { it.busiDate }
-        notifyDataSetChanged()
-    }
-
     /**
      * 更新数据
      */

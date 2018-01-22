@@ -24,7 +24,7 @@ interface GenericView {
     /**
      * 显示loading信息
      */
-    fun showLoading()
+    fun showLoading(){}
 
     /**
      * 隐藏loading信息

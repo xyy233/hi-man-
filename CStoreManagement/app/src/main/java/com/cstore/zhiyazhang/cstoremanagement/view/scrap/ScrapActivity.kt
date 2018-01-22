@@ -27,7 +27,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.AddLessClickListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemTouchHelperCallback
@@ -347,23 +346,23 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun showDatePickDlg() {
         val calendar = Calendar.getInstance()
-        val datePickDialog = DatePickerDialog(this@ScrapActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+        val datePickDialog = DatePickerDialog(this@ScrapActivity, DatePickerDialog.OnDateSetListener { _, year, month, day ->
             run {
                 val myCalendar = Calendar.getInstance()
                 myCalendar.timeInMillis = System.currentTimeMillis()
-                val selectDate = (year.toString() + monthOfYear.toString() + dayOfMonth.toString()).toInt()
-                if (selectDate > MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()) {
+                val m=if (month + 1<10)"0${month + 1}" else (month + 1).toString()
+                val d= if (day < 10) "0$day" else day.toString()
+                val selectDate = (year.toString() + m + d).toInt()
+                val nowDate=MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
+                if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear = year.toString() + "年"
-                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else (monthOfYear + 1).toString() + "月"
-                val dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dayOfMonth.toString()
+                val mm = m + "月"
                 date_util.year.text = textYear
                 date_util.month.text = mm
-                date_util.day.text = dd
+                date_util.day.text = d
                 adapter.data.clear()
                 editData.clear()
                 val callback = ItemTouchHelperCallback(adapter as onMoveAndSwipedListener, MyTimeUtil.nowDate == MyTimeUtil.getTextViewDate(date_util))

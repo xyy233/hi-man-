@@ -150,20 +150,19 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                     //换日了要加一天
                     myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 1)
                 }
-
-                val selectDate = (year.toString() + monthOfYear.toString() + dayOfMonth.toString()).toInt()
-                if (selectDate > MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()) {
+                val m=if (monthOfYear+1<10)"0${monthOfYear + 1}" else (monthOfYear + 1).toString()
+                val d= if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth.toString()
+                val selectDate = (year.toString() + m + d).toInt()
+                val nowDate=MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
+                if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
                 val textYear = year.toString() + "年"
-                val mm = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}月"//如果小于十月就代表是个位数要手动加上0
-                else (monthOfYear + 1).toString() + "月"
-                val dd = if (dayOfMonth < 10) "0$dayOfMonth"//如果小于十日就代表是个位数要手动加上0
-                else dayOfMonth.toString()
+                val mm = m + "月"
                 date_util.year.text = textYear
                 date_util.month.text = mm
-                date_util.day.text = dd
+                date_util.day.text = d
                 if (type == 1) presenter.getAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
                 else presenter.getReturnAcceptanceList(MyTimeUtil.getTextViewDate(date_util))
                 orderRecycler.adapter = null

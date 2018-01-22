@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
+import android.content.Intent
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -42,8 +44,11 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
                     1 -> {
                         MyToast.getShortToast(getString(R.string.in_development))
                     }
-                    2->{
+                    2 -> {
                         MyToast.getShortToast(getString(R.string.in_development))
+                    }
+                    3 -> {
+                        startActivity(Intent(this@InStockActivity, TransferActivity::class.java))
                     }
                 }
             }
@@ -54,6 +59,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
         data.add(LogoBean(R.drawable.no_img, getString(R.string.unitInvSearch), 0))
         data.add(LogoBean(R.drawable.no_img, getString(R.string.fiveError), 1))
         data.add(LogoBean(R.drawable.no_img, getString(R.string.point), 2))
+        data.add(LogoBean(R.drawable.no_img, getString(R.string.transfer), 3))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
