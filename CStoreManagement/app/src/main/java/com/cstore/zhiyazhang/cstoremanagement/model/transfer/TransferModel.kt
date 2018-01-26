@@ -93,9 +93,6 @@ class TransferModel : TransferInterface {
                 msg.obj = result
                 msg.what = ERROR
             } else {
-                tib.forEach {
-                    //变成TrsItemBean
-                }
                 msg.obj = tib
                 msg.what = SUCCESS
             }
@@ -214,9 +211,15 @@ class TransferModel : TransferInterface {
      */
     private fun geteditTrsSql(data: ArrayList<TrsItemBean>, ip: String, msg: Message, handler: MyHandler): String {
         val result = StringBuilder()
-        val createData = data.filter { it.action == 0 }
+        val createData = data.filter { it.action == 1 }
         //获得这一单的单号
-        val trsNumber = getTrsNumber(ip, msg, handler)
+
+        val trsNumber = if (data[0].trsNumber!=""){
+            //有单号
+            data[0].trsNumber
+        }else{
+            getTrsNumber(ip, msg, handler)
+        }
         if (trsNumber == "ERROR") return trsNumber
 
         //添加创建语句
@@ -225,7 +228,7 @@ class TransferModel : TransferInterface {
             result.append(MySql.createTrs(it))
         }
         //添加更新语句
-        data.filter { it.action == 1 }.forEach {
+        data.filter { it.action == 0 }.forEach {
             result.append(MySql.updateTrs(it))
         }
         result.append("\u0004")
@@ -238,10 +241,6 @@ class TransferModel : TransferInterface {
     private fun getTrsNumber(ip: String, msg: Message, handler: MyHandler): String {
         val sql = MySql.getMaxTrsNumber
         val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-        if (sqlResult == "[]") {
-            //没有单号，新建
-            return trsNumberIsExits((MyTimeUtil.dayOfYear() + "1").toInt(), ip, msg, handler)
-        }
         //有单号
         val values = ArrayList<UtilBean>()
         try {
@@ -253,6 +252,10 @@ class TransferModel : TransferInterface {
             msg.what = ERROR
             handler.sendMessage(msg)
             return "ERROR"
+        }
+        if (values[0].value == null||values[0].value == "null") {
+            //没有单号，新建
+            return trsNumberIsExits((MyTimeUtil.dayOfYear() + "1").toInt(), ip, msg, handler)
         }
         return trsNumberIsExits(values[0].value!!.substring(8, 4).toInt() + 1, ip, msg, handler)
     }

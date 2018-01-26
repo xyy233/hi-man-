@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
@@ -118,13 +119,24 @@ class TransferActivity(override val layoutId: Int = R.layout.activity_order) : M
         adapter = TransferAdapter(MyTimeUtil.getTextViewDate(date_util), aData, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 //添加
-                showPrompt("点击添加按钮")
+                //拿到所有调出门市的数据
+                val stores = ArrayList<String>()
+                aData.forEach {
+                    stores.add(it.trsStoreId)
+                }
+                val i = Intent(this@TransferActivity, TransferItemActivity::class.java)
+                i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
+                i.putExtra("stores", stores)
+                startActivity(i)
             }
 
             override fun <T> onItemEdit(data: T, position: Int) {
                 //查看
                 if (data is TrsBean) {
-                    showPrompt("点击${data.trsNumber}查看")
+                    val i = Intent(this@TransferActivity, TransferItemActivity::class.java)
+                    i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
+                    i.putExtra("data", data)
+                    startActivity(i)
                 }
             }
         })

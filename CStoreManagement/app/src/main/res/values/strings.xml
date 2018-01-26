@@ -54,6 +54,7 @@
     <string name="date">日期：</string>
     <string name="status">状态：</string>
     <string name="cant_bgt_inv">数量不能大于库存</string>
+    <string name="qrcode_error">条码错误</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
@@ -175,6 +176,7 @@
     <string name="tax_sell_cost">含税单价：</string>
     <string name="retail">零售价：</string>
     <string name="please_edit_id">请输入品号</string>
+    <string name="please_edit_store">请输入店号</string>
     <string name="please_edit_dlv">请输入验收量</string>
     <string name="create_acceptance">创建验收项</string>
     <string name="return_purchase_acceptance">退货验收</string>
@@ -267,10 +269,12 @@
     <string name="transfer_quantity">调拨数</string>
     <string name="trs_number">调拨单号:</string>
     <string name="ostore_id">往来店号:</string>
+    <string name="ostore_id2">往来店号</string>
     <string name="trs_count">调拨项数:</string>
     <string name="trs_qty">调拨数量:</string>
     <string name="trs_type">调拨类型:</string>
     <string name="unit_cost_total">零售合计:</string>
     <string name="trs_date">调拨业务日:</string>
     <string name="search_prompt">请在右侧输入品号查询</string>
+    <string name="trs_please_edit_store">请输入要调出的门市并点击查询按钮！</string>
 </resources>

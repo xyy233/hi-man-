@@ -17,8 +17,8 @@ android {
         applicationId "com.cstore.zhiyazhang.cstoremanagement"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 25
-        versionName "17.10.24.0Alpha"
+        versionCode 26
+        versionName "18.01.26.0Alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

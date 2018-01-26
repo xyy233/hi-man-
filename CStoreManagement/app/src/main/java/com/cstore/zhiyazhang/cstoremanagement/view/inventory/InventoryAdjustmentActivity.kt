@@ -20,11 +20,7 @@ import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AdjustmentBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.adjustment.AdjustmentPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_adjustment.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -62,6 +58,7 @@ class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity
         MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(0))
         setSupportActionBar(my_toolbar)
         adjustment_tab.setupWithViewPager(adjustment_viewpager)
+        adjustment_viewpager.setPageTransformer(true, ZoomOutPageTransformer())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

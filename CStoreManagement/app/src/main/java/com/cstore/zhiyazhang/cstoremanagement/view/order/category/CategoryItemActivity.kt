@@ -26,7 +26,6 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryIt
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_contract.*
@@ -218,8 +217,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         }
         search_btn.setOnClickListener {
             presenter.getAllSearch(search_edit.text.toString())
-            val imm = getSystemService(
-                    Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
         }
         search_edit.setOnEditorActionListener { _, actionId, _ ->

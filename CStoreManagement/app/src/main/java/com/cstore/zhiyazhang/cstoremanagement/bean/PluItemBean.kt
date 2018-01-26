@@ -9,18 +9,46 @@ import java.io.Serializable
  */
 open class PluItemBean : Serializable {
     @SerializedName("itemnumber")
-    val pluId: String? = null
+    var pluId: String? = null
     @SerializedName("pluname")
-    val pluName: String? = null
+    var pluName: String? = null
     @SerializedName("storeunitprice")
-    val storeUnitPrice: Double? = null
+    var storeUnitPrice: Double? = null
     @SerializedName("shipnumber")
-    val shipNumber: Int? = null
+    var shipNumber: String? = null
     @SerializedName("unitcost")
-    val unitCost: Double? = null
+    var unitCost: Double? = null
     @SerializedName("sell_cost")
-    val sellCost: Double? = null
+    var sellCost: Double? = null
     @SerializedName("inv_qty")
-    val invQty: Int? = null
+    var invQty: Int? = null
+    @SerializedName("vendorid")
+    var vendorId: String? = null
+    @SerializedName("supplierid")
+    var supplierId: String? = null
+    @SerializedName("signtype")
+    var signType: String? = null
+    @SerializedName("stocktype")
+    var stockType: String? = null
     var editCount: Int = 0
+
+/*    *//**
+     * 想不到办法用泛型，只能继承一个复制一个过去了
+     *//*
+    private fun setData(data: Any, pluId: String, pluName: String, storeUnitPrice: Double, shipNumber: String, unitCost: Double, sellCost: Double, invQty: Int, vendorId: String, supplierId: String, signType: String, stockType: String): Any {
+        data as PluItemBean
+        data.pluId = pluId
+        data.pluName = pluName
+        data.storeUnitPrice = storeUnitPrice
+        data.shipNumber = shipNumber
+        data.unitCost = unitCost
+        data.sellCost = sellCost
+        data.invQty = invQty
+        data.vendorId = vendorId
+        data.supplierId = supplierId
+        data.signType = signType
+        data.stockType = stockType
+        return data
+    }
+    */
 }

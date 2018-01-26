@@ -22,7 +22,63 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/store_box"/>
+
+    <LinearLayout
+        android:id="@+id/store_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/store_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="0.4"/>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.6"
+            android:background="@drawable/bg_search_line"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            tools:ignore="UselessParent">
+
+            <EditText
+                android:id="@+id/store_search_edit"
+                android:layout_width="160dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="13dp"
+                android:background="@null"
+                android:hint="@string/ostore_id2"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColorHint="@color/white"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/store_search_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center"
+                android:layout_margin="2dp"
+                android:src="@mipmap/ic_search"
+                tools:ignore="ContentDescription"/>
+        </FrameLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/done"

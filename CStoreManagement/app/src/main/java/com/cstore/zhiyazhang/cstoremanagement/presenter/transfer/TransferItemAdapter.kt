@@ -11,7 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
-import kotlinx.android.synthetic.main.item_commodity_return.view.*
+import kotlinx.android.synthetic.main.item_plu_card.view.*
 import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
 
 /**
@@ -19,6 +19,11 @@ import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
  * on 2018/1/22 9:52.
  */
 class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemBean>, private val onClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    /**
+     * 控制是否显示添加
+     */
+    private var showAdd = true
+
     companion object {
         private val TYPE_ITEM = 1
         private val TYPE_FOOTER = 2
@@ -27,19 +32,19 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ITEM -> {
-                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_return, parent, false))
+                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
             }
             TYPE_FOOTER -> {
                 FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_purchase_acceptance, parent, false))
             }
             else -> {
-                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_return, parent, false))
+                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
+        return if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0 && showAdd) {
             data.size + 1
         } else {
             data.size
@@ -59,7 +64,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
 
     override fun getItemViewType(position: Int): Int {
         return if (position + 1 == itemCount) {
-            if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
+            if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0 && showAdd) {
                 TYPE_FOOTER
             } else {
                 TYPE_ITEM
@@ -67,6 +72,11 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
         } else {
             TYPE_ITEM
         }
+    }
+
+    fun updateShowAdd() {
+        showAdd = !showAdd
+        notifyDataSetChanged()
     }
 
     fun addItem(aData: TrsItemBean) {
@@ -84,40 +94,49 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
     private inner class ItemViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind(tib: TrsItemBean) = with(itemView) {
             val context = MyApplication.instance().applicationContext
-            lsjjhlj_box.visibility = View.GONE
-            reason_box.visibility = View.GONE
             edit_count_text.text = context.getString(R.string.transfer_quantity)
-            commodity_id.text = tib.pluId
-            commodity_name.text = tib.pluName
+            one_text.text = context.getString(R.string.inventory2)
+            two_text.text = context.getString(R.string.retail_total)
+            plu_id.text = tib.pluId
+            plu_name.text = tib.pluName
             Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${tib.pluId}.do")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()
-                    .into(commodity_img)
-            commodity_retail.text = tib.storeUnitPrice.toString()
-            commodity_retail_total.text = tib.total.toString()
-            commodity_inv.text=tib.invQty.toString()
-            plnrtn_quantity.text=tib.trsQty.toString()
+                    .into(plu_img)
+            plu_retail.text = tib.storeUnitPrice.toString()
+            two_text_detail.text = tib.total.toString()
+            one_text_detail.text = tib.invQty.toString()
+            pln_qty.text = tib.trsQty.toString()
 
-            return_less.setOnClickListener {
-                if (tib.trsQty>0){
-                    tib.trsQty--
-                    tib.editCount--
-                    plnrtn_quantity.text=tib.trsQty.toString()
-                    onClick.onItemEdit(tib,0)
-                }else{
-                    MyToast.getShortToast(context.getString(R.string.maxOrMinError))
+            if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
+                btn_less.visibility = View.VISIBLE
+                btn_add.visibility = View.VISIBLE
+                add_less_line.visibility = View.VISIBLE
+                btn_less.setOnClickListener {
+                    if (tib.trsQty > 0) {
+                        tib.trsQty--
+                        tib.editCount--
+                        pln_qty.text = tib.trsQty.toString()
+                        onClick.onItemEdit(tib, 0)
+                    } else {
+                        MyToast.getShortToast(context.getString(R.string.maxOrMinError))
+                    }
                 }
-            }
-            return_add.setOnClickListener {
-                if (tib.trsQty<tib.invQty!!){
-                    tib.trsQty++
-                    tib.editCount++
-                    plnrtn_quantity.text=tib.trsQty.toString()
-                    onClick.onItemEdit(tib,0)
-                }else{
-                    MyToast.getShortToast(context.getString(R.string.cant_bgt_inv))
+                btn_add.setOnClickListener {
+                    if (tib.trsQty < tib.invQty!!) {
+                        tib.trsQty++
+                        tib.editCount++
+                        pln_qty.text = tib.trsQty.toString()
+                        onClick.onItemEdit(tib, 0)
+                    } else {
+                        MyToast.getShortToast(context.getString(R.string.cant_bgt_inv))
+                    }
                 }
+            } else {
+                btn_less.visibility = View.GONE
+                btn_add.visibility = View.GONE
+                add_less_line.visibility = View.GONE
             }
         }
     }

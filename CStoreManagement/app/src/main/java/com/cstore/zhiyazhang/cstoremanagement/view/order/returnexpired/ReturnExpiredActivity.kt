@@ -12,6 +12,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.returnexpired.ReturnExpi
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.ZoomOutPageTransformer
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_cashdaily.*
@@ -43,6 +44,7 @@ class ReturnExpiredActivity(override val layoutId: Int = R.layout.activity_cashd
         tabIndicators.add(getString(R.string.return_expired2))
         cash_daily_tab.tabMode = MODE_FIXED
         cash_daily_tab.setupWithViewPager(cash_daily_viewpager)
+        cash_daily_viewpager.setPageTransformer(true, ZoomOutPageTransformer())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

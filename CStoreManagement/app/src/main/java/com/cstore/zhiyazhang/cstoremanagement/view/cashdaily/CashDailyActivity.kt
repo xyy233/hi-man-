@@ -14,11 +14,7 @@ import android.widget.ArrayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CashDailyBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.cashdaily.CashDailyPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import kotlinx.android.synthetic.main.activity_cashdaily.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -32,29 +28,30 @@ import java.util.*
  * Created by zhiya.zhang
  * on 2017/9/4 11:29.
  */
-class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) : MyActivity(){
+class CashDailyActivity(override val layoutId: Int = R.layout.activity_cashdaily) : MyActivity() {
 
     private val tabIndicators = ArrayList<String>()
-    private val presenter=CashDailyPresenter(this,this,this)
+    private val presenter = CashDailyPresenter(this, this, this)
 
-    var dialog:AlertDialog?=null
+    var dialog: AlertDialog? = null
 
     override fun initView() {
-        my_toolbar.title=getString(R.string.cash_daily)
+        my_toolbar.title = getString(R.string.cash_daily)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        date_util.visibility=View.VISIBLE
+        date_util.visibility = View.VISIBLE
         //用换日表的时间
-        MyTimeUtil.setTextViewDate(date_util,CStoreCalendar.getCurrentDate(1))
+        MyTimeUtil.setTextViewDate(date_util, CStoreCalendar.getCurrentDate(1))
         setSupportActionBar(my_toolbar)
         //设置title
         resources.getStringArray(R.array.cashDailyTags).forEach { tabIndicators.add(it) }
         //设置tab和viewPager联动
         cash_daily_tab.setupWithViewPager(cash_daily_viewpager)
+        cash_daily_viewpager.setPageTransformer(true, ZoomOutPageTransformer())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->onBackPressed()
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
         }
         return true
     }
@@ -63,16 +60,16 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         loading.setOnClickListener {
             showPrompt(getString(R.string.wait_loading))
         }
-        date_util.setOnTouchListener{_,event->
-            if (event.action==MotionEvent.ACTION_DOWN){
+        date_util.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 showDatePickDlg()
                 true
-            }else false
+            } else false
         }
         loading_retry.setOnClickListener {
-            loading_retry.visibility=View.GONE
-            loading_text.visibility=View.VISIBLE
-            loading_progress.visibility=View.VISIBLE
+            loading_retry.visibility = View.GONE
+            loading_text.visibility = View.VISIBLE
+            loading_progress.visibility = View.VISIBLE
             presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
         }
     }
@@ -81,42 +78,42 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
     }
 
-    var dialogView:View?= null
-    fun updateData(view: View, cd:CashDailyBean){
-        if (dialog==null){
-            val builder=AlertDialog.Builder(this@CashDailyActivity)
-            dialogView = View.inflate(this,R.layout.dialog_cashdaily,null)!!
+    var dialogView: View? = null
+    fun updateData(view: View, cd: CashDailyBean) {
+        if (dialog == null) {
+            val builder = AlertDialog.Builder(this@CashDailyActivity)
+            dialogView = View.inflate(this, R.layout.dialog_cashdaily, null)!!
             builder.setView(dialogView)
             builder.setCancelable(true)
-            dialog=builder.create()
+            dialog = builder.create()
             dialogView!!.dialog_cancel.setOnClickListener {
                 dialog!!.cancel()
             }
         }
-        if (CStoreCalendar.getCurrentDate(1)!=MyTimeUtil.getTextViewDate(date_util)){
+        if (CStoreCalendar.getCurrentDate(1) != MyTimeUtil.getTextViewDate(date_util)) {
             //1100事件要可点击查看
-            dialogView!!.dialog_save.visibility=View.GONE
-            dialogView!!.dialog_title.text=cd.cdName
+            dialogView!!.dialog_save.visibility = View.GONE
+            dialogView!!.dialog_title.text = cd.cdName
             dialogView!!.dialog_edit.setText(cd.cdValue)
-            dialogView!!.dialog_spinner.visibility=View.GONE
-            dialogView!!.dialog_edit.visibility=View.VISIBLE
-            dialogView!!.dialog_edit.isEnabled=false
-            dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
+            dialogView!!.dialog_spinner.visibility = View.GONE
+            dialogView!!.dialog_edit.visibility = View.VISIBLE
+            dialogView!!.dialog_edit.isEnabled = false
+            dialogView!!.dialog_edit.inputType = InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
 //            dialogView!!.dialog_edit.gravity=Gravity.TOP
             dialogView!!.dialog_edit.setSingleLine(false)
             dialogView!!.dialog_edit.setHorizontallyScrolling(false)
-        }else{
-            dialogView!!.dialog_edit.isEnabled=true
-            dialogView!!.dialog_save.visibility=View.VISIBLE
+        } else {
+            dialogView!!.dialog_edit.isEnabled = true
+            dialogView!!.dialog_save.visibility = View.VISIBLE
             dialogView!!.dialog_save.setOnClickListener {
-                if (cd.cdId=="1097"){
-                    dialogView!!.dialog_progress.visibility=View.VISIBLE
+                if (cd.cdId == "1097") {
+                    dialogView!!.dialog_progress.visibility = View.VISIBLE
                     //天气,在spinner内是从0开始，显示及存储是从1开始，所以+1
-                    presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view,cd,(dialogView!!.dialog_spinner.selectedItemPosition+1).toString())
-                }else{//其他
+                    presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view, cd, (dialogView!!.dialog_spinner.selectedItemPosition + 1).toString())
+                } else {//其他
 
                     //去掉空格
-                    val value=dialogView!!.dialog_edit.text.toString().replace(" ","")
+                    val value = dialogView!!.dialog_edit.text.toString().replace(" ", "")
                     when (value) {
                         "" -> showPrompt(getString(R.string.please_edit_value))//不能为空
                         cd.cdValue -> {
@@ -125,31 +122,31 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
                             dialog!!.cancel()
                         }
                         else -> {
-                            dialogView!!.dialog_progress.visibility=View.VISIBLE
+                            dialogView!!.dialog_progress.visibility = View.VISIBLE
                             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(dialogView!!.dialog_edit.windowToken, 0)
-                            presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util),view,cd,value)
+                            presenter.updateCashDaily(MyTimeUtil.getTextViewDate(date_util), view, cd, value)
                         }
                     }
                 }
             }
-            dialogView!!.dialog_title.text=cd.cdName
-            if (cd.cdId=="1097"){
-                dialogView!!.dialog_spinner.visibility=View.VISIBLE
-                dialogView!!.dialog_edit.visibility=View.GONE
-            }else{
+            dialogView!!.dialog_title.text = cd.cdName
+            if (cd.cdId == "1097") {
+                dialogView!!.dialog_spinner.visibility = View.VISIBLE
+                dialogView!!.dialog_edit.visibility = View.GONE
+            } else {
                 dialogView!!.dialog_edit.setText(cd.cdValue)
-                dialogView!!.dialog_spinner.visibility=View.GONE
-                dialogView!!.dialog_edit.visibility=View.VISIBLE
+                dialogView!!.dialog_spinner.visibility = View.GONE
+                dialogView!!.dialog_edit.visibility = View.VISIBLE
                 //设置输入类型
-                if (cd.cdId=="1100"){
-                    dialogView!!.dialog_edit.inputType=InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
-                    dialogView!!.dialog_edit.gravity= Gravity.TOP
+                if (cd.cdId == "1100") {
+                    dialogView!!.dialog_edit.inputType = InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE
+                    dialogView!!.dialog_edit.gravity = Gravity.TOP
                     dialogView!!.dialog_edit.setSingleLine(false)
                     dialogView!!.dialog_edit.setHorizontallyScrolling(false)
-                }else{
-                    dialogView!!.dialog_edit.inputType=InputType.TYPE_CLASS_NUMBER
-                    dialogView!!.dialog_edit.keyListener=DigitsKeyListener.getInstance("1234567890.")
+                } else {
+                    dialogView!!.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
+                    dialogView!!.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890.")
                 }
                 dialogView!!.dialog_edit.setSelection(dialogView!!.dialog_edit.text.length)
             }
@@ -161,7 +158,7 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
      * 得到天气选择的下拉列表
      */
     fun getWeatherAdapter(): ArrayAdapter<String> {
-        val weatherAdapter=ArrayAdapter(this,R.layout.custom_spinner_text_item,resources.getStringArray(R.array.weather))
+        val weatherAdapter = ArrayAdapter(this, R.layout.custom_spinner_text_item, resources.getStringArray(R.array.weather))
         weatherAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item)
         return weatherAdapter
     }
@@ -173,26 +170,26 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
         val calendar = Calendar.getInstance()
         val datePickDialog: DatePickerDialog = DatePickerDialog(this@CashDailyActivity, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             run {
-                val calendar1=Calendar.getInstance()
-                calendar1.timeInMillis=System.currentTimeMillis()
+                val calendar1 = Calendar.getInstance()
+                calendar1.timeInMillis = System.currentTimeMillis()
                 if (MyTimeUtil.nowHour >= CStoreCalendar.getChangeTime(1)) {
                     //换日了要加一天
                     calendar1.set(Calendar.DATE, calendar1.get(Calendar.DATE) + 1)
                 }
 
-                val m=if (monthOfYear+1<10)"0${monthOfYear + 1}" else (monthOfYear + 1).toString()
-                val d= if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth.toString()
+                val m = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}" else (monthOfYear + 1).toString()
+                val d = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth.toString()
                 val selectDate = (year.toString() + m + d).toInt()
-                val nowDate=MyTimeUtil.getYMDStringByDate3(calendar1.time).toInt()
+                val nowDate = MyTimeUtil.getYMDStringByDate3(calendar1.time).toInt()
                 if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
                 }
-                val textYear=year.toString()+"年"
-                val mm = m+"月"
-                date_util.year.text=textYear
-                date_util.month.text=mm
-                date_util.day.text=d
+                val textYear = year.toString() + "年"
+                val mm = m + "月"
+                date_util.year.text = textYear
+                date_util.month.text = mm
+                date_util.day.text = d
                 presenter.getAllCashDaily(MyTimeUtil.getTextViewDate(date_util))
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
@@ -204,42 +201,42 @@ class CashDailyActivity(override val layoutId: Int=R.layout.activity_cashdaily) 
     }
 
     override fun <T> updateDone(uData: T) {
-        dialogView!!.dialog_progress.visibility=View.GONE
+        dialogView!!.dialog_progress.visibility = View.GONE
         dialog!!.cancel()
         dialogView!!.dialog_edit.setText("")
     }
 
     override fun showLoading() {
-        if (loading_progress.visibility==View.GONE)loading_progress.visibility=View.VISIBLE
-        if (loading_text.visibility==View.GONE)loading_text.visibility=View.VISIBLE
-        if (loading_retry.visibility==View.VISIBLE)loading_retry.visibility=View.GONE
-        loading.visibility=View.VISIBLE
+        if (loading_progress.visibility == View.GONE) loading_progress.visibility = View.VISIBLE
+        if (loading_text.visibility == View.GONE) loading_text.visibility = View.VISIBLE
+        if (loading_retry.visibility == View.VISIBLE) loading_retry.visibility = View.GONE
+        loading.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
         MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
-        loading.visibility=View.GONE
+        loading.visibility = View.GONE
     }
 
-    var adapter:CashDailyPagerAdapter?=null
+    var adapter: CashDailyPagerAdapter? = null
     override fun <T> showView(aData: T) {
-        if (adapter==null){
+        if (adapter == null) {
             //设置viewPager的adapter，把fragment放入viewpager
-            adapter=CashDailyPagerAdapter(supportFragmentManager, aData as ArrayList<CashDailyFragment>,tabIndicators)
-            cash_daily_viewpager.adapter=adapter
-        }else{
+            adapter = CashDailyPagerAdapter(supportFragmentManager, aData as ArrayList<CashDailyFragment>, tabIndicators)
+            cash_daily_viewpager.adapter = adapter
+        } else {
             (cash_daily_viewpager.adapter as CashDailyPagerAdapter).setFragments(aData as ArrayList<CashDailyFragment>)
             cash_daily_viewpager.currentItem = 0
         }
     }
 
     override fun errorDealWith() {
-        loading_progress.visibility=View.GONE
-        loading_text.visibility=View.GONE
-        if (dialog!=null&&dialog!!.dialog_progress.visibility==View.VISIBLE){
-            dialog!!.dialog_progress.visibility=View.GONE
-        }else{
-            loading_retry.visibility=View.VISIBLE
+        loading_progress.visibility = View.GONE
+        loading_text.visibility = View.GONE
+        if (dialog != null && dialog!!.dialog_progress.visibility == View.VISIBLE) {
+            dialog!!.dialog_progress.visibility = View.GONE
+        } else {
+            loading_retry.visibility = View.VISIBLE
         }
         MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
