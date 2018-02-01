@@ -1822,4 +1822,104 @@ object MySql {
                 "AND T.TRSNUMBER = '${tib.trsNumber}'\u000c " +
                 "update trs_hq set status = '1' where trsnumber ='${tib.trsNumber}'\u0004"
     }
+
+
+    /******************************************单品查询**********************************************************/
+
+    /**
+     * 单品搜索商品
+     * @param data 搜索关键字
+     * @param type 0=品号品名搜索，1=条码档期搜索
+     */
+    fun getUnitPlu(data: String, type: Int): String {
+        return if (type == 0) {
+            //根据品名或品号
+            "select plu.itemNumber,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID,plu.unitCost,plu.shipNumber, " +
+                    "round(plu.unitCost*(1+taxtype.taxrate),6) storeunitCost,round(plu.sell_cost*(1+taxtype.taxrate),6) storesell_cost , " +
+                    "plu.ordertype,plu.returnType,plu.saletype,substr(plu.signType,7,1) mrktype,substr(plu.signType,6,1) trsType, " +
+                    "decode(plu.ordertype,'Y',to_char(plu.orderbeginDate,'yyyy-mm-dd'),'') orderbeginDate,decode(plu.ordertype,'Y',to_char(plu.orderendDate,'yyyy-mm-dd'),'') orderendDate, " +
+                    "decode(plu.returntype,'Y',to_char(plu.returnbeginDate,'yyyy-mm-dd'),'') returnbeginDate,decode(plu.returntype,'Y',to_char(plu.returnendDate,'yyyy-mm-dd'),'') returnendDate, " +
+                    "decode(plu.saletype,'Y',to_char(plu.SaleBeginDate,'yyyy-mm-dd'),'') SaleBeginDate,decode(plu.saletype,'Y',to_char(plu.SaleendDate,'yyyy-mm-dd'),'') SaleendDate, " +
+                    "unit.UnitName,c1.categoryname,c2.categoryname midCateGoryname,v1.vendorName,v2.vendorName supplierName, plu.status, " +
+                    "plu.out_th_code,plu.stop_th_code,plu.in_th_code,substr(plu.signType,9,1) STOCKCHANGE,substr(plu.signType,12,1) s_returntype, " +
+                    "plu.return_attr, " +
+                    "(nvl(inv.befInvQuantity,0) " +
+                    "+nvl(inv.accDlvQuantity,0) " +
+                    "-nvl(inv.accRtnQuantity,0) " +
+                    "-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0) " +
+                    "-nvl(inv.accMrkQuantity,0) " +
+                    "+nvl(inv.accCshDlvQuantity,0) " +
+                    "-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0) " +
+                    "+nvl(inv.accLeibianQuantity,0) " +
+                    "+nvl(inv.accAdjQuantity,0) " +
+                    "+nvl(inv.accHqAdjQuantity,0) " +
+                    ") as InvQuantity, " +
+                    "decode(trim(plu.mmid),null,inv.dms,inv.pdms) dms,nvl(itemsalemonth.dma,0) dma, " +
+                    "plu.item_level,plu.keep_days,nvl(sfitem.safe_qty,plu.face_qty) min_qty,  " +
+                    "to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd')- plu.market_date+1 go_market_days " +
+                    "from plu  left join  unit on unit.storeid = plu.storeid and unit.unitid = plu.smallunitid " +
+                    "left join cat c1 on c1.storeID = plu.storeID and c1.categoryNumber=plu.categorynumber and trim(c1.midCategorynumber) is null and trim(c1.microCategorynumber) is  null " +
+                    "left join cat c2 on c2.storeID = plu.storeID and c2.categoryNumber=plu.categorynumber and c2.midCategorynumber=plu.midcategorynumber and trim(c2.microCategorynumber) is null " +
+                    "left join vendor v1 on v1.storeid = plu.storeID and v1.vendorID=plu.vendorID " +
+                    "left join vendor v2 on v2.storeid = plu.storeID and v2.vendorID=plu.supplierID " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join itemsaleMonth on itemsaleMonth.storeID=plu.storeID AND itemsaleMonth.itemNumber=plu.itemNumber AND itemsaleMonth.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "left join taxtype on taxtype.storeid=plu.storeid and taxtype.taxid=plu.taxid " +
+                    "where plu.storeID   = '${User.getUser().storeId}' " +
+                    "and (plu.pluName = '$data' or plu.itemNumber = '$data')\u0004"
+        } else {
+            //根据条码和档期
+            "select plu.itemNumber,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID,plu.unitCost,plu.shipNumber, " +
+                    "round(plu.unitCost*(1+taxtype.taxrate),6) storeunitCost,round(plu.sell_cost*(1+taxtype.taxrate),6) storesell_cost , " +
+                    "plu.ordertype,plu.returnType,plu.saletype,substr(plu.signType,7,1) mrktype,substr(plu.signType,6,1) trsType, " +
+                    "plu.orderbeginDate,plu.orderendDate,plu.returnBeginDate,plu.returnEndDate,plu.SaleBeginDate,plu.SaleEndDate ,itemplu.plunumber, " +
+                    "unit.UnitName,c1.categoryname,c2.categoryname midCateGoryname,v1.vendorName,v2.vendorName supplierName, " +
+                    "plu.status,plu.STOP_TH_CODE,plu.OUT_TH_CODE,substr(plu.signType,9,1) STOCKCHANGE, substr(plu.signType,12,1) s_returntype, " +
+                    "plu.return_attr, " +
+                    "(nvl(inv.befInvQuantity,0) " +
+                    "+nvl(inv.accDlvQuantity,0) " +
+                    "-nvl(inv.accRtnQuantity,0) " +
+                    "-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0) " +
+                    "-nvl(inv.accMrkQuantity,0) " +
+                    "+nvl(inv.accCshDlvQuantity,0) " +
+                    "-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0) " +
+                    "+nvl(inv.accLeibianQuantity,0) " +
+                    "+nvl(inv.accAdjQuantity,0) " +
+                    "+nvl(inv.accHqAdjQuantity,0) " +
+                    ") as InvQuantity,decode(trim(plu.mmid),null,inv.dms,inv.pdms) dms, " +
+                    "nvl(itemsaleMonth.dma,0)  dma,plu.IN_TH_CODE,plu.item_level,nvl(sfitem.safe_qty,plu.face_qty) min_qty,plu.KEEP_DAYS, " +
+                    "to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd')- plu.market_date+1 go_market_days " +
+                    "from itemplu left join plu on plu.storeid = itemplu.storeID and plu.itemnumber = itemplu.itemnumber " +
+                    "left join unit on unit.storeid = itemplu.storeid and unit.unitid = plu.smallunitid " +
+                    "left join cat c1 on c1.storeID = itemplu.storeID and c1.categoryNumber=plu.categorynumber and Trim(c1.midCategorynumber) is null and Trim(c1.microCategorynumber)is null " +
+                    "left join cat c2 on c2.storeID = itemplu.storeID and c2.categoryNumber=plu.categorynumber and c2.midCategorynumber=plu.midcategorynumber and Trim(c2.microCategorynumber)is null " +
+                    "left join vendor v1 on v1.storeid = itemplu.storeID and v1.vendorID=plu.vendorID " +
+                    "left join vendor v2 on v2.storeid = plu.storeID and v2.vendorID=plu.supplierID " +
+                    "left join taxtype on taxtype.storeid=plu.storeID and taxtype.taxid=plu.taxid " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.busiDate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join itemsaleMonth on itemsaleMonth.storeID=plu.storeID AND itemsaleMonth.itemNumber=plu.itemNumber AND itemsaleMonth.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "where itemplu.storeID = '${User.getUser().storeId}' " +
+                    "and itemplu.pluNumber = '$data'\u0004"
+        }
+    }
+
+    /**
+     * 创建自设排面量流程，删除
+     */
+    fun getDeleteMin(itemId: String): String {
+        return "delete from sfitem where storeid='${User.getUser().storeId}' and item='$itemId';"
+    }
+
+    /**
+     * 创建自设排面量流程，创建
+     */
+    fun getInsertMin(minQty:Int, itemId: String): String {
+        return "insert into sfitem values('${User.getUser().storeId}','$itemId',$minQty);"
+    }
 }

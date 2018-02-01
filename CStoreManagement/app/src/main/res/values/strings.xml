@@ -201,7 +201,7 @@
     <string name="edit_user_id">请输入工号</string>
     <string name="cnt_not_use">非承包店不能使用此功能!</string>
     <!--库存-->
-    <string name="unitInvSearch">单品库存查询</string>
+    <string name="unitSearch">单品查询</string>
     <string name="fiveError">五大异常</string>
     <string name="point">盘点</string>
     <!--退货-->
@@ -277,4 +277,19 @@
     <string name="trs_date">调拨业务日:</string>
     <string name="search_prompt">请在右侧输入品号查询</string>
     <string name="trs_please_edit_store">请输入要调出的门市并点击查询按钮！</string>
+
+    <!--单品查询-->
+    <string name="min_qty">自设排面量：</string>
+    <string name="enter_cost">含税进货成本：</string>
+    <string name="sales_cost">含税销售成本：</string>
+    <string name="schedule1">上市档期：</string>
+    <string name="schedule2">停售档期：</string>
+    <string name="schedule3">退货档期：</string>
+    <string name="date_return_check">过期可退</string>
+    <string name="sales">销售</string>
+    <string name="order_">订货</string>
+    <string name="return_">退货</string>
+    <string name="supplier_name">供应商：</string>
+    <string name="supplier_id">供应商编号：</string>
+
 </resources>

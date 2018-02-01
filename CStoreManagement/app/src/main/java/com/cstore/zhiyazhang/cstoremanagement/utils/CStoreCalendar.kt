@@ -19,7 +19,7 @@ object CStoreCalendar {
     private val data: ArrayList<CStoreCalendarBean> = ArrayList()//换日数据
     private var date: String? = null//上一次执行获得换日的日期
     val SUCCESS_MSG = "success"
-    val ERROR_MSG2 = "换日失败！请联系系统部！"
+    val ERROR_MSG2 = "换日失败！请停止操作并退出重进应用或联系系统部！"
     val ERROR_MSG = "获得换日表失败,请停止操作并退出重进应用或联系系统部"
 
     fun getCStoreCalendar(): ArrayList<CStoreCalendarBean>? {
@@ -49,6 +49,9 @@ object CStoreCalendar {
         return SUCCESS_MSG
     }
 
+    /**
+     * 得到日期
+     */
     fun getCurrentDate(type: Int): String {
         if (data.isNotEmpty()){
             //如果有的话在这里就已经return了
@@ -58,6 +61,9 @@ object CStoreCalendar {
         return "type=$type, data=$data error!"
     }
 
+    /**
+     * 得到换日日期
+     */
     fun getChangeTime(type: Int): Int {
         if (data.isNotEmpty()){
             data.filter { it.dateType == type }.forEach { return getHourByString(it.changeTime) }
@@ -65,6 +71,7 @@ object CStoreCalendar {
         MyToast.getLongToast(ERROR_MSG)
         return 0
     }
+
 
     fun getNowStatus(type: Int): Int {
         if (data.isNotEmpty()) {

@@ -184,6 +184,8 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <include
+        android:id="@+id/loading"
+        android:visibility="gone"
         layout="@layout/loading_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"

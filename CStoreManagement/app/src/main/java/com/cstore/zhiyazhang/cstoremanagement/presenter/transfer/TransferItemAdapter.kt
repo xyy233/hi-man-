@@ -12,7 +12,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_plu_card.view.*
-import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
+import kotlinx.android.synthetic.main.layout_foot.view.*
 
 /**
  * Created by zhiya.zhang
@@ -35,7 +35,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
                 ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
             }
             TYPE_FOOTER -> {
-                FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_purchase_acceptance, parent, false))
+                FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.layout_foot, parent, false))
             }
             else -> {
                 ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
@@ -143,10 +143,8 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
 
     private inner class FooterViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind() = with(itemView) {
-            acceptance_data.visibility = View.GONE
-            acceptance_status.visibility = View.GONE
-            add.visibility = View.VISIBLE
-            acceptance_item.setOnClickListener {
+            add_text.text = "新增"
+            foot_item.setOnClickListener {
                 onClick.onItemClick(this@FooterViewHolder, 0)
             }
         }

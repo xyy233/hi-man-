@@ -108,6 +108,8 @@
     </LinearLayout>
 
     <include
+        android:id="@+id/loading"
+        android:visibility="gone"
         layout="@layout/loading_layout"/>
 
     <TextView

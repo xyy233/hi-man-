@@ -128,4 +128,8 @@ object GsonUtil {
     fun getPlu(data:String): ArrayList<PluItemBean> {
         return Gson().fromJson<ArrayList<PluItemBean>>(data, object : TypeToken<ArrayList<PluItemBean>>() {}.type)
     }
+
+    fun getUnitInquiry(data: String): ArrayList<UnitInquiryBean> {
+        return Gson().fromJson<ArrayList<UnitInquiryBean>>(data, object : TypeToken<ArrayList<UnitInquiryBean>>() {}.type)
+    }
 }

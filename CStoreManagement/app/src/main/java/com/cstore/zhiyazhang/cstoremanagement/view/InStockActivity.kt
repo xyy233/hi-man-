@@ -10,6 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.inquiry.UnitInquiryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
@@ -39,7 +40,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when (data[position].position) {
                     0 -> {
-                        MyToast.getShortToast(getString(R.string.in_development))
+                        startActivity(Intent(this@InStockActivity, UnitInquiryActivity::class.java))
                     }
                     1 -> {
                         MyToast.getShortToast(getString(R.string.in_development))
@@ -56,7 +57,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
     }
 
     private fun setData(data: ArrayList<LogoBean>) {
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.unitInvSearch), 0))
+        data.add(LogoBean(R.drawable.no_img, getString(R.string.unitSearch), 0))
         data.add(LogoBean(R.drawable.no_img, getString(R.string.fiveError), 1))
         data.add(LogoBean(R.drawable.no_img, getString(R.string.point), 2))
         data.add(LogoBean(R.drawable.no_img, getString(R.string.transfer), 3))

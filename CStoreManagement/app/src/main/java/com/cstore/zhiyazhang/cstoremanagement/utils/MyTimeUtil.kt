@@ -62,9 +62,16 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(date)
     }
 
+    /**
+     * 删除时间只要年月日
+     */
     fun deleteTime(date: String): String {
+        if (date.isEmpty() || date == "null") {
+            return "无"
+        }
         return getYMDStringByDate(getDateByString(date))
     }
+
     /**
      * String转为时间
 
@@ -125,11 +132,11 @@ object MyTimeUtil {
             return Calendar.getInstance().get(Calendar.YEAR)
         }
 
-    fun dayOfYear():String{
-        return Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString().padStart(3,'0')
+    fun dayOfYear(): String {
+        return Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString().padStart(3, '0')
     }
 
-    fun nowYear():String{
+    fun nowYear(): String {
         return nowYear.toString().substring(2)
     }
 

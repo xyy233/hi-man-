@@ -10,8 +10,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteTime
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
-import kotlinx.android.synthetic.main.item_purchase_acceptance.view.*
 import kotlinx.android.synthetic.main.item_return.view.*
+import kotlinx.android.synthetic.main.layout_foot.view.*
 
 /**
  * Created by zhiya.zhang
@@ -40,7 +40,7 @@ class TransferAdapter(private var date: String, val data: ArrayList<TrsBean>, pr
                 ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_return, parent, false))
             }
             TYPE_FOOTER -> {
-                FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_purchase_acceptance, parent, false))
+                FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.layout_foot, parent, false))
             }
             else -> {
                 ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_return, parent, false))
@@ -106,10 +106,8 @@ class TransferAdapter(private var date: String, val data: ArrayList<TrsBean>, pr
 
     private inner class FooterViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind() = with(itemView) {
-            acceptance_data.visibility = View.GONE
-            acceptance_status.visibility = View.GONE
-            add.visibility = View.VISIBLE
-            acceptance_item.setOnClickListener {
+            add_text.text="新增调拨"
+            foot_item.setOnClickListener {
                 onClick.onItemClick(this@FooterViewHolder, 0)
             }
         }

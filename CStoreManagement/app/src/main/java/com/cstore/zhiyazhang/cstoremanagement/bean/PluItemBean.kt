@@ -6,6 +6,8 @@ import java.io.Serializable
 /**
  * Created by zhiya.zhang
  * on 2018/1/18 16:11.
+ *
+ * 废弃，Gson对Kotlin的父类不支持，未来还是每次重写
  */
 open class PluItemBean : Serializable {
     @SerializedName("itemnumber")

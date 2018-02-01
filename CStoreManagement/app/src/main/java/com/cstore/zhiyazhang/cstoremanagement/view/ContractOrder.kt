@@ -3,6 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Handler
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -111,8 +112,17 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     10 -> {
-                        orderLoading.visibility = View.VISIBLE
-                        runAutoOrd()
+                        AlertDialog.Builder(this@ContractOrder)
+                                .setTitle("提示")
+                                .setMessage("是否需要一键下单？")
+                                .setPositiveButton("保存", { _, _ ->
+                                    orderLoading.visibility = View.VISIBLE
+                                    runAutoOrd()
+                                })
+                                .setNegativeButton("退出", { _, _ ->
+
+                                })
+                                .show()
                     }
                     11 -> {
                         val intent = Intent(this@ContractOrder, ReturnExpiredActivity::class.java)
