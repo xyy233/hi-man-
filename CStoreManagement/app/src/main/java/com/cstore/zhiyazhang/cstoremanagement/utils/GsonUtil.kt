@@ -132,4 +132,8 @@ object GsonUtil {
     fun getUnitInquiry(data: String): ArrayList<UnitInquiryBean> {
         return Gson().fromJson<ArrayList<UnitInquiryBean>>(data, object : TypeToken<ArrayList<UnitInquiryBean>>() {}.type)
     }
+
+    fun getInvError(data: String): ArrayList<InvErrorBean> {
+        return Gson().fromJson<ArrayList<InvErrorBean>>(data, object : TypeToken<ArrayList<InvErrorBean>>() {}.type)
+    }
 }

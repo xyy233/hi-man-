@@ -11,6 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.inquiry.UnitInquiryActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.inverror.InvErrorActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
@@ -43,7 +44,7 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
                         startActivity(Intent(this@InStockActivity, UnitInquiryActivity::class.java))
                     }
                     1 -> {
-                        MyToast.getShortToast(getString(R.string.in_development))
+                        startActivity(Intent(this@InStockActivity, InvErrorActivity::class.java))
                     }
                     2 -> {
                         MyToast.getShortToast(getString(R.string.in_development))
@@ -57,10 +58,10 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
     }
 
     private fun setData(data: ArrayList<LogoBean>) {
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.unitSearch), 0))
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.fiveError), 1))
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.point), 2))
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.transfer), 3))
+        data.add(LogoBean(R.mipmap.ic_unit_inquiry, getString(R.string.unitSearch), 0))
+        data.add(LogoBean(R.mipmap.ic_inv_error, getString(R.string.inv_error), 1))
+        data.add(LogoBean(R.mipmap.ic_inventory, getString(R.string.point), 2))
+        data.add(LogoBean(R.mipmap.ic_transfer, getString(R.string.transfer), 3))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

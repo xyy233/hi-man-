@@ -22,8 +22,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManag
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_transfer_item.*
-import kotlinx.android.synthetic.main.layout_search_title.*
-import kotlinx.android.synthetic.main.loading_layout.*
+import kotlinx.android.synthetic.main.layout_search_line.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 
 /**

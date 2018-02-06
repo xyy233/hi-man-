@@ -11,7 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
-import kotlinx.android.synthetic.main.item_plu_card.view.*
+import kotlinx.android.synthetic.main.item_commodity_return.view.*
 import kotlinx.android.synthetic.main.layout_foot.view.*
 
 /**
@@ -32,13 +32,13 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ITEM -> {
-                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
+                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_commodity_return, parent, false))
             }
             TYPE_FOOTER -> {
                 FooterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.layout_foot, parent, false))
             }
             else -> {
-                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_plu_card, parent, false))
+                ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_commodity_return, parent, false))
             }
         }
     }
@@ -94,48 +94,47 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
     private inner class ItemViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind(tib: TrsItemBean) = with(itemView) {
             val context = MyApplication.instance().applicationContext
-            edit_count_text.text = context.getString(R.string.transfer_quantity)
-            one_text.text = context.getString(R.string.inventory2)
-            two_text.text = context.getString(R.string.retail_total)
-            plu_id.text = tib.pluId
-            plu_name.text = tib.pluName
+            lsjjhlj_box.visibility=View.GONE
+            reason_box.visibility=View.GONE
+            commodity_id.text = tib.pluId
+            commodity_name.text = tib.pluName
             Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${tib.pluId}.do")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()
-                    .into(plu_img)
-            plu_retail.text = tib.storeUnitPrice.toString()
-            two_text_detail.text = tib.total.toString()
-            one_text_detail.text = tib.invQty.toString()
-            pln_qty.text = tib.trsQty.toString()
+                    .into(commodity_img)
+            commodity_retail.text = tib.storeUnitPrice.toString()
+            commodity_retail_total.text = tib.total.toString()
+            commodity_inv.text = tib.invQty.toString()
+            plnrtn_quantity.text = tib.trsQty.toString()
 
             if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
-                btn_less.visibility = View.VISIBLE
-                btn_add.visibility = View.VISIBLE
+                return_less.visibility = View.VISIBLE
+                return_add.visibility = View.VISIBLE
                 add_less_line.visibility = View.VISIBLE
-                btn_less.setOnClickListener {
+                return_less.setOnClickListener {
                     if (tib.trsQty > 0) {
                         tib.trsQty--
                         tib.editCount--
-                        pln_qty.text = tib.trsQty.toString()
+                        plnrtn_quantity.text = tib.trsQty.toString()
                         onClick.onItemEdit(tib, 0)
                     } else {
                         MyToast.getShortToast(context.getString(R.string.maxOrMinError))
                     }
                 }
-                btn_add.setOnClickListener {
+                return_add.setOnClickListener {
                     if (tib.trsQty < tib.invQty!!) {
                         tib.trsQty++
                         tib.editCount++
-                        pln_qty.text = tib.trsQty.toString()
+                        plnrtn_quantity.text = tib.trsQty.toString()
                         onClick.onItemEdit(tib, 0)
                     } else {
                         MyToast.getShortToast(context.getString(R.string.cant_bgt_inv))
                     }
                 }
             } else {
-                btn_less.visibility = View.GONE
-                btn_add.visibility = View.GONE
+                return_less.visibility = View.GONE
+                return_add.visibility = View.GONE
                 add_less_line.visibility = View.GONE
             }
         }

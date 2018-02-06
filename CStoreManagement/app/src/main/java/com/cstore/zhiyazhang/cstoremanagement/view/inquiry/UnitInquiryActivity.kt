@@ -44,6 +44,20 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     private lateinit var showAction: Animation
     private lateinit var hideAction: Animation
     private var uib: UnitInquiryBean? = null
+    /**
+     * flag用于判断是从那里来做什么的。
+     * 0->库存管理点进来的 1->库存异常单品进入
+     */
+    private var flag = 0
+    /**
+     * 从库存异常传入，其他无用
+     */
+    private var pluId: String? = null
+    /**
+     * 用来判断是否有保存，如果有返回上页面的时候需要处理提醒上页面更行数据
+     */
+    private var isSave = false
+
 
     override fun initView() {
         my_toolbar.title = getString(R.string.unitSearch)
@@ -58,6 +72,15 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         saveDialog = builder.create()
         dialogView.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
         dialogView.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
+        if (intent.getIntExtra("flag", 0) != 0) {
+            flag = intent.getIntExtra("flag", 0)
+            search.visibility = View.GONE
+            pluId = intent.getStringExtra("pluId")
+            if (pluId == null) {
+                showPrompt("出现异常，请联系系统部！")
+                onBackPressed()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -65,6 +88,12 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
             android.R.id.home -> onBackPressed()
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        if (flag == 1 && isSave) setResult(1, Intent())
+
+        super.onBackPressed()
     }
 
     override fun initClick() {
@@ -130,8 +159,11 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
             (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(search_edit.windowToken, 0)
         }
     }
-
+    
     override fun initData() {
+        if (flag == 1) {
+            presenter.getData()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -153,7 +185,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
 
     //获得搜索关键字
     override fun getData2(): Any {
-        return msg
+        return if (flag == 0) msg else pluId!!
     }
 
     //获得是搜索什么的
@@ -192,6 +224,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     override fun <T> requestSuccess(rData: T) {
+        if (flag == 1) isSave = true
         plu_inv.text = uib!!.invQty.toString()
         dialogView.dialog_progress.visibility = View.GONE
         dialogView.dialog_edit.setText("")
@@ -199,6 +232,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     override fun <T> requestSuccess2(rData: T) {
+        if (flag == 1) isSave = true
         plu_min.text = uib!!.minQty.toString()
         dialogView.dialog_progress.visibility = View.GONE
         dialogView.dialog_edit.setText("")

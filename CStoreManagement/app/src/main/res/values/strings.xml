@@ -202,7 +202,6 @@
     <string name="cnt_not_use">非承包店不能使用此功能!</string>
     <!--库存-->
     <string name="unitSearch">单品查询</string>
-    <string name="fiveError">五大异常</string>
     <string name="point">盘点</string>
     <!--退货-->
     <string name="return_purchase">一般预约退货</string>
@@ -291,5 +290,22 @@
     <string name="return_">退货</string>
     <string name="supplier_name">供应商：</string>
     <string name="supplier_id">供应商编号：</string>
+
+    <!--库存异常查询-->
+    <string name="inv_error">库存异常</string>
+    <string name="now_inv">当前库存：</string>
+    <string name="init_inv">最初库存：</string>
+    <string name="chenlie">陈列：</string>
+    <string name="is_sales">可销：</string>
+    <string name="is_order">可订</string>
+    <string name="is_return">可退</string>
+    <string name="m_package">包装：</string>
+    <string name="init_order">起订：</string>
+    <string name="end_sales">最后销：</string>
+    <string name="end_acc">最后验：</string>
+    <string name="zhi">直</string>
+    <string name="pei">配</string>
+    <string name="ting">停</string>
+    <string name="tui">退</string>
 
 </resources>

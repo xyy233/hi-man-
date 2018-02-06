@@ -175,7 +175,7 @@ object MySql {
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p, " +
-                "(select itemnumber item_no from itemgondra where storeid='111112' and gondranumber like '%' " +
+                "(select itemnumber item_no from itemgondra where storeid='${User.getUser().storeId}' and gondranumber like '%' " +
                 "group by itemnumber) y " +
                 "where x.itemnumber= y.item_no(+) " +
                 "and x.itemnumber = p.itemnumber(+)  " +
@@ -241,7 +241,7 @@ object MySql {
     }
 
     /**
-     * 更新单品语句配合事务头和脚使用
+     * 更新单品语句${MyApplication.instance().getString(R.string.pei)}合事务头和脚使用
      */
     fun updateOrdItem(itemId: String, value: Int): String {
         return "update ord set updateuserid='${User.getUser().uId}', updatedate=sysdate, ordstatus='1', ordactualquantity=$value where storeid='${User.getUser().storeId}' and orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId'; update appord_t2 set ordactualquantity=$value,status='1' where orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId';"
@@ -440,7 +440,7 @@ object MySql {
                     "plu left join itemsaleMonth on itemsaleMonth.storeID=plu.storeID AND itemsaleMonth.itemNumber=plu.itemNumber " +
                     "left join unit on plu.storeID=unit.storeID AND plu.smallUnitID=unit.unitID, " +
                     "inv " +
-                    "where ord.StoreID='111112' " +
+                    "where ord.StoreID='${User.getUser().storeId}' " +
                     "and ord.orderdate=to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-MM-dd') " +
                     "and plu.storeID = ord.StoreID " +
                     "and plu.itemNumber = ord.itemnumber " +
@@ -531,21 +531,21 @@ object MySql {
     /**********************************************报废************************************************************/
 
     /**
-     * 创建报废,配合事务头脚使用
+     * 创建报废,${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
      */
     fun insertScrap(data: ScrapContractBean): String {
         return "insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (${User.getUser().storeId}, trunc(sysdate), ${data.recordNumber}, ${data.scrapId}, '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', ${User.getUser().uId}, sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
     }
 
     /**
-     * 更新报废，配合事务头脚使用
+     * 更新报废，${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
      */
     fun updateScrap(data: ScrapContractBean): String {
         return "update mrk set mrkquantity=${data.mrkCount}, updateuserid='${User.getUser().uId}',updatedatetime=sysdate where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
     }
 
     /**
-     * 删除报废，配合事务头脚使用
+     * 删除报废，${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
      */
     fun deleteScrap(data: ScrapContractBean): String {
         return "delete from mrk where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
@@ -617,7 +617,7 @@ object MySql {
     /**********************************************进货验收************************************************************/
 
     /**
-     * 得到配送列表
+     * 得到${MyApplication.instance().getString(R.string.pei)}送列表
      */
     fun getAcceptanceList(date: String): String {
         return "select dlh.requestnumber,ven.vendorname, " +
@@ -652,7 +652,7 @@ object MySql {
     }
 
     /**
-     * 得到配送表下的商品
+     * 得到${MyApplication.instance().getString(R.string.pei)}送表下的商品
      */
     fun getAcceptanceItemList(ab: AcceptanceBean, date: String): String {
         return "select dlv.itemNumber,plu.stocktype,plu.order_item, dlv.ordQuantity,dlv.hqquantity,dlv.dctrsquantity ,nvl(dlv.varQuantity,0)varQuantity, " +
@@ -683,7 +683,7 @@ object MySql {
     }
 
     /**
-     * 更新配送单,配合事务使用
+     * 更新${MyApplication.instance().getString(R.string.pei)}送单,${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateAcceptance(ab: AcceptanceBean): String {
         return "update dlvhead set " +
@@ -701,7 +701,7 @@ object MySql {
     }
 
     /**
-     * 更新配送单的商品,配合事务使用
+     * 更新${MyApplication.instance().getString(R.string.pei)}送单的商品,${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateAcceptanceItem(aib: AcceptanceItemBean): String {
         return "update dlvdtl set " +
@@ -717,7 +717,7 @@ object MySql {
     }
 
     /**
-     * 得到配送商
+     * 得到${MyApplication.instance().getString(R.string.pei)}送商
      */
     val getVendor: String
         get() {
@@ -732,7 +732,7 @@ object MySql {
         }
 
     /**
-     * 创建配送单,配合事务使用
+     * 创建${MyApplication.instance().getString(R.string.pei)}送单,${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createAcceptance(ab: AcceptanceBean, date: String): String {
         val time = "to_date('$date','yyyy-MM-dd')"
@@ -744,7 +744,7 @@ object MySql {
     }
 
     /**
-     * 创建配送单下的商品，配合事务使用
+     * 创建${MyApplication.instance().getString(R.string.pei)}送单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createAcceptanceItem(aib: AcceptanceItemBean, date: String): String {
         val time = "to_date('$date','yyyy-MM-dd')"
@@ -757,7 +757,7 @@ object MySql {
     }
 
     /**
-     * 得到今天最大的配送单
+     * 得到今天最大的${MyApplication.instance().getString(R.string.pei)}送单
      */
     fun getMaxAcceptanceId(date: String, num: String, type: Int): String {
         return if (type == 1) {
@@ -768,7 +768,7 @@ object MySql {
     }
 
     /**
-     * 得到配送单号的前缀
+     * 得到${MyApplication.instance().getString(R.string.pei)}送单号的前缀
      */
     fun getNowNum(date: String): String {
         var month = ""
@@ -867,7 +867,7 @@ object MySql {
     }
 
     /**
-     * 检测输入的退货商品是否重复
+     * 检测输入的${MyApplication.instance().getString(R.string.tui)}货商品是否重复
      */
     fun getJudgmentReturnCommodity(raib: ArrayList<ReturnAcceptanceItemBean>, date: String): String {
         var sql = "select * from rtndtl where rtndate=to_date('$date','yyyy-MM-dd') and itemnumber in ("
@@ -877,10 +877,10 @@ object MySql {
         return sql
     }
 
-    /**********************************************退货验收************************************************************/
+    /**********************************************${MyApplication.instance().getString(R.string.tui)}货验收************************************************************/
 
     /**
-     * 得到退货验收单
+     * 得到${MyApplication.instance().getString(R.string.tui)}货验收单
      */
     fun getReturnAcceptanceList(date: String): String {
         return "select rtn.requestNumber, to_char(rtn.rtnDate,'yyyy-MM-dd') rtndate,rtn.plnrtnDate,rtn.preRtnDate, " +
@@ -899,7 +899,7 @@ object MySql {
     }
 
     /**
-     * 得到退货单下的商品
+     * 得到${MyApplication.instance().getString(R.string.tui)}货单下的商品
      */
     fun getReturnAcceptanceItemList(rab: ReturnAcceptanceBean, date: String): String {
         return "select to_char(rtn.rtnDate,'yyyy-MM-dd') rtndate,rtn.itemNumber,nvl(rtn.ordQuantity,0)ordQuantity, rtn.RequestNumber,rtn.supplierID,NVL(rtn.rtnQuantity,0) rtnQuantity, nvl(rtn.storeUnitPrice,0) storeUnitPrice,rtn.shipNumber,rtn.vendorID,rtn.unitCost, " +
@@ -919,7 +919,7 @@ object MySql {
     }
 
     /**
-     * 更新退货验收单，配合事务使用
+     * 更新${MyApplication.instance().getString(R.string.tui)}货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "update rtnHead set " +
@@ -937,7 +937,7 @@ object MySql {
     }
 
     /**
-     * 更新验收单下的商品，配合事务使用
+     * 更新验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateReturnAcceptanceItem(raib: ReturnAcceptanceItemBean): String {
         return "update rtndtl set " +
@@ -949,7 +949,7 @@ object MySql {
     }
 
     /**
-     * 创建退货验收单，配合事务使用
+     * 创建${MyApplication.instance().getString(R.string.tui)}货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "insert into rtnHead " +
@@ -963,7 +963,7 @@ object MySql {
     }
 
     /**
-     * 穿件退货验收单下的商品，配合事务使用
+     * 穿件${MyApplication.instance().getString(R.string.tui)}货验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createReturnAcceptanceItem(raib: ReturnAcceptanceItemBean): String {
         return "insert into rtndtl " +
@@ -1013,7 +1013,7 @@ object MySql {
     }
 
     /**
-     * 创建库调,必须配合事务使用!
+     * 创建库调,必须${MyApplication.instance().getString(R.string.pei)}合事务使用!
      */
     fun createAdjustment(ab: AdjustmentBean, date: String, recordNumber: Int): String {
         //创建库调
@@ -1051,10 +1051,10 @@ object MySql {
                 " to_date('$nowTime','yyyy-MM-dd HH24:MI:SS'))"
     }
 
-    /**********************************************退货************************************************************/
+    /**********************************************${MyApplication.instance().getString(R.string.tui)}货************************************************************/
 
     /**
-     * 获得退货原因
+     * 获得${MyApplication.instance().getString(R.string.tui)}货原因
      */
     val getReason: String
         get() {
@@ -1062,7 +1062,7 @@ object MySql {
         }
 
     /**
-     * 获得退货配送商
+     * 获得${MyApplication.instance().getString(R.string.tui)}货${MyApplication.instance().getString(R.string.pei)}送商
      */
     val getReturnVendor: String
         get() {
@@ -1080,7 +1080,7 @@ object MySql {
         }
 
     /**
-     * 根据配送商得到近期商品
+     * 根据${MyApplication.instance().getString(R.string.pei)}送商得到近期商品
      */
     fun getRecentlyCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
         var sql: String
@@ -1134,7 +1134,7 @@ object MySql {
     }
 
     /**
-     * 根据配送商得到长期商品
+     * 根据${MyApplication.instance().getString(R.string.pei)}送商得到长期商品
      */
     fun getLongCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
         var sql = ""
@@ -1190,7 +1190,7 @@ object MySql {
     }
 
     /**
-     * 获得退货单
+     * 获得${MyApplication.instance().getString(R.string.tui)}货单
      */
     fun getReturnPurchase(date: String): String {
         return "select pln.RequestNumber, pln.PlnRtnDate RtnDate,vendor.vendorName, " +
@@ -1205,7 +1205,7 @@ object MySql {
     }
 
     /**
-     * 获得退货单下的商品
+     * 获得${MyApplication.instance().getString(R.string.tui)}货单下的商品
      */
     fun getReturnPurchaseItem(date: String, vendorId: String, requestNumber: String): String {
         return "select pln.recordNumber, pln.requestNumber, pln.itemNumber,nvl(pln.storeunitprice,0)*nvl(pln.plnrtnquantity,0) Total,pln.StoreUnitprice,pln.UnitCost,pln.plnRtnUnitQuantity, pln.plnRtnQuantity, pln.plnRtnDate, pln.vendorID, pln.supplierID, " +
@@ -1229,7 +1229,7 @@ object MySql {
     }
 
     /**
-     * 创建退货商品,配合事务使用
+     * 创建${MyApplication.instance().getString(R.string.tui)}货商品,${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createReturnPurchase(rpb: ReturnPurchaseItemBean): String {
         return "insert into plnrtn  " +
@@ -1241,7 +1241,7 @@ object MySql {
     }
 
     /**
-     * 更新退货商品，配合事务使用
+     * 更新${MyApplication.instance().getString(R.string.tui)}货商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateReturnPurchase(rpb: ReturnPurchaseItemBean): String {
         return "Update plnrtn " +
@@ -1263,7 +1263,7 @@ object MySql {
      * 检测这个预约日是否已有此商品
      */
     fun judgmentReturnPurchase(aib: ArrayList<ReturnPurchaseItemBean>): String {
-        //因为来检测的必定是同一配送商的，因此拿第一个的预约时间就好了
+        //因为来检测的必定是同一${MyApplication.instance().getString(R.string.pei)}送商的，因此拿第一个的预约时间就好了
         if (aib.isEmpty()) throw Exception("method judgmentReturnPurchase aib list's item is null")
         var sql = "select *  " +
                 "from plnrtn  " +
@@ -1284,17 +1284,17 @@ object MySql {
     }
 
     /**
-     * 得到退货商品的最大排序id
+     * 得到${MyApplication.instance().getString(R.string.tui)}货商品的最大排序id
      */
     fun getMaxRecordNumber(date: String): String {
         return "select max(recordNumber) value from plnrtn where plnrtndate0=to_date('$date','yyyy-MM-dd')\u0004"
     }
 
 
-    /**********************************************过期品退货*******************************************************/
+    /**********************************************过期品${MyApplication.instance().getString(R.string.tui)}货*******************************************************/
 
     /**
-     * 得到今天所有的过期退货商品
+     * 得到今天所有的过期${MyApplication.instance().getString(R.string.tui)}货商品
      */
     fun expiredReturnGetAll(): String {
         val context = MyApplication.instance().applicationContext
@@ -1350,7 +1350,7 @@ object MySql {
     }
 
     /**
-     * 得到商品过期品退货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
+     * 得到商品过期品${MyApplication.instance().getString(R.string.tui)}货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
      * @param data 用来搜索的品号或条形码
      */
     fun expiredReturnGetCommodity(data: String): String {
@@ -1428,7 +1428,7 @@ object MySql {
     }
 
     /**
-     * 保存过期品预约退货
+     * 保存过期品预约${MyApplication.instance().getString(R.string.tui)}货
      */
     fun saveExpiredReturn(data: ReturnExpiredBean): String {
         val date = deleteTime(data.plnRtnDate)
@@ -1495,8 +1495,8 @@ object MySql {
     }
 
     /**
-     * 收款完毕或退款完毕更新到posul_weixin_detail的sql语句
-     * @param isRefund 判断是否是退款的布尔
+     * 收款完毕或${MyApplication.instance().getString(R.string.tui)}款完毕更新到posul_weixin_detail的sql语句
+     * @param isRefund 判断是否是${MyApplication.instance().getString(R.string.tui)}款的布尔
      */
     fun createWXPayDone(posBean: PosBean, payData: Map<String, String>, isRefund: Boolean): String {
         return try {
@@ -1516,9 +1516,9 @@ object MySql {
             }
             val nonCoupondFee = totalFee - couponFee
             val result = if (isRefund) {
-                //退款记录
+                //${MyApplication.instance().getString(R.string.tui)}款记录
                 val refundId = payData["refund_id"]
-                //退款需要负数
+                //${MyApplication.instance().getString(R.string.tui)}款需要负数
                 totalFee *= -1
                 "insert into posul_weixin_detail " +
                         "(storenumber, posnumber, transactionnumber, total_fee, transaction_id, systemdate, seq, REFUND_ID, openid, coupon_fee, non_coupond_fee) " +
@@ -1605,7 +1605,7 @@ object MySql {
 
     /**
      * 撤销订单后需要修改app_pos的next_tranno，不然再次提交订单微信会报错订单号重复
-     * 退款同时需要进行此操作
+     * ${MyApplication.instance().getString(R.string.tui)}款同时需要进行此操作
      */
     val updateAppPos: String
         get() {
@@ -1621,10 +1621,10 @@ object MySql {
         }
 
     /**
-     * 像微信申请退款成功后执行的存储过程
+     * 像微信申请${MyApplication.instance().getString(R.string.tui)}款成功后执行的存储过程
      * @param pay_tranno 收款时的对方交易序号
-     * @param refoundId 微信返回退款单号
-     * @param isWhere 是在微信还是现金还是支付宝执行的退款
+     * @param refoundId 微信返回${MyApplication.instance().getString(R.string.tui)}款单号
+     * @param isWhere 是在微信还是现金还是支付宝执行的${MyApplication.instance().getString(R.string.tui)}款
      */
     fun refoundCall(pay_tranno: String, refoundId: String, isWhere: String): String {
         return "call refound_Shopping_basket_r01('${MyApplication.getOnlyid()}',$pay_tranno,'$refoundId','$isWhere')\u0004"
@@ -1714,7 +1714,7 @@ object MySql {
     val getMaxTrsNumber: String
         get() {
             return "select Max(TrsNumber) value from trs\n" +
-                    "where storeID='111112' and  trsID='O' and\n" +
+                    "where storeID='${User.getUser().storeId}' and  trsID='O' and\n" +
                     "trsnumber like '%${nowYear() + dayOfYear()}%'\u0004"
         }
 
@@ -1794,7 +1794,7 @@ object MySql {
      * 查找店号
      */
     fun searchStore(storeId: String): String {
-        return "select ostoreid,ostorename,DECODE(ostore_attr,'1','直营','2','委托','3','特I','4','特II','5','2F') ostore_attr from ostore where ostoreid='$storeId' order by ostoreid"
+        return "select ostoreid,ostorename,DECODE(ostore_attr,'1','${MyApplication.instance().getString(R.string.zhi)}营','2','委托','3','特I','4','特II','5','2F') ostore_attr from ostore where ostoreid='$storeId' order by ostoreid"
     }
 
     val getTrsf: String
@@ -1919,7 +1919,340 @@ object MySql {
     /**
      * 创建自设排面量流程，创建
      */
-    fun getInsertMin(minQty:Int, itemId: String): String {
+    fun getInsertMin(minQty: Int, itemId: String): String {
         return "insert into sfitem values('${User.getUser().storeId}','$itemId',$minQty);"
+    }
+
+
+    /******************************************库存异常查询**********************************************************/
+
+    /**
+     * 每次获得数据都要运行
+     */
+    val invErrorFirst: String
+        get() {
+            return "insert into dlv_temp " +
+                    "SELECT dlvdtl.storeID,dlvdtl.itemNumber,SUM(dlvdtl.dlvQuantity) dlvQuantity " +
+                    "FROM dlvhead,dlvdtl " +
+                    "WHERE dlvhead.storeID=dlvdtl.storeID   AND dlvhead.dlvDate=dlvdtl.dlvDate " +
+                    "AND dlvhead.requestNumber=dlvdtl.requestNumber  AND dlvhead.dlvStatus='0' " +
+                    "AND dlvhead.storeID='${User.getUser().storeId}' " +
+                    "AND dlvhead.dlvDate>=trunc(sysdate) " +
+                    "GROUP BY dlvdtl.storeID,dlvdtl.itemNumber\u0004"
+        }
+
+    /**
+     * 负库存商品
+     */
+    val negativeInv: String
+        get() {
+            return "select '1' flag, " +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber, " +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY, " +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, " +
+                    "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                    "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,case when ana55.Dlv_Date='700101' or ana55.Dlv_Date='000000' then '' else " +
+                    "ana55.Dlv_Date end Dlv_Date, plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else plu.stop_th_code||'(${MyApplication.instance().getString(R.string.ting)})' end)|| " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else (case when trim(plu.OUT_TH_CODE) is null then '' else '-' end) end)|| " +
+                    "(case when trim(plu.OUT_TH_CODE) is null then '' else plu.OUT_TH_CODE||'(${MyApplication.instance().getString(R.string.tui)})' end) th_code, " +
+                    "case when nvl(trim(plu.STOP_TH_CODE),0)>nvl(trim(plu.OUT_TH_CODE),0) then " +
+                    "nvl(trim(plu.STOP_TH_CODE),0) else nvl(trim(plu.OUT_TH_CODE),0) end th_code1, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity " +
+                    ",case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)+ " +
+                    "nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+ " +
+                    "nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0))>0 " +
+                    "then 1 else (case when nvl(dlvdtl.dlvQuantity,0)>0 then 2 else 3 end) end orderSeq, " +
+                    "decode(trim(itemfaceqty.ITEMNUMBER),null,'N','Y') display_yn " +
+                    "FROM ana55,cat,plu " +
+                    "left join itemfaceqty on itemfaceqty.storeID=plu.storeID AND plu.itemNumber=itemfaceqty.ITEMNUMBER " +
+                    "left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                    "left join dlvdtl on dlvdtl.storeID=plu.storeID AND dlvdtl.itemNumber=plu.itemNumber and dlvdtl.dlvdate =to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')+1 " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                    "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "WHERE ana55.storeID='${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='1' " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "order by plu.categoryNumber,plu.itemNumber\u0004"
+        }
+
+    /**
+     * 滞销品
+     */
+    val noSales: String
+        get() {
+            return "select '4' flag, " +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber,  " +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 nosaleday, " +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status, " +
+                    "plu.market_date, " +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, case when ana55.days<0 then 0 else ana55.days end days  , " +
+                    "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,ana55.Dlv_Date,plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "'' th_code,'' th_code1, " +
+                    "to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') -    " +
+                    "( case when to_date(case when sale_date is null then '010101' else sale_date end ,'rrmmdd')<=  " +
+                    "to_date('2001-01-01','yyyy-mm-dd')  then   ( case when to_date(case when Dlv_date is null then '010101'  " +
+                    "else dlv_date end ,'rrmmdd')<=to_date('2001-01-01','yyyy-mm-dd') then  ( case when plu.market_date<   " +
+                    "store.storeopendate  then store.storeopendate   else plu.market_date end ) else to_date(Dlv_date,'rrmmdd') end )   " +
+                    "else to_date(Sale_Date,'rrmmdd') end  ) no_sale_day, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)  " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)  " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity, " +
+                    "to_number(to_char( case when to_date(case when sale_date is null then '010101' else sale_date end ,'rrmmdd')<=  " +
+                    "to_date('2001-01-01','yyyy-mm-dd')  then   ( case when to_date(case when Dlv_date is null then '010101'  " +
+                    "else dlv_date end ,'rrmmdd')<=to_date('2001-01-01','yyyy-mm-dd') then  ( case when plu.market_date<  " +
+                    "store.storeopendate  then store.storeopendate   else plu.market_date end ) else to_date(Dlv_date,'rrmmdd') end )  " +
+                    "else to_date(Sale_Date,'rrmmdd') end ,'yyyymmdd')) orderseq, " +
+                    "'N' display_yn " +
+                    "FROM ana55 left join dlv_temp on dlv_temp.storeID=ana55.storeID AND dlv_temp.itemNumber=ana55.itemnumber  " +
+                    "left join itemfaceqty iy on iy.storeID=ana55.storeID AND iy.ITEMNUMBER=ana55.itemNumber  " +
+                    ",cat, plu left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID  " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0'  " +
+                    "AND inv.busiDate =to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')  " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber , " +
+                    "store   " +
+                    "WHERE ana55.storeID= '${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='3' " +
+                    "AND ana55.storeID=store.storeID " +
+                    "AND to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')-store.storeOpenDate>=60   " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null  " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "and to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') -  " +
+                    "( case when to_date(case when sale_date is null then '010101' else sale_date end ,'rrmmdd')<=to_date('2001-01-01','yyyy-mm-dd')  " +
+                    "then  " +
+                    "(  case when to_date(case when Dlv_date is null then '010101' else dlv_date end ,'rrmmdd')<=to_date('2001-01-01','yyyy-mm-dd')   " +
+                    "then   " +
+                    "(  case when plu.market_date<store.storeopendate   " +
+                    "then store.storeopendate   " +
+                    "else plu.market_date   " +
+                    "end  )   " +
+                    "else to_date(Dlv_date,'rrmmdd')   " +
+                    "end  )   " +
+                    "else to_date(Sale_Date,'rrmmdd')   " +
+                    "end   ) >=60  " +
+                    "order by plu.categoryNumber,plu.itemnumber,orderseq desc\u0004"
+        }
+
+    /**
+     * 获得状态6、8的商品
+     */
+    val errorStatus: String
+        get() {
+            return "select '6' flag," +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber," +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, " +
+                    "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                    "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,case when ana55.Dlv_Date='700101' or ana55.Dlv_Date='000000' then '' else " +
+                    "ana55.Dlv_Date end Dlv_Date, plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else plu.stop_th_code||'(${MyApplication.instance().getString(R.string.ting)})' end)|| " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else (case when trim(plu.OUT_TH_CODE) is null then '' else '-' end) end)|| " +
+                    "(case when trim(plu.OUT_TH_CODE) is null then '' else plu.OUT_TH_CODE||'(${MyApplication.instance().getString(R.string.tui)})' end) th_code, " +
+                    "case when nvl(trim(plu.STOP_TH_CODE),0)>nvl(trim(plu.OUT_TH_CODE),0) then " +
+                    "nvl(trim(plu.STOP_TH_CODE),0) else nvl(trim(plu.OUT_TH_CODE),0) end th_code1, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity " +
+                    ",case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)+ " +
+                    "nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+ " +
+                    "nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0))>0 " +
+                    "then 1 else (case when nvl(dlvdtl.dlvQuantity,0)>0 then 2 else 3 end) end orderSeq, " +
+                    "decode(trim(itemfaceqty.ITEMNUMBER),null,'N','Y') display_yn " +
+                    "FROM ana55,cat,plu " +
+                    "left join itemfaceqty on itemfaceqty.storeID=plu.storeID AND plu.itemNumber=itemfaceqty.ITEMNUMBER " +
+                    "left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                    "left join dlvdtl on dlvdtl.storeID=plu.storeID AND dlvdtl.itemNumber=plu.itemNumber and dlvdtl.dlvdate =to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')+1 " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                    "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "WHERE ana55.storeID='${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='5' " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "order by plu.categoryNumber,plu.itemNumber,th_code1 desc\u0004"
+        }
+
+    /**
+     * 需要移除商品卡商品
+     */
+    val needRemove: String
+        get() {
+            return "select '7' flag, ana55.itemNumber,plu.pluName,plu.categoryNumber,cat.categoryName, " +
+                    "plu.status,plu.item_level layclass,plu.storeUnitPrice,ana55.DMS " +
+                    "FROM ana55,plu,cat " +
+                    "WHERE ana55.storeID='${User.getUser().storeId}' " +
+                    "AND ana55.busiDate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='7' " +
+                    "AND ana55.storeID=plu.storeID " +
+                    "AND ana55.itemNumber=plu.itemNumber " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "order by plu.categoryNumber,plu.itemNumber"
+        }
+
+    /**
+     * L1缺货商品
+     */
+    val outL1: String
+        get() {
+            return "select  '2' flag," +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber," +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, " +
+                    "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                    "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,case when ana55.Dlv_Date='700101' or ana55.Dlv_Date='000000' then '' else " +
+                    "ana55.Dlv_Date end Dlv_Date, plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else plu.stop_th_code||'(${MyApplication.instance().getString(R.string.ting)})' end)|| " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else (case when trim(plu.OUT_TH_CODE) is null then '' else '-' end) end)|| " +
+                    "(case when trim(plu.OUT_TH_CODE) is null then '' else plu.OUT_TH_CODE||'(${MyApplication.instance().getString(R.string.tui)})' end) th_code, " +
+                    "case when nvl(trim(plu.STOP_TH_CODE),0)>nvl(trim(plu.OUT_TH_CODE),0) then " +
+                    "nvl(trim(plu.STOP_TH_CODE),0) else nvl(trim(plu.OUT_TH_CODE),0) end th_code1, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity " +
+                    ",case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)+ " +
+                    "nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+ " +
+                    "nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0))>0 " +
+                    "then 1 else (case when nvl(dlvdtl.dlvQuantity,0)>0 then 2 else 3 end) end orderSeq, " +
+                    "decode(trim(itemfaceqty.ITEMNUMBER),null,'N','Y') display_yn " +
+                    "FROM ana55,cat,plu " +
+                    "left join itemfaceqty on itemfaceqty.storeID=plu.storeID AND plu.itemNumber=itemfaceqty.ITEMNUMBER " +
+                    "left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                    "left join dlvdtl on dlvdtl.storeID=plu.storeID AND dlvdtl.itemNumber=plu.itemNumber and dlvdtl.dlvdate =to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')+1 " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                    "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "WHERE ana55.storeID='${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='2' " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "order by plu.categoryNumber,plu.itemNumber,(case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)+ " +
+                    "nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+ " +
+                    "nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0))>0 " +
+                    "then 1 else (case when nvl(dlvdtl.dlvQuantity,0)>0 then 2 else 3 end) end) desc\u0004"
+        }
+
+    /**
+     * 高库存商品
+     */
+    val highInv: String
+        get() {
+            return "select '5' flag," +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber," +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, " +
+                    "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                    "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,case when ana55.Dlv_Date='700101' or ana55.Dlv_Date='000000' then '' else " +
+                    "ana55.Dlv_Date end Dlv_Date, plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else plu.stop_th_code||'(${MyApplication.instance().getString(R.string.ting)})' end)|| " +
+                    "(case when trim(plu.STOP_TH_CODE) is null then '' else (case when trim(plu.OUT_TH_CODE) is null then '' else '-' end) end)|| " +
+                    "(case when trim(plu.OUT_TH_CODE) is null then '' else plu.OUT_TH_CODE||'(${MyApplication.instance().getString(R.string.tui)})' end) th_code, " +
+                    "case when nvl(trim(plu.STOP_TH_CODE),0)>nvl(trim(plu.OUT_TH_CODE),0) then " +
+                    "nvl(trim(plu.STOP_TH_CODE),0) else nvl(trim(plu.OUT_TH_CODE),0) end th_code1, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity " +
+                    ",case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0)+ " +
+                    "nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+ " +
+                    "nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0))>0 " +
+                    "then 1 else (case when nvl(dlvdtl.dlvQuantity,0)>0 then 2 else 3 end) end orderSeq, " +
+                    "decode(trim(itemfaceqty.ITEMNUMBER),null,'N','Y') display_yn " +
+                    "FROM ana55,cat,plu " +
+                    "left join itemfaceqty on itemfaceqty.storeID=plu.storeID AND plu.itemNumber=itemfaceqty.ITEMNUMBER " +
+                    "left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                    "left join dlvdtl on dlvdtl.storeID=plu.storeID AND dlvdtl.itemNumber=plu.itemNumber and dlvdtl.dlvdate =to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')+1 " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                    "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber " +
+                    "WHERE ana55.storeID='${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='4' " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "order by plu.categoryNumber,plu.itemNumber\u0004"
+        }
+
+    /**
+     * 一般缺货
+     */
+    val genOut:String
+    get() {
+        return "SELECT '3' flag, " +
+                "plu.itemNumber,plu.pluName,plu.categoryNumber,  " +
+                "cat.categoryName,plu.orderMode,ana55.Class_type,120 nosaleday, " +
+                "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
+                "plu.item_level layclass,plu.storeUnitPrice, " +
+                "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                "ana55.DMS,ana55.befInvQuantity, " +
+                "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +
+                "unit.unitName,ana55.Sale_Date,ana55.Dlv_Date,plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity,  " +
+                "(case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-   " +
+                "nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+  " +
+                "nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+  " +
+                "nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) >0  " +
+                "then 1 else ( case when  ( nvl(dlv_temp.dlvQuantity,0) )>0 then 2 else 3  end )  " +
+                "end  )order_seq    " +
+                "FROM ana55,cat, " +
+                "plu left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                "left join dlv_temp on dlv_temp.storeID=plu.storeID AND dlv_temp.itemNumber=plu.itemNumber " +
+                "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber  " +
+                "WHERE ana55.storeID= '${User.getUser().storeId}' " +
+                "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                "AND ana55.EXCEPTION_type='6' " +
+                "AND plu.storeID=ana55.storeID " +
+                "AND plu.itemNumber=ana55.itemNumber " +
+                "AND plu.shipNumber='0' " +
+                "AND trim(cat.midCategoryNumber) is null " +
+                "AND plu.categoryNumber=cat.categoryNumber " +
+                "and plu.item_level<>'L1' " +
+                "order by plu.categoryNumber,plu.itemNumber,order_seq desc\u0004"
     }
 }

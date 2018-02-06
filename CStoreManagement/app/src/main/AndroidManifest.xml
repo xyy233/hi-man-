@@ -179,12 +179,19 @@
             android:screenOrientation="portrait"/>
 
         <!--商品调拨详细页-->
-        <activity android:name=".view.transfer.TransferItemActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.transfer.TransferItemActivity"
+            android:screenOrientation="portrait"/>
 
         <!--单品查询-->
-        <activity android:name=".view.inquiry.UnitInquiryActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.inquiry.UnitInquiryActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--库存异常查询-->
+        <activity
+            android:name=".view.inverror.InvErrorActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

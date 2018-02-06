@@ -40,8 +40,7 @@ class TransferModel : TransferInterface {
                 msg.what = ERROR
             } else {
                 tib.forEach {
-                    val items = getTrsItem(it.trsNumber, date, ip, msg, handler)
-                    if (items.isEmpty()) return@Runnable
+                    val items = getTrsItem(it.trsNumber, date, ip, msg, handler) ?: return@Runnable
                     it.items = items
                 }
                 msg.obj = tib
@@ -54,7 +53,7 @@ class TransferModel : TransferInterface {
     /**
      * 获得调拨单下的商品
      */
-    private fun getTrsItem(trsNumber: String, date: String, ip: String, msg: Message, handler: MyHandler): ArrayList<TrsItemBean> {
+    private fun getTrsItem(trsNumber: String, date: String, ip: String, msg: Message, handler: MyHandler): ArrayList<TrsItemBean>? {
         val sql = MySql.getTrsItems(date, trsNumber)
         val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
         val result = ArrayList<TrsItemBean>()
@@ -62,13 +61,15 @@ class TransferModel : TransferInterface {
             result.addAll(GsonUtil.getTrsItem(sqlResult))
         } catch (e: Exception) {
         }
-        if (result.isEmpty()) {
+        return if (result.isEmpty()) {
             msg.obj = result
             msg.what = ERROR
+            handler.sendMessage(msg)
+            null
         } else {
             result.forEach { it.action = 0 }
+            result
         }
-        return result
     }
 
     override fun searchCommodity(data: String, handler: MyHandler) {
@@ -214,10 +215,10 @@ class TransferModel : TransferInterface {
         val createData = data.filter { it.action == 1 }
         //获得这一单的单号
 
-        val trsNumber = if (data[0].trsNumber!=""){
+        val trsNumber = if (data[0].trsNumber != "") {
             //有单号
             data[0].trsNumber
-        }else{
+        } else {
             getTrsNumber(ip, msg, handler)
         }
         if (trsNumber == "ERROR") return trsNumber
@@ -253,7 +254,7 @@ class TransferModel : TransferInterface {
             handler.sendMessage(msg)
             return "ERROR"
         }
-        if (values[0].value == null||values[0].value == "null") {
+        if (values[0].value == null || values[0].value == "null") {
             //没有单号，新建
             return trsNumberIsExits((MyTimeUtil.dayOfYear() + "1").toInt(), ip, msg, handler)
         }

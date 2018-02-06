@@ -29,7 +29,6 @@ import com.uuzuche.lib_zxing.camera.CameraManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_pay.*
 import kotlinx.android.synthetic.main.layout_search_line.*
-import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import java.text.DecimalFormat
 
@@ -86,13 +85,13 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     }
 
     override fun initView() {
+        /*toolbar_time.text = "退款"
+        toolbar_time.visibility = View.VISIBLE*/
         search_edit.hint = getString(R.string.idorcode)
         search_edit.inputType = InputType.TYPE_CLASS_NUMBER
         search_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
         my_toolbar.title = "收款"
-        //toolbar_time.text = "退款"
         toolbar_btn.text = "清空"
-        //toolbar_time.visibility = View.VISIBLE
         toolbar_btn.visibility = View.VISIBLE
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
@@ -181,11 +180,11 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
 
     override fun initClick() {
         //退款
-        /*toolbar_time.setOnClickListener {
+        toolbar_time.setOnClickListener {
             val intent = Intent(this@PayActivity, PayCollectActivity::class.java)
             intent.putExtra("action", 1)
             startActivity(intent)
-        }*/
+        }
         toolbar_btn.setOnClickListener {
             presenter.deleteData()
             adapter.removeItem()
