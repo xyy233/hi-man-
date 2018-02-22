@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
 
-    lintOptions {
+    lintOptions {5
         abortOnError false
         checkReleaseBuilds false
     }
@@ -63,6 +63,7 @@ dependencies {
     //图片view,随意拖动放大缩小
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     //http请求与json解析
+    //compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.zhy:okhttputils:2.6.2'
     //扫描二维码

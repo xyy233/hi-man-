@@ -159,7 +159,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
             (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(search_edit.windowToken, 0)
         }
     }
-    
+
     override fun initData() {
         if (flag == 1) {
             presenter.getData()

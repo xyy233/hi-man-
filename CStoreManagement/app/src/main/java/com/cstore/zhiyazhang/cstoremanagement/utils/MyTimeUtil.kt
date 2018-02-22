@@ -62,6 +62,10 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(date)
     }
 
+    private fun getTimeByDate(date: Date): String {
+        return SimpleDateFormat("HH:mm", Locale.CHINA).format(date)
+    }
+
     /**
      * 删除时间只要年月日
      */
@@ -70,6 +74,16 @@ object MyTimeUtil {
             return "无"
         }
         return getYMDStringByDate(getDateByString(date))
+    }
+
+    /**
+     * 删除年月日只要时间
+     */
+    fun deleteDate(date: String): String {
+        if (date.isEmpty() || date == "null") {
+            return "无"
+        }
+        return getTimeByDate(getDateByString(date))
     }
 
     /**
@@ -209,5 +223,66 @@ object MyTimeUtil {
      */
     fun getTextViewDate(dateUtil: LinearLayout): String {
         return "${dateUtil.year.text.toString().replace("年", "")}-${dateUtil.month.text.toString().replace("月", "")}-${dateUtil.day.text}"
+    }
+
+    /**
+     * 获得周一日期
+     * @param isWeek isWeek为摇摆数+1为当前周加一天，本周为0，上周为-1
+     */
+    fun getWeekMondayDate(isWeek: Int): String {
+        val cal = Calendar.getInstance()
+        cal.firstDayOfWeek = Calendar.MONDAY
+        cal.add(Calendar.WEEK_OF_YEAR, isWeek)
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
+    }
+
+    /**
+     * 获得周日日期
+     * @param isWeek isWeek为摇摆数+1为当前周加一天，本周为0，上周为-1
+     */
+    fun getWeekSundayDate(isWeek: Int): String {
+        val cal = Calendar.getInstance()
+        cal.firstDayOfWeek = Calendar.MONDAY
+        cal.add(Calendar.WEEK_OF_YEAR, isWeek)
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+            /**
+             * 根据日期获得日期周的周日
+             */
+    fun getWeekSundayByDate(date: String): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val nowDate = sdf.parse(date)
+        val cal = Calendar.getInstance()
+        cal.time = nowDate
+        cal.firstDayOfWeek = Calendar.MONDAY
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
+    }
+
+    /**
+     * 获得两个时间相差的小时数
+     * @param dateStart 开始时间
+     * @param dateEnd 结束时间
+     */
+    fun getDiscrepantHours(dateStart: String, dateEnd: String): Int {
+        val startDate = getDateByString(dateStart)
+        val endDate = getDateByString(dateEnd)
+        return ((endDate.time - startDate.time) / 1000 / 60 / 60).toInt()
+    }
+
+    @SuppressLint("SimpleDateFormat")
+            /**
+             * 得到当前是周几
+             */
+    fun getNowWeek(data: String): Int {
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val date = sdf.parse(data)
+        val cal = Calendar.getInstance()
+        cal.time = date
+        return cal.get(Calendar.DAY_OF_WEEK)
     }
 }

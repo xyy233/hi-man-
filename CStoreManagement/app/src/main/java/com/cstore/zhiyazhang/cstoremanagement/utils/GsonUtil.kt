@@ -136,4 +136,8 @@ object GsonUtil {
     fun getInvError(data: String): ArrayList<InvErrorBean> {
         return Gson().fromJson<ArrayList<InvErrorBean>>(data, object : TypeToken<ArrayList<InvErrorBean>>() {}.type)
     }
+
+    fun getPaiban(data: String): ArrayList<PaibanBean> {
+        return Gson().fromJson<ArrayList<PaibanBean>>(data, object : TypeToken<ArrayList<PaibanBean>>() {}.type)
+    }
 }

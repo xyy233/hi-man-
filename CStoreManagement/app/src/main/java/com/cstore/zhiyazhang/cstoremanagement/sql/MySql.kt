@@ -2217,42 +2217,84 @@ object MySql {
     /**
      * 一般缺货
      */
-    val genOut:String
-    get() {
-        return "SELECT '3' flag, " +
-                "plu.itemNumber,plu.pluName,plu.categoryNumber,  " +
-                "cat.categoryName,plu.orderMode,ana55.Class_type,120 nosaleday, " +
-                "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
-                "plu.item_level layclass,plu.storeUnitPrice, " +
-                "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
-                "ana55.DMS,ana55.befInvQuantity, " +
-                "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
-                "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +
-                "unit.unitName,ana55.Sale_Date,ana55.Dlv_Date,plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
-                "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
-                "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
-                "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity,  " +
-                "(case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-   " +
-                "nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+  " +
-                "nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+  " +
-                "nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) >0  " +
-                "then 1 else ( case when  ( nvl(dlv_temp.dlvQuantity,0) )>0 then 2 else 3  end )  " +
-                "end  )order_seq    " +
-                "FROM ana55,cat, " +
-                "plu left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
-                "left join dlv_temp on dlv_temp.storeID=plu.storeID AND dlv_temp.itemNumber=plu.itemNumber " +
-                "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
-                "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
-                "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber  " +
-                "WHERE ana55.storeID= '${User.getUser().storeId}' " +
-                "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
-                "AND ana55.EXCEPTION_type='6' " +
-                "AND plu.storeID=ana55.storeID " +
-                "AND plu.itemNumber=ana55.itemNumber " +
-                "AND plu.shipNumber='0' " +
-                "AND trim(cat.midCategoryNumber) is null " +
-                "AND plu.categoryNumber=cat.categoryNumber " +
-                "and plu.item_level<>'L1' " +
-                "order by plu.categoryNumber,plu.itemNumber,order_seq desc\u0004"
+    val genOut: String
+        get() {
+            return "SELECT '3' flag, " +
+                    "plu.itemNumber,plu.pluName,plu.categoryNumber,  " +
+                    "cat.categoryName,plu.orderMode,ana55.Class_type,120 nosaleday, " +
+                    "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
+                    "plu.item_level layclass,plu.storeUnitPrice, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "ana55.DMS,ana55.befInvQuantity, " +
+                    "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
+                    "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +
+                    "unit.unitName,ana55.Sale_Date,ana55.Dlv_Date,plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
+                    "(nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-nvl(inv.accSaleQuantity,0) " +
+                    "+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0) " +
+                    "+nvl(inv.accTrsQuantity,0)+nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) as InvQuantity,  " +
+                    "(case when (nvl(inv.befInvQuantity,0)+nvl(inv.accDlvQuantity,0)-nvl(inv.accRtnQuantity,0)-   " +
+                    "nvl(inv.accSaleQuantity,0)+nvl(inv.accSaleRtnQuantity,0)-nvl(inv.accMrkQuantity,0)+  " +
+                    "nvl(inv.accCshDlvQuantity,0)-nvl(inv.accCshRtnQuantity,0)+nvl(inv.accTrsQuantity,0)+  " +
+                    "nvl(inv.accLeibianQuantity,0)+nvl(inv.accAdjQuantity,0)+nvl(inv.accHqAdjQuantity,0)) >0  " +
+                    "then 1 else ( case when  ( nvl(dlv_temp.dlvQuantity,0) )>0 then 2 else 3  end )  " +
+                    "end  )order_seq    " +
+                    "FROM ana55,cat, " +
+                    "plu left join unit on unit.storeID=plu.storeID AND unit.unitID=plu.smallUnitID " +
+                    "left join dlv_temp on dlv_temp.storeID=plu.storeID AND dlv_temp.itemNumber=plu.itemNumber " +
+                    "left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber AND inv.shipNumber='0' " +
+                    "AND inv.busiDate = to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "left join sfitem on sfitem.storeid=plu.storeID AND sfitem.item=plu.itemNumber  " +
+                    "WHERE ana55.storeID= '${User.getUser().storeId}' " +
+                    "AND ana55.busiDate= to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
+                    "AND ana55.EXCEPTION_type='6' " +
+                    "AND plu.storeID=ana55.storeID " +
+                    "AND plu.itemNumber=ana55.itemNumber " +
+                    "AND plu.shipNumber='0' " +
+                    "AND trim(cat.midCategoryNumber) is null " +
+                    "AND plu.categoryNumber=cat.categoryNumber " +
+                    "and plu.item_level<>'L1' " +
+                    "order by plu.categoryNumber,plu.itemNumber,order_seq desc\u0004"
+        }
+
+    /***********************************************排班*****************************************************/
+
+    /**
+     * 根据日期得到排班数据
+     */
+    fun getPaibanData(beginDate: String, endDate: String): String {
+        return "select p.storeid, p.systemdate, p.employeeid, e.employeename, p.begindatetime, p.enddatetime, p.danren_hr, p.updatedatetime  " +
+                "from paiban_simple p,employee e   " +
+                "where p.employeeid=e.employeeid " +
+                "and p.systemdate between to_date('$beginDate', 'yyyy-mm-dd') and to_date('$endDate', 'yyyy-mm-dd')\u0004"
+    }
+
+    /**
+     * 创建排班数据
+     */
+    fun createPaiban(data: PaibanBean): String {
+        return "insert into paiban_simple  " +
+                "values('${data.storeId}',to_date('${data.systemDate}','yyyy-mm-dd'),'${data.employeeId}', " +
+                "to_date('${data.beginDateTime}','yyyy-MM-dd HH24:mi:ss'), to_date('${data.endDateTime}','yyyy-MM-dd HH24:mi:ss'), " +
+                "${data.danrenHr},sysdate)\u0004"
+    }
+
+    /**
+     * 更新排班数据
+     */
+    fun updatePaiban(data: PaibanBean): String {
+        return "update paiban_simple set begindatetime=to_date('${data.beginDateTime}','yyyy-MM-dd HH24:mi:ss'), " +
+                "enddatetime=to_date('${data.endDateTime}','yyyy-MM-dd HH24:mi:ss'), " +
+                "danren_hr=${data.danrenHr}, " +
+                "updatedatetime=sysdate " +
+                "where storeid='${data.storeId}'  " +
+                "and systemdate=to_date('${data.systemDate}','yyyy-mm-dd') " +
+                "and employeeid='${data.employeeId}'\u0004"
+    }
+
+    fun deletePaiban(data: PaibanBean): String {
+        return "delete from paiban_simple  " +
+                "where storeid='${data.storeId}'  " +
+                "and systemdate=to_date('${data.systemDate}','yyyy-mm-dd') " +
+                "and employeeid='${data.employeeId}'\u0004"
     }
 }
