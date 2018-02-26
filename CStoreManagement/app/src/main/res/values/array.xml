@@ -61,5 +61,11 @@
         <item>状态6、8商品</item>
     </string-array>
 
+    <string-array name="dateTest">
+        <item>2018-02-26</item>
+        <item>2018-02-27</item>
+        <item>2018-02-28</item>
+    </string-array>
+
 
 </resources>

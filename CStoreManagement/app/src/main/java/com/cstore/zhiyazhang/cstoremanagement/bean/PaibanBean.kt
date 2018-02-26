@@ -8,23 +8,23 @@ import java.io.Serializable
  * on 2018/2/8 11:37.
  */
 data class PaibanBean(
-        @SerializedName("storeid") val storeId: String,
+        @SerializedName("storeid") val storeId: String?,
         /**
          * 考勤日
          */
-        @SerializedName("systemdate") val systemDate: String,
+        @SerializedName("systemdate") val systemDate: String?,
         /**
          * 考勤人号码
          */
         @SerializedName("employeeid") val employeeId: String,
         @SerializedName("employeename") val employeeName: String,
-        @SerializedName("begindatetime") val beginDateTime: String,
-        @SerializedName("enddatetime") val endDateTime: String,
+        @SerializedName("begindatetime") val beginDateTime: String?,
+        @SerializedName("enddatetime") val endDateTime: String?,
         /**
          * 大夜时数
          */
-        @SerializedName("danren_hr") val danrenHr: Double,
-        @SerializedName("updatedatetime") val updateDateTime: String
+        @SerializedName("danren_hr") val danrenHr: Double?,
+        @SerializedName("updatedatetime") val updateDateTime: String?
 ) : Serializable
 
 data class SortPaiban(

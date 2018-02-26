@@ -1621,7 +1621,7 @@ object MySql {
         }
 
     /**
-     * 像微信申请${MyApplication.instance().getString(R.string.tui)}款成功后执行的存储过程
+     * 像微信申请退款成功后执行的存储过程
      * @param pay_tranno 收款时的对方交易序号
      * @param refoundId 微信返回${MyApplication.instance().getString(R.string.tui)}款单号
      * @param isWhere 是在微信还是现金还是支付宝执行的${MyApplication.instance().getString(R.string.tui)}款
@@ -2259,13 +2259,39 @@ object MySql {
     /***********************************************排班*****************************************************/
 
     /**
+     * 获得店长是否排班
+     */
+    val getIsPaiban: String
+        get() {
+            return "select nvl(sv_work_sign,'Y') value from store where storeid='${User.getUser().storeId}'\u0004"
+        }
+
+    /**
      * 根据日期得到排班数据
      */
-    fun getPaibanData(beginDate: String, endDate: String): String {
-        return "select p.storeid, p.systemdate, p.employeeid, e.employeename, p.begindatetime, p.enddatetime, p.danren_hr, p.updatedatetime  " +
-                "from paiban_simple p,employee e   " +
-                "where p.employeeid=e.employeeid " +
-                "and p.systemdate between to_date('$beginDate', 'yyyy-mm-dd') and to_date('$endDate', 'yyyy-mm-dd')\u0004"
+    fun getPaibanData(beginDate: String, endDate: String, isPaiban: String): String {
+        return "select p.storeid,p.systemdate,p.employeeid,e.employeename, " +
+                "p.begindatetime, p.enddatetime,p.danren_hr, p.updatedatetime " +
+                "from paiban_simple p, employee e " +
+                "where p.employeeid = e.employeeid " +
+                "and p.systemdate between to_date('$beginDate', 'yyyy-mm-dd') and " +
+                "to_date('$endDate', 'yyyy-mm-dd') " +
+                "union all " +
+                "select null, null, employeeid, employeename, null, null, null, null " +
+                "from employee where empgroupid <> '01' " +
+                "${
+                if (isPaiban != "Y") {
+                    "and nvl(substr(empstaff, 1, 2), 'x') <> '01' "
+                } else {
+                    ""
+                }} " +
+                "and nvl(empexitdate, trunc(sysdate + 360)) >= sysdate "+
+                "and nvl(emptypeno, '01') like '%' " +
+                "and employeeid not in(select p.employeeid " +
+                "from paiban_simple p, employee e " +
+                "where p.employeeid = e.employeeid " +
+                "and p.systemdate between to_date('$beginDate', 'yyyy-mm-dd') and " +
+                "to_date('$endDate', 'yyyy-mm-dd'))\u0004"
     }
 
     /**

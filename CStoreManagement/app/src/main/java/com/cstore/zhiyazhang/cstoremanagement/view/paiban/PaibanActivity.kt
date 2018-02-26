@@ -1,22 +1,26 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.paiban
 
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.bean.PaibanBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.SortPaiban
 import com.cstore.zhiyazhang.cstoremanagement.presenter.paiban.PaibanAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.paiban.PaibanPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.dateAddDay
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getWeekSundayByDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_paiban.*
+import kotlinx.android.synthetic.main.dialog_paiban.view.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 
@@ -28,6 +32,9 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
     private val presenter = PaibanPresenter(this)
     private val dateList = ArrayList<String>()
     private lateinit var adapter: PaibanAdapter
+    private lateinit var dialog: AlertDialog
+    private lateinit var dialogView: View
+
     override fun initView() {
         my_toolbar.title = getString(R.string.paiban)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
@@ -37,6 +44,21 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dateList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         paiban_spinner.adapter = adapter
+        initDialog()
+    }
+
+    private fun initDialog() {
+        val builder = AlertDialog.Builder(this)
+        dialogView = View.inflate(this, R.layout.dialog_paiban, null)
+        builder.setView(dialogView)
+        builder.setCancelable(true)
+        dialog = builder.create()
+        dialogView.dialog_cancel.setOnClickListener {
+            dialog.cancel()
+        }
+        dialogView.drdy.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogView.drdy.keyListener = DigitsKeyListener.getInstance("1234567890")
+        dialogView.drdy.setSelection(dialogView.drdy.text.length)
     }
 
     private fun getWeek() {
@@ -76,30 +98,62 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
     }
 
     override fun initData() {
-        presenter.getDataByDate()
+        //presenter.getDataByDate()
     }
 
     override fun <T> showView(aData: T) {
-        aData as ArrayList<PaibanBean>
-        aData.sortBy { it.employeeId }
-        val data = ArrayList<SortPaiban>()
-        var id = ""
-        //循环所有数据
-        for (pb in aData) {
-            //如果记录id和循环id不同就代表是新的人需要添加
-            if (id != pb.employeeId) {
-                id = pb.employeeId
-                //查询到这个新的人的所有数据添加进去
-                val sp = SortPaiban(aData.filter { it.employeeId == id } as ArrayList<PaibanBean>)
-                data.add(sp)
-            }
-        }
-        adapter = PaibanAdapter(data, object : ItemClickListener {
+        aData as ArrayList<SortPaiban>
+        adapter = PaibanAdapter(aData, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            //data为排班bean，position为周几，从0开始,确认当前选中哪天为当前spinner日期+position日期
+            override fun <T> onItemEdit(data: T, position: Int) {
+                onclickDate(data as SortPaiban, position)
             }
         })
         paiban_recycler.adapter = adapter
+    }
+
+    /**
+     * 弹出保存排版器
+     * @param data 排班bean
+     * @param day 从0开始,确认当前选中哪天为当前spinner日期+day日期
+     */
+    fun onclickDate(data: SortPaiban, day: Int) {
+        //当前选择的日期
+        val selectDate = dateAddDay(paiban_spinner.selectedItem.toString(), day)
+        //夜班选择能跨一天
+        val selectDate2 = dateAddDay(paiban_spinner.selectedItem.toString(), day + 1)
+        val title = data.data[0].employeeName + "  " + selectDate
+        dialogView.dialog_title.text = title
+
+        val paibans = data.data.filter { it.systemDate == selectDate }
+        val selectDateList = ArrayList<String>()
+        selectDateList.add(selectDate)
+        selectDateList.add(selectDate2)
+        //日期选择spinner初始化
+        val beginAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, selectDateList)
+        beginAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dialogView.begin_spinner.adapter = beginAdapter
+        val endAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, selectDateList)
+        endAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dialogView.end_spinner.adapter = endAdapter
+
+        if (paibans.isNotEmpty()) {
+            //有值
+            val paiban = paibans[0]
+            //设置spinner当前显示的值，如果选择的日期不等于开始、结束时间就代表日期为第二天，按照添加顺序第二天是第二条
+            if (selectDate != MyTimeUtil.deleteTime(paiban.beginDateTime!!)) {
+                dialogView.begin_spinner.setSelection(1)
+            }
+            if (selectDate != MyTimeUtil.deleteTime(paiban.endDateTime!!)) {
+                dialogView.end_spinner.setSelection(1)
+            }
+        } else {
+            //无值
+        }
+        dialog.show()
     }
 
     override fun errorDealWith() {

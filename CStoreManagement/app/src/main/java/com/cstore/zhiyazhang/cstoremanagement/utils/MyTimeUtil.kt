@@ -276,7 +276,7 @@ object MyTimeUtil {
 
     @SuppressLint("SimpleDateFormat")
             /**
-             * 得到当前是周几
+             * 得到是周几
              */
     fun getNowWeek(data: String): Int {
         val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -284,5 +284,19 @@ object MyTimeUtil {
         val cal = Calendar.getInstance()
         cal.time = date
         return cal.get(Calendar.DAY_OF_WEEK)
+    }
+
+    /**
+     * 日期添加天数的时间
+     * @param date 要操作的日期
+     * @param day 要添加的天数
+     */
+    fun dateAddDay(date: String, day: Int): String {
+        if (day == 0) return date
+        val nowDate = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(date)
+        val calendar = Calendar.getInstance()
+        calendar.time = nowDate
+        calendar.add(Calendar.DATE,day)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
     }
 }

@@ -161,17 +161,21 @@ internal class SocketUtil  {
         try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
+
             os = mySocket.getOutputStream()
             bw = BufferedWriter(OutputStreamWriter(os!!))
             `is` = mySocket.getInputStream()
             br = BufferedReader(InputStreamReader(`is`!!))
+
             bw!!.write(message)
             bw!!.flush()
             mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
+
             var receive: String? = null
             while (receive == null) {
                 receive = br!!.readLine()
             }
+
             return receive
         } catch (ste: SocketTimeoutException) {
             return REQUEST_ERROR

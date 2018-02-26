@@ -31,6 +31,7 @@
     <string name="saveDone">保存成功</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
+    <string name="delete">删除</string>
     <string name="wifi_hints">请确定当前连接的wifi是cstorebp</string>
     <string name="now_wifi">当前链接的wifi为：</string>
     <string name="mobile_network">移动网络</string>
@@ -317,5 +318,10 @@
     <string name="friday">周五</string>
     <string name="saturday">周六</string>
     <string name="sunday">周日</string>
+    <string name="beginDate">开始时间：</string>
+    <string name="endDate">结束时间：</string>
+    <string name="crb">常日班：</string>
+    <string name="ybdy">一般大夜：</string>
+    <string name="drdy">单人大夜：</string>
 
 </resources>
