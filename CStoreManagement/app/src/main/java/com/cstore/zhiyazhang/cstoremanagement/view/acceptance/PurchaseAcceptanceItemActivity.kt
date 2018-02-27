@@ -184,14 +184,16 @@ class PurchaseAcceptanceItemActivity(override val layoutId: Int= R.layout.activi
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(resultCode){
-            0->{
-                try {
-                    val aib=data!!.getSerializableExtra("aib") as ArrayList<*>
-                    //ab.allItems.addAll(aib)
-                    adapter.addItem(aib)
-                }catch (e:Exception){
-                    Log.e("验收item",e.message)
+        if (data!=null){
+            when(resultCode){
+                0->{
+                    try {
+                        val aib=data.getSerializableExtra("aib") as ArrayList<*>
+                        //ab.allItems.addAll(aib)
+                        adapter.addItem(aib)
+                    }catch (e:Exception){
+                        Log.e("验收item",e.message)
+                    }
                 }
             }
         }

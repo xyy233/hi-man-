@@ -156,14 +156,16 @@ class ReturnPurchaseItemActivity(override val layoutId: Int = R.layout.activity_
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (resultCode) {
-            1 -> {
-                try {
-                    val rb = data!!.getSerializableExtra("newData") as ArrayList<ReturnPurchaseItemBean>
-                    addNewDataList(rb)
-                    adapter.notifyDataSetChanged()
-                } catch (e: Exception) {
-                    Log.e("预约退货item", e.message.toString())
+        if (data!=null){
+            when (resultCode) {
+                1 -> {
+                    try {
+                        val rb = data.getSerializableExtra("newData") as ArrayList<ReturnPurchaseItemBean>
+                        addNewDataList(rb)
+                        adapter.notifyDataSetChanged()
+                    } catch (e: Exception) {
+                        Log.e("预约退货item", e.message.toString())
+                    }
                 }
             }
         }

@@ -79,7 +79,7 @@ object ReportListener {
         OkHttpUtils
                 .postString()
                 .url(AppUrl.UPLOAD_ERROR)
-                .content("")
+                .content("版本号：${MyApplication.getVersion()!!}")
                 .addHeader("fileName", "$storeId/login.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {

@@ -29,11 +29,11 @@ import java.io.File
  * Created by zhiya.zhang
  * on 2017/6/7 15:23.
  */
-class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, GenericView, EasyPermissions.PermissionCallbacks {
+class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, EasyPermissions.PermissionCallbacks {
 
 
     var preferences: SharedPreferences? = null
-    val mSigninPresenter: SignInPresenter = SignInPresenter(this, this, this, this)
+    val mSigninPresenter: SignInPresenter = SignInPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

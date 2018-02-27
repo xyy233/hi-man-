@@ -168,12 +168,14 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (resultCode) {
-            0 -> {
-                msg = data!!.getStringExtra("message")
-                whereSearch = 1
-                showDetail(false)
-                presenter.getData()
+        if (data != null) {
+            when (resultCode) {
+                0 -> {
+                    msg = data.getStringExtra("message")
+                    whereSearch = 1
+                    showDetail(false)
+                    presenter.getData()
+                }
             }
         }
     }

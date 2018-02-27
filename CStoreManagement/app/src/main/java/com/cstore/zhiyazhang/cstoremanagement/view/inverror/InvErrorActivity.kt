@@ -85,9 +85,11 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (resultCode) {
-            1 -> {
-                presenter.getAllFragment()
+        if (data!=null){
+            when (resultCode) {
+                1 -> {
+                    presenter.getAllFragment()
+                }
             }
         }
     }

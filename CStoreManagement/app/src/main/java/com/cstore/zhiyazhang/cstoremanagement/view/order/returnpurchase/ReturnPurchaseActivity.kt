@@ -153,24 +153,26 @@ class ReturnPurchaseActivity(override val layoutId: Int = R.layout.activity_orde
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (resultCode) {
-            0 -> {
-                //从item页返回来的
-                try {
-                    val rb = data!!.getSerializableExtra("newData")
-                    adapter!!.updateData(rb as ReturnedPurchaseBean)
-                } catch (e: Exception) {
-                    Log.e("预约退货", e.message.toString())
-                    showPrompt(e.message.toString())
+        if (data!=null){
+            when (resultCode) {
+                0 -> {
+                    //从item页返回来的
+                    try {
+                        val rb = data.getSerializableExtra("newData")
+                        adapter!!.updateData(rb as ReturnedPurchaseBean)
+                    } catch (e: Exception) {
+                        Log.e("预约退货", e.message.toString())
+                        showPrompt(e.message.toString())
+                    }
                 }
-            }
-            1 -> {
-                try {
-                    val isNew = data!!.getBooleanExtra("isNew", false)
-                    if (isNew) presenter.getReturnPurchaseList(MyTimeUtil.getTextViewDate(date_util))
-                } catch (e: Exception) {
-                    Log.e("预约退货", e.message.toString())
-                    showPrompt(e.message.toString())
+                1 -> {
+                    try {
+                        val isNew = data.getBooleanExtra("isNew", false)
+                        if (isNew) presenter.getReturnPurchaseList(MyTimeUtil.getTextViewDate(date_util))
+                    } catch (e: Exception) {
+                        Log.e("预约退货", e.message.toString())
+                        showPrompt(e.message.toString())
+                    }
                 }
             }
         }
