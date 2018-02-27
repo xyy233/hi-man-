@@ -2,16 +2,25 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.os.Environment
 import android.provider.Settings
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.view.PayDataService
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
+import java.io.File
+import java.io.FileOutputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.net.SocketException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -46,7 +55,7 @@ class MyApplication : Application() {
                             val ip = inetAddress.hostAddress
                             val ips = ip.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                             result = ips[0] + "." + ips[1] + "." + ips[2] + ".100"
-                            if (name.indexOf("wlan") != -1 && result !=        "") {
+                            if (name.indexOf("wlan") != -1 && result != "") {
                                 return result
                             }
                         }
@@ -130,25 +139,35 @@ class MyApplication : Application() {
         //开启交易数据处理服务
         startService(Intent(this, PayDataService::class.java))
 
-        //全局错误信息收集先关闭
-        //Thread.setDefaultUncaughtExceptionHandler(GlobalException.instance)
+        //全局错误信息收集
+        Thread.setDefaultUncaughtExceptionHandler(GlobalException.instance)
     }
 }
 
-/*
-*/
+
 /**
  * 全局错误信息收集
- *//*
+ */
 class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
     private val mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler()
 
     companion object {
-        @get:Synchronized val instance = GlobalException()
+        @get:Synchronized
+        val instance = GlobalException()
+
+        /**
+         * 获取崩溃文件
+         */
+        fun getCrashFile(): File {
+            val cashFileName = MyApplication.instance().getSharedPreferences("crash", Context.MODE_PRIVATE).getString("CRASH_FILE_NAME", "")
+            return File(cashFileName)
+        }
+
     }
 
     override fun uncaughtException(t: Thread?, ex: Throwable?) {
-        if (!handleException(ex) && mDefaultHandler != null) {
+        MyToast.getLongToast("很抱歉,程序出现异常,即将退出。")
+        if (handleException(ex) && mDefaultHandler != null) {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(t, ex)
         } else {
@@ -164,50 +183,59 @@ class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
         }
     }
 
-    fun handleException(ex: Throwable?): Boolean {
+    private fun handleException(ex: Throwable?): Boolean {
         if (ex == null) return false
-        thread {
-            kotlin.run {
-                Looper.prepare()
-                MyToast.getLongToast("很抱歉,程序出现异常,即将退出。")
-                Looper.loop()
-            }
-        }.start()
-        saveCrashInfoFile(ex)
+        //写入文件
+        val crashFileName = saveCrashInfoFile(ex)
+        // 3. 缓存崩溃日志文件
+        cacheCrashFile(crashFileName)
         return true
     }
 
-    */
-/**
- * 记录错误信息
- *//*
-    private fun saveCrashInfoFile(ex: Throwable) {
+    /**
+     * 记录错误信息
+     */
+    @SuppressLint("SimpleDateFormat")
+    private fun saveCrashInfoFile(ex: Throwable): String {
+        var fileName = ""
         val writer = StringWriter()
         val printWriter = PrintWriter(writer)
         ex.printStackTrace(printWriter)
-        var cause: Throwable? = ex.cause
-        while (cause != null) {
-            cause.printStackTrace(printWriter)
-            cause = cause.cause
-        }
         printWriter.close()
-        val result: String = writer.toString()
+        val result = writer.toString()
         try {
-            val timestamp = System.currentTimeMillis()
-            val formatter = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
-            val time = formatter.format(Date())
-            val fileName = "crash-$time-$timestamp.log"
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-                val path = "/cstore/crash/"
-                val dir = File(path)
-                if (!dir.exists()) {
-                    dir.mkdirs()
+                val dir = File(MyApplication.instance().applicationContext.filesDir.toString() + File.separator + "crash"
+                        + File.separator)
+                //存在就删除
+                if (dir.exists()) {
+                    dir.deleteRecursively()
                 }
-                val fos = FileOutputStream(path + fileName)
+                //重新创建
+                if (!dir.exists()) {
+                    dir.mkdir()
+                }
+                val formatter = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
+                val time = formatter.format(Date())
+                fileName = "${dir.toString()}${File.separator}$time.txt"
+                val fos = FileOutputStream(fileName)
                 fos.write(result.toByteArray())
+                fos.flush()
                 fos.close()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return fileName
     }
-}*/
+
+    /**
+     * 缓存崩溃日志文件
+     *
+     * @param fileName
+     */
+    private fun cacheCrashFile(fileName: String?) {
+        val sp = MyApplication.instance().applicationContext.getSharedPreferences("crash", Context.MODE_PRIVATE)
+        sp.edit().putString("CRASH_FILE_NAME", fileName).apply()
+    }
+}

@@ -720,7 +720,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         if (searchData.isNotEmpty()) {
             if (searchData.size > 1) {
                 //错误数据发送到服务器
-                ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, getString(R.string.duplicateData), Gson().toJson(adapter!!.data))
+                ReportListener.report(getString(R.string.duplicateData), Gson().toJson(adapter!!.data))
                 changeData.removeAll(searchData)
                 changeData.add(cb.copy())
             } else {
@@ -753,7 +753,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         if (searchData.isNotEmpty()) {
             if (searchData.size > 1) {
                 //错误数据发送到服务器
-                ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, getString(R.string.duplicateData), Gson().toJson(adapter!!.data))
+                ReportListener.report(getString(R.string.duplicateData), Gson().toJson(adapter!!.data))
                 changeData.removeAll(searchData)
                 changeData.add(cb.copy())
             } else {

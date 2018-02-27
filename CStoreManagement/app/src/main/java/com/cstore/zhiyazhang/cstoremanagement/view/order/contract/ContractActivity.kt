@@ -107,7 +107,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
                         showPrompt(getString(R.string.noEditMsg))
                         return@setOnClickListener
                     }
-                    ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, "保存订量", Gson().toJson(changeData))
+                    ReportListener.report("保存订量", Gson().toJson(changeData))
                     presenter.updateAllContract()
                 }else showPrompt("超出订货时间，不能保存")
             }
@@ -373,7 +373,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
             //如果有重复数据
             if (searchData.size > 1) {
                 //错误数据发送到服务器
-                ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, getString(R.string.duplicateData), Gson().toJson(adapter!!.cr.detail))
+                ReportListener.report(getString(R.string.duplicateData), Gson().toJson(adapter!!.cr.detail))
                 changeData.removeAll(searchData)
                 changeData.add(cb.copy(cType = ""))
             } else {

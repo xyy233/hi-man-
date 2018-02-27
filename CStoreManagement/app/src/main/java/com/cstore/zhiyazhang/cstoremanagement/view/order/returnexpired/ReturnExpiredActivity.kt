@@ -147,20 +147,20 @@ class ReturnExpiredActivity(override val layoutId: Int = R.layout.activity_cashd
     override fun <T> requestSuccess(rData: T) {
         rData as ArrayList<ReturnExpiredBean>
         if (rData.isNotEmpty()) {
-            val rb=rData[0]
-            if (rb.vendorYN!="Y"){
+            val rb = rData[0]
+            if (rb.vendorYN != "Y") {
                 showPrompt("商品:${rb.pluName} 不可厂退！")
                 return
             }
-            if (rb.stopThCode!=null){
+            if (rb.stopThCode != null) {
                 showPrompt("商品:${rb.pluName} 停售商品不可退货，停售档期:${rb.stopThCode}")
                 return
             }
-            if (rb.outThCode!=null){
+            if (rb.outThCode != null) {
                 showPrompt("商品:${rb.pluName} 退货档期:${rb.outThCode}，不可退货!")
                 return
             }
-            if (rb.vendorId!="00000000000099999100"&&rb.vendorId!="00000000000099999701"){
+            if (rb.vendorId != "00000000000099999100" && rb.vendorId != "00000000000099999701") {
                 showPrompt("商品:${rb.pluName} 不属于常低温配送商品，请在一般预约退货作业里退货！")
                 return
             }

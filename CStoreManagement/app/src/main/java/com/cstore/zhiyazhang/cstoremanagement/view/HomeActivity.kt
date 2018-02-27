@@ -23,7 +23,6 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG
-import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG2
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
@@ -159,7 +158,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             if (data == null) {
                 home_notice.text = ERROR_MSG//没获得换日数据
             } else {
-                home_notice.text = ERROR_MSG2//换日失败
+                home_notice.text = "应用崩溃，请退出应用后重启即可恢复"//曾经崩溃过
             }
             closeOperating()
         }
@@ -170,6 +169,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         gg2.setOnClickListener(errorListener)
         gg3.setOnClickListener(errorListener)
         gg4.setOnClickListener(errorListener)
+        gg5.setOnClickListener(errorListener)
     }
 
     /**

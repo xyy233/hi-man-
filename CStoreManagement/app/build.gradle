@@ -17,8 +17,8 @@ android {
         applicationId "com.cstore.zhiyazhang.cstoremanagement"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 26
-        versionName "18.01.26.0Alpha"
+        versionCode 27
+        versionName "18.02.27.0Alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -63,7 +63,6 @@ dependencies {
     //图片view,随意拖动放大缩小
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     //http请求与json解析
-    //compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.zhy:okhttputils:2.6.2'
     //扫描二维码

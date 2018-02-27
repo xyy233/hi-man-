@@ -11,7 +11,6 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.contract.ContractModel
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter.Companion.PULLUP_LOAD_MORE
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
@@ -54,7 +53,7 @@ class ContractPresenter(private val cView: ContractView, private val gView: Gene
                     }
                     //数据异常就传递数据到服务器
                     if (maxDate.isNotEmpty() || minDate.isNotEmpty()) {
-                        ReportListener.report(User.getUser().storeId, MyApplication.getVersion()!!, context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
+                        ReportListener.report(context.getString(R.string.maxOrMinError), "${Gson().toJson(maxDate)}\r\n${Gson().toJson(minDate)}")
                     }
                     initAdapter(contracts,adapter,cView.isJustLook)
                 }).start()

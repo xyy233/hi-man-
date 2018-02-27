@@ -117,7 +117,7 @@ object CStoreCalendar {
         if (CStoreCalendar.getNowStatus(type) != 0 || CStoreCalendar.getCurrentDate(type) != date) {
             val errorMsg = when {
                 CStoreCalendar.getNowStatus(type) == 1 -> "正在换日中，请等待换日完成！"
-                CStoreCalendar.getNowStatus(type) == 2 -> "换日失败，请停止操作并联系系统部！"
+                CStoreCalendar.getNowStatus(type) == 2 -> ERROR_MSG
                 else -> "当前日期不能进行操作"
             }
             msg.obj = errorMsg
@@ -142,7 +142,7 @@ object CStoreCalendar {
         if (CStoreCalendar.getNowStatus(type) != 0 || CStoreCalendar.getCurrentDate(type) != date) {
             val errorMsg = when {
                 CStoreCalendar.getNowStatus(type) == 1 -> "正在换日中，请等待换日完成！"
-                CStoreCalendar.getNowStatus(type) == 2 -> "换日失败，请停止操作并联系系统部！"
+                CStoreCalendar.getNowStatus(type) == 2 -> ERROR_MSG
                 else -> "当前日期不能进行操作"
             }
             msg.obj = errorMsg
