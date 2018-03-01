@@ -18,12 +18,12 @@ data class PaibanBean(
          */
         @SerializedName("employeeid") val employeeId: String,
         @SerializedName("employeename") val employeeName: String,
-        @SerializedName("begindatetime") val beginDateTime: String?,
-        @SerializedName("enddatetime") val endDateTime: String?,
+        @SerializedName("begindatetime") var beginDateTime: String?,
+        @SerializedName("enddatetime") var endDateTime: String?,
         /**
          * 大夜时数
          */
-        @SerializedName("danren_hr") val danrenHr: Double?,
+        @SerializedName("danren_hr") var danrenHr: Int?,
         @SerializedName("updatedatetime") val updateDateTime: String?
 ) : Serializable
 

@@ -2318,9 +2318,10 @@ object MySql {
     }
 
     fun deletePaiban(data: PaibanBean): String {
+        val sysdate=MyTimeUtil.deleteTime(data.systemDate!!)
         return "delete from paiban_simple  " +
                 "where storeid='${data.storeId}'  " +
-                "and systemdate=to_date('${data.systemDate}','yyyy-mm-dd') " +
+                "and systemdate=to_date('$sysdate','yyyy-mm-dd') " +
                 "and employeeid='${data.employeeId}'\u0004"
     }
 }

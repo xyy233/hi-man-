@@ -49,39 +49,39 @@ class PaibanAdapter(val data: ArrayList<SortPaiban>, private val onClick: ItemCl
                     val nowDay = getNowWeek(it.systemDate)
                     when (nowDay) {
                         0 -> {
-                            val sundayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val sundayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             sunday.text = sundayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         1 -> {
-                            val mondayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val mondayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             monday.text = mondayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         2 -> {
-                            val tuesdayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val tuesdayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             tuesday.text = tuesdayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         3 -> {
-                            val wednesdayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val wednesdayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             wednesday.text = wednesdayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         4 -> {
-                            val thursdayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val thursdayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             thursday.text = thursdayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         5 -> {
-                            val fridayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val fridayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             friday.text = fridayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                         6 -> {
-                            val saturdayDate = deleteDate(it.beginDateTime) + "-" + deleteDate(it.endDateTime)
+                            val saturdayDate = deleteDate(it.beginDateTime!!) + "-" + deleteDate(it.endDateTime!!)
                             saturday.text = saturdayDate
-                            hours += getDiscrepantHours(it.beginDateTime, it.endDateTime)
+                            hours += getDiscrepantHours(it.beginDateTime!!, it.endDateTime!!)
                         }
                     }
                 }

@@ -100,7 +100,7 @@ class PaibanModel {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val sql = MySql.createPaiban(data)
             val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-            if (sql == "1") {
+            if (sqlResult == "1") {
                 msg.what = SUCCESS
             } else {
                 msg.what = ERROR
@@ -117,7 +117,7 @@ class PaibanModel {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val sql = MySql.updatePaiban(data)
             val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-            if (sql == "1") {
+            if (sqlResult == "1") {
                 msg.what = SUCCESS
             } else {
                 msg.what = ERROR
@@ -134,7 +134,7 @@ class PaibanModel {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val sql = MySql.deletePaiban(data)
             val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-            if (sql == "1") {
+            if (sqlResult == "1") {
                 msg.what = SUCCESS
             } else {
                 msg.what = ERROR

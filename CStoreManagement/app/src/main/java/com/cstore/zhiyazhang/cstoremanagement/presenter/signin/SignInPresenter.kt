@@ -17,7 +17,9 @@ class SignInPresenter(private val view: SignInActivity) {
 
     fun login() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        model.login(view.uid, view.password, OnlyMyHandler.writeActivity(view).writeListener(object : MyListener {
+
+        val handler = OnlyMyHandler.writeActivity(view)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User
                 view.saveUser(data)
@@ -29,6 +31,8 @@ class SignInPresenter(private val view: SignInActivity) {
                 view.showPrompt(errorMessage)
                 view.hideLoading()
             }
-        }))
+        })
+
+        model.login(view.uid, view.password, handler)
     }
 }

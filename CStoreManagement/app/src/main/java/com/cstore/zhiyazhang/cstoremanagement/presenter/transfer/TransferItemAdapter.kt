@@ -107,6 +107,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
             commodity_retail_total.text = tib.total.toString()
             commodity_inv.text = tib.invQty.toString()
             plnrtn_quantity.text = tib.trsQty.toString()
+            edit_count_text.text=context.getString(R.string.transfer_quantity)
 
             if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
                 return_less.visibility = View.VISIBLE

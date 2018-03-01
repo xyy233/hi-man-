@@ -6,13 +6,13 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
 
-    lintOptions {5
+    lintOptions {
         abortOnError false
         checkReleaseBuilds false
     }
 
     compileSdkVersion 26
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.cstore.zhiyazhang.cstoremanagement"
         minSdkVersion 21

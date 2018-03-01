@@ -166,20 +166,28 @@ class GlobalException private constructor() : Thread.UncaughtExceptionHandler {
     }
 
     override fun uncaughtException(t: Thread?, ex: Throwable?) {
-        MyToast.getLongToast("很抱歉,程序出现异常,即将退出。")
-        if (handleException(ex) && mDefaultHandler != null) {
-            //如果用户没有处理则让系统默认的异常处理器来处理
-            mDefaultHandler.uncaughtException(t, ex)
-        } else {
-            try {
-                Thread.sleep(3000)
-            } catch (e: InterruptedException) {
-                Log.e("GlobalException", "error : ", e)
-            }
+        try {
+            MyToast.getLongToast("很抱歉,程序出现异常,即将退出。")
+            if (handleException(ex) && mDefaultHandler != null) {
+                //如果用户没有处理则让系统默认的异常处理器来处理
+                mDefaultHandler.uncaughtException(t, ex)
+            } else {
+                try {
+                    Thread.sleep(3000)
+                } catch (e: InterruptedException) {
+                    Log.e("GlobalException", "error : ", e)
+                }
 
-            //退出程序
-            android.os.Process.killProcess(android.os.Process.myPid())
-            System.exit(1)
+                //退出程序
+                android.os.Process.killProcess(android.os.Process.myPid())
+                System.exit(1)
+            }
+        }catch (e:Exception){
+            if (mDefaultHandler!=null){
+                mDefaultHandler.uncaughtException(t, ex)
+            }else{
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }
         }
     }
 

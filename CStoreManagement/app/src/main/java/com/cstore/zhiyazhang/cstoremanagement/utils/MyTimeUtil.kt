@@ -201,6 +201,16 @@ object MyTimeUtil {
     }
 
     /**
+     * 通过String日期得到Calendar格式的日期，包含小时分秒
+     */
+    fun getCalendarByStringHMS(data: String): Calendar {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse(data)
+        val result = Calendar.getInstance()
+        result.time = date
+        return result
+    }
+
+    /**
      * 写入日期到TextView插件
      */
     fun setTextViewDate(dateUtil: LinearLayout, nowDate: String) {
@@ -282,8 +292,9 @@ object MyTimeUtil {
         val sdf = SimpleDateFormat("yyyy-MM-dd")
         val date = sdf.parse(data)
         val cal = Calendar.getInstance()
+        cal.firstDayOfWeek = Calendar.MONDAY
         cal.time = date
-        return cal.get(Calendar.DAY_OF_WEEK)
+        return cal.get(Calendar.DAY_OF_WEEK) - 1
     }
 
     /**
@@ -296,7 +307,60 @@ object MyTimeUtil {
         val nowDate = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(date)
         val calendar = Calendar.getInstance()
         calendar.time = nowDate
-        calendar.add(Calendar.DATE,day)
+        calendar.add(Calendar.DATE, day)
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
+    }
+
+    /**
+     * 两个日期相差多少小时
+     * @param beginDate 被减时间
+     * @param endDate 基数时间
+     */
+    fun getHourPoor(beginDate: String, endDate: String): Int {
+        val diff = getDateByString(endDate).time - getDateByString(beginDate).time
+        val hour = diff / 1000 / 60 / 60
+        return hour.toInt()
+    }
+
+    /**
+     * 两个日期相差多少分钟
+     * @param beginDate 被减时间
+     * @param endDate 基数时间
+     */
+    fun getMinutePoor(beginDate: String, endDate: String): Int {
+        val diff = getDateByString(endDate).time - getDateByString(beginDate).time
+        val minute = diff / 1000 / 60
+        return minute.toInt()
+    }
+
+    /**
+     * 两个日期相差多少天
+     * @param beginDate 被减时间
+     * @param endDate 基数时间
+     */
+    fun getDayPoor(beginDate: String, endDate: String): Int {
+        val diff = getDateByString(endDate).time - getDateByString(beginDate).time
+        val day = diff / 1000 / 60 / 60 / 24
+        return day.toInt()
+    }
+
+    /**
+     * 截取日期的 '日'
+     */
+    fun getDayByDate(data: String): Int {
+        val calendar = Calendar.getInstance()
+        val date = getDateByString(data)
+        calendar.time = date
+        return calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    /**
+     * 截取日期的 '时'
+     */
+    fun getHourByDate(data: String): Int {
+        val calendar = Calendar.getInstance()
+        val date = getDateByString(data)
+        calendar.time = date
+        return calendar.get(Calendar.HOUR_OF_DAY)
     }
 }

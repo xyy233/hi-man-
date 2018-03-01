@@ -11,6 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.checkin.CheckInActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.paiban.PaibanActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -39,8 +40,8 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 when (data[position].position) {
                     0 -> {
-                        MyToast.getShortToast(getString(R.string.in_development))
-//                        startActivity(Intent(this@PersonnelActivity, PaibanActivity::class.java))
+//                        MyToast.getShortToast(getString(R.string.in_development))
+                        startActivity(Intent(this@PersonnelActivity, PaibanActivity::class.java))
                     }
                     1 -> {
                         startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))

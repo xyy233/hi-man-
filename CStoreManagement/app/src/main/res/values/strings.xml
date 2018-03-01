@@ -323,5 +323,6 @@
     <string name="crb">常日班：</string>
     <string name="ybdy">一般大夜：</string>
     <string name="drdy">单人大夜：</string>
+    <string name="now_time_not_edit">当前时间不允许进行修改！</string>
 
 </resources>

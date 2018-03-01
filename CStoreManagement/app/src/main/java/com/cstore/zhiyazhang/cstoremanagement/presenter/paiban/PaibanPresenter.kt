@@ -42,19 +42,17 @@ class PaibanPresenter(private val view: GenericView) {
      * @param type 1=创建 2=更新 3=删除
      */
     fun editData(type: Int) {
-        if (!PresenterUtil.judgmentInternet(view)) return
+        //if (!PresenterUtil.judgmentInternet(view)) return
         val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.updateDone(data)
-                view.hideLoading()
                 handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 view.errorDealWith()
                 view.showPrompt(errorMessage)
-                view.hideLoading()
                 handler.cleanAll()
             }
         })
