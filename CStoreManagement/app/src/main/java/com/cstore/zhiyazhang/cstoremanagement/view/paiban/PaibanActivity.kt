@@ -5,7 +5,10 @@ import android.app.TimePickerDialog
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
 import android.text.InputType
+import android.text.Selection.setSelection
+import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
@@ -24,6 +27,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.dateAddDay
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getDayByDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getHourByDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getHourPoor
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getMinuteByDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.getWeekSundayByDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
@@ -31,6 +35,7 @@ import kotlinx.android.synthetic.main.activity_paiban.*
 import kotlinx.android.synthetic.main.dialog_paiban.view.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
+import java.text.DecimalFormat
 import java.util.*
 
 /**
@@ -66,6 +71,28 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         dialogView.dialog_cancel.setOnClickListener {
             dialog.cancel()
         }
+        //监听单人大夜变化
+        dialogView.drdy.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (dialogView.drdy.text.toString() != "") {
+                    val drdy = dialogView.drdy.text.toString().toInt()
+                    if (nowYBDY >= drdy) {
+                        val nowYb = (nowYBDY - drdy).toString()
+                        dialogView.ybdy.text = nowYb
+                    } else {
+                        showPrompt("单人大夜不能大于一般大夜")
+                        dialogView.drdy.setText("0")
+                    }
+                }
+                dialogView.drdy.setSelection(dialogView.drdy.text.length)
+            }
+        })
         dialogView.drdy.inputType = InputType.TYPE_CLASS_NUMBER
         dialogView.drdy.keyListener = DigitsKeyListener.getInstance("1234567890")
         dialogView.drdy.setSelection(dialogView.drdy.text.length)
@@ -132,7 +159,7 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
              * @param day 从0开始,确认当前选中哪天为当前spinner日期+day日期
              */
     fun onclickDate(data: SortPaiban, day: Int) {
-        var isEdit: Boolean = false
+        val isEdit: Boolean
         //当前选择的日期
         val selectDate = dateAddDay(paiban_spinner.selectedItem.toString(), day)
         //夜班选择能跨一天
@@ -225,6 +252,16 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
                     showPrompt(getString(R.string.now_time_not_edit))
             }
         }
+        dialogView.end_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val beginText = dialogView.begin_spinner.selectedItem.toString() + " " + dialogView.begin_time.text.toString() + ":00"
+                val endText = dialogView.end_spinner.selectedItem.toString() + " " + dialogView.end_time.text.toString() + ":00"
+                getWorkingHours(beginText, endText, dialogView.drdy.text.toString().toInt())
+            }
+        }
         dialogView.dialog_deletge.setOnClickListener {
             if (paibans.isEmpty()) {
                 showPrompt(getString(R.string.noEditMsg))
@@ -258,11 +295,10 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
      */
     private fun getCreateData(selectDate: String, name: String, id: String): PaibanBean {
         val uId = User.getUser().storeId
-        val sysdate = selectDate
         val beginDate = dialogView.begin_spinner.selectedItem.toString() + " " + dialogView.begin_time.text.toString() + ":00"
         val endDate = dialogView.end_spinner.selectedItem.toString() + " " + dialogView.end_time.text.toString() + ":00"
         val drdy = dialogView.drdy.text.toString().toInt()
-        return PaibanBean(uId, sysdate, id, name, beginDate, endDate, drdy, null)
+        return PaibanBean(uId, selectDate, id, name, beginDate, endDate, drdy, null)
     }
 
     /**
@@ -274,15 +310,16 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         return seDate.time > nowDate.time
     }
 
+    private var nowYBDY=0
     /**
      * 设置常日班一般大夜显示
      * 夜班不考虑连跨两个夜班
      */
     private fun getWorkingHours(beginTime: String, endTime: String, danrenHr: Int) {
         //夜班时间
-        val nightShift: Int
+        var nightShift: Float
         //白班时间
-        val dayShift: Int
+        var dayShift: Float
         //得到总工时
         val allHour = getHourPoor(beginTime, endTime)
         if (allHour < 0) return
@@ -294,45 +331,65 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         val beginHour = getHourByDate(beginTime)
         //下班小时
         val endHour = getHourByDate(endTime)
+        //上班分钟
+        val beginMinute = getMinuteByDate(beginTime).toFloat()
+        //下班分钟
+        val endMinute = getMinuteByDate(endTime).toFloat()
         //上班时间小于7必有夜班
         if (beginHour < 7) {
             //下班时间大于等于7代表有白班+夜班,夜班等于 7-上班时
             if (endHour > 7) {
-                nightShift = 7 - beginHour
+                nightShift = (7 - beginHour).toFloat()
                 dayShift = allHour - nightShift
             } else {
                 //下班时间小于7不是还在今天就是跨天
                 if (beginDay == endDay) {
                     //在今天
-                    nightShift = allHour
-                    dayShift = 0
+                    nightShift = allHour.toFloat()
+                    dayShift = 0f
                 } else {
                     //跨天了
-                    nightShift = 7
+                    nightShift = 7f
                     dayShift = allHour - nightShift
                 }
+            }
+            //如果分钟不为0夜班小时数就减一
+            if (beginMinute != 0f) nightShift -= 1f
+            //如果有白班且下班有分钟就要加上百分比小时
+            if (dayShift > 0 && endMinute != 0f) {
+                dayShift += endMinute / 60
             }
         } else {
             //下班时间跨天的话必有夜班，否则全白班
             if (beginDay == endDay) {
                 //未跨天
-                dayShift = allHour
-                nightShift = 0
+                dayShift = allHour.toFloat()
+                nightShift = 0f
+                dayShift += (beginMinute + endMinute) / 60
             } else {
                 //跨天通过判断下班时间确认是否有白班
                 if (endHour > 7) {
                     //下班时间大于7代表有上白班
-                    nightShift = 8
-                    dayShift = allHour - 8
+                    nightShift = 8f
+                    dayShift = (allHour - 8).toFloat()
+                    if (beginMinute != 0f || endMinute != 0f) {
+                        dayShift += if (beginHour != 23) {
+                            (beginMinute + endMinute) / 60
+                        } else {
+                            endMinute / 60
+                        }
+                    }
                 } else {
                     //无白班
-                    nightShift = allHour
-                    dayShift = 0
+                    nightShift = allHour.toFloat()
+                    dayShift = 0f
                 }
             }
         }
-        dialogView.crb.text = (dayShift - danrenHr).toString()
-        dialogView.ybdy.text = nightShift.toString()
+        val df = DecimalFormat("0.0")
+        dialogView.crb.text = df.format(dayShift - danrenHr)
+        nowYBDY=nightShift.toInt()
+        dialogView.ybdy.text = nowYBDY.toString()
     }
 
     /**

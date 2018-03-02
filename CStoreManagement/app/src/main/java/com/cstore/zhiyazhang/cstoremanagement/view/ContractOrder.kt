@@ -12,6 +12,7 @@ import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.OrderCategoryBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
@@ -54,19 +55,19 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                 view as LogoAdapter.ViewHolder
                 when (data[position].position) {
                     0 -> {
-                        /*if (User.getUser().cnt == 0) {
+                        if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
                             return
-                        }*/
+                        }
                         val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
                         intent.putExtra("is_just_look", false)
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     1 -> {
-                        /*if (User.getUser().cnt == 0) {
+                        if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
                             return
-                        }*/
+                        }
                         val intent = Intent(this@ContractOrder, ContractTypeActivity::class.java)
                         intent.putExtra("is_just_look", true)
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
@@ -158,15 +159,13 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
 
     private fun setData(data: ArrayList<LogoBean>) {
         //保持顺序，手动插入
-        /*if (User.getUser().cnt == 0) {
+        if (User.getUser().cnt == 0) {
             data.add(LogoBean(R.mipmap.ic_contract_order_close, getString(R.string.contract_order), 0))
             data.add(LogoBean(R.mipmap.ic_contract_see_order_close, getString(R.string.contract_order_toview), 1))
         } else {
             data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
             data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 1))
-        }*/
-        data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
-        data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 1))
+        }
         data.add(LogoBean(R.mipmap.ic_categroy_order, getString(R.string.category_order), 2))
         data.add(LogoBean(R.mipmap.ic_shelf_order, getString(R.string.shelf_order), 3))
         data.add(LogoBean(R.mipmap.ic_unit_order, getString(R.string.unit_order), 4))

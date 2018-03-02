@@ -32,7 +32,6 @@ class SignInPresenter(private val view: SignInActivity) {
                 view.hideLoading()
             }
         })
-
         model.login(view.uid, view.password, handler)
     }
 }

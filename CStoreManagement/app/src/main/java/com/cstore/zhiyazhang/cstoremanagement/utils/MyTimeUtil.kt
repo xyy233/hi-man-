@@ -363,4 +363,14 @@ object MyTimeUtil {
         calendar.time = date
         return calendar.get(Calendar.HOUR_OF_DAY)
     }
+
+    /**
+     * 截取日期的 '分'
+     */
+    fun getMinuteByDate(data: String): Int {
+        val calendar = Calendar.getInstance()
+        val date = getDateByString(data)
+        calendar.time = date
+        return calendar.get(Calendar.MINUTE)
+    }
 }
