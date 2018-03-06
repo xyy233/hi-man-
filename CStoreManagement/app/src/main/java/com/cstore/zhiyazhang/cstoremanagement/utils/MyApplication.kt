@@ -36,12 +36,12 @@ class MyApplication : Application() {
          */
         private var instance: MyApplication? = null
 
-        fun instance() = instance!!
+        @JvmStatic fun instance() = instance!!
 
         /**
          * 得到和门市通信的ip
          */
-        fun getIP(): String {
+        @JvmStatic fun getIP(): String {
             var result: String = ""
             try {
                 val en = NetworkInterface.getNetworkInterfaces()
@@ -70,7 +70,7 @@ class MyApplication : Application() {
         /**
          * 得到我自己的ip
          */
-        fun getMyIP(): String {
+        @JvmStatic fun getMyIP(): String {
             var result = ""
             try {
                 val en = NetworkInterface.getNetworkInterfaces()
@@ -94,7 +94,7 @@ class MyApplication : Application() {
             return result
         }
 
-        fun getVersion(): String? {
+        @JvmStatic fun getVersion(): String? {
             try {
                 val manager = instance!!.packageManager
                 val info = manager.getPackageInfo(instance!!.packageName, 0)
@@ -105,7 +105,7 @@ class MyApplication : Application() {
             return null
         }
 
-        fun getVersionNum(): Int {
+        @JvmStatic fun getVersionNum(): Int {
             val manager = instance().packageManager
             val info = manager.getPackageInfo(instance().packageName, 0)
             return info.versionCode
@@ -115,7 +115,7 @@ class MyApplication : Application() {
          * 获得手机序列号
          */
         @SuppressLint("HardwareIds")
-        fun getOnlyid(): String {
+        @JvmStatic fun getOnlyid(): String {
             return Settings.Secure.getString(instance().contentResolver, Settings.Secure.ANDROID_ID)
         }
     }

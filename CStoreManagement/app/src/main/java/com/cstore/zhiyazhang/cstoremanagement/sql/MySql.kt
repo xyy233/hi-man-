@@ -1040,15 +1040,14 @@ object MySql {
      * 得到创建签到的sql语句
      * @param uId 输入的UserId，并不是登录用户的id
      */
-    fun getInsCheckIn(uId: String): String {
-        val nowTime = MyTimeUtil.nowTimeString
+    fun getInsCheckIn(uId: String, date: String): String {
         return " insert into arrtime  " +
                 " values( " +
                 " to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd'), " +//营业日
                 " '${User.getUser().storeId}','$uId', " +
-                " to_date('$nowTime','yyyy-MM-dd HH24:MI:SS'), " +
+                " to_date('$date','yyyyMMddHH24:MI:SS'), " +
                 " '${User.getUser().uId}', " +
-                " to_date('$nowTime','yyyy-MM-dd HH24:MI:SS'))"
+                " to_date('$date','yyyyMMddHH24:MI:SS'))"
     }
 
     /**********************************************${MyApplication.instance().getString(R.string.tui)}货************************************************************/
@@ -2285,7 +2284,7 @@ object MySql {
                 } else {
                     ""
                 }} " +
-                "and nvl(empexitdate, trunc(sysdate + 360)) >= sysdate "+
+                "and nvl(empexitdate, trunc(sysdate + 360)) >= sysdate " +
                 "and nvl(emptypeno, '01') like '%' " +
                 "and employeeid not in(select p.employeeid " +
                 "from paiban_simple p, employee e " +
@@ -2318,10 +2317,120 @@ object MySql {
     }
 
     fun deletePaiban(data: PaibanBean): String {
-        val sysdate=MyTimeUtil.deleteTime(data.systemDate!!)
+        val sysdate = MyTimeUtil.deleteTime(data.systemDate!!)
         return "delete from paiban_simple  " +
                 "where storeid='${data.storeId}'  " +
                 "and systemdate=to_date('$sysdate','yyyy-mm-dd') " +
                 "and employeeid='${data.employeeId}'\u0004"
+    }
+
+    /***********************************************考勤*****************************************************/
+
+    /**
+     * 检查大夜是否只有一个人,只在能操作日期调用
+     */
+    fun judgmentDY(): String {
+        //只在能操作的日期调用，因为考勤检查的是昨天资料，因此再次操作时间为操作昨天
+        val date = MyTimeUtil.tomorrowDate
+        return "Select Count(*) cnt1,sum(Decode(bbid,'3',1,0)) cnt2,  " +
+                "Sum(Round((enddatetime-begindatetime)*24)) work_hr  " +
+                "From paiban  " +
+                "Where storeid= BUSI_DAYCLOSE.GetStoreProperty('0')  " +
+                "And systemdate = to_date('$date','yyyy-mm-dd')  " +
+                "And bbid In ('3','9')  " +
+                "And Round((enddatetime-begindatetime)*24)>0\u0004"
+    }
+
+    /**
+     * 修改为单人大夜
+     */
+    fun changeDY(): String {
+        val date = MyTimeUtil.tomorrowDate2
+        return "call Sca05_P04('$date')"
+    }
+
+    /**
+     * 获得选择日期的考勤数据
+     * @param date 在activity获得的数据
+     */
+    fun getAttendanceData(date:String):String{
+        val date = MyTimeUtil.tomorrowDate2
+        //得到考勤数据的存储过程
+        val callAttendanceDataSql = "call Sca05_P01('$date')\u000c"
+        return "$callAttendanceDataSql Select a.Busidate, a.Storeid, " +
+                "To_Char(a.Workdate, 'yyyy-MM-dd') As Workdate, a.Emp_No, " +
+                "b.Employeename,nvl(b.Emptypeno,'01') Emptypeno, " +
+                "Sum(Decode(a.Bbtype, '1', a.Day_Hr, 0)) Zb_Hr, " +
+                "Sum(Decode(a.Bbtype, '2', a.Day_Hr, 0)) Wb_Hr, " +
+                "Sum(Decode(a.Bbtype, '3', a.Day_Hr, 0)) Dy_Hr, " +
+                "Sum(Decode(a.Bbtype, '4', a.Day_Hr, 0)) Cr_Hr, " +
+                "Sum(Decode(a.Bbtype, '9', a.Day_Hr, 0)) Dr_Hr, " +
+                "Sum(a.Feria_Hr) f_Hr, a.Status " +
+                "From Sca05 a, Employee b " +
+                "Where a.Busidate = To_Date('$date','yyyy-mm-dd') " +
+                "And a.Emp_No = b.Employeeid(+) " +
+                "And Nvl(b.Emptypeno, '01') Like '01' " +
+                "Group By a.Busidate, a.Storeid, To_Char(a.Workdate, 'yyyy-MM-dd'), " +
+                "a.Emp_No, b.Employeename, Emptypeno, a.Status\u0004"
+    }
+
+    /**
+     * 获得考勤用户的打卡资料
+     */
+    fun getAttendanceUserData(date:String, uId: String):String{
+        return "select rownum seq, a.pb_on, a.pb_off, b.work_on, b.work_off, a.rid, " +
+                "Decode(b.Work_On,Null,'noImage', " +
+                "'c:\\rtcvs\\arr_photo\\'||to_char(b.Work_On+1,'yyyymmdd\\')||a.storeid|| a.Employeeid ||to_char(b.Work_On,'yyyymmddhh24miss')||'.jpg') on_jpg, " +
+                "Decode(b.Work_Off,Null,'noImage', " +
+                "'c:\\rtcvs\\arr_photo\\'||to_char(b.Work_Off+1,'yyyymmdd\\')||a.storeid|| a.Employeeid ||to_char(b.Work_Off,'yyyymmddhh24miss')||'.jpg') off_jpg " +
+                "From (Select Distinct a.Storeid, a.Employeeid, a.Systemdate, b.Begindatetime Pb_On, " +
+                "b.Enddatetime Pb_Off, b.rowid rid " +
+                "From Paiban a, Paiban_Simple b " +
+                "Where a.Storeid = b.Storeid " +
+                "And a.Employeeid = b.Employeeid " +
+                "And a.Systemdate =to_date('$date','yyyy-mm-dd') " +
+                "And a.Employeeid ='$uId' " +
+                "And a.Begindatetime >= b.Begindatetime " +
+                "And a.Enddatetime <= b.Enddatetime) a, " +
+                "(Select x.rid, Min(y.Arr_Time) Work_On, Max(y.Arr_Time) Work_Off " +
+                "From (Select Distinct a.Systemdate, b.Employeeid, b.Begindatetime, " +
+                "b.Enddatetime, b.rowid rid " +
+                "From Paiban a, Paiban_Simple b " +
+                "Where a.Storeid = b.Storeid " +
+                "And a.Employeeid = b.Employeeid " +
+                "And a.Systemdate =to_date('$date','yyyy-mm-dd') " +
+                "And a.Employeeid ='$uId' " +
+                "And a.Begindatetime >= b.Begindatetime " +
+                "And a.Enddatetime <= b.Enddatetime) x, Arrtime y " +
+                "Where x.Employeeid = y.Emp_No " +
+                "And y.Arr_Time >= x.Begindatetime - 2 / 24 " +
+                "And y.Arr_Time <= x.Enddatetime + 2 / 24 " +
+                "Group By x.rid) b " +
+                "Where a.rid = b.rid(+)\u0004"
+    }
+
+    /**
+     * 修改考勤审核
+     * @param type 0=单个  1=全部   2=取消
+     */
+    fun changeAttendance(date:String, uId:String?, type:Int):String{
+        if (uId!=null&&type==2){
+            //取消
+            return "update sca05 set status='0', updateuserid='${User.getUser().uId}', updatedate=system  " +
+                    "where busidate=to_date('$date','yyyy-mm-dd')   " +
+                    "and emp_no='$uId' " +
+                    "and status='1'\u0004"
+        }else if (uId!=null){
+            //单个
+            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=system  " +
+                    "where busidate=to_date('$date','yyyy-mm-dd')  " +
+                    "and emp_no='$uId'\n" +
+                    "and status='0'\u0004"
+        }else{
+            //全部
+            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=system  " +
+                    "where busidate=to_date('$date','yyyy-mm-dd') " +
+                    "and status='0'\u0004"
+        }
     }
 }

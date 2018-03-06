@@ -22,26 +22,26 @@ import java.net.SocketTimeoutException
  * @since 1.1
  */
 
-internal class SocketUtil  {
+internal class SocketUtil {
     private var mySocket: Socket
     private var os: OutputStream? = null
     private var bw: BufferedWriter? = null
     private var `is`: InputStream? = null
     private var br: BufferedReader? = null
-    private var loadingTime:Int
+    private var loadingTime: Int
 
-    private constructor(ip: String, msg: String){
+    private constructor(ip: String, msg: String) {
         mySocket = Socket()
         host = ip
         message = msg
-        loadingTime=10//默认超时时间为10s
+        loadingTime = 10//默认超时时间为10s
     }
 
-    private constructor(ip: String, msg: String, lt:Int){
+    private constructor(ip: String, msg: String, lt: Int) {
         mySocket = Socket()
         host = ip
         message = msg
-        loadingTime=lt
+        loadingTime = lt
     }
 
     companion object {
@@ -54,6 +54,7 @@ internal class SocketUtil  {
         /**
          * 初始化Socket
          */
+        @JvmStatic
         fun initSocket(ip: String, message: String): SocketUtil {
             return SocketUtil(ip, message)
         }
@@ -61,103 +62,113 @@ internal class SocketUtil  {
         /**
          * 初始化Socket，附带设置等待时间,时间是以秒为单位
          */
-        fun initSocket(ip: String, message: String, loadingTime:Int): SocketUtil {
+        @JvmStatic
+        fun initSocket(ip: String, message: String, loadingTime: Int): SocketUtil {
             return SocketUtil(ip, message, loadingTime)
         }
 
         /**
          * 判断ip是否正确
          */
+        @JvmStatic
         fun judgmentIP(ip: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
 
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
-            return if (wifiName == null || wifiName == ""){
+            return if (wifiName == null || wifiName == "") {
                 msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
+            } else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else true
+            } else true
         }
 
         /**
          * 判断ip是否正确
          */
+        @JvmStatic
         fun judgmentIP(ip: String, msg: Message, handler: MyHandler): Boolean {
 
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
-            return if (wifiName == null || wifiName == ""){
+            return if (wifiName == null || wifiName == "") {
                 msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
+            } else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else true
+            } else true
         }
 
         /**
          * 判断得到的数据是否有值
          */
+        @JvmStatic
         fun judgmentNull(data: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
             return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else true
+            } else true
         }
 
         /**
          * 判断得到的数据是否有值
          */
+        @JvmStatic
         fun judgmentNull(data: String, msg: Message, handler: MyHandler): Boolean {
             return if (data == "" || data == "[]") {
                 msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false
-            }else true
+            } else true
         }
     }
 
     /**
      * 关闭各种流
      */
-    private fun closeSocket(socket:Socket) {
+    private fun closeSocket(socket: Socket) {
         try {
             bw!!.close()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
 
         try {
             br!!.close()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
 
         try {
             os!!.close()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
 
         try {
             `is`!!.close()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
 
         try {
             socket.close()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
     }
 
     /**
      * 执行Socket操作,这不是异步，在外层要开thread
      * @return 如果是insert这类修改的，修改成功几个就是返回数字字符串几，如果是在事务内的返回的是0
      */
-    fun inquire():String {
+    fun inquire(): String {
         try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
@@ -191,13 +202,13 @@ internal class SocketUtil  {
     /**
      * 发送图片
      */
-    fun inquire(bmp:Bitmap, address:String):String {
+    fun inquire(bmp: Bitmap, address: String): String {
         try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
             os = mySocket.getOutputStream()
             os!!.write(address.toByteArray())
-            bmp.compress(Bitmap.CompressFormat.JPEG,100, os)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, os)
             bw = BufferedWriter(OutputStreamWriter(os!!))
             `is` = mySocket.getInputStream()
             br = BufferedReader(InputStreamReader(`is`!!))
@@ -221,7 +232,7 @@ internal class SocketUtil  {
     /**
      * 得到文件下所有文件名
      */
-    fun getAllFileName(address:String):String{
+    fun getAllFileName(address: String): String {
         try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
@@ -250,7 +261,7 @@ internal class SocketUtil  {
     /**
      * 得到图片
      */
-    fun inquire(address:String):ByteArray?{
+    fun inquire(address: String): ByteArray? {
         try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
@@ -260,10 +271,10 @@ internal class SocketUtil  {
             br = BufferedReader(InputStreamReader(`is`!!))
             os!!.write(address.toByteArray())
             mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
-            val b=BitmapFactory.decodeStream(`is`)
-            val bs=ByteArrayOutputStream()
-            b.compress(Bitmap.CompressFormat.JPEG,100,bs)
-            val result=bs.toByteArray()
+            val b = BitmapFactory.decodeStream(`is`)
+            val bs = ByteArrayOutputStream()
+            b.compress(Bitmap.CompressFormat.JPEG, 100, bs)
+            val result = bs.toByteArray()
             bs.close()
             return result
         } catch (ste: SocketTimeoutException) {

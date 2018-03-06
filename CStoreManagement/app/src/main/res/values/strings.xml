@@ -324,5 +324,6 @@
     <string name="ybdy">一般大夜：</string>
     <string name="drdy">单人大夜：</string>
     <string name="now_time_not_edit">当前时间不允许进行修改！</string>
+    <string name="noP">当前用户无操作权限</string>
 
 </resources>

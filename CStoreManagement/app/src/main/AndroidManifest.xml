@@ -198,6 +198,11 @@
         <activity
             android:name=".view.paiban.PaibanActivity"
             android:screenOrientation="portrait"/>
+
+        <!--考勤-->
+        <activity
+            android:name=".view.attendance.AttendanceActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -140,4 +140,12 @@ object GsonUtil {
     fun getPaiban(data: String): ArrayList<PaibanBean> {
         return Gson().fromJson<ArrayList<PaibanBean>>(data, object : TypeToken<ArrayList<PaibanBean>>() {}.type)
     }
+
+    @JvmStatic fun getAttendance(data: String): ArrayList<AttendanceBean> {
+        return Gson().fromJson<ArrayList<AttendanceBean>>(data, object : TypeToken<ArrayList<AttendanceBean>>() {}.type)
+    }
+
+    @JvmStatic fun getAttendanceUser(data: String): ArrayList<UserAttendanceBean> {
+        return Gson().fromJson<ArrayList<UserAttendanceBean>>(data, object : TypeToken<ArrayList<UserAttendanceBean>>() {}.type)
+    }
 }

@@ -1,19 +1,24 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
 import android.content.Intent
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
+import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.attendance.AttendanceActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.checkin.CheckInActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.paiban.PaibanActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_in_stock.*
+import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 
 /**
@@ -21,15 +26,40 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
  * on 2017/10/11 14:36.
  */
 class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock) : MyActivity() {
+    private lateinit var dialog: AlertDialog
+    private lateinit var dialogView: View
     override fun initView() {
         my_toolbar.title = getString(R.string.personnel)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
         inv_recycler.addItemDecoration(DividerItemDecoration(this@PersonnelActivity, DividerItemDecoration.VERTICAL))
         inv_recycler.addItemDecoration(DividerItemDecoration(this@PersonnelActivity, DividerItemDecoration.HORIZONTAL))
+        val builder = AlertDialog.Builder(this)
+        dialogView = View.inflate(this, R.layout.dialog_cashdaily, null)
+        builder.setView(dialogView)
+        builder.setCancelable(true)
+        dialog = builder.create()
+        dialogView.dialog_title.text = "登入验证"
+        dialogView.dialog_save.text = getString(R.string.sure)
+        dialogView.dialog_edit.hint = getString(R.string.please_edit_password)
+        dialogView.dialog_text.visibility = View.VISIBLE
+        val dialogText = "帐号ID：${User.getUser().uId}"
+        dialogView.dialog_text.text = dialogText
     }
 
     override fun initClick() {
+        dialogView.dialog_save.setOnClickListener {
+            val x = dialogView.dialog_edit.text.toString()
+            if (x.isEmpty()) {
+                showPrompt(getString(R.string.noMessage))
+                return@setOnClickListener
+            }
+            if (x != User.getUser().password) {
+                showPrompt(getString(R.string.pwdError))
+                return@setOnClickListener
+            }
+            startActivity(Intent(this@PersonnelActivity, AttendanceActivity::class.java))
+        }
     }
 
     override fun initData() {
@@ -41,13 +71,21 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
                 when (data[position].position) {
                     0 -> {
 //                        MyToast.getShortToast(getString(R.string.in_development))
-                        startActivity(Intent(this@PersonnelActivity, PaibanActivity::class.java))
+                        if (User.getUser().groupId == "01") {
+                            startActivity(Intent(this@PersonnelActivity, PaibanActivity::class.java))
+                        } else {
+                            showPrompt(getString(R.string.noP))
+                        }
                     }
                     1 -> {
                         startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))
                     }
                     2 -> {
-                        MyToast.getShortToast(getString(R.string.in_development))
+                        if (User.getUser().groupId == "01" || User.getUser().groupId == "03") {
+                            dialog.show()
+                        } else {
+                            showPrompt(getString(R.string.noP))
+                        }
                     }
                     3 -> {
                         MyToast.getShortToast(getString(R.string.in_development))

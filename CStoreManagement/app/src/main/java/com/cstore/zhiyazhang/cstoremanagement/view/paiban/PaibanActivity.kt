@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.InputType
-import android.text.Selection.setSelection
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
@@ -59,6 +58,7 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dateList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         paiban_spinner.adapter = adapter
+        paiban_spinner.setSelection(4)
         initDialog()
     }
 
@@ -102,7 +102,7 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         //得到从上周开始到上四周的日期
         (1..4).mapTo(dateList) { MyTimeUtil.getWeekMondayDate(it * -1) }
         //循环得到从这周开始到第八周的日期
-        (0..7).mapTo(dateList) { MyTimeUtil.getWeekMondayDate(it) }
+        (0..3).mapTo(dateList) { MyTimeUtil.getWeekMondayDate(it) }
         dateList.sort()
     }
 

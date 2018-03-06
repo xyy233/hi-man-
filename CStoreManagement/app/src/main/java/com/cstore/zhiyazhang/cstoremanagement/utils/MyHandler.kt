@@ -19,9 +19,9 @@ import java.lang.ref.WeakReference
 class MyHandler : Handler() {
 
     companion object OnlyMyHandler : Handler() {
-        val SUCCESS = 0
-        val ERROR = 1
-        val OTHER = 2
+        const val SUCCESS = 0
+        const val ERROR = 1
+        const val OTHER = 2
         private var isRun: Boolean = false
 
         private var mActivity: WeakReference<MyActivity>? = null

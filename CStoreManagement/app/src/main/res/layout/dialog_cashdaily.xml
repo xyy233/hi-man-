@@ -9,44 +9,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/sure"
-        android:textColor="@color/white"
-        android:maxLines="1"
         android:gravity="center"
+        android:maxLines="1"
         android:padding="10dp"
-        android:textSize="18sp" />
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <EditText
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:id="@+id/dialog_edit"
-            android:gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+        <TextView
+            android:id="@+id/dialog_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/dialog_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
             android:hint="@string/please_edit_value"/>
 
         <Spinner
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
             android:id="@+id/dialog_spinner"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:entries="@array/weather"/>
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp"
+            android:entries="@array/weather"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/dialog_progress"
-            android:visibility="gone"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -59,10 +68,10 @@
             android:id="@+id/dialog_cancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/white"
-            android:background="@color/sure"
             android:layout_weight="1"
-            android:text="@string/cancel" />
+            android:background="@color/sure"
+            android:text="@string/cancel"
+            android:textColor="@color/white"/>
 
         <View
             android:layout_width="1dp"
@@ -71,12 +80,12 @@
 
         <Button
             android:id="@+id/dialog_save"
-            android:textColor="@color/white"
-            android:background="@color/sure"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/save" />
+            android:background="@color/sure"
+            android:text="@string/save"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 
