@@ -215,6 +215,7 @@
     <string name="rtn_qty_inv">退货数不能超过库存</string>
     <string name="return_recent">最近可退</string>
     <string name="return_long">长期可退</string>
+    <string name="judgment_inv">检查库存</string>
     <string name="confirm_data">确认选中资料</string>
     <string name="return_expired">过期品预约退货</string>
     <string name="return_expired1">预约退货新增</string>

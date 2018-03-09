@@ -1079,9 +1079,9 @@ object MySql {
         }
 
     /**
-     * 根据${MyApplication.instance().getString(R.string.pei)}送商得到近期商品
+     * 根据配送商得到近期商品
      */
-    fun getRecentlyCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
+    fun getRecentlyCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, judgmentInv: Boolean): String {
         var sql: String
         if (rpb != null) {
             sql = "SELECT A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
@@ -1133,9 +1133,9 @@ object MySql {
     }
 
     /**
-     * 根据${MyApplication.instance().getString(R.string.pei)}送商得到长期商品
+     * 根据配送商得到长期商品
      */
-    fun getLongCommodity(rpb: ReturnedPurchaseBean?, vendorId: String): String {
+    fun getLongCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, judgmentInv: Boolean): String {
         var sql = ""
         if (rpb != null) {
             sql += "SELECT A.RETURNENDDATE,A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
@@ -1149,7 +1149,11 @@ object MySql {
                     "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND NVL(B.FACEQUANTITY,0)=0 " +
-                    "AND NVL(C.END_QTY,0)>0 " +
+                    if (judgmentInv) {
+                        "AND NVL(C.END_QTY,0)>0 "
+                    } else {
+                        ""
+                    } +
                     "AND A.STOREID = B.STOREID(+) " +
                     "AND A.ITEMNUMBER  = B.ITEMNUMBER(+)    " +
                     "AND A.STOREID = D.STOREID(+) " +
@@ -1159,6 +1163,7 @@ object MySql {
                     "AND A.STOREID = E.STOREID(+) " +
                     "AND A.TAXID = E.TAXID(+) " +
                     "AND A.ITEMNUMBER not in("
+
             rpb.allItem.forEach { sql += "'${it.itemNumber}'," }
             sql = sql.substring(0, sql.length - 1)
             sql += ") ORDER BY A.ITEMNUMBER\u0004"
@@ -1174,7 +1179,11 @@ object MySql {
                     "AND A.VENDORID='$vendorId' " +
                     "AND A.RETURNTYPE='Y' " +
                     "AND NVL(B.FACEQUANTITY,0)=0 " +
-                    "AND NVL(C.END_QTY,0)>0 " +
+                    if (judgmentInv) {
+                        "AND NVL(C.END_QTY,0)>0 "
+                    } else {
+                        ""
+                    } +
                     "AND A.STOREID = B.STOREID(+) " +
                     "AND A.ITEMNUMBER  = B.ITEMNUMBER(+)    " +
                     "AND A.STOREID = D.STOREID(+) " +

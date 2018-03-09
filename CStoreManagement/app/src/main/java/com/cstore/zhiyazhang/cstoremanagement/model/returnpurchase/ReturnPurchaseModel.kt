@@ -130,14 +130,14 @@ class ReturnPurchaseModel : ReturnPurchaseInterface {
         }).start()
     }
 
-    override fun getCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, type: Int, handler: MyHandler) {
+    override fun getCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, type: Int, judgmentInv:Boolean, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             val result =
-                    if (type == 0) SocketUtil.initSocket(ip, MySql.getRecentlyCommodity(rpb, vendorId)).inquire()
-                    else SocketUtil.initSocket(ip, MySql.getLongCommodity(rpb, vendorId)).inquire()
+                    if (type == 0) SocketUtil.initSocket(ip, MySql.getRecentlyCommodity(rpb, vendorId, judgmentInv)).inquire()
+                    else SocketUtil.initSocket(ip, MySql.getLongCommodity(rpb, vendorId, judgmentInv)).inquire()
             val rpib = ArrayList<ReturnPurchaseItemBean>()
             if (result == "[]") {
                 msg.obj = rpib
@@ -345,7 +345,7 @@ interface ReturnPurchaseInterface {
      * 得到配送商下的商品
      * @param type 0=短期商品  1=长期商品
      */
-    fun getCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, type: Int, handler: MyHandler)
+    fun getCommodity(rpb: ReturnedPurchaseBean?, vendorId: String, type: Int, judgmentInv:Boolean, handler: MyHandler)
 
     /**
      * 创建退货

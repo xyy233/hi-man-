@@ -25,7 +25,7 @@ class ReturnPurchasePresenter(private val activity: ReturnPurchaseActivity) {
     /**
      * 获得退货原因
      */
-    fun getReasonList(){
+    fun getReasonList() {
         if (!PresenterUtil.judgmentInternet(activity)) return
         val handler = MyHandler().writeActivity(activity)
         handler.writeListener(object : MyListener {
@@ -149,6 +149,7 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
                 activity.getRPB(),
                 activity.getSelectVendor(),
                 activity.getSelectType(),
+                activity.getJudgmentInv(),
                 handler
         )
     }

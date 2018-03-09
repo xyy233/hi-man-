@@ -23,19 +23,19 @@
             layout="@layout/toolbar_layout"/>
 
         <LinearLayout
-            android:visibility="gone"
-            android:background="@color/line"
             android:id="@+id/return_time_box"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/line"
+            android:visibility="gone">
 
             <CheckedTextView
                 android:id="@+id/return_recent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
                 android:background="?android:attr/selectableItemBackground"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:paddingStart="30dp"
@@ -49,12 +49,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
                 android:background="?android:attr/selectableItemBackground"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:paddingStart="30dip"
                 android:text="@string/return_long"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="?android:attr/textColorAlertDialogListItem"
+                tools:ignore="RtlSymmetry"/>
+
+            <CheckedTextView
+                android:id="@+id/judgment_inv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackground"
+                android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:paddingStart="30dip"
+                android:text="@string/judgment_inv"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="?android:attr/textColorAlertDialogListItem"
                 tools:ignore="RtlSymmetry"/>
@@ -140,8 +155,8 @@
 
     <include
         android:id="@+id/loading"
-        android:visibility="gone"
         layout="@layout/loading_layout"
+        android:visibility="gone"
         tools:layout_conversion_absoluteHeight="0dp"
         tools:layout_conversion_absoluteWidth="0dp"
         tools:layout_conversion_absoluteX="0dp"

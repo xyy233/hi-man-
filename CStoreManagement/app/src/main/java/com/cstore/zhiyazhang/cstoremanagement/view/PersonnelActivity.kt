@@ -14,6 +14,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.attendance.AttendanceActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.attendance.AttendanceRecordingActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.checkin.CheckInActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.paiban.PaibanActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
@@ -94,7 +95,7 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
                         }
                     }
                     3 -> {
-                        MyToast.getShortToast(getString(R.string.in_development))
+                        startActivity(Intent(this@PersonnelActivity, AttendanceRecordingActivity::class.java))
                     }
                 }
             }

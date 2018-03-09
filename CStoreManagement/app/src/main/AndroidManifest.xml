@@ -208,6 +208,11 @@
         <activity
             android:name=".view.attendance.AttendanceItemActivity"
             android:screenOrientation="portrait"/>
+
+        <!--考勤记录查询-->
+        <activity
+            android:name=".view.attendance.AttendanceRecordingActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

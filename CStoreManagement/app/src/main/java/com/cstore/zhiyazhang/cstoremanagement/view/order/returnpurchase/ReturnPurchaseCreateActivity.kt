@@ -59,7 +59,12 @@ class ReturnPurchaseCreateActivity(override val layoutId: Int = R.layout.activit
         return_time_box.visibility = View.VISIBLE
         return_recent.isChecked = true
         return_long.isChecked = false
+        judgment_inv.isChecked = false
         acceptance_save.setTextColor(ContextCompat.getColor(this, R.color.white))
+    }
+
+    fun getJudgmentInv(): Boolean {
+        return judgment_inv.isChecked
     }
 
     override fun initClick() {
@@ -88,6 +93,10 @@ class ReturnPurchaseCreateActivity(override val layoutId: Int = R.layout.activit
         return_long.setOnClickListener {
             return_recent.toggle()
             return_long.toggle()
+            presenter.getCommodity()
+        }
+        judgment_inv.setOnClickListener {
+            judgment_inv.toggle()
             presenter.getCommodity()
         }
     }
@@ -222,7 +231,7 @@ class ReturnPurchaseCreateActivity(override val layoutId: Int = R.layout.activit
         rib.addAll(newData)
         adapter.notifyDataSetChanged()
         acceptance_spinner.isEnabled = false
-        if (type==0){
+        if (type == 0) {
             onBackPressed()
             return
         }
