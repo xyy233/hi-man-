@@ -82,13 +82,14 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (dialogView.drdy.text.toString() != "") {
                     val drdy = dialogView.drdy.text.toString().toInt()
-                    if (nowYBDY >= drdy) {
-                        val nowYb = (nowYBDY - drdy).toString()
-                        dialogView.ybdy.text = nowYb
-                    } else {
-                        showPrompt("单人大夜不能大于一般大夜")
+                    val nowYb = nowYBDY - drdy
+                    if (nowYb < 0) {
+                        showPrompt("单人大夜不能大于一般大夜!")
+                        dialogView.ybdy.text = nowYBDY.toString()
                         dialogView.drdy.setText("0")
+                        return
                     }
+                    dialogView.ybdy.text = nowYb.toString()
                 }
                 dialogView.drdy.setSelection(dialogView.drdy.text.length)
             }
@@ -272,6 +273,10 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
             presenter.editData(3)
         }
         dialogView.dialog_save.setOnClickListener {
+            if (dialogView.drdy.text.toString().toInt() > nowYBDY) {
+                showPrompt("单人大夜不能大于一般大夜!")
+                return@setOnClickListener
+            }
             editData = getCreateData(selectDate, data.data[0].employeeName, data.data[0].employeeId)
             startDialogLoading()
             if (paibans.isEmpty()) {
@@ -310,7 +315,7 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         return seDate.time > nowDate.time
     }
 
-    private var nowYBDY=0
+    private var nowYBDY = 0
     /**
      * 设置常日班一般大夜显示
      * 夜班不考虑连跨两个夜班
@@ -387,9 +392,9 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
             }
         }
         val df = DecimalFormat("0.0")
-        dialogView.crb.text = df.format(dayShift - danrenHr)
-        nowYBDY=nightShift.toInt()
-        dialogView.ybdy.text = nowYBDY.toString()
+        dialogView.crb.text = df.format(dayShift)
+        nowYBDY = nightShift.toInt()
+        dialogView.ybdy.text = (nightShift.toInt() - danrenHr).toString()
     }
 
     /**

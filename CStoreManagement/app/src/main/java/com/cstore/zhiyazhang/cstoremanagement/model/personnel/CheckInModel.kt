@@ -40,7 +40,7 @@ class CheckInModel : CheckInInterface {
             val date=MyTimeUtil.nowTimeString2
             //这里创建文件夹的日期要加一，不知道为什么，但是在考勤里面拿资料的时候就是日期+1的
             val address = "fileput C:\\rtcvs\\arr_photo\\${MyTimeUtil.tomorrowDate2}\\${User.getUser().storeId + uId + date}.jpg\u0004"
-            val data = SocketUtil.initSocket(ip, "").inquire(waterBmp, address)
+            val data = SocketUtil.initSocket(ip).inquire(waterBmp, address)
             if (data == "0") {
                 val nowResult=SocketUtil.initSocket(ip,MySql.getInsCheckIn(uId,date)).inquire()
                 if (nowResult=="1")

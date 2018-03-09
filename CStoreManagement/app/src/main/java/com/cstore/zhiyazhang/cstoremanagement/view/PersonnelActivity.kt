@@ -48,17 +48,23 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
     }
 
     override fun initClick() {
+        dialogView.dialog_cancel.setOnClickListener {
+            dialog.cancel()
+        }
         dialogView.dialog_save.setOnClickListener {
             val x = dialogView.dialog_edit.text.toString()
             if (x.isEmpty()) {
                 showPrompt(getString(R.string.noMessage))
                 return@setOnClickListener
             }
-            if (x != User.getUser().password) {
+            val pwd = User.getUser().password
+            if (x != pwd) {
                 showPrompt(getString(R.string.pwdError))
                 return@setOnClickListener
             }
             startActivity(Intent(this@PersonnelActivity, AttendanceActivity::class.java))
+            dialogView.dialog_edit.setText("")
+            dialog.cancel()
         }
     }
 

@@ -91,7 +91,7 @@ data class User(
                 staticUser = User(
                         sp.getString("storeId", ""),
                         sp.getString("uid", ""),
-                        "", //不保存密码
+                        sp.getString("password", ""),
                         sp.getString("uName", ""),
                         sp.getString("groupId", ""),
                         sp.getString("telphone", ""),
@@ -120,6 +120,7 @@ data class User(
             ue.putString("storeId", user.storeId)
             ue.putString("uid", user.uId)
             ue.putString("uName", user.name)
+            ue.putString("password", user.password)
             ue.putString("groupId", user.groupId)
             ue.putString("telphone", user.telphone)
             ue.putString("storeName", user.storeName)
@@ -145,7 +146,7 @@ data class User(
             staticUser = User(
                     sp.getString("storeId", ""),
                     sp.getString("uid", ""),
-                    "", //不保存密码
+                    sp.getString("password", ""),
                     sp.getString("uName", ""),
                     sp.getString("groupId", ""),
                     sp.getString("telphone", ""),

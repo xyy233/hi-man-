@@ -2,7 +2,6 @@ package com.cstore.zhiyazhang.cstoremanagement.utils.socket
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.wifi.WifiManager
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -50,6 +49,15 @@ internal class SocketUtil {
         private val SOCKET_ERROR = "服务器异常，确定连在内网中，确定服务器正常"
         private var message = ""
         lateinit private var host: String
+
+
+        /**
+         * 初始化Socket
+         */
+        @JvmStatic
+        fun initSocket(ip: String): SocketUtil {
+            return SocketUtil(ip, "")
+        }
 
         /**
          * 初始化Socket
@@ -261,28 +269,17 @@ internal class SocketUtil {
     /**
      * 得到图片
      */
-    fun inquire(address: String): ByteArray? {
-        try {
+    fun inquire(address: String): Bitmap? {
+        return try {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
-            os = mySocket.getOutputStream()
-            bw = BufferedWriter(OutputStreamWriter(os!!))
-            `is` = mySocket.getInputStream()
-            br = BufferedReader(InputStreamReader(`is`!!))
-            os!!.write(address.toByteArray())
-            mySocket.shutdownOutput()//可以不用关，这只是个人习惯关闭而已
-            val b = BitmapFactory.decodeStream(`is`)
-            val bs = ByteArrayOutputStream()
-            b.compress(Bitmap.CompressFormat.JPEG, 100, bs)
-            val result = bs.toByteArray()
-            bs.close()
-            return result
+            SocketUtilJava.inquire(mySocket, address)
         } catch (ste: SocketTimeoutException) {
-            return null
+            null
         } catch (ioe: IOException) {
-            return null
+            null
         } catch (e: Exception) {
-            return null
+            null
         } finally {
             closeSocket(mySocket)
         }

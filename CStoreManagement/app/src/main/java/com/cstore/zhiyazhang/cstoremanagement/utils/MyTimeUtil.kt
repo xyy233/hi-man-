@@ -50,7 +50,7 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(date)
     }
 
-    private fun getYMDStringByDate(date: Date): String {
+    public fun getYMDStringByDate(date: Date): String {
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(date)
     }
 
@@ -69,11 +69,16 @@ object MyTimeUtil {
     /**
      * 删除时间只要年月日
      */
+    @JvmStatic
     fun deleteTime(date: String): String {
         if (date.isEmpty() || date == "null") {
             return "无"
         }
-        return getYMDStringByDate(getDateByString(date))
+        return try {
+            getYMDStringByDate(getDateByString(date))
+        } catch (e: Exception) {
+            date
+        }
     }
 
     /**
@@ -83,7 +88,11 @@ object MyTimeUtil {
         if (date.isEmpty() || date == "null") {
             return "无"
         }
-        return getTimeByDate(getDateByString(date))
+        return try {
+            getTimeByDate(getDateByString(date))
+        } catch (e: Exception) {
+            date
+        }
     }
 
     /**
@@ -98,6 +107,11 @@ object MyTimeUtil {
     @Throws(ParseException::class)
     private fun getDateByString(date: String): Date {
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse(date)
+    }
+
+    @JvmStatic
+    fun getDateByString2(data:String):Date{
+        return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(data)
     }
 
     /**

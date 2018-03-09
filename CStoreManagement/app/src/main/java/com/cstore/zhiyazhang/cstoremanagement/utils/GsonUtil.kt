@@ -65,6 +65,7 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<VendorBean>>(data, object : TypeToken<ArrayList<VendorBean>>() {}.type)
     }
 
+    @JvmStatic
     fun getUtilBean(data: String): ArrayList<UtilBean> {
         return Gson().fromJson<ArrayList<UtilBean>>(data, object : TypeToken<ArrayList<UtilBean>>() {}.type)
     }
@@ -145,7 +146,11 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<AttendanceBean>>(data, object : TypeToken<ArrayList<AttendanceBean>>() {}.type)
     }
 
-    @JvmStatic fun getAttendanceUser(data: String): ArrayList<UserAttendanceBean> {
-        return Gson().fromJson<ArrayList<UserAttendanceBean>>(data, object : TypeToken<ArrayList<UserAttendanceBean>>() {}.type)
+    @JvmStatic fun getAttendanceUser(data: String): ArrayList<PaibanAttendanceBean> {
+        return Gson().fromJson<ArrayList<PaibanAttendanceBean>>(data, object : TypeToken<ArrayList<PaibanAttendanceBean>>() {}.type)
+    }
+
+    @JvmStatic fun getUserBBTypeBean(data: String): ArrayList<UserBBTypeBean> {
+        return Gson().fromJson<ArrayList<UserBBTypeBean>>(data, object : TypeToken<ArrayList<UserBBTypeBean>>() {}.type)
     }
 }

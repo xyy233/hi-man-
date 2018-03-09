@@ -71,12 +71,12 @@ class ReturnPurchaseCreateAdapter(val data: ArrayList<ReturnPurchaseItemBean>) :
             return_add.setOnClickListener {
 
                 //测试
-                /*rb.plnRtnQuantity++
+                rb.plnRtnQuantity++
                 rb.editCount++
-                plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()*/
+                plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()
 
                 //lsjjh为空的话写死为-1，判断不为空且加量后lsjjh小与退货量就报错
-                if (rb.lsjjh != -1 && rb.lsjjh < rb.plnRtnQuantity + 1) {
+                /*if (rb.lsjjh != -1 && rb.lsjjh < rb.plnRtnQuantity + 1) {
                     MyToast.getShortToast("退货量不能大于最大退货量，最大退货量为：${rb.lsjjh}")
                     return@setOnClickListener
                 }
@@ -86,7 +86,7 @@ class ReturnPurchaseCreateAdapter(val data: ArrayList<ReturnPurchaseItemBean>) :
                     plnrtn_quantity.text = rb.plnRtnQuantity.toInt().toString()
                 } else {
                     MyToast.getShortToast(context.getString(R.string.rtn_qty_inv))
-                }
+                }*/
             }
         }
     }

@@ -45,7 +45,7 @@ class PaibanAdapter(val data: ArrayList<SortPaiban>, private val onClick: ItemCl
             //循环数据
             pb.data.forEach {
                 //只有有数据的才进去判断星期添加数据
-                if (it.systemDate != null && it.beginDateTime != null && it.endDateTime != null) {
+                if (it.systemDate != "" && it.systemDate != null && it.beginDateTime != null && it.endDateTime != null) {
                     val nowDay = getNowWeek(it.systemDate)
                     when (nowDay) {
                         0 -> {
@@ -109,7 +109,7 @@ class PaibanAdapter(val data: ArrayList<SortPaiban>, private val onClick: ItemCl
             sunday_box.setOnClickListener {
                 onClick.onItemEdit(pb, 6)
             }
-            statistics_box.setOnClickListener {  }
+            statistics_box.setOnClickListener { }
         }
     }
 }

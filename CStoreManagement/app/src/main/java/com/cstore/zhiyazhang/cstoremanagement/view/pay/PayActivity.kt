@@ -25,7 +25,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import com.uuzuche.lib_zxing.camera.CameraManager
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_pay.*
 import kotlinx.android.synthetic.main.layout_search_line.*
@@ -137,7 +136,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
 
         judgmentSqlData()
 
-        Thread(Runnable {
+        /*Thread(Runnable {
             //10s
             var i = 10 * 1000
             while (i > 100) {
@@ -157,7 +156,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
                     break
                 }
             }
-        }).start()
+        }).start()*/
     }
 
     /**

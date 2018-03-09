@@ -52,6 +52,7 @@ object CStoreCalendar {
     /**
      * 得到日期
      */
+    @JvmStatic
     fun getCurrentDate(type: Int): String {
         if (data.isNotEmpty()){
             //如果有的话在这里就已经return了

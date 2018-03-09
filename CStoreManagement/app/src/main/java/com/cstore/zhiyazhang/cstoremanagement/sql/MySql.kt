@@ -47,7 +47,7 @@ object MySql {
      * @return 新的sql语句
      */
     fun signIn(uid: String): String {
-        return "select storeid,employeeid,employeename,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt, WEIXINAPPID ,WEIXINMCHID,WEIXINPARTNERKEY,WEIXINKEYSTORE,WEIXINKEYPASSWORD,ALIPAY_PARTNER_ID,ALIPAY_SECURITY_CODE from (select A.storeid,A.Employeeid,A.Employeename,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr,B.WEIXINAPPID,B.WEIXINMCHID,B.WEIXINPARTNERKEY,B.WEIXINKEYSTORE,B.WEIXINKEYPASSWORD,B.ALIPAY_PARTNER_ID,B.ALIPAY_SECURITY_CODE from employee A,store B) where employeeid='$uid'\u0004"
+        return "select storeid,employeeid,employeename,empgroupid,emppassword,emptelphone,storechinesename,address,store_attr,(SELECT COUNT(*) CNT FROM CONT_ITEM X,PLU Y WHERE X.STOREID = Y.STOREID AND X.ITEMNO = Y.ITEMNUMBER AND TO_CHAR(SYSDATE-1,'YYYYMMDD') BETWEEN X.TRAN_DATE_ST AND X.TRAN_DATE_ED) cnt, WEIXINAPPID ,WEIXINMCHID,WEIXINPARTNERKEY,WEIXINKEYSTORE,WEIXINKEYPASSWORD,ALIPAY_PARTNER_ID,ALIPAY_SECURITY_CODE from (select A.storeid,A.Employeeid,A.Employeename,A.Empgroupid,A.Emppassword,A.Emptelphone,B.Storechinesename,B.Address,B.Store_Attr,B.WEIXINAPPID,B.WEIXINMCHID,B.WEIXINPARTNERKEY,B.WEIXINKEYSTORE,B.WEIXINKEYPASSWORD,B.ALIPAY_PARTNER_ID,B.ALIPAY_SECURITY_CODE from employee A,store B) where employeeid='$uid'\u0004"
     }
 
 
@@ -867,7 +867,7 @@ object MySql {
     }
 
     /**
-     * 检测输入的${MyApplication.instance().getString(R.string.tui)}货商品是否重复
+     * 检测输入的退货商品是否重复
      */
     fun getJudgmentReturnCommodity(raib: ArrayList<ReturnAcceptanceItemBean>, date: String): String {
         var sql = "select * from rtndtl where rtndate=to_date('$date','yyyy-MM-dd') and itemnumber in ("
@@ -877,10 +877,10 @@ object MySql {
         return sql
     }
 
-    /**********************************************${MyApplication.instance().getString(R.string.tui)}货验收************************************************************/
+    /**********************************************退货验收************************************************************/
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.tui)}货验收单
+     * 得到退货验收单
      */
     fun getReturnAcceptanceList(date: String): String {
         return "select rtn.requestNumber, to_char(rtn.rtnDate,'yyyy-MM-dd') rtndate,rtn.plnrtnDate,rtn.preRtnDate, " +
@@ -899,7 +899,7 @@ object MySql {
     }
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.tui)}货单下的商品
+     * 得到退货单下的商品
      */
     fun getReturnAcceptanceItemList(rab: ReturnAcceptanceBean, date: String): String {
         return "select to_char(rtn.rtnDate,'yyyy-MM-dd') rtndate,rtn.itemNumber,nvl(rtn.ordQuantity,0)ordQuantity, rtn.RequestNumber,rtn.supplierID,NVL(rtn.rtnQuantity,0) rtnQuantity, nvl(rtn.storeUnitPrice,0) storeUnitPrice,rtn.shipNumber,rtn.vendorID,rtn.unitCost, " +
@@ -919,7 +919,7 @@ object MySql {
     }
 
     /**
-     * 更新${MyApplication.instance().getString(R.string.tui)}货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新退货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun updateReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "update rtnHead set " +
@@ -949,7 +949,7 @@ object MySql {
     }
 
     /**
-     * 创建${MyApplication.instance().getString(R.string.tui)}货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 创建退货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "insert into rtnHead " +
@@ -963,7 +963,7 @@ object MySql {
     }
 
     /**
-     * 穿件${MyApplication.instance().getString(R.string.tui)}货验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 穿件退货验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
      */
     fun createReturnAcceptanceItem(raib: ReturnAcceptanceItemBean): String {
         return "insert into rtndtl " +
@@ -1050,10 +1050,10 @@ object MySql {
                 " to_date('$date','yyyyMMddHH24:MI:SS'))"
     }
 
-    /**********************************************${MyApplication.instance().getString(R.string.tui)}货************************************************************/
+    /**********************************************退货************************************************************/
 
     /**
-     * 获得${MyApplication.instance().getString(R.string.tui)}货原因
+     * 获得退货原因
      */
     val getReason: String
         get() {
@@ -1061,7 +1061,7 @@ object MySql {
         }
 
     /**
-     * 获得${MyApplication.instance().getString(R.string.tui)}货${MyApplication.instance().getString(R.string.pei)}送商
+     * 获得退货${MyApplication.instance().getString(R.string.pei)}送商
      */
     val getReturnVendor: String
         get() {
@@ -1189,7 +1189,7 @@ object MySql {
     }
 
     /**
-     * 获得${MyApplication.instance().getString(R.string.tui)}货单
+     * 获得退货单
      */
     fun getReturnPurchase(date: String): String {
         return "select pln.RequestNumber, pln.PlnRtnDate RtnDate,vendor.vendorName, " +
@@ -1204,7 +1204,7 @@ object MySql {
     }
 
     /**
-     * 获得${MyApplication.instance().getString(R.string.tui)}货单下的商品
+     * 获得退货单下的商品
      */
     fun getReturnPurchaseItem(date: String, vendorId: String, requestNumber: String): String {
         return "select pln.recordNumber, pln.requestNumber, pln.itemNumber,nvl(pln.storeunitprice,0)*nvl(pln.plnrtnquantity,0) Total,pln.StoreUnitprice,pln.UnitCost,pln.plnRtnUnitQuantity, pln.plnRtnQuantity, pln.plnRtnDate, pln.vendorID, pln.supplierID, " +
@@ -1228,7 +1228,7 @@ object MySql {
     }
 
     /**
-     * 创建${MyApplication.instance().getString(R.string.tui)}货商品,${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 创建退货商品,配合事务使用
      */
     fun createReturnPurchase(rpb: ReturnPurchaseItemBean): String {
         return "insert into plnrtn  " +
@@ -1240,7 +1240,7 @@ object MySql {
     }
 
     /**
-     * 更新${MyApplication.instance().getString(R.string.tui)}货商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新退货商品，配合事务使用
      */
     fun updateReturnPurchase(rpb: ReturnPurchaseItemBean): String {
         return "Update plnrtn " +
@@ -1283,17 +1283,17 @@ object MySql {
     }
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.tui)}货商品的最大排序id
+     * 得到退货商品的最大排序id
      */
     fun getMaxRecordNumber(date: String): String {
         return "select max(recordNumber) value from plnrtn where plnrtndate0=to_date('$date','yyyy-MM-dd')\u0004"
     }
 
 
-    /**********************************************过期品${MyApplication.instance().getString(R.string.tui)}货*******************************************************/
+    /**********************************************过期品退货*******************************************************/
 
     /**
-     * 得到今天所有的过期${MyApplication.instance().getString(R.string.tui)}货商品
+     * 得到今天所有的过期tui货商品
      */
     fun expiredReturnGetAll(): String {
         val context = MyApplication.instance().applicationContext
@@ -1349,7 +1349,7 @@ object MySql {
     }
 
     /**
-     * 得到商品过期品${MyApplication.instance().getString(R.string.tui)}货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
+     * 得到商品过期品退货的商品SQL语句，使用时间为订货换日，其中一个是营业换日
      * @param data 用来搜索的品号或条形码
      */
     fun expiredReturnGetCommodity(data: String): String {
@@ -1427,7 +1427,7 @@ object MySql {
     }
 
     /**
-     * 保存过期品预约${MyApplication.instance().getString(R.string.tui)}货
+     * 保存过期品预约退货
      */
     fun saveExpiredReturn(data: ReturnExpiredBean): String {
         val date = deleteTime(data.plnRtnDate)
@@ -2329,11 +2329,12 @@ object MySql {
     /**
      * 检查大夜是否只有一个人,只在能操作日期调用
      */
+    @JvmStatic
     fun judgmentDY(): String {
         //只在能操作的日期调用，因为考勤检查的是昨天资料，因此再次操作时间为操作昨天
-        val date = MyTimeUtil.tomorrowDate
-        return "Select Count(*) cnt1,sum(Decode(bbid,'3',1,0)) cnt2,  " +
-                "Sum(Round((enddatetime-begindatetime)*24)) work_hr  " +
+        val date = MyTimeUtil.getYMDStringByDate(MyTimeUtil.getDateByString2(MyTimeUtil.dateAddDay(CStoreCalendar.getCurrentDate(0), -1)))
+        return "Select Count(*) value,sum(Decode(bbid,'3',1,0)) value2,  " +
+                "Sum(Round((enddatetime-begindatetime)*24)) value3  " +
                 "From paiban  " +
                 "Where storeid= BUSI_DAYCLOSE.GetStoreProperty('0')  " +
                 "And systemdate = to_date('$date','yyyy-mm-dd')  " +
@@ -2344,8 +2345,9 @@ object MySql {
     /**
      * 修改为单人大夜
      */
+    @JvmStatic
     fun changeDY(): String {
-        val date = MyTimeUtil.tomorrowDate2
+        val date = MyTimeUtil.getYMDStringByDate3(MyTimeUtil.getDateByString2(MyTimeUtil.dateAddDay(CStoreCalendar.getCurrentDate(0), -1)))
         return "call Sca05_P04('$date')"
     }
 
@@ -2353,10 +2355,12 @@ object MySql {
      * 获得选择日期的考勤数据
      * @param date 在activity获得的数据
      */
-    fun getAttendanceData(date:String):String{
-        val date = MyTimeUtil.tomorrowDate2
+    @JvmStatic
+    fun getAttendanceData(date: String): String {
+        //永远都是上一天数据
+        val callDate = MyTimeUtil.getYMDStringByDate3(MyTimeUtil.getDateByString2(MyTimeUtil.dateAddDay(date, -1)))
         //得到考勤数据的存储过程
-        val callAttendanceDataSql = "call Sca05_P01('$date')\u000c"
+        val callAttendanceDataSql = "call Sca05_P01('$callDate')\u000c"
         return "$callAttendanceDataSql Select a.Busidate, a.Storeid, " +
                 "To_Char(a.Workdate, 'yyyy-MM-dd') As Workdate, a.Emp_No, " +
                 "b.Employeename,nvl(b.Emptypeno,'01') Emptypeno, " +
@@ -2377,7 +2381,8 @@ object MySql {
     /**
      * 获得考勤用户的打卡资料
      */
-    fun getAttendanceUserData(date:String, uId: String):String{
+    @JvmStatic
+    fun getAttendanceUserData(date: String, uId: String): String {
         return "select rownum seq, a.pb_on, a.pb_off, b.work_on, b.work_off, a.rid, " +
                 "Decode(b.Work_On,Null,'noImage', " +
                 "'c:\\rtcvs\\arr_photo\\'||to_char(b.Work_On+1,'yyyymmdd\\')||a.storeid|| a.Employeeid ||to_char(b.Work_On,'yyyymmddhh24miss')||'.jpg') on_jpg, " +
@@ -2410,26 +2415,41 @@ object MySql {
     }
 
     /**
+     * 得到班别数据
+     */
+    @JvmStatic
+    fun getAttendanceBBData(date: String, uId: String): String {
+        return "Select a.Bbtype, b.Banbiename, " +
+                "a.Paiban_Hr, a.Day_Hr, a.Feria_Hr " +
+                "From Sca05 a, Banbie b " +
+                "Where a.Workdate =to_date('$date','yyyy-mm-dd') " +
+                "And a.Emp_No ='$uId' " +
+                "And a.Bbtype = b.Bbid(+) " +
+                "Order By Decode(a.Bbtype, '4', '1', a.Bbtype)"
+    }
+
+    /**
      * 修改考勤审核
      * @param type 0=单个  1=全部   2=取消
      */
-    fun changeAttendance(date:String, uId:String?, type:Int):String{
-        if (uId!=null&&type==2){
+    @JvmStatic
+    fun changeAttendance(uId: String?, type: Int): String {
+        if (uId != null && type == 2) {
             //取消
-            return "update sca05 set status='0', updateuserid='${User.getUser().uId}', updatedate=system  " +
-                    "where busidate=to_date('$date','yyyy-mm-dd')   " +
+            return "update sca05 set status='0', updateuserid='${User.getUser().uId}', updatedate=sysdate  " +
+                    "where busidate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')   " +
                     "and emp_no='$uId' " +
                     "and status='1'\u0004"
-        }else if (uId!=null){
+        } else if (uId != null) {
             //单个
-            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=system  " +
-                    "where busidate=to_date('$date','yyyy-mm-dd')  " +
+            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=sysdate  " +
+                    "where busidate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd')  " +
                     "and emp_no='$uId'\n" +
                     "and status='0'\u0004"
-        }else{
+        } else {
             //全部
-            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=system  " +
-                    "where busidate=to_date('$date','yyyy-mm-dd') " +
+            return "update sca05 set status='1', updateuserid='${User.getUser().uId}', updatedate=sysdate  " +
+                    "where busidate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
                     "and status='0'\u0004"
         }
     }
