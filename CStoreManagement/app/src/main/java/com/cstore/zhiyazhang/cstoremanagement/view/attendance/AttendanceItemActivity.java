@@ -58,7 +58,9 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
         jr = (TextView) findViewById(R.id.jr);
         bbType = (TextView) findViewById(R.id.bb_type);
         paibanHour = (TextView) findViewById(R.id.paiban_hour);
+
         dayHour = (TextView) findViewById(R.id.day_hour);
+
         fHour = (TextView) findViewById(R.id.f_hour);
         paibanDateOn = (TextView) findViewById(R.id.paiban_date_on);
         paibanDateOff = (TextView) findViewById(R.id.paiban_date_off);

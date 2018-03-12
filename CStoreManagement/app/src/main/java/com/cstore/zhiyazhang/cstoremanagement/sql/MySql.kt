@@ -2387,6 +2387,25 @@ object MySql {
                 "a.Emp_No, b.Employeename, Emptypeno, a.Status\u0004"
     }
 
+
+    /**
+     * 修改上班时数Sql
+     * @param date = 考勤日期的 yyyymmdd 格式
+     * @param uId = 被修改人
+     * @param bbType= 班别类型
+     * @param dayHr = 修改的上班时数值
+     */
+    fun getChangeDayHour(date: String, uId: String, bbType: String, dayHr: Int): String {
+        return "declare " +
+                "v_code varchar2(10); " +
+                "v_emsg varchar2(100); " +
+                "begin " +
+                "Sca05_P02('$date','$uId',$bbType,$dayHr,v_code,v_emsg); " +
+                "dbms_output.put_line(v_code||v_emsg); " +
+                "end;"
+    }
+
+
     /**
      * 获得考勤用户的打卡资料
      */
