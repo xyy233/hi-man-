@@ -2395,13 +2395,14 @@ object MySql {
      * @param bbType= 班别类型
      * @param dayHr = 修改的上班时数值
      */
-    fun getChangeDayHour(date: String, uId: String, bbType: String, dayHr: Int): String {
+    @JvmStatic
+    fun getChangeDayHour(date: String, uId: String, bbType: String, dayHr: Double): String {
+        val sqlDate = MyTimeUtil.getYMDStringByDate3(MyTimeUtil.getDateByString2(date))
         return "declare " +
                 "v_code varchar2(10); " +
                 "v_emsg varchar2(100); " +
                 "begin " +
-                "Sca05_P02('$date','$uId',$bbType,$dayHr,v_code,v_emsg); " +
-                "dbms_output.put_line(v_code||v_emsg); " +
+                "Sca05_P02('$sqlDate','$uId',$bbType,$dayHr,v_code,v_emsg); " +
                 "end;"
     }
 
@@ -2480,5 +2481,98 @@ object MySql {
                     "where busidate=to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd') " +
                     "and status='0'\u0004"
         }
+    }
+
+    /*******************************************考勤查看*******************************************************/
+    /**
+     * 得到某月标准工时
+     * @param data yyyyMM格式日期
+     */
+    fun getAttendanceWorkHours(data: String): String {
+        return "SELECT ym,hours FROM hr003 WHERE ym='$data'\u0004"
+    }
+
+    /**
+     * 得到具体考勤数据
+     * @param isShowManager 是否显示店长
+     */
+    fun getAttendanceRecordingData(beginDate: String, endDate: String, workHours: Double, isShowManager: Boolean): String {
+        val result = "delete from temp_sca06\u000c" +
+                "insert into temp_sca06(emp_no, voc_ahr, voc_bhr, voc_chr, voc_ctimes, voc_xhr, voc_jhr, voc_otherhr) " +
+                "SELECT  " +
+                "sca06.emp_no, " +
+                "nvl( sum(case sca06.voc_Code when 'A' then sca06.voc_Hr END), 0 ) AS voc_Ahr , " +
+                "nvl(sum(case sca06.voc_Code when 'B' then sca06.voc_Hr END), 0 ) AS voc_Bhr, " +
+                "nvl(sum(case sca06.voc_Code when 'C' then sca06.voc_Hr when 'D' then sca06.voc_Hr END), 0 ) AS voc_Chr, " +
+                "nvl(sum(case sca06.voc_Code when 'C' then 1 when 'D' then 1 END), 0 ) AS voc_Ctimes, " +
+                "nvl( sum(case sca06.voc_Code when 'X' then sca06.voc_Hr END), 0 ) AS voc_Xhr, " +
+                "nvl( sum(case sca06.voc_Code when 'J' then sca06.voc_Hr END), 0 ) AS voc_Jhr, " +
+                "nvl( sum(voc_hr),0) - nvl( sum(case sca06.voc_Code when 'A' then sca06.voc_Hr END),0)- " +
+                "nvl(sum(case sca06.voc_Code when 'B' then sca06.voc_Hr END),0)- " +
+                "nvl(sum(case sca06.voc_Code when 'C' then sca06.voc_Hr when 'D' then sca06.voc_Hr END),0)- " +
+                "nvl( sum(case sca06.voc_Code when 'X' then sca06.voc_Hr END),0)- " +
+                "nvl(sum(case sca06.voc_Code when 'J' then sca06.voc_Hr END),0)- " +
+                "nvl(sum(case sca06.voc_Code when 'Z' then sca06.voc_Hr END),0) AS voc_Otherhr " +
+                "FROM sca06 " +
+                "WHERE sca06.voc_Date between to_date('$beginDate','yyyy-mm-dd') " +
+                "and to_date('$endDate','yyyy-mm-dd') " +
+                "group by emp_no\u000c" +
+                "delete from temp_sca05\u000c " +
+                "insert into temp_sca05(emp_no, tot_day, tot_night, tot_feria, tot_danren) " +
+                "SELECT emp_no, " +
+                "sum(case bbtype when '1' then day_hr when '2' then day_hr when '4' then day_hr end) tot_day, " +
+                "sum(case bbtype when '3' then day_hr end) tot_night, " +
+                "sum(feria_hr) AS tot_feria, " +
+                "sum(case bbtype when '9' then day_hr end) tot_danren " +
+                "FROM sca05 " +
+                "WHERE workDate between to_date('$beginDate','yyyy-mm-dd') " +
+                "and to_date('$endDate','yyyy-mm-dd') " +
+                "and status='1' " +
+                "GROUP BY emp_no\u000c" +
+                "SELECT employee.employeeID,employee.employeeName,empstaff, " +
+                "nvl(temp_sca05.tot_day,0)   as tot_day,    " +
+                "nvl(temp_sca05.tot_night,0) as tot_night,    " +
+                "nvl(temp_sca05.tot_danren,0) as tot_danren,   " +
+                "nvl(temp_sca05.tot_day,0)+  " +
+                "nvl(temp_sca05.tot_danren,0)+   " +
+                "nvl(temp_sca05.tot_night,0) as tot_hr,    " +
+                "nvl(temp_sca06.voc_Ahr,0)   AS voc_Ahr,  " +
+                "nvl(temp_sca06.voc_Bhr,0)   AS voc_Bhr,    " +
+                "nvl(temp_sca06.voc_Xhr,0)   AS voc_Xhr,       " +
+                "nvl(temp_sca06.voc_Jhr,0)   AS voc_Jhr,     " +
+                "nvl(temp_sca06.voc_Otherhr,0) AS voc_Otherhr, " +
+                "nvl(temp_sca06.voc_Ahr,0)+  " +
+                "nvl(temp_sca06.voc_Bhr,0)+ " +
+                "nvl(temp_sca06.voc_Xhr,0)+ " +
+                "nvl(temp_sca06.voc_Jhr,0)+ " +
+                "nvl(temp_sca06.voc_Otherhr,0) AS voc_tot,     " +
+                "nvl(temp_sca06.voc_Ctimes,0)  as voc_Ctimes,  " +
+                "nvl(temp_sca06.voc_Chr,0)     AS voc_Chr,   " +
+                "nvl(temp_sca05.tot_day,0)+ " +
+                "nvl(temp_sca05.tot_night,0)+ " +
+                "nvl(temp_sca05.tot_danren,0)+ " +
+                "nvl(temp_sca06.voc_Ahr,0)+ " +
+                "nvl(temp_sca06.voc_Bhr,0)+ " +
+                "nvl(temp_sca06.voc_Xhr,0)+ " +
+                "nvl(temp_sca06.voc_Jhr,0)+ " +
+                "nvl(temp_sca06.voc_Otherhr,0)-($workHours) AS tot_added, " +
+                "nvl(temp_sca05.tot_day,0)+ " +
+                "nvl(temp_sca05.tot_night,0)+ " +
+                "nvl(temp_sca05.tot_danren,0)+ " +
+                "nvl(temp_sca06.voc_Ahr,0)+ " +
+                "nvl(temp_sca06.voc_Bhr,0)+ " +
+                "nvl(temp_sca06.voc_Xhr,0)+ " +
+                "nvl(temp_sca06.voc_Jhr,0)+ " +
+                "nvl(temp_sca06.voc_Otherhr,0)- " +
+                "nvl(temp_sca05.tot_feria,0)-($workHours) AS tot_common_added, " +
+                "nvl(temp_sca05.tot_feria,0) AS tot_feria " +
+                "FROM employee left join temp_sca05 on employee.employeeID=temp_sca05.emp_no " +
+                "left join temp_sca06 on employee.employeeID=temp_sca06.emp_no " +
+                "WHERE employee.storeID ='${User.getUser().storeId}' " +
+                "AND (employee.empExitDate is null OR employee.empExitDate>to_date('$beginDate','yyyy-mm-dd')) " +
+                "AND employee.empInDate <=to_date('$endDate','yyyy-mm-dd') " +
+                "AND employee.employeeID not like '9%' " +
+                "AND nvl(emptypeno,'01') like '01'"
+        return if (isShowManager) result + "\u0004" else result + "AND nvl(empstaff,'x') <> '01:店长'\u0004"
     }
 }

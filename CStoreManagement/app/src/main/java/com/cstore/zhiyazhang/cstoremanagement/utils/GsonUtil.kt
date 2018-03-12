@@ -153,4 +153,12 @@ object GsonUtil {
     @JvmStatic fun getUserBBTypeBean(data: String): ArrayList<UserBBTypeBean> {
         return Gson().fromJson<ArrayList<UserBBTypeBean>>(data, object : TypeToken<ArrayList<UserBBTypeBean>>() {}.type)
     }
+
+    @JvmStatic fun getWorkHoursBean(data: String): ArrayList<WorkHoursBean> {
+        return Gson().fromJson<ArrayList<WorkHoursBean>>(data, object : TypeToken<ArrayList<WorkHoursBean>>() {}.type)
+    }
+
+    @JvmStatic fun getAttendanceRecordingBean(data: String): ArrayList<AttendanceRecordingBean> {
+        return Gson().fromJson<ArrayList<AttendanceRecordingBean>>(data, object : TypeToken<ArrayList<AttendanceRecordingBean>>() {}.type)
+    }
 }

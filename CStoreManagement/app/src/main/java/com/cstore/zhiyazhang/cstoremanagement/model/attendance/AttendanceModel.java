@@ -186,6 +186,32 @@ public class AttendanceModel implements AttendanceInterface {
 
     }
 
+    /**
+     * 修改上班时数
+     */
+
+    @Override
+    public void ChangeDayHour(final AttendanceBean ab, final String dyHour, final MyHandler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                String ip = MyApplication.getIP();
+                if (!SocketUtil.judgmentIP(ip, msg, handler))
+                    return;
+                String sql = MySql.getChangeDayHour(ab.getBusiDate(), ab.getUId(), ab.getBbType().getBbType(), Integer.valueOf(dyHour));
+                String sqlResult = SocketUtil.initSocket(ip, sql).inquire();
+                msg.obj = sqlResult;
+                if (sqlResult.equals("[]") || sqlResult.equals("") || sqlResult.equals("0")) {
+                    msg.what = SUCCESS;
+                } else {
+                    msg.what = ERROR;
+                }
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
     @Override
     public void changeDY(final MyHandler handler) {
         new Thread(new Runnable() {

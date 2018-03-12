@@ -34,4 +34,10 @@ public interface AttendanceInterface {
      */
     public void getPaibanAttendance(AttendanceBean ab, MyHandler handler);
 
+    /**
+     * 修改上班时数
+     * */
+
+    public void ChangeDayHour(AttendanceBean ab,String dyHour,MyHandler handler);
+
 }

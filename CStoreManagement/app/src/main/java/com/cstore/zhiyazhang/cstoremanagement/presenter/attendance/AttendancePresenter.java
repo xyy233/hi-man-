@@ -26,7 +26,7 @@ public class AttendancePresenter {
     private static AttendanceInterface model = new AttendanceModel();
 
     public AttendancePresenter(GenericView view) {
-        AttendancePresenter.view = view;
+        this.view = view;
     }
 
     public void getAttendanceData() {
@@ -134,7 +134,7 @@ public class AttendancePresenter {
         model.changeAttendance(uId, type, handler);
     }
 
-    public void changeDY(){
+    public void changeDY() {
         if ((!PresenterUtil.INSTANCE.judgmentInternet(view)))
             return;
 
@@ -161,4 +161,39 @@ public class AttendancePresenter {
         });
         model.changeDY(handler);
     }
+
+
+    /**
+     * 修改上班时数
+     */
+    public void ChangeDayHour(final AttendanceBean ab, String dyHour) {
+        if ((!PresenterUtil.INSTANCE.judgmentInternet(view)))
+            return;
+        assert (MyActivity) view.getData1() != null;
+        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        handler.writeListener(new MyListener() {
+            @Override
+            public void listenerOther(@NotNull Object data) {
+
+            }
+
+            @Override
+            public void listenerFailed(@NotNull String errorMessage) {
+                view.showPrompt(errorMessage);
+                view.hideLoading();
+                handler.cleanAll();
+            }
+
+            @Override
+            public void listenerSuccess(@NotNull Object data) {
+                view.requestSuccess2(data);
+                view.hideLoading();
+                view.showPrompt(MyApplication.instance().getApplicationContext().getString(R.string.saveDone));
+                handler.cleanAll();
+            }
+        });
+        model.ChangeDayHour(ab, dyHour, handler);
+    }
+
+
 }

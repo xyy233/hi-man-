@@ -83,4 +83,12 @@ interface GenericView {
     fun getData4():Any?{
         return ""
     }
+
+    /**
+     * 得到activity数据专用
+     * 2018年1月30日 11:51:32
+     */
+    fun getData5():Any?{
+        return ""
+    }
 }

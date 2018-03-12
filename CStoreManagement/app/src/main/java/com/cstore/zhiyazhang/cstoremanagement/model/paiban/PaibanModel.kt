@@ -18,6 +18,32 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class PaibanModel {
 
+    companion object {
+        /**
+         * 获得店长是否能排班
+         */
+        @JvmStatic
+        public fun getIsPaiban(ip: String, msg: Message, handler: MyHandler): String? {
+            val sql = MySql.getIsPaiban
+            val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
+            val result = ArrayList<UtilBean>()
+            if (sqlResult == "[]" || sqlResult == "") {
+                return null
+            }
+            try {
+                result.addAll(GsonUtil.getUtilBean(sqlResult))
+            } catch (e: Exception) {
+            }
+            if (result.isEmpty()) {
+                msg.obj = sqlResult
+                msg.what = ERROR
+                handler.sendMessage(msg)
+                return null
+            }
+            return result[0].value
+        }
+    }
+
     /**
      * 根据日期得到数据
      */
@@ -45,29 +71,6 @@ class PaibanModel {
             msg.what = SUCCESS
             handler.sendMessage(msg)
         }).start()
-    }
-
-    /**
-     * 获得店长是否能排班
-     */
-    private fun getIsPaiban(ip: String, msg: Message, handler: MyHandler): String? {
-        val sql = MySql.getIsPaiban
-        val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-        val result = ArrayList<UtilBean>()
-        if (sqlResult == "[]" || sqlResult == "") {
-            return null
-        }
-        try {
-            result.addAll(GsonUtil.getUtilBean(sqlResult))
-        } catch (e: Exception) {
-        }
-        if (result.isEmpty()) {
-            msg.obj = sqlResult
-            msg.what = ERROR
-            handler.sendMessage(msg)
-            return null
-        }
-        return result[0].value
     }
 
     /**

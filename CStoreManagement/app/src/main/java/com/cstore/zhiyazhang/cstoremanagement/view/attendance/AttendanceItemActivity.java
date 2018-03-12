@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.attendance;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,15 +31,17 @@ import org.jetbrains.annotations.Nullable;
 public class AttendanceItemActivity extends MyActivity implements View.OnClickListener {
 
     private LinearLayout loading, dataDetailBox;
-    private TextView name, attendanceDate, userId, crb, ybdy, drdy, jr, bbType, paibanHour, dayHour, fHour, paibanDateOn, paibanDateOff, checkInOn, checkInOff, loadingText;
+    private TextView name, attendanceDate, userId, crb, ybdy, drdy, jr, bbType, paibanHour, dayHour, fHour, paibanDateOn, paibanDateOff, checkInOn, checkInOff, loadingText, dialog_edit;
     private ImageView attendanceStatus, offImg, onImg;
-    private Button cancelAttendance, doneAttendance, loadingRetry;
+    private Button cancelAttendance, doneAttendance, loadingRetry, dialog_cancel, dialog_save;
     private ProgressBar loadingProgress;
 
     private AttendanceBean ab;
     private Animation showAnimation, hideAnimation;
     private AttendancePresenter presenter = new AttendancePresenter(this);
-
+    private AlertDialog.Builder builder;
+    private AlertDialog saveDialog;
+    private View dialogView;
 
     @Override
     protected int getLayoutId() {
@@ -58,9 +61,7 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
         jr = (TextView) findViewById(R.id.jr);
         bbType = (TextView) findViewById(R.id.bb_type);
         paibanHour = (TextView) findViewById(R.id.paiban_hour);
-
         dayHour = (TextView) findViewById(R.id.day_hour);
-
         fHour = (TextView) findViewById(R.id.f_hour);
         paibanDateOn = (TextView) findViewById(R.id.paiban_date_on);
         paibanDateOff = (TextView) findViewById(R.id.paiban_date_off);
@@ -75,6 +76,18 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
         loadingText = (TextView) findViewById(R.id.loading_text);
         loadingRetry = (Button) findViewById(R.id.loading_retry);
         loadingProgress = (ProgressBar) findViewById(R.id.loading_progress);
+
+        dialogView = View.inflate(this, R.layout.dialog_cashdaily, null);
+
+        dialog_edit = (TextView) dialogView.findViewById(R.id.dialog_edit);
+        dialog_save = (Button) dialogView.findViewById(R.id.dialog_save);
+        dialog_cancel = (Button) dialogView.findViewById(R.id.dialog_cancel);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        builder.setCancelable(true);
+
+        saveDialog = builder.create();
 
         showAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in);
         hideAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out);
@@ -153,12 +166,18 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
         doneAttendance.setVisibility(View.GONE);
         cancelAttendance.setAnimation(hideAnimation);
         doneAttendance.setAnimation(hideAnimation);
+
     }
 
     @Override
     protected void initClick() {
         cancelAttendance.setOnClickListener(this);
         doneAttendance.setOnClickListener(this);
+        dayHour.setClickable(true);
+        dayHour.setOnClickListener(this);
+        dialog_cancel.setOnClickListener(this);
+        dialog_save.setOnClickListener(this);
+
     }
 
     @Override
@@ -188,9 +207,24 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
             case R.id.loading:
                 showPrompt(getString(R.string.wait_loading));
                 break;
-        }
+            case R.id.day_hour:
+                saveDialog.show();
+                break;
+            case R.id.dialog_cancel:
+                saveDialog.cancel();
+                dialog_edit.setText("");
+                break;
+            case R.id.dialog_save:
+                if (dialog_edit.getText().toString().equals("") || dialog_edit.getText() == null) {
+                    showPrompt(getString(R.string.please_edit_value));
+                    break;
+                } else {
+                    presenter.ChangeDayHour(ab, dialog_edit.getText().toString());
+                }
 
+        }
     }
+
 
     @Override
     protected void initData() {
@@ -266,6 +300,13 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
     public void showLoading() {
         loading.setVisibility(View.VISIBLE);
         attendanceStatus.setVisibility(View.GONE);
+    }
+
+    @Override
+    public <T> void requestSuccess2(T rData) {
+        dayHour.setText(dialog_edit.getText());
+        saveDialog.cancel();
+        dialog_edit.setText("");
     }
 
 }
