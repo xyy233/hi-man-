@@ -463,7 +463,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="1dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="@color/sure"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
             android:text="@string/cancel_attendance"
             android:textColor="@color/cstore_white"
             android:textSize="20sp"
@@ -475,10 +478,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="@color/sure"
-            android:text="@string/done_attendance"
+            android:foreground="@drawable/selector_foreground"
+            android:stateListAnimator="@drawable/lift_on_touch"
             android:textColor="@color/cstore_white"
             android:textSize="20sp"
+            android:text="@string/done_attendance"
             tools:ignore="ButtonStyle"/>
 
     </LinearLayout>

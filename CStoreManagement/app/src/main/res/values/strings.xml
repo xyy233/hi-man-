@@ -343,4 +343,7 @@
     <string name="cancel_attendance">取消审核</string>
     <string name="done_attendance">考勤审核</string>
 
+    <!--考勤审核-->
+    <string name="select">查</string>
+
 </resources>
