@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -31,9 +33,9 @@ import org.jetbrains.annotations.Nullable;
 public class AttendanceItemActivity extends MyActivity implements View.OnClickListener {
 
     private LinearLayout loading, dataDetailBox;
-    private TextView name, attendanceDate, userId, crb, ybdy, drdy, jr, bbType, paibanHour, dayHour, fHour, paibanDateOn, paibanDateOff, checkInOn, checkInOff, loadingText, dialog_edit;
+    private TextView name, attendanceDate, userId, crb, ybdy, drdy, jr, bbType, paibanHour, dayHour, fHour, paibanDateOn, paibanDateOff, checkInOn, checkInOff, loadingText, dialogEdit;
     private ImageView attendanceStatus, offImg, onImg;
-    private Button cancelAttendance, doneAttendance, loadingRetry, dialog_cancel, dialog_save;
+    private Button cancelAttendance, doneAttendance, loadingRetry, dialogCancel, dialogSave;
     private ProgressBar loadingProgress;
 
     private AttendanceBean ab;
@@ -79,15 +81,18 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
 
         dialogView = View.inflate(this, R.layout.dialog_cashdaily, null);
 
-        dialog_edit = (TextView) dialogView.findViewById(R.id.dialog_edit);
-        dialog_save = (Button) dialogView.findViewById(R.id.dialog_save);
-        dialog_cancel = (Button) dialogView.findViewById(R.id.dialog_cancel);
+        dialogEdit = (TextView) dialogView.findViewById(R.id.dialog_edit);
+        dialogSave = (Button) dialogView.findViewById(R.id.dialog_save);
+        dialogCancel = (Button) dialogView.findViewById(R.id.dialog_cancel);
 
         builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
         builder.setCancelable(true);
 
         saveDialog = builder.create();
+
+        dialogEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dialogEdit.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
 
         showAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in);
         hideAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out);
@@ -175,8 +180,8 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
         doneAttendance.setOnClickListener(this);
         dayHour.setClickable(true);
         dayHour.setOnClickListener(this);
-        dialog_cancel.setOnClickListener(this);
-        dialog_save.setOnClickListener(this);
+        dialogCancel.setOnClickListener(this);
+        dialogSave.setOnClickListener(this);
 
     }
 
@@ -212,14 +217,14 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
                 break;
             case R.id.dialog_cancel:
                 saveDialog.cancel();
-                dialog_edit.setText("");
+                dialogEdit.setText("");
                 break;
             case R.id.dialog_save:
-                if (dialog_edit.getText().toString().equals("") || dialog_edit.getText() == null) {
+                if (dialogEdit.getText().toString().equals("") || dialogEdit.getText() == null) {
                     showPrompt(getString(R.string.please_edit_value));
                     break;
                 } else {
-                    presenter.ChangeDayHour(ab, dialog_edit.getText().toString());
+                    presenter.ChangeDayHour(ab, dialogEdit.getText().toString());
                 }
 
         }
@@ -304,9 +309,9 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
 
     @Override
     public <T> void requestSuccess2(T rData) {
-        dayHour.setText(dialog_edit.getText());
+        dayHour.setText(dialogEdit.getText());
         saveDialog.cancel();
-        dialog_edit.setText("");
+        dialogEdit.setText("");
     }
 
 }

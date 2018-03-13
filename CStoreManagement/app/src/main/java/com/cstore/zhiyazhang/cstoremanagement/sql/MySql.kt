@@ -2489,7 +2489,7 @@ object MySql {
      * @param data yyyyMM格式日期
      */
     fun getAttendanceWorkHours(data: String): String {
-        return "SELECT ym,hours FROM hr003 WHERE ym='$data'\u0004"
+        return "SELECT ym,hours FROM hr003\u0004"
     }
 
     /**

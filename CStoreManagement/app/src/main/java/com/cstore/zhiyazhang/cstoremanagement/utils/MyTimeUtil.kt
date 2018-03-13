@@ -110,7 +110,7 @@ object MyTimeUtil {
     }
 
     @JvmStatic
-    fun getDateByString2(data:String):Date{
+    fun getDateByString2(data: String): Date {
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(data)
     }
 
@@ -155,7 +155,7 @@ object MyTimeUtil {
             return Calendar.getInstance().get(Calendar.MONTH) + 1
         }
 
-    private val nowYear: Int
+    val nowYear: Int
         get() {
             return Calendar.getInstance().get(Calendar.YEAR)
         }
@@ -386,5 +386,28 @@ object MyTimeUtil {
         val date = getDateByString(data)
         calendar.time = date
         return calendar.get(Calendar.MINUTE)
+    }
+
+
+    /**
+     * 判断是否添加0
+     */
+    fun isAddZero(value: Int): String {
+        return if (value < 10) {
+            "0$value"
+        } else {
+            value.toString()
+        }
+    }
+
+    /**
+     * 根据月份得到上个月月份
+     */
+    fun getLastMonthByMonth(month: String): String {
+        return if (month == "1") {
+            "12"
+        } else {
+            (month.toInt() - 1).toString()
+        }
     }
 }

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:id="@+id/merge_sales"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/table_user_id"
+        style="@style/TextView_Table_Right"
+        android:text="员工编号"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_day"
+        style="@style/TextView_Table_Right"
+        android:text="常日班工时"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_night"
+        style="@style/TextView_Table_Right"
+        android:text="一般大夜"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_danren"
+        style="@style/TextView_Table_Right"
+        android:text="单人大夜"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_hr"
+        style="@style/TextView_Table_Right"
+        android:text="时数小计"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_ahr"
+        style="@style/TextView_Table_Right"
+        android:text="事假时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_bhr"
+        style="@style/TextView_Table_Right"
+        android:text="病假时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_xhr"
+        style="@style/TextView_Table_Right"
+        android:text="代休时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_jhr"
+        style="@style/TextView_Table_Right"
+        android:text="婚假时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_otherhr"
+        style="@style/TextView_Table_Right"
+        android:text="其他请假时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_tot"
+        style="@style/TextView_Table_Right"
+        android:text="请假小计"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_ctimes"
+        style="@style/TextView_Table_Right"
+        android:text="迟到次数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_chr"
+        style="@style/TextView_Table_Right"
+        android:text="迟到时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_common_added"
+        style="@style/TextView_Table_Right"
+        android:text="平日加班时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_feria"
+        style="@style/TextView_Table_Right"
+        android:text="法定假日加班时数"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_added"
+        style="@style/TextView_Table_Right"
+        android:text="加班小计"/>
+
+
+</merge>

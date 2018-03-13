@@ -31,8 +31,8 @@ class AttendanceRecordingPresenter(private val view: GenericView) {
             }
 
             override fun listenerFailed(errorMessage: String) {
-                view.errorDealWith()
                 view.showPrompt(errorMessage)
+                view.errorDealWith(0)
                 view.hideLoading()
                 handler.cleanAll()
             }
@@ -48,6 +48,10 @@ class AttendanceRecordingPresenter(private val view: GenericView) {
      * get5=workHours
      */
     fun getRecordingData() {
+        if (view.getData5() == null) {
+            view.showPrompt("工时不能为空！")
+            return
+        }
         if (!PresenterUtil.judgmentInternet(view)) return
         val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
         handler.writeListener(object : MyListener {
@@ -59,6 +63,7 @@ class AttendanceRecordingPresenter(private val view: GenericView) {
 
             override fun listenerFailed(errorMessage: String) {
                 view.showPrompt(errorMessage)
+                view.errorDealWith(1)
                 view.hideLoading()
                 handler.cleanAll()
             }

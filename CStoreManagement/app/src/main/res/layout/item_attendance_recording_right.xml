@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/right_detail_box"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/table_user_id"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_day"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_night"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_danren"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_hr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_ahr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_bhr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_xhr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_jhr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_otherhr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_tot"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_ctimes"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_voc_chr"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_common_added"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_feria"
+        style="@style/TextView_Table_Right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="@color/line"/>
+
+    <TextView
+        android:id="@+id/table_tot_added"
+        style="@style/TextView_Table_Right"/>
+
+</LinearLayout>

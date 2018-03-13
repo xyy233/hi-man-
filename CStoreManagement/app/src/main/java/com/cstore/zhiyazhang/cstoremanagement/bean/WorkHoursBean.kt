@@ -15,5 +15,5 @@ data class WorkHoursBean(
         /**
          * 总小时
          */
-        val hours: Double
+        val hours: Int
 ) : Serializable

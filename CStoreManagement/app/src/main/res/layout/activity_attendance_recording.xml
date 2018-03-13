@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/item_bg"
+            android:elevation="4dp"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -50,10 +51,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="10dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:gravity="center|start"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/begin_year"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="2018"/>
@@ -62,9 +66,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="年"/>
+                            android:text="@string/year"/>
 
                         <TextView
+                            android:id="@+id/begin_month"
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -75,23 +80,25 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="月"/>
+                            android:text="@string/month"/>
 
                         <EditText
+                            android:id="@+id/begin_day"
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/bg_edit_text"
                             android:gravity="center"
+                            android:inputType="number"
                             android:maxLength="2"
-                            android:text="25"
+                            android:text="26"
                             android:textColor="@color/black"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="日"/>
+                            android:text="@string/day"/>
 
 
                     </LinearLayout>
@@ -101,10 +108,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="6dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:gravity="center|start"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/end_year"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2018"/>
@@ -113,35 +123,39 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="年"/>
+                            android:text="@string/year"/>
 
                         <Spinner
+                            android:id="@+id/end_month_spinner"
                             android:layout_width="30dp"
                             android:layout_height="16dp"
                             android:layout_marginStart="6dp"
-                            android:background="@drawable/bg_edit_text"/>
+                            android:background="@drawable/bg_edit_text"
+                            android:gravity="center"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="月"/>
+                            android:text="@string/month"/>
 
                         <EditText
+                            android:id="@+id/end_day"
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/bg_edit_text"
                             android:gravity="center"
-                            android:maxLength="1"
-                            android:text="2"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:text="25"
                             android:textColor="@color/black"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="日"/>
+                            android:text="@string/day"/>
 
                     </LinearLayout>
 
@@ -150,6 +164,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="6dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:gravity="center|start"
                         android:orientation="horizontal">
 
@@ -159,16 +175,20 @@
                             android:text="标准工时："/>
 
                         <EditText
-                            android:layout_width="40dp"
+                            android:id="@+id/work_hours"
+                            android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_edit_text"
-                            android:gravity="center"/>
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="@color/black"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/recording_search"
                     android:layout_width="80dp"
                     android:layout_height="45dp"
                     android:layout_gravity="end|bottom"
@@ -184,33 +204,8 @@
                 android:id="@+id/my_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                app:layout_collapseMode="pin">
-
-                <TextView
-                    android:id="@+id/toolbar_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="16dp"
-                    android:foreground="@drawable/selector_foreground"
-                    android:stateListAnimator="@drawable/lift_on_touch"
-                    android:textSize="18sp"
-                    android:visibility="gone"/>
-
-                <include
-                    layout="@layout/layout_date"/>
-
-                <TextView
-                    android:id="@+id/toolbar_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="16dp"
-                    android:foreground="@drawable/selector_foreground"
-                    android:stateListAnimator="@drawable/lift_on_touch"
-                    android:textSize="18sp"
-                    android:visibility="gone"/>
-            </android.support.v7.widget.Toolbar>
+                android:elevation="4dp"
+                app:layout_collapseMode="pin"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -218,24 +213,27 @@
             android:id="@+id/myTitle"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#F2F2F2"
+            android:background="@color/gray3"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="@string/name"
+                android:text="@string/name1"
                 android:textColor="@color/black"
                 android:textSize="12sp"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="@color/line"/>
 
             <com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyHorizontalScrollView
                 android:id="@+id/title_horsv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:fillViewport="true"
                 android:scrollbars="none">
 
@@ -256,6 +254,7 @@
         android:id="@+id/nested_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -265,16 +264,14 @@
 
             <com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyRecyclerView
                 android:id="@+id/left_list"
-                android:layout_width="0dp"
+                android:layout_width="101dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:scrollbars="none"/>
 
             <com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyHorizontalScrollView
                 android:id="@+id/content_horsv"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
                 android:fillViewport="true"
                 android:scrollbars="none">
 
@@ -282,7 +279,6 @@
                     android:id="@+id/right_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:scrollbars="none"/>
 
             </com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyHorizontalScrollView>
@@ -291,5 +287,10 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
+    <include
+        android:id="@+id/loading"
+        layout="@layout/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </android.support.design.widget.CoordinatorLayout>
