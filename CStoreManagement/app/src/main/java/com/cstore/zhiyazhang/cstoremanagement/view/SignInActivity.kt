@@ -17,7 +17,6 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -46,8 +45,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
-
-//        test2.setOnClickListener { startActivity(Intent(this@SignInActivity,Test::class.java)) }
         //如果获得了就直接输入否则为""
         user_id.setText(preferences?.getString("id", ""))
         user_password.setText(preferences?.getString("pwd", ""))
@@ -89,6 +86,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     @SuppressLint("SetTextI18n")
     override fun initData() {
         app_version.text = "v: ${MyApplication.getVersion()}"
+        ReportListener.reportError()
     }
 
     override fun onStart() {
@@ -101,7 +99,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             if (wifiName == null || wifiName == "") wifiName = getString(R.string.mobile_network)
             @SuppressLint("WifiManagerLeak")
             wifi_hints.text = "${getString(R.string.now_wifi)}$wifiName\n${getString(R.string.wifi_hints)}"
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             wifi_hints.text = getString(R.string.not_wifi_name)
         }
     }
@@ -130,7 +128,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             is User -> {
                 showPrompt(rData.name + "您好,登陆成功")
                 ReportListener.reportEnter(rData.storeId)
-                ReportListener.reportError()
                 val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                 intent.putExtra("user", rData)
                 startActivity(intent)
@@ -251,7 +248,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     }
 
     //删除预览版安装包
-    private fun deleteAlphaDownload(){
+    private fun deleteAlphaDownload() {
         val versionName = "CStoreManagementAlpha.apk"
         val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
         val f = File(downloadPath)

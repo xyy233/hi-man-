@@ -21,7 +21,7 @@ object MyTimeUtil {
      * @return long
      */
     fun getLongByDate(date: Date): Long {
-        return date.time / 1000
+        return date.time
     }
 
     /**
@@ -31,8 +31,8 @@ object MyTimeUtil {
      * *
      * @return date
      */
-    fun getDateByLong(date: Long?): Date {
-        return Date(date!! * 1000)
+    fun getDateByLong(date: Long): Date {
+        return Date(date)
     }
 
     /**
@@ -271,6 +271,41 @@ object MyTimeUtil {
         cal.add(Calendar.WEEK_OF_YEAR, isWeek)
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
+    }
+
+    /**
+     * 在日期上添加时间
+     * @param type respectively add year or month or day
+     * @return format is Date
+     */
+    fun getAddDate(type: String, date: Date, addNumber: Int): Date {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.firstDayOfWeek = Calendar.MONDAY
+        when (type) {
+            "year" -> {
+                cal.add(Calendar.YEAR, addNumber)
+            }
+            "month" -> {
+                cal.add(Calendar.MONTH, addNumber)
+            }
+            "day" -> {
+                cal.add(Calendar.DAY_OF_MONTH, addNumber)
+            }
+        }
+        return cal.time
+    }
+
+    /**
+     * 得到当前月份的最大日期
+     * @param date 基数日期
+     */
+    fun getMaxDateByNowMonth(date: Date): Date {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        cal.set(Calendar.DAY_OF_MONTH, maxDay)
+        return cal.time
     }
 
     @SuppressLint("SimpleDateFormat")

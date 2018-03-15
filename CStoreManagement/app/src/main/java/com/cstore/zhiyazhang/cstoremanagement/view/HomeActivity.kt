@@ -2,10 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -34,6 +31,12 @@ import kotlinx.android.synthetic.main.nav_header_home.view.*
 
 class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var bulletinShared: SharedPreferences
+
+    private lateinit var dialog: AlertDialog.Builder
+    private lateinit var dialogView: View
+    private lateinit var deleteDialog: AlertDialog
+
 
     var updateButton = false//确认是否是通过更新按钮更新的
 
@@ -48,27 +51,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         }
     }
 
-    private lateinit var dialog: AlertDialog.Builder
-    private lateinit var dialogView: View
-    private lateinit var deleteDialog: AlertDialog
-
-    override fun initData() {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("com.cstore.zhiyazhang.UPDATE")
-        registerReceiver(updateReceiver, intentFilter)
-        this.startService(Intent(this, UpdateService::class.java))
-
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(updateReceiver)
-        super.onDestroy()
-    }
-
     @SuppressLint("SetTextI18n")
     override fun initView() {
         toolbar.title = resources.getString(R.string.app_name)
         setSupportActionBar(toolbar)
+        bulletinShared = getSharedPreferences("bulletin", Context.MODE_PRIVATE)
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -151,6 +138,56 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         }
     }
 
+    override fun initData() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("com.cstore.zhiyazhang.UPDATE")
+        registerReceiver(updateReceiver, intentFilter)
+        this.startService(Intent(this, UpdateService::class.java))
+        beginBulletin()
+    }
+
+    /**
+     * 开始公告处理
+     */
+    private fun beginBulletin() {
+        //是否显示公告
+        val versionNum = bulletinShared.getInt("versionNum", 0)
+        //保存的版本号小于当前版本号就弹出公告牌
+        if (versionNum < MyApplication.getVersionNum()) {
+            showBulletin()
+            changeBulletin()
+        }
+    }
+
+    /**
+     * 显示公告
+     */
+    private fun showBulletin() {
+        //需要显示的内容
+        val bulletinMessage = "${getString(R.string.bulletin)}当前版本：${MyApplication.getVersion()}"
+        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+                .setTitle("更新提示")
+                .setMessage(bulletinMessage)
+                .setPositiveButton(getString(R.string.sure), { v, _ ->
+                    v.cancel()
+                })
+                .show()
+    }
+
+    /**
+     * 更新公告数据
+     */
+    private fun changeBulletin() {
+        val bs = bulletinShared.edit()
+        bs.putInt("versionNum", MyApplication.getVersionNum())
+        bs.apply()
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(updateReceiver)
+        super.onDestroy()
+    }
+
     override fun onStart() {
         super.onStart()
         if (!CStoreCalendar.judgmentStatus()) {
@@ -164,6 +201,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         }
     }
 
+    /**
+     * 关闭所有可点击选项
+     */
     private fun closeOperating() {
         gg1.setOnClickListener(errorListener)
         gg2.setOnClickListener(errorListener)
@@ -220,7 +260,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                         .show()
             }
             R.id.nav_about -> {
-                Toast.makeText(this@HomeActivity, "当前版本号：" + MyApplication.getVersion(), Toast.LENGTH_SHORT).show()
+                showBulletin()
             }
             R.id.nav_update -> {
                 updateButton = true
