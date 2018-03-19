@@ -83,7 +83,6 @@ public class AttendanceActivity extends MyActivity implements View.OnClickListen
             @Override
             public <T> void onItemEdit(T data, int position) {
                 AttendanceBean ab = (AttendanceBean) data;
-                showPrompt(ab.getUName());
                 Intent i = new Intent(AttendanceActivity.this, AttendanceItemActivity.class);
                 i.putExtra("data", ab);
                 startActivityForResult(i, 0);

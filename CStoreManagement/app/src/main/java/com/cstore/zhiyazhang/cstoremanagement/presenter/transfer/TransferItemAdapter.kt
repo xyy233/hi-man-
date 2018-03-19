@@ -29,7 +29,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
         private val TYPE_FOOTER = 2
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ITEM -> {
                 ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_commodity_return, parent, false))
@@ -51,7 +51,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ItemViewHolder -> {
                 holder.bind(data[position])

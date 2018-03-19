@@ -13,6 +13,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.AcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnAcceptanceItemBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
@@ -24,13 +25,14 @@ class PurchaseAcceptanceCreateAdapter(private val type:Int, val data:ArrayList<*
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val df= DecimalFormat("######0.00")
         if (type==1){
             data as ArrayList<AcceptanceItemBean>
             holder.dlvText.text=MyApplication.instance().applicationContext.getString(R.string.dlv_quantity)
             holder.commodityId.text=data[position].itemId
             holder.commodityName.text=data[position].itemName
-            holder.taxSellCost.text=data[position].taxSellCost.toString()
-            holder.retail.text=data[position].storeUnitPrice.toString()
+            holder.taxSellCost.text=df.format(data[position].taxSellCost)
+            holder.retail.text=df.format(data[position].storeUnitPrice)
             holder.dlvQuantity.text=""
             holder.dlvQuantity.keyListener= DigitsKeyListener.getInstance("1234567890")
             holder.dlvQuantity.addTextChangedListener(object : TextWatcher {
@@ -58,8 +60,8 @@ class PurchaseAcceptanceCreateAdapter(private val type:Int, val data:ArrayList<*
             holder.dlvText.text=MyApplication.instance().applicationContext.getString(R.string.return_quantity)
             holder.commodityId.text=data[position].itemId
             holder.commodityName.text=data[position].itemName
-            holder.taxSellCost.text=data[position].taxSellCost.toString()
-            holder.retail.text=data[position].storeUnitPrice.toString()
+            holder.taxSellCost.text=df.format(data[position].taxSellCost)
+            holder.retail.text=df.format(data[position].storeUnitPrice)
             holder.dlvQuantity.text=""
             holder.dlvQuantity.keyListener= DigitsKeyListener.getInstance("1234567890")
             holder.dlvQuantity.addTextChangedListener(object : TextWatcher {

@@ -19,7 +19,7 @@ class CashDailyPagerAdapter(fm: FragmentManager, private val tabFragments: Array
         return tabFragments[position]
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         return PagerAdapter.POSITION_NONE
     }
 

@@ -23,8 +23,8 @@ class AttendanceRecordingLeftAdapter(private val data: ArrayList<AttendanceRecor
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder!!.name.text = data[position].uName
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.name.text = data[position].uName
         holder.leftDetailBox.background = if (position % 2 == 1) {
             ContextCompat.getDrawable(MyApplication.instance().applicationContext, R.color.gray3)
         } else {
@@ -32,8 +32,8 @@ class AttendanceRecordingLeftAdapter(private val data: ArrayList<AttendanceRecor
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_attendance_recording_left, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_attendance_recording_left, parent, false))
     }
 
     override fun getItemCount(): Int {

@@ -12,7 +12,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.attendance.AttendanceActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.attendance.AttendanceRecordingActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.checkin.CheckInActivity
@@ -53,6 +52,7 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
             dialog.cancel()
         }
         dialogView.dialog_save.setOnClickListener {
+            //测试
             val x = dialogView.dialog_edit.text.toString()
             if (x.isEmpty()) {
                 showPrompt(getString(R.string.noMessage))

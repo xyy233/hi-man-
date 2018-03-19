@@ -18,7 +18,7 @@ class InvErrorPagerAdapter(fm: FragmentManager, private val tabFragments: ArrayL
         return tabFragments[position]
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         return PagerAdapter.POSITION_NONE
     }
 

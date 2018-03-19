@@ -16,7 +16,7 @@ import java.text.DecimalFormat
  * on 2018/2/3 15:59.
  */
 class InvErrorAdapter(val data: ArrayList<InvErrorBean>, private val onClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
             when (data[position].flag) {
                 7 -> {
@@ -29,8 +29,8 @@ class InvErrorAdapter(val data: ArrayList<InvErrorBean>, private val onClick: It
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_inv_error, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_inv_error, parent, false))
     }
 
     override fun getItemCount(): Int {

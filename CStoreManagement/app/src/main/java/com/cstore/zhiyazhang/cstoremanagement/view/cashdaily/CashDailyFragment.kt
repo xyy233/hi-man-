@@ -48,13 +48,13 @@ class CashDailyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //获得类型和数据
-        data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<CashDailyBean>)
-        date=arguments.getString(PAGE_DATE)
+        data.addAll(arguments!!.getSerializable(PAGE_DATA) as ArrayList<CashDailyBean>)
+        date= arguments!!.getString(PAGE_DATE)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cash_recycler.layoutManager=MyLinearlayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+        cash_recycler.layoutManager=MyLinearlayoutManager(activity!!,LinearLayoutManager.VERTICAL,false)
         cash_recycler.adapter=CashDailyAdapter(data, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 view as CashDailyAdapter.ViewHolder

@@ -47,19 +47,19 @@ class ReturnExpired1Fragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_return_expired1, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<ReturnExpiredBean>)
+        data.addAll(arguments!!.getSerializable(PAGE_DATA) as ArrayList<ReturnExpiredBean>)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //开搞adapter
-        return_expired_list.layoutManager = MyLinearlayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        return_expired_list.layoutManager = MyLinearlayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
         return_expired_list.adapter = adapter
         //adapter.addItems(data)
         adapter.notifyDataSetChanged()
@@ -75,7 +75,7 @@ class ReturnExpired1Fragment : Fragment() {
                 }
             } else {
                 save_expired.visibility = View.GONE
-                mActivity.showPrompt(context.getString(R.string.noSaveMessage))
+                mActivity.showPrompt(context!!.getString(R.string.noSaveMessage))
             }
         }
     }

@@ -48,7 +48,7 @@ class ReturnExpired2Fragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_return_expired2, container, false)
     }
 
@@ -58,7 +58,7 @@ class ReturnExpired2Fragment : Fragment() {
         setTextViewDate(CStoreCalendar.getCurrentDate(2), 2)
         initDate()
         initSpinner()
-        return_expired_list2.layoutManager = MyLinearlayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        return_expired_list2.layoutManager = MyLinearlayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
         return_expired_list2.adapter = adapter
     }
 

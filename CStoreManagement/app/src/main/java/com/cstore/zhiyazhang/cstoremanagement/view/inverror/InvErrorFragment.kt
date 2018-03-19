@@ -36,18 +36,18 @@ class InvErrorFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_cash_daily, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_cash_daily, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<InvErrorBean>)
+        data.addAll(arguments!!.getSerializable(PAGE_DATA) as ArrayList<InvErrorBean>)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cash_recycler.layoutManager = MyLinearlayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        cash_recycler.layoutManager = MyLinearlayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         cash_recycler.adapter = InvErrorAdapter(data, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {}
             override fun <T> onItemEdit(data: T, position: Int) {

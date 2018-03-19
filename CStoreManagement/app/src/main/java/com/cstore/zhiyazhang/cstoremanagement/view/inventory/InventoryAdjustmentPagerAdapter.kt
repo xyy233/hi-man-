@@ -17,7 +17,7 @@ class InventoryAdjustmentPagerAdapter(private val fm:FragmentManager, private va
         return tabFragments[position]
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         return PagerAdapter.POSITION_NONE
     }
 

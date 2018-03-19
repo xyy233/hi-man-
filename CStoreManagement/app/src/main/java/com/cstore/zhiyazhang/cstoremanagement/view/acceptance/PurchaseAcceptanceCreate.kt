@@ -26,6 +26,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     private lateinit var date: String
     private var ab: AcceptanceBean? = null//上一页传过来的，如果上一页是在单子里面创建的就是空的，如果是在商品内就有，查询商品的时候要检查是否为空,如果内部有数据那就去除掉那些
     private var rab: ReturnAcceptanceBean? = null
+    private var isAction = 0//0是从验收首页进入，创建完毕结束当前页，否者不处理
     private var type = 1
     private val aib = ArrayList<AcceptanceItemBean>()
     private val raib = ArrayList<ReturnAcceptanceItemBean>()
@@ -41,6 +42,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
         if (a != null) {
             if (type == 1) ab = a as AcceptanceBean else rab = a as ReturnAcceptanceBean
         }
+        isAction = intent.getIntExtra("isAction", 0)
         my_toolbar.title = getString(R.string.create_acceptance)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
@@ -128,7 +130,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
                         }
                     })
                     .setNegativeButton("退出", { _, _ ->
-                        if (if (type==1)ab != null else rab!=null) {
+                        if (if (type == 1) ab != null else rab != null) {
                             val i = Intent()
                             if (type == 1) i.putExtra("aib", aib) else i.putExtra("aib", raib)
                             setResult(0, i)
@@ -139,7 +141,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
             return
         }
 
-        if (if (type==1)ab != null else rab!=null) {
+        if (if (type == 1) ab != null else rab != null) {
             val i = Intent()
             if (type == 1) i.putExtra("aib", aib) else i.putExtra("aib", raib)
             setResult(0, i)
@@ -194,11 +196,11 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
         }
         val adapterResource = ArrayList<String>()
         if (ab != null || rab != null) {
-            adapterResource.add(if (type==1)ab!!.vendorName else rab!!.vendorName)
+            adapterResource.add(if (type == 1) ab!!.vendorName else rab!!.vendorName)
             vendor = ArrayList()
-            if (type==1){
+            if (type == 1) {
                 vendor!!.add(VendorBean(ab!!.vendorId, ab!!.vendorName))
-            }else{
+            } else {
                 vendor!!.add(VendorBean(rab!!.vendorId, rab!!.vendorName))
             }
         } else {
@@ -222,11 +224,11 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
     }
 
     override fun <T> updateDone(uData: T) {
-        if (type==1){
-            val a=(adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange }
+        if (type == 1) {
+            val a = (adapter!!.data as ArrayList<AcceptanceItemBean>).filter { it.isChange }
             aib.addAll(a)
             adapter!!.data.removeAll(a)
-        }else{
+        } else {
             val a = (adapter!!.data as ArrayList<ReturnAcceptanceItemBean>).filter { it.isChange }
             raib.addAll(a)
             adapter!!.data.removeAll(a)
@@ -236,6 +238,7 @@ class PurchaseAcceptanceCreate(override val layoutId: Int = R.layout.activity_ac
         showPrompt(getString(R.string.saveDone))
         //不允许再选别的配送
         acceptance_spinner.isEnabled = false
+        if (isAction == 1) onBackPressed()
     }
 
 }

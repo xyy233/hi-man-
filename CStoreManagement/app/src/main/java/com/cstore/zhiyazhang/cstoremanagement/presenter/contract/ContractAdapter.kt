@@ -33,7 +33,7 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             when (viewType) {//是什么页面就添加对应的
                 TYPE_ITEM -> {
                     ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_contract, parent, false))
@@ -42,7 +42,7 @@ class ContractAdapter(val cr: ContractResult, val context: Context, val onTouch:
                     FooterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
                 }
                 else ->
-                    null
+                    ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_contract, parent, false))
             }
 
     @SuppressLint("ClickableViewAccessibility")

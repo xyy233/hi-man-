@@ -22,13 +22,13 @@ class AttendanceRecordingRightAdapter(private val data: ArrayList<AttendanceReco
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val color = position % 2
-        holder!!.bind(data[position], color)
+        holder.bind(data[position], color)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_attendance_recording_right, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_attendance_recording_right, parent, false))
     }
 
     override fun getItemCount(): Int {

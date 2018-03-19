@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.item_paiban.view.*
  * on 2018/2/9 10:36.
  */
 class PaibanAdapter(val data: ArrayList<SortPaiban>, private val onClick: ItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is PaibanViewHolder) {
             holder.bind(data[position], position)
         }
@@ -27,7 +27,7 @@ class PaibanAdapter(val data: ArrayList<SortPaiban>, private val onClick: ItemCl
         return data.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PaibanViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_paiban, parent, false))
     }
 

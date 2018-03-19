@@ -48,7 +48,7 @@ class ReturnExpiredAdapter(val data: ArrayList<ReturnExpiredBean>, private val t
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ITEM -> {
                 return if (type == 1) {

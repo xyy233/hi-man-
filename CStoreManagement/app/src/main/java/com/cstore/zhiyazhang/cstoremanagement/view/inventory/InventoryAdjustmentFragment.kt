@@ -60,9 +60,9 @@ class InventoryAdjustmentFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        data.addAll(arguments.getSerializable(PAGE_DATA) as ArrayList<AdjustmentBean>)
-        date=arguments.getString(PAGE_DATE)
-        type=arguments.getInt(PAGE_TYPE)
+        data.addAll(arguments!!.getSerializable(PAGE_DATA) as ArrayList<AdjustmentBean>)
+        date=arguments!!.getString(PAGE_DATE)
+        type=arguments!!.getInt(PAGE_TYPE)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

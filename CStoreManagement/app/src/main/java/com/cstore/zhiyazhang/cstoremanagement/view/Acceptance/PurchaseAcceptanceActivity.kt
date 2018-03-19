@@ -32,7 +32,7 @@ import java.util.*
  * order页布局简单刚好用于此处
  */
 class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
-    private val presenter = PurchaseAcceptancePresenter(this,this)
+    private val presenter = PurchaseAcceptancePresenter(this, this)
     private var type = 1
 
     override fun initView() {
@@ -112,6 +112,7 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                 val i = Intent(this@PurchaseAcceptanceActivity, PurchaseAcceptanceCreate::class.java)
                 i.putExtra("type", type)
                 i.putExtra("date", MyTimeUtil.getTextViewDate(date_util))
+                i.putExtra("isAction", 1)
                 startActivity(i)
             }
         })
@@ -150,10 +151,10 @@ class PurchaseAcceptanceActivity(override val layoutId: Int = R.layout.activity_
                     //换日了要加一天
                     myCalendar.set(Calendar.DATE, myCalendar.get(Calendar.DATE) + 1)
                 }
-                val m=if (monthOfYear+1<10)"0${monthOfYear + 1}" else (monthOfYear + 1).toString()
-                val d= if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth.toString()
+                val m = if (monthOfYear + 1 < 10) "0${monthOfYear + 1}" else (monthOfYear + 1).toString()
+                val d = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth.toString()
                 val selectDate = (year.toString() + m + d).toInt()
-                val nowDate=MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
+                val nowDate = MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
                 if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run

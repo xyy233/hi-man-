@@ -17,6 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.UnitInquiryBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.inquiry.UnitInquiryPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyCameraUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_unit_inquiry.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -242,7 +243,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     private fun mShowView(data: UnitInquiryBean) {
-        val df = DecimalFormat("#.00")
+        val df = DecimalFormat("#0.00")
         Glide.with(this).load("http://watchstore.rt-store.com:8086/app/order/getImage${data.pluId}.do")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)
@@ -258,8 +259,8 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         schedule1.text = data.inThCode
         schedule2.text = data.stopThCode
         schedule3.text = data.outThCode
-        dms.text = data.dms
-        dma.text = data.dma
+        dms.text = df.format(data.dms)
+        dma.text = df.format(data.dma)
         scrap_check.isChecked = data.mrkType == "Y"
         date_return_check.isChecked = data.sReturnType == "Y"
         trs_check.isChecked = data.trsType == "Y"
@@ -267,11 +268,11 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         order_check.isChecked = data.orderType == "Y"
         return_check.isChecked = data.returnType == "Y"
 
-        val salesDate = if (sales_check.isChecked) "销售日期：${data.saleBeginDate} — ${data.saleEndDate}" else ""
+        val salesDate = if (sales_check.isChecked) "销售日期：${MyTimeUtil.deleteTime(data.saleBeginDate)} — ${MyTimeUtil.deleteTime(data.saleEndDate)}" else ""
         sales_date.text = salesDate
-        val orderDate = if (order_check.isChecked) "订货日期：${data.orderBeginDate} — ${data.orderEndDate}" else ""
+        val orderDate = if (order_check.isChecked) "订货日期：${MyTimeUtil.deleteTime(data.orderBeginDate)} — ${MyTimeUtil.deleteTime(data.orderEndDate)}" else ""
         order_date.text = orderDate
-        val returnDate = if (return_check.isChecked) "退货日期：${data.returnBeginDate} — ${data.returnEndDate}" else ""
+        val returnDate = if (return_check.isChecked) "退货日期：${MyTimeUtil.deleteTime(data.returnBeginDate)} — ${MyTimeUtil.deleteTime(data.returnEndDate)}" else ""
         return_date.text = returnDate
         supplier_id.text = data.supplierId
         supplier_name.text = data.supplierName
