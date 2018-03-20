@@ -5,6 +5,8 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 import android.view.MenuItem
 import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -42,6 +44,8 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
         dialogView.dialog_title.text = "登入验证"
         dialogView.dialog_save.text = getString(R.string.sure)
         dialogView.dialog_edit.hint = getString(R.string.please_edit_password)
+        dialogView.dialog_edit.inputType = InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        dialogView.dialog_edit.transformationMethod = PasswordTransformationMethod.getInstance()
         dialogView.dialog_text.visibility = View.VISIBLE
         val dialogText = "帐号ID：${User.getUser().uId}"
         dialogView.dialog_text.text = dialogText

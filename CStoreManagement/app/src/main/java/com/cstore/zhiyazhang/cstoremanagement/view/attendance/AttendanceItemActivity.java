@@ -223,6 +223,8 @@ public class AttendanceItemActivity extends MyActivity implements View.OnClickLi
                 if (dialogEdit.getText().toString().equals("") || dialogEdit.getText() == null) {
                     showPrompt(getString(R.string.please_edit_value));
                     break;
+                } else if (Integer.valueOf(dialogEdit.getText().toString()) > Integer.valueOf(paibanHour.getText().toString())) {
+                    showPrompt("上班时数不能大于排班时数！");
                 } else {
                     presenter.ChangeDayHour(ab, dialogEdit.getText().toString());
                 }

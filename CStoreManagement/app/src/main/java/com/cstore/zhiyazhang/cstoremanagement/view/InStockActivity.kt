@@ -9,7 +9,6 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.inquiry.UnitInquiryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.inverror.InvErrorActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferActivity
@@ -46,10 +45,10 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
                     1 -> {
                         startActivity(Intent(this@InStockActivity, InvErrorActivity::class.java))
                     }
-                    2 -> {
+                    /*2 -> {
                         MyToast.getShortToast(getString(R.string.in_development))
-                    }
-                    3 -> {
+                    }*/
+                    2 -> {
                         startActivity(Intent(this@InStockActivity, TransferActivity::class.java))
                     }
                 }
@@ -60,8 +59,8 @@ class InStockActivity(override val layoutId: Int = R.layout.activity_in_stock) :
     private fun setData(data: ArrayList<LogoBean>) {
         data.add(LogoBean(R.mipmap.ic_unit_inquiry, getString(R.string.unitSearch), 0))
         data.add(LogoBean(R.mipmap.ic_inv_error, getString(R.string.inv_error), 1))
-        data.add(LogoBean(R.mipmap.ic_inventory, getString(R.string.point), 2))
-        data.add(LogoBean(R.mipmap.ic_transfer, getString(R.string.transfer), 3))
+        //data.add(LogoBean(R.mipmap.ic_inventory, getString(R.string.point), 2))
+        data.add(LogoBean(R.mipmap.ic_transfer, getString(R.string.transfer), 2))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
