@@ -212,7 +212,7 @@
         <!--考勤记录查询-->
         <activity
             android:name=".view.attendance.AttendanceRecordingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

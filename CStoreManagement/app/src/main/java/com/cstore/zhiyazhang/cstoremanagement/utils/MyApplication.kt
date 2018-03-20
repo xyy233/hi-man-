@@ -120,8 +120,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-//        LeakCanary.install(this)
-//        Stetho.initializeWithDefaults(this)
+       /* LeakCanary.install(this)
+        Stetho.initializeWithDefaults(this)*/
 
         instance = this
 

@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.attendance
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
@@ -34,98 +33,62 @@ class AttendanceRecordingActivity(override val layoutId: Int = R.layout.activity
     private val nowMonth = MyTimeUtil.nowMonth
     private val leftAdapter = AttendanceRecordingLeftAdapter(ArrayList())
     private val rightAdapter = AttendanceRecordingRightAdapter(ArrayList())
-    private lateinit var beginDialog: DatePickerDialog
-    private lateinit var endDialog: DatePickerDialog
 
     override fun initView() {
         my_toolbar.title = getString(R.string.attendance_record)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
-//        begin_year.text = nowYear.toString()
-//        begin_month.text = (nowMonth - 1).toString()
-        end_year.text = nowYear.toString()
-        end_month.text = if (nowMonth < 10) {
-            "0$nowMonth"
-        } else {
-            nowMonth.toString()
-        }
+
+        val c = Calendar.getInstance(Locale.CHINA)
+        begin_date.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), 26, beginDialogListener)
+        end_date.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), 25, endDialogListener)
+
+        val maxDate = MyTimeUtil.getMaxDateByNowMonth(Date(System.currentTimeMillis()))
+        begin_date.maxDate = maxDate.time
+        end_date.maxDate = maxDate.time
+
         //这个方法里的month是计算机的month，所以要在正常month上-1
-        afterChangeEndDate(nowYear, nowMonth-1, end_day.text.toString().toInt())
-        initDatePickerDialog()
+        afterChangeEndDate(nowYear, nowMonth - 1, "26".toInt())
         initEdit()
         initDetailBox()
     }
 
-    private val beginDialogListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-        val m = if (month + 1 < 10) {
-            "0${month + 1}"
-        } else {
-            (month + 1).toString()
-        }
-        val d = if (dayOfMonth < 10) {
-            "0$dayOfMonth"
-        } else {
-            dayOfMonth.toString()
-        }
-        val beginDate = "$year$m$d".toInt()
-        val endDate = "${end_year.text}${end_month.text}${end_day.text}".toInt()
-        if (beginDate > endDate) {
-            showPrompt("结束日期不能大于开始日期")
-            return@OnDateSetListener
-        }
-        begin_year.text = year.toString()
-        begin_month.text = m
-        begin_day.text = d
-        beginDialog.cancel()
+    private val beginDialogListener = DatePicker.OnDateChangedListener { _, _, _, _ ->
     }
 
-    private val endDialogListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-        val m = if (month + 1 < 10) {
-            "0${month + 1}"
-        } else {
-            (month + 1).toString()
+    /**
+     * 根据type返回view对应的数据
+     * @param type y = year m = month d = day
+     */
+    private fun getDateText(view: DatePicker, type: String): String {
+        when (type) {
+            "y" -> {
+                return view.year.toString()
+            }
+            "m" -> {
+                val m = view.month
+                return if (m + 1 < 10) {
+                    "0${m + 1}"
+                } else {
+                    (m + 1).toString()
+                }
+            }
+            "d" -> {
+                val d = view.dayOfMonth
+                return if (d < 10) {
+                    "0$d"
+                } else {
+                    d.toString()
+                }
+            }
+            else -> {
+                return ""
+            }
         }
-        val d = if (dayOfMonth < 10) {
-            "0$dayOfMonth"
-        } else {
-            dayOfMonth.toString()
-        }
-        end_year.text = year.toString()
-        end_month.text = m
-        end_day.text = d
+    }
+
+    private val endDialogListener = DatePicker.OnDateChangedListener { _, year, month, dayOfMonth ->
         afterChangeEndDate(year, month, dayOfMonth)
-        endDialog.cancel()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun initDatePickerDialog() {
-        val calendar = Calendar.getInstance()
-        beginDialog = object : DatePickerDialog(this, DatePickerDialog.THEME_HOLO_LIGHT,
-                beginDialogListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) {
-            override fun onDateChanged(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-                super.onDateChanged(view, year, month, dayOfMonth)
-                setTitle("设置开始日期")
-            }
-
-            override fun onStop() {}
-        }
-        endDialog = object : DatePickerDialog(this, DatePickerDialog.THEME_HOLO_LIGHT,
-                endDialogListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) {
-            override fun onDateChanged(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-                super.onDateChanged(view, year, month, dayOfMonth)
-                setTitle("设置结束日期")
-            }
-
-            override fun onStop() {}
-        }
-        val nowDate = Date(System.currentTimeMillis())
-        //只能查到前六个月的
-        val minDate = MyTimeUtil.getAddDate("month", nowDate, -5)
-        val maxDate = MyTimeUtil.getMaxDateByNowMonth(nowDate)
-        beginDialog.datePicker.minDate = minDate.time
-        beginDialog.datePicker.maxDate = maxDate.time
-        endDialog.datePicker.minDate = minDate.time
-        endDialog.datePicker.maxDate = maxDate.time
     }
 
     /**
@@ -134,26 +97,30 @@ class AttendanceRecordingActivity(override val layoutId: Int = R.layout.activity
      * 2.修改工时
      */
     private fun afterChangeEndDate(year: Int, month: Int, day: Int) {
-        val cal = Calendar.getInstance()
+        val cal = Calendar.getInstance(Locale.CHINA)
         cal.set(Calendar.YEAR, year)
         cal.set(Calendar.MONTH, month)
         cal.set(Calendar.DAY_OF_MONTH, day)
+        val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
         cal.add(Calendar.MONTH, -1)
         val cY = cal.get(Calendar.YEAR)
-        val cM = cal.get(Calendar.MONTH)
-        begin_year.text = cY.toString()
-        begin_month.text = if (cM + 1 < 10) {
-            "0${cM + 1}"
-        } else {
-            (cM + 1).toString()
+        var cM = cal.get(Calendar.MONTH)
+        val cD = when (day) {
+            maxDay -> {
+                cM = month
+                1
+            }
+            25 -> 26
+            else -> begin_date.dayOfMonth
         }
+        begin_date.updateDate(cY, cM, cD)
         //修改工时
         changeWorkHoursEdit()
     }
 
     private fun changeWorkHoursEdit() {
         if (workHoursList.isNotEmpty()) {
-            val yM = end_year.text.toString() + MyTimeUtil.isAddZero(end_month.text.toString().toInt())
+            val yM = getDateText(end_date, "y") + MyTimeUtil.isAddZero(getDateText(end_date, "m").toInt())
             workHoursList.filter { it.ym == yM }.forEach {
                 work_hours.setText(it.hours.toString())
             }
@@ -192,29 +159,15 @@ class AttendanceRecordingActivity(override val layoutId: Int = R.layout.activity
     }
 
     override fun initClick() {
-        /*end_month_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 0) {
-                    begin_month.text = endMonthRes[1]
-                } else if (position == 1) {
-                    val month = MyTimeUtil.getLastMonthByMonth(endMonthRes[1])
-                    begin_month.text = month
-                }
-                changeWorkHoursEdit()
-            }
-        }*/
-        begin_date.setOnClickListener {
-            beginDialog.datePicker.init(begin_year.text.toString().toInt(), begin_month.text.toString().toInt() - 1, begin_day.text.toString().toInt(), beginDialog)
-            beginDialog.show()
-        }
-        end_date.setOnClickListener {
-            endDialog.datePicker.init(end_year.text.toString().toInt(), end_month.text.toString().toInt() - 1, end_day.text.toString().toInt(), endDialog)
-            endDialog.show()
-        }
         recording_search.setOnClickListener {
-            if (end_day.text.toString().isEmpty() || begin_day.text.toString().isEmpty() || work_hours.text.toString().isEmpty()) {
+
+            val endDate = "${getDateText(end_date, "y")}${getDateText(end_date, "m")}${getDateText(end_date, "d")}".toInt()
+            val beginDate = "${getDateText(begin_date, "y")}${getDateText(begin_date, "m")}${getDateText(begin_date, "d")}".toInt()
+            if (endDate < beginDate) {
+                showPrompt("开始日期不能大于结束日期")
+                return@setOnClickListener
+            }
+            if (work_hours.text.toString().isEmpty()) {
                 showPrompt(getString(R.string.please_edit_value))
             } else {
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(work_hours.windowToken, 0)
@@ -276,22 +229,18 @@ class AttendanceRecordingActivity(override val layoutId: Int = R.layout.activity
 
     //返回结束时间的yyyyMM格式日期
     override fun getData2(): Any? {
-        val month = MyTimeUtil.isAddZero(end_month.text.toString().toInt())
-        return end_year.text.toString() + month
+
+        return getDateText(end_date, "y") + getDateText(end_date, "m")
     }
 
     //返回开始日期 yyyy-MM-dd
     override fun getData3(): Any? {
-        val month = MyTimeUtil.isAddZero(begin_month.text.toString().toInt())
-        val day = MyTimeUtil.isAddZero(begin_day.text.toString().toInt())
-        return "${begin_year.text}-$month-$day"
+        return "${getDateText(begin_date, "y")}-${getDateText(begin_date, "m")}-${getDateText(begin_date, "d")}"
     }
 
     //返回结束日期 yyyy-MM-dd
     override fun getData4(): Any? {
-        val month = MyTimeUtil.isAddZero(end_month.text.toString().toInt())
-        val day = MyTimeUtil.isAddZero(end_day.text.toString().toInt())
-        return "${begin_year.text}-$month-$day"
+        return "${getDateText(end_date, "y")}-${getDateText(end_date, "m")}-${getDateText(end_date, "d")}"
     }
 
     //返回工时，如果有工时数据就用工时数据，否则就用用户输入的

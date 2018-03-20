@@ -42,130 +42,165 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="40dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:text="考勤年月："
                         android:textSize="20sp"/>
 
                     <LinearLayout
-                        android:id="@+id/begin_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_box_line2"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:gravity="center|start"
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/begin_year"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="2018"
-                            android:textSize="20sp"/>
-
-                        <TextView
+                        <DatePicker
+                            android:id="@+id/begin_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/year"
-                            android:textSize="20sp"/>
-
-                        <TextView
-                            android:id="@+id/begin_month"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:gravity="center"
-                            android:text="2"
-                            android:textSize="20sp"/>
+                            android:layout_gravity="center"
+                            android:calendarTextColor="@color/white"
+                            android:calendarViewShown="false"
+                            android:datePickerMode="spinner"
+                            android:theme="@android:style/Theme.Holo.Dialog"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/month"
-                            android:textSize="20sp"/>
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginStart="20dp"
+                            android:text="至"/>
 
-                        <TextView
-                            android:id="@+id/begin_day"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:gravity="center"
-                            android:text="26"
-                            android:textSize="20sp"/>
-
-                        <TextView
+                        <DatePicker
+                            android:id="@+id/end_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/day"
-                            android:textSize="20sp"/>
+                            android:layout_gravity="center"
+                            android:calendarTextColor="@color/white"
+                            android:calendarViewShown="false"
+                            android:datePickerMode="spinner"
+                            android:theme="@android:style/Theme.Holo.Dialog"/>
 
 
                     </LinearLayout>
+                    <!-- <LinearLayout
+                         android:id="@+id/begin_date"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="20dp"
+                         android:layout_marginTop="10dp"
+                         android:background="@drawable/bg_box_line2"
+                         android:focusable="true"
+                         android:focusableInTouchMode="true"
+                         android:gravity="center|start"
+                         android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/end_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_box_line2"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:gravity="center|start"
-                        android:orientation="horizontal">
+                         <TextView
+                             android:id="@+id/begin_year"
+                             android:layout_width="wrap_content"
+                             android:layout_height="match_parent"
+                             android:text="2018"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:id="@+id/end_year"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2018"
-                            android:textSize="20sp"/>
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/year"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/year"
-                            android:textSize="20sp"/>
+                         <TextView
+                             android:id="@+id/begin_month"
+                             android:layout_width="30dp"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:gravity="center"
+                             android:text="2"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:id="@+id/end_month"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textSize="20sp"/>
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/month"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/month"
-                            android:textSize="20sp"/>
+                         <TextView
+                             android:id="@+id/begin_day"
+                             android:layout_width="30dp"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:gravity="center"
+                             android:text="26"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:id="@+id/end_day"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:gravity="center"
-                            android:text="25"
-                            android:textSize="20sp"/>
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/day"
+                             android:textSize="20sp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/day"
-                            android:textSize="20sp"/>
 
-                    </LinearLayout>
+                     </LinearLayout>
+
+                     <LinearLayout
+                         android:id="@+id/end_date"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="20dp"
+                         android:layout_marginTop="6dp"
+                         android:background="@drawable/bg_box_line2"
+                         android:focusable="true"
+                         android:focusableInTouchMode="true"
+                         android:gravity="center|start"
+                         android:orientation="horizontal">
+
+                         <TextView
+                             android:id="@+id/end_year"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="2018"
+                             android:textSize="20sp"/>
+
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/year"
+                             android:textSize="20sp"/>
+
+                         <TextView
+                             android:id="@+id/end_month"
+                             android:layout_width="30dp"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:gravity="center"
+                             android:text="3"
+                             android:textSize="20sp"/>
+
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/month"
+                             android:textSize="20sp"/>
+
+                         <TextView
+                             android:id="@+id/end_day"
+                             android:layout_width="30dp"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:gravity="center"
+                             android:text="25"
+                             android:textSize="20sp"/>
+
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginStart="6dp"
+                             android:text="@string/day"
+                             android:textSize="20sp"/>
+
+                     </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"

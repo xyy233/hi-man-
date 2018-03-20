@@ -50,15 +50,6 @@ abstract class MyActivity : AppCompatActivity(),GenericView {
         initView()
         initClick()
         initData()
-
-        //正式版本用这个
-        /*try {
-            initView()
-            initClick()
-            initData()
-        } catch (e: Exception) {
-            MyToast.getLongToast("系统错误：${e.message}")
-        }*/
     }
 
     override fun onDestroy() {
