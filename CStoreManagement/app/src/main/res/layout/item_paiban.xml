@@ -16,9 +16,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="1"
-        android:text="张智涯"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/detail_box"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
@@ -26,7 +33,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:background="@drawable/bg_table_line"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,8 +65,7 @@
                     android:id="@+id/monday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -82,8 +87,7 @@
                     android:id="@+id/tuesday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -105,8 +109,7 @@
                     android:id="@+id/wednesday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -128,8 +131,7 @@
                     android:id="@+id/thursday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -160,8 +162,7 @@
                     android:id="@+id/friday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -183,8 +184,7 @@
                     android:id="@+id/saturday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -206,8 +206,7 @@
                     android:id="@+id/sunday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="7:00-15:00"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
 
@@ -229,8 +228,7 @@
                     android:id="@+id/statistics"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="56h"/>
+                    android:layout_margin="6dp"/>
 
             </LinearLayout>
         </LinearLayout>

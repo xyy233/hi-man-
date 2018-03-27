@@ -54,9 +54,9 @@ class AttendanceRecordingRightAdapter(private val data: ArrayList<AttendanceReco
             table_tot_feria.text = arb.totFeria
             
             val totCommonAdded = arb.totCommonAdded
-            table_tot_common_added.text = if (totCommonAdded.toInt() < 0) "0" else totCommonAdded
+            table_tot_common_added.text = if (totCommonAdded.toDouble() < 0) "0" else totCommonAdded
             val totAdded = arb.totAdded
-            table_tot_added.text = if (totAdded.toInt() < 0) "0" else arb.totAdded
+            table_tot_added.text = if (totAdded.toDouble() < 0) "0" else arb.totAdded
 
             right_detail_box.background = if (color == 1) {
                 ContextCompat.getDrawable(MyApplication.instance().applicationContext, R.color.gray3)

@@ -82,7 +82,8 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
                 when (data[position].position) {
                     0 -> {
 //                        MyToast.getShortToast(getString(R.string.in_development))
-                        if (User.getUser().groupId == "01") {
+                        val groupId = User.getUser().groupId
+                        if (groupId == "01" || groupId == "02" || User.getUser().groupId == "03") {
                             startActivity(Intent(this@PersonnelActivity, PaibanActivity::class.java))
                         } else {
                             showPrompt(getString(R.string.noP))
@@ -92,7 +93,7 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
                         startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))
                     }
                     2 -> {
-                        if (User.getUser().groupId == "01" || User.getUser().groupId == "03") {
+                        if (User.getUser().groupId == "01" || User.getUser().groupId == "02" || User.getUser().groupId == "03") {
                             dialog.show()
                         } else {
                             showPrompt(getString(R.string.noP))
