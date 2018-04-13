@@ -54,6 +54,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 view as LogoAdapter.ViewHolder
                 when (data[position].position) {
+                    //测试
                     0 -> {
                         if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
@@ -158,7 +159,10 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
     }
 
     private fun setData(data: ArrayList<LogoBean>) {
-        //保持顺序，手动插入
+
+//        data.add(LogoBean(R.mipmap.ic_contract_order, getString(R.string.contract_order), 0))
+//        data.add(LogoBean(R.mipmap.ic_contract_see_order, getString(R.string.contract_order_toview), 1))
+        //保持顺序，手动插入 测试
         if (User.getUser().cnt == 0) {
             data.add(LogoBean(R.mipmap.ic_contract_order_close, getString(R.string.contract_order), 0))
             data.add(LogoBean(R.mipmap.ic_contract_see_order_close, getString(R.string.contract_order_toview), 1))

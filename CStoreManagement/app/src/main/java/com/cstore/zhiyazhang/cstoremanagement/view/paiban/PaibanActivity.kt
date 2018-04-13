@@ -395,6 +395,7 @@ class PaibanActivity(override val layoutId: Int = R.layout.activity_paiban) : My
         dialogView.crb.text = df.format(dayShift)
         nowYBDY = nightShift.toInt()
         dialogView.ybdy.text = (nightShift.toInt() - danrenHr).toString()
+        dialogView.all_hours.text = allHour.toString()
     }
 
     /**

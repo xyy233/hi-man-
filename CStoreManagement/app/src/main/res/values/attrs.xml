@@ -11,4 +11,9 @@
         <attr name="inner_scan_speed" format="integer"/>
         <attr name="inner_scan_iscircle" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="MyButton">
+        <!--涟漪效果的颜色-->
+        <attr name="ripple_color" format="color"/>
+    </declare-styleable>
 </resources>

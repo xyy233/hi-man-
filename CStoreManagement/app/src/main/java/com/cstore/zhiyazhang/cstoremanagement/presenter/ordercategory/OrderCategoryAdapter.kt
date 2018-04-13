@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DataClickListener
 import kotlinx.android.synthetic.main.item_type_horizontal.view.*
 import kotlinx.android.synthetic.main.item_type_vertical.view.*
@@ -18,6 +19,14 @@ import kotlinx.android.synthetic.main.item_type_vertical.view.*
  */
 class OrderCategoryAdapter(val type: String, val data: Any, private val listener: DataClickListener) :
         RecyclerView.Adapter<OrderCategoryAdapter.ViewHolder>() {
+
+    init {
+        val d = PresenterUtil.judgmentClass(data)
+        if (d == "null" || d == "item") {
+            data as ArrayList<*>
+            data.clear()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (type == "shelf") return OrderCategoryAdapter.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_type_vertical, parent, false))
@@ -73,7 +82,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             tonightCount_h.text = ocb.ordSku.toString()
             todayCount_h.text = ocb.ordPrice.toString()
             when {
-                ocb.categoryId=="-1" -> type_tag_h.visibility = View.GONE
+                ocb.categoryId == "-1" -> type_tag_h.visibility = View.GONE
                 ocb.ordSku != 0 -> {
                     type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                     type_tag_h.visibility = View.VISIBLE
@@ -88,7 +97,7 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             item_text2.text = sb.allSku.toString()
             item_text3.text = sb.ordSku.toString()
             item_text4.text = sb.ordPrice.toString()
-            typebg_v.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
+            typebg_v.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(), R.color.white))
             if (sb.ordSku != 0) {
                 type_tag_v.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_v.visibility = View.VISIBLE

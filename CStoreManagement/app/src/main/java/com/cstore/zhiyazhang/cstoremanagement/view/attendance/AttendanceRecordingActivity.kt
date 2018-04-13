@@ -160,7 +160,6 @@ class AttendanceRecordingActivity(override val layoutId: Int = R.layout.activity
 
     override fun initClick() {
         recording_search.setOnClickListener {
-
             val endDate = "${getDateText(end_date, "y")}${getDateText(end_date, "m")}${getDateText(end_date, "d")}".toInt()
             val beginDate = "${getDateText(begin_date, "y")}${getDateText(begin_date, "m")}${getDateText(begin_date, "d")}".toInt()
             if (endDate < beginDate) {

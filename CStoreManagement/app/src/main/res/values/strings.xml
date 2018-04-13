@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复排班Bug\n2.新增考勤查询\n</string>
+    <string name="bulletin">1.修复订货点击跳转过快导致应用崩溃，现在如点击过快会变成空页面，重新加载即可。\n2.修复Android7.0不能自动更新的异常</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -14,6 +14,7 @@
     <string name="openCamera">您未开启相机权限，请开启相机权限！</string>
     <string name="clearData">清空数据</string>
     <string name="clear">清空</string>
+    <string name="search">查找</string>
     <string name="loading">加载中，请稍后</string>
     <string name="loadingUp">上拉加载更多</string>
     <string name="in_development">开发中</string>
@@ -203,6 +204,10 @@
     <string name="access">出入</string>
     <string name="edit_user_id">请输入工号</string>
     <string name="cnt_not_use">非承包店不能使用此功能!</string>
+
+    <!--签到-->
+    <string name="ordinary_check">普通签到</string>
+    <string name="night_check">大夜签到</string>
     <!--库存-->
     <string name="unitSearch">单品查询</string>
     <string name="point">盘点</string>
@@ -324,6 +329,7 @@
     <string name="beginDate">开始时间：</string>
     <string name="endDate">结束时间：</string>
     <string name="crb">常日班：</string>
+    <string name="all_hours">总工时：</string>
     <string name="ybdy">一般大夜：</string>
     <string name="drdy">单人大夜：</string>
     <string name="now_time_not_edit">当前时间不允许进行修改！</string>

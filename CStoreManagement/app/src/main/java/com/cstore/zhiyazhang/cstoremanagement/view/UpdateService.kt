@@ -7,7 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.support.v4.content.FileProvider
 import android.util.Log
 import android.webkit.MimeTypeMap
 import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
@@ -46,10 +48,10 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
     private val myListener = object : MyListener {
 
         override fun listenerSuccess(data: Any) {
-            val updates= Gson().fromJson(data as String, UpdateBean::class.java)
+            val updates = Gson().fromJson(data as String, UpdateBean::class.java)
             downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
             val intent = Intent("com.cstore.zhiyazhang.UPDATE")
-            if (MyApplication.getVersion()!!.indexOf("Alpha") == -1){
+            if (MyApplication.getVersion()!!.indexOf("Alpha") == -1) {
                 //线上版本
 
                 //如果版本名不同就去下载
@@ -62,7 +64,7 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
                     intent.putExtra("is_new", false)
                     sendBroadcast(intent)
                 }
-            }else{
+            } else {
                 //预览版
 
                 //如果版本名不同就去下载
@@ -183,11 +185,17 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
         try {
             if (!file.exists()) return
             val intent = Intent(Intent.ACTION_VIEW)
-            val uri = Uri.parse("file://" + file.toString())
+            val uri: Uri
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                uri = FileProvider.getUriForFile(MyApplication.instance().applicationContext, "cstore.zhiyazhang.cstoremanagement.fileprovider", file)
+            } else {
+                uri = Uri.parse("file://" + file.toString())
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
             intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             MyToast.getLongToast("自动更新失败，请到手机目录Download下手动安装或联系系统部！${e.message}")
         }
 

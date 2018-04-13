@@ -284,4 +284,23 @@ internal class SocketUtil {
             closeSocket(mySocket)
         }
     }
+
+    /**
+     * 得到图片
+     */
+    fun inquireF(address: String): Array<String>? {
+        return try {
+            mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
+            mySocket.soTimeout = loadingTime * 1000
+            SocketUtilJava.inquireF(mySocket, address)
+        } catch (ste: SocketTimeoutException) {
+            null
+        } catch (ioe: IOException) {
+            null
+        } catch (e: Exception) {
+            null
+        } finally {
+            closeSocket(mySocket)
+        }
+    }
 }

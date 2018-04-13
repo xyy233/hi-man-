@@ -14,15 +14,15 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
  * Created by zhiya.zhang
  * on 2017/7/25 14:24.
  */
-class OrderCategoryPresenter(private val gView: GenericView, private val activity:MyActivity) {
+class OrderCategoryPresenter(private val gView: GenericView, private val activity: MyActivity) {
 
     private val anInterface: OrderCategoryInterface = OrderCategoryModel()
 
     fun getAllCategory() {
-        if (!PresenterUtil.judgmentInternet(gView))return
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getAllCategory(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val adapter= OrderCategoryAdapter("category",data as ArrayList<OrderCategoryBean>, object : DataClickListener {
+                val adapter = OrderCategoryAdapter("category", data as ArrayList<OrderCategoryBean>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         gView.requestSuccess(data)
                     }
@@ -39,11 +39,11 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
         }))
     }
 
-    fun getShelf(){
-        if (!PresenterUtil.judgmentInternet(gView))return
+    fun getShelf() {
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getAllShelf(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val adapter=OrderCategoryAdapter("shelf",data as ArrayList<ShelfBean>, object : DataClickListener {
+                val adapter = OrderCategoryAdapter("shelf", data as ArrayList<ShelfBean>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         gView.requestSuccess(data)
                     }
@@ -61,10 +61,10 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
     }
 
     fun getSelf() {
-        if (!PresenterUtil.judgmentInternet(gView))return
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getSelf(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val adapter=OrderCategoryAdapter("self",data as ArrayList<SelfBean>, object : DataClickListener {
+                val adapter = OrderCategoryAdapter("self", data as ArrayList<SelfBean>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         gView.requestSuccess(data)
                     }
@@ -82,10 +82,10 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
     }
 
     fun getNOP() {
-        if (!PresenterUtil.judgmentInternet(gView))return
+        if (!PresenterUtil.judgmentInternet(gView)) return
         anInterface.getNewItemId(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val adapter=OrderCategoryAdapter("nop",data as ArrayList<NOPBean>, object : DataClickListener {
+                val adapter = OrderCategoryAdapter("nop", data as ArrayList<NOPBean>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         gView.requestSuccess(data)
                     }
@@ -106,10 +106,10 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
      * 1==fresh1 2==fresh2
      */
     fun getFresh(freshType: Int) {
-        if (!PresenterUtil.judgmentInternet(gView))return
-        anInterface.getFresh(freshType,OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        anInterface.getFresh(freshType, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val adapter=OrderCategoryAdapter("fresh",data as ArrayList<FreshGroup>, object : DataClickListener {
+                val adapter = OrderCategoryAdapter("fresh", data as ArrayList<FreshGroup>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         gView.requestSuccess(data)
                     }

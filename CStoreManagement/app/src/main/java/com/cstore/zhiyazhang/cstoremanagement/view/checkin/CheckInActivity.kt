@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.checkin
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
@@ -10,6 +11,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.support.v4.app.ActivityCompat
 import android.util.SparseIntArray
+import android.view.MenuItem
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.View
@@ -19,10 +21,10 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.presenter.personnel.CheckInPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyImage
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_check_in.*
 import kotlinx.android.synthetic.main.layout_camera.*
-import kotlinx.android.synthetic.main.loading_layout.*
+import kotlinx.android.synthetic.main.toolbar_layout.*
+import kotlinx.android.synthetic.main.toolbar_layout.view.*
 import java.util.*
 
 /**
@@ -53,9 +55,16 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
 
     override fun initView() {
+        my_toolbar.title = getString(R.string.check_in)
+        my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
+        my_toolbar.toolbar_btn.visibility = View.VISIBLE
+        my_toolbar.toolbar_btn.text = "查看大夜签到照片"
+        setSupportActionBar(my_toolbar)
         mSurfaceHolder = my_camera_surface.holder
         mSurfaceHolder!!.setFixedSize(320, 240)
         mSurfaceHolder!!.setKeepScreenOn(true)
+        ordinary_check.isChecked = true
+        night_check.isChecked = false
         mSurfaceHolder!!.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
 
@@ -76,7 +85,25 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return false
+    }
+
     override fun initClick() {
+        ordinary_check.setOnClickListener {
+            ordinary_check.toggle()
+            night_check.toggle()
+        }
+        night_check.setOnClickListener {
+            ordinary_check.toggle()
+            night_check.toggle()
+        }
         check_in_access.setOnClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(check_in_edit.windowToken, 0)
@@ -89,6 +116,10 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
         loading.setOnClickListener {
             showPrompt(getString(R.string.wait_loading))
+        }
+
+        my_toolbar.toolbar_btn.setOnClickListener {
+            startActivity(Intent(this@CheckInActivity, CheckInDYActivity::class.java))
         }
     }
 
@@ -111,7 +142,7 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
             val newBitmap = MyImage.reverseBitmap(bitmap, 0)
             if (newBitmap != null) {
                 my_camera_img.setImageBitmap(newBitmap)
-                presenter.checkInUser(check_in_edit.text.toString(),newBitmap)
+                presenter.checkInUser(check_in_edit.text.toString(), newBitmap)
             } else showPrompt(getString(R.string.socketError))
         } else {
             showPrompt(getString(R.string.socketError))
@@ -160,7 +191,7 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
             // 获取手机方向
             val rotation = windowManager.defaultDisplay.rotation
             // 根据设备方向计算设置照片的方向
-            captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorToDeviceRotation(cameraCharacteristics,rotation))
+            captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorToDeviceRotation(cameraCharacteristics, rotation))
             //拍照
             val mCaptureRequest = captureRequestBuilder.build()
             mCameraCaptureSession!!.capture(mCaptureRequest, null, childHandler)
@@ -171,7 +202,7 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
 
     /**
      * 获得方向,
-     * 三星有问题,设置方向后的图是旋转的
+     * 三星有问题,设置方向后的图是旋转的,不管了反正公司用的是小米~
      */
     private fun sensorToDeviceRotation(c: CameraCharacteristics, rotation: Int): Int {
         val sensorOrientation = c.get(CameraCharacteristics.SENSOR_ORIENTATION)
@@ -267,6 +298,18 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
         showPrompt(getString(R.string.saveDone))
         my_camera_surface.visibility = View.GONE
         my_camera_img.visibility = View.VISIBLE
+        onBackPressed()
     }
 
+    /**
+     * 得到签到类型
+     * @return 0=普通签到 1=大夜签到
+     */
+    override fun getData1(): Any? {
+        return if (ordinary_check.isChecked) {
+            0
+        } else {
+            1
+        }
+    }
 }

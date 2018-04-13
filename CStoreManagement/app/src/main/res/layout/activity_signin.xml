@@ -185,7 +185,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView2"/>
 
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/login"
         android:layout_width="290dp"
         android:layout_height="50dp"

@@ -51,24 +51,6 @@ class ContractSearchActivity : AppCompatActivity() {
                 }
             }
         }
-        /*qrcode.setOnClickListener {
-            if (nowLayout != 0) {
-                captureFragment = CaptureFragment()
-                CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera)
-                captureFragment.analyzeCallback = analyzeCallback
-                supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
-                nowLayout = 0
-            }
-        }
-        barcode.setOnClickListener {
-            if (nowLayout != 1) {
-                captureFragment = CaptureFragment()
-                CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera_barcode)
-                captureFragment.analyzeCallback = analyzeCallback
-                supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
-                nowLayout = 1
-            }
-        }*/
     }
 
     /**
