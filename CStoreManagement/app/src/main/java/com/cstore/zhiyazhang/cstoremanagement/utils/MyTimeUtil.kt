@@ -255,9 +255,11 @@ object MyTimeUtil {
      */
     fun getWeekMondayDate(isWeek: Int): String {
         val cal = Calendar.getInstance()
-        cal.firstDayOfWeek = Calendar.MONDAY
-        cal.add(Calendar.WEEK_OF_YEAR, isWeek)
+        val data = cal.time
+//        cal.firstDayOfWeek = Calendar.MONDAY
+        if (isWeek != 0) cal.add(Calendar.WEEK_OF_YEAR, isWeek)
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        val data2 = cal.time
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
     }
 
@@ -317,7 +319,7 @@ object MyTimeUtil {
         val nowDate = sdf.parse(date)
         val cal = Calendar.getInstance()
         cal.time = nowDate
-        cal.firstDayOfWeek = Calendar.MONDAY
+        cal.add(Calendar.WEEK_OF_YEAR, 1)
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(cal.time)
     }

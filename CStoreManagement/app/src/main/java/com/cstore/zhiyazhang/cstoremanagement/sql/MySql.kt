@@ -1503,8 +1503,8 @@ object MySql {
     }
 
     /**
-     * 收款完毕或${MyApplication.instance().getString(R.string.tui)}款完毕更新到posul_weixin_detail的sql语句
-     * @param isRefund 判断是否是${MyApplication.instance().getString(R.string.tui)}款的布尔
+     * 收款完毕或退款完毕更新到posul_weixin_detail的sql语句
+     * @param isRefund 判断是否是退款的布尔
      */
     fun createWXPayDone(posBean: PosBean, payData: Map<String, String>, isRefund: Boolean): String {
         return try {

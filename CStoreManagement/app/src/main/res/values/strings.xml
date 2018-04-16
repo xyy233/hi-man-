@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复订货点击跳转过快导致应用崩溃，现在如点击过快会变成空页面，重新加载即可。\n2.修复Android7.0不能自动更新的异常</string>
+    <string name="bulletin">1.修复订货点击跳转过快导致应用崩溃，现在如点击过快会变成空页面，重新加载即可。\n2.修复Android7.0不能自动更新的异常\n3.修复排班日期异常</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
