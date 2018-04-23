@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnPurchaseItemBean
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import kotlinx.android.synthetic.main.item_commodity_return.view.*
 
@@ -33,11 +34,12 @@ class ReturnPurchaseCreateAdapter(val data: ArrayList<ReturnPurchaseItemBean>) :
     }
 
 
+    private val ip = MyApplication.getIP()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(position: Int) = with(itemView) {
             val rb = data[position]
             commodity_id.text = rb.itemNumber//品号
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${rb.itemNumber}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${rb.itemNumber}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()

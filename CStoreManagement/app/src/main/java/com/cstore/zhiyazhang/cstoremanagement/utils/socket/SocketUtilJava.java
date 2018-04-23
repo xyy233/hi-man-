@@ -5,10 +5,12 @@ import android.graphics.BitmapFactory;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.Socket;
 
 /**
@@ -46,5 +48,22 @@ public class SocketUtilJava {
             bos.write(buf, 0, len);
         String b = bos.toString();
         return new Gson().fromJson(b, String[].class);
+    }
+
+    public static StringBuilder readerToString(Reader reader, StringBuilder content) throws IOException {
+        char[] cbuf = new char[512];
+        int len = -1;
+        while ((len = reader.read(cbuf)) > -1) {
+            content.append(cbuf, 0, len);
+        }
+        return content;
+    }
+
+    public static String inquire(BufferedReader br) throws IOException {
+        String sqlResult;
+        while ((sqlResult = br.readLine()) != null) {
+
+        }
+        return sqlResult;
     }
 }

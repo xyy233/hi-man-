@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
+import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
@@ -58,7 +59,7 @@ object CStoreCalendar {
             //如果有的话在这里就已经return了
             data.filter { it.dateType == type }.forEach { return it.currentDate }
         }
-        MyToast.getLongToast(ERROR_MSG)
+        Handler().post { MyToast.getLongToast(ERROR_MSG) }
         return "type=$type, data=$data error!"
     }
 
@@ -69,7 +70,7 @@ object CStoreCalendar {
         if (data.isNotEmpty()){
             data.filter { it.dateType == type }.forEach { return getHourByString(it.changeTime) }
         }
-        MyToast.getLongToast(ERROR_MSG)
+        Handler().post { MyToast.getLongToast(ERROR_MSG) }
         return 0
     }
 
@@ -78,7 +79,7 @@ object CStoreCalendar {
         if (data.isNotEmpty()) {
             data.filter { it.dateType == type }.forEach { return it.sceodResult }
         }
-        MyToast.getLongToast(ERROR_MSG)
+        Handler().post { MyToast.getLongToast(ERROR_MSG) }
         return 0
     }
 
@@ -91,7 +92,7 @@ object CStoreCalendar {
                 return false
             }
         } else {
-            MyToast.getLongToast(ERROR_MSG)
+            Handler().post { MyToast.getLongToast(ERROR_MSG) }
             return false
         }
         return true

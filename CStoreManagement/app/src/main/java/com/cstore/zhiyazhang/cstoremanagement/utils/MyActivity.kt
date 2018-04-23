@@ -14,7 +14,8 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
  * 此activity承担setContentView的工作
  * 以及完整退出应用步骤，确认退出时发送广播通知所有注册的activity退出
  */
-abstract class MyActivity : AppCompatActivity(),GenericView {
+abstract class MyActivity : AppCompatActivity(), GenericView {
+    var is_back = false
     protected val EXIT_APP_ACTION = "finish"
 
     private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -46,10 +47,24 @@ abstract class MyActivity : AppCompatActivity(),GenericView {
         filter.addAction(EXIT_APP_ACTION)
         registerReceiver(mBroadcastReceiver, filter)
 
-        //开发版本用这个
         initView()
         initClick()
         initData()
+    }
+
+    override fun onStart() {
+        is_back = false
+        Thread(Runnable {
+            Thread.sleep(800)
+            is_back = true
+        }).start()
+        super.onStart()
+    }
+
+    override fun onBackPressed() {
+        if (is_back) {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {

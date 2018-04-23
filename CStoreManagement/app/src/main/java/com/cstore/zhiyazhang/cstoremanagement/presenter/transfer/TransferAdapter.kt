@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.transfer
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.TrsBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteDate
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteTime
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_return.view.*
@@ -82,22 +84,29 @@ class TransferAdapter(private var date: String, val data: ArrayList<TrsBean>, pr
         fun bind(tb: TrsBean) = with(itemView) {
             val context = MyApplication.instance().applicationContext
             one_text.text = context.getString(R.string.trs_number)
+            eight_text.text = context.getString(R.string.trs_type)
+            nine_text.text = context.getString(R.string.trs_time)
             two_text.text = context.getString(R.string.ostore_id)
             three_text.text = context.getString(R.string.trs_count)
             four_text.text = context.getString(R.string.trs_qty)
-            five_text.text = context.getString(R.string.trs_type)
-            six_text.text = context.getString(R.string.unit_cost_total)
-            seven_text.text = context.getString(R.string.trs_date)
-            seven_box.visibility = View.VISIBLE
-
+            five_text.text = context.getString(R.string.unit_cost_total)
+            six_text.text = context.getString(R.string.trs_date)
+            eight_box.visibility = View.VISIBLE
+            nine_box.visibility = View.VISIBLE
             return_id.text = tb.trsNumber
-            return_vendor.text = tb.trsStoreId
+            val store="${tb.trsStoreId}(${tb.oStoreName})"
+            return_vendor.text = store
             return_count.text = tb.trsItem.toString()
             return_quantity.text = tb.trsQty.toString()
-            return_date.text = if (tb.trsId == 0) "调出" else "调入"
-            return_total.text = tb.storeUnitPrice.toString()
-            trs_type.text = deleteTime(tb.busiDate)
-
+            eight_value.text = if (tb.trsId == "O") "调出" else "调入"
+            eight_value.setTextColor(if (tb.trsId == "O") {
+                ContextCompat.getColor(context, R.color.cstore_red)
+            } else {
+                ContextCompat.getColor(context, R.color.add_less)
+            })
+            nine_value.text = deleteDate(tb.trsTime)
+            return_date.text = tb.storeUnitPrice.toString()
+            return_total.text = deleteTime(tb.busiDate)
             return_item.setOnClickListener {
                 onClick.onItemEdit(tb, 0)
             }
@@ -106,7 +115,7 @@ class TransferAdapter(private var date: String, val data: ArrayList<TrsBean>, pr
 
     private inner class FooterViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind() = with(itemView) {
-            add_text.text="新增调拨"
+            add_text.text = "新增调拨"
             foot_item.setOnClickListener {
                 onClick.onItemClick(this@FooterViewHolder, 0)
             }

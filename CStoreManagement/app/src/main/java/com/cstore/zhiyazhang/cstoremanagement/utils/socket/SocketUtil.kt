@@ -286,7 +286,7 @@ internal class SocketUtil {
     }
 
     /**
-     * 得到图片
+     * 得到图片地址
      */
     fun inquireF(address: String): Array<String>? {
         return try {

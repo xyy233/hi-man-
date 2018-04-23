@@ -9,6 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReasonBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ReturnPurchaseItemBean
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_commodity_return.view.*
@@ -23,7 +24,7 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
         private val TYPE_ITEM = 0
         private val TYPE_FOOTER = 1
     }
-
+    private val ip = MyApplication.getIP()
     private val adapterResource = ArrayList<String>()
 
     init {
@@ -82,7 +83,7 @@ class ReturnPurchaseItemAdapter(private val date: String, private val data: Arra
         fun bind(position: Int) = with(itemView) {
             val rb = data[position]
             commodity_id.text = rb.itemNumber//品号
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${rb.itemNumber}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${rb.itemNumber}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()

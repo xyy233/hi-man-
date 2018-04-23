@@ -16,6 +16,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.UnitInquiryBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.inquiry.UnitInquiryPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyCameraUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
@@ -241,10 +242,10 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         dialogView.dialog_edit.setText("")
         saveDialog.cancel()
     }
-
+    private val ip = MyApplication.getIP()
     private fun mShowView(data: UnitInquiryBean) {
         val df = DecimalFormat("#0.00")
-        Glide.with(this).load("http://watchstore.rt-store.com:8086/app/order/getImage${data.pluId}.do")
+        Glide.with(this).load("http://$ip:8666/uploadIMG/${data.pluId}.png")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)
                 .crossFade()

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.InvErrorBean
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_inv_error.view.*
 import java.text.DecimalFormat
@@ -36,12 +37,12 @@ class InvErrorAdapter(val data: ArrayList<InvErrorBean>, private val onClick: It
     override fun getItemCount(): Int {
         return data.size
     }
-
+    private val ip = MyApplication.getIP()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(ieb: InvErrorBean, position: Int) = with(itemView) {
             val df = DecimalFormat("#.00")
             plu_id.text = ieb.pluId
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${ieb.pluId}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${ieb.pluId}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()
@@ -77,7 +78,7 @@ class InvErrorAdapter(val data: ArrayList<InvErrorBean>, private val onClick: It
             five_box.visibility = View.GONE
             val df = DecimalFormat("#.00")
             plu_id.text = ieb.pluId
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${ieb.pluId}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${ieb.pluId}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()

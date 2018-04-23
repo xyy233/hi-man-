@@ -127,9 +127,9 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
         store_search_btn.setOnClickListener {
             if (store_search_edit.text.trim().isNotEmpty()) {
                 val searchData = store_search_edit.text.toString()
-                if (stores!!.none { it==searchData }){
+                if (stores!!.none { it == searchData }) {
                     presenter.searchStore(searchData)
-                }else{
+                } else {
                     showPrompt("今日已创建店号:${store_search_edit.text.trim()}的调出单,不能重复创建！")
                 }
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(store_search_edit.windowToken, 0)
@@ -141,9 +141,9 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (store_search_edit.text.trim().isNotEmpty()) {
                     val searchData = store_search_edit.text.toString()
-                    if (stores!!.none { it==searchData }){
+                    if (stores!!.none { it == searchData }) {
                         presenter.searchStore(searchData)
-                    }else{
+                    } else {
                         showPrompt("今日已创建店号:${store_search_edit.text.trim()}的调出单,不能重复创建！")
                     }
                     (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(store_search_edit.windowToken, 0)
@@ -197,7 +197,7 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
         var newData =
                 if (data == null) {
                     //存粹新建
-                    TrsItemBean(0, "", "", 0, 0.0, aData[0].storeUnitPrice!!, 1)
+                    TrsItemBean("O", "", "", 0, 0.0, aData[0].storeUnitPrice!!, 1)
                 } else {
                     //已有单子数据
                     TrsItemBean(data!!.trsId, data!!.trsStoreId, data!!.trsNumber, 0, 0.0, aData[0].storeUnitPrice!!, 1)

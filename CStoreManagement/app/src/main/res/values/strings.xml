@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复订货点击跳转过快导致应用崩溃，现在如点击过快会变成空页面，重新加载即可。\n2.修复Android7.0不能自动更新的异常\n3.修复排班日期异常</string>
+    <string name="bulletin">1.调拨未合并的异常\n2.修复验收创建异常\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -283,6 +283,7 @@
     <string name="trs_type">调拨类型:</string>
     <string name="unit_cost_total">零售合计:</string>
     <string name="trs_date">调拨业务日:</string>
+    <string name="trs_time">时间：</string>
     <string name="search_prompt">请在右侧输入品号查询</string>
     <string name="trs_please_edit_store">请输入要调出的门市并点击查询按钮！</string>
 

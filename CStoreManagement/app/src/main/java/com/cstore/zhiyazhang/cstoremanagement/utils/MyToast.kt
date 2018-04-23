@@ -21,7 +21,7 @@ object MyToast {
             toast!!.setText(msg)
             toast!!.duration = Toast.LENGTH_SHORT
         }
-        handler.run { toast!!.show() }
+        handler.post { toast!!.show() }
     }
 
     @SuppressLint("ShowToast")
@@ -32,6 +32,6 @@ object MyToast {
             toast!!.setText(msg)
             toast!!.duration = Toast.LENGTH_LONG
         }
-        handler.run { toast!!.show() }
+        handler.post { toast!!.show() }
     }
 }

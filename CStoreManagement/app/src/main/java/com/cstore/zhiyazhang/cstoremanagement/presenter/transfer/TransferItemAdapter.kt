@@ -23,6 +23,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
      * 控制是否显示添加
      */
     private var showAdd = true
+    private val ip = MyApplication.getIP()
 
     companion object {
         private val TYPE_ITEM = 1
@@ -94,11 +95,11 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
     private inner class ItemViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind(tib: TrsItemBean) = with(itemView) {
             val context = MyApplication.instance().applicationContext
-            lsjjhlj_box.visibility=View.GONE
-            reason_box.visibility=View.GONE
+            lsjjhlj_box.visibility = View.GONE
+            reason_box.visibility = View.GONE
             commodity_id.text = tib.pluId
             commodity_name.text = tib.pluName
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${tib.pluId}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${tib.pluId}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()
@@ -107,7 +108,7 @@ class TransferItemAdapter(private val date: String, val data: ArrayList<TrsItemB
             commodity_retail_total.text = tib.total.toString()
             commodity_inv.text = tib.invQty.toString()
             plnrtn_quantity.text = tib.trsQty.toString()
-            edit_count_text.text=context.getString(R.string.transfer_quantity)
+            edit_count_text.text = context.getString(R.string.transfer_quantity)
 
             if (date == CStoreCalendar.getCurrentDate(0) && CStoreCalendar.getNowStatus(0) == 0) {
                 return_less.visibility = View.VISIBLE

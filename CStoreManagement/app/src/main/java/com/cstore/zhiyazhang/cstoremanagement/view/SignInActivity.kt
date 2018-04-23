@@ -32,7 +32,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
 
     var preferences: SharedPreferences? = null
-    val mSigninPresenter: SignInPresenter = SignInPresenter(this)
+    private val mSigninPresenter: SignInPresenter = SignInPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

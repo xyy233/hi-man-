@@ -34,7 +34,7 @@ object MySql {
     /**
      * 事务脚，用于执行批量sql语句
      */
-    val affairFoot = " commit;exception when others then rollback;end;\u0004"
+    val affairFoot = " commit;rollback;end;\u0004"
 
 
     /**********************************************登录************************************************************/
@@ -241,7 +241,7 @@ object MySql {
     }
 
     /**
-     * 更新单品语句${MyApplication.instance().getString(R.string.pei)}合事务头和脚使用
+     * 更新单品语句配合事务头和脚使用
      */
     fun updateOrdItem(itemId: String, value: Int): String {
         return "update ord set updateuserid='${User.getUser().uId}', updatedate=sysdate, ordstatus='1', ordactualquantity=$value where storeid='${User.getUser().storeId}' and orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId'; update appord_t2 set ordactualquantity=$value,status='1' where orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') and itemnumber='$itemId';"
@@ -531,21 +531,21 @@ object MySql {
     /**********************************************报废************************************************************/
 
     /**
-     * 创建报废,${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
+     * 创建报废,配合事务头脚使用
      */
     fun insertScrap(data: ScrapContractBean): String {
         return "insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (${User.getUser().storeId}, trunc(sysdate), ${data.recordNumber}, ${data.scrapId}, '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', ${User.getUser().uId}, sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
     }
 
     /**
-     * 更新报废，${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
+     * 更新报废，配合事务头脚使用
      */
     fun updateScrap(data: ScrapContractBean): String {
         return "update mrk set mrkquantity=${data.mrkCount}, updateuserid='${User.getUser().uId}',updatedatetime=sysdate where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
     }
 
     /**
-     * 删除报废，${MyApplication.instance().getString(R.string.pei)}合事务头脚使用
+     * 删除报废，配合事务头脚使用
      */
     fun deleteScrap(data: ScrapContractBean): String {
         return "delete from mrk where itemnumber='${data.scrapId}' and busidate=to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd');"
@@ -617,7 +617,7 @@ object MySql {
     /**********************************************进货验收************************************************************/
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.pei)}送列表
+     * 得到配送列表
      */
     fun getAcceptanceList(date: String): String {
         return "select dlh.requestnumber,ven.vendorname, " +
@@ -652,7 +652,7 @@ object MySql {
     }
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.pei)}送表下的商品
+     * 得到配送表下的商品
      */
     fun getAcceptanceItemList(ab: AcceptanceBean, date: String): String {
         return "select dlv.itemNumber,plu.stocktype,plu.order_item, dlv.ordQuantity,dlv.hqquantity,dlv.dctrsquantity ,nvl(dlv.varQuantity,0)varQuantity, " +
@@ -683,7 +683,7 @@ object MySql {
     }
 
     /**
-     * 更新${MyApplication.instance().getString(R.string.pei)}送单,${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新配送单,配合事务使用
      */
     fun updateAcceptance(ab: AcceptanceBean): String {
         return "update dlvhead set " +
@@ -693,7 +693,8 @@ object MySql {
                 "retailtotal=${ab.retailTotal}," +
                 "costtotal=${ab.costTotal}," +
                 "updateuserid='${User.getUser().uId}'," +
-                "updatedate=sysdate " +
+                "updatedate=sysdate," +
+                "actdlvtime=sysdate " +
                 "where storeid='${User.getUser().storeId}' " +
                 "and dlvdate=to_date('${MyTimeUtil.nowDate}','yyyy-MM-dd') " +
                 "and vendorid='${ab.vendorId}' " +
@@ -701,7 +702,7 @@ object MySql {
     }
 
     /**
-     * 更新${MyApplication.instance().getString(R.string.pei)}送单的商品,${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新配送单的商品,配合事务使用
      */
     fun updateAcceptanceItem(aib: AcceptanceItemBean): String {
         return "update dlvdtl set " +
@@ -717,7 +718,7 @@ object MySql {
     }
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.pei)}送商
+     * 得到配送商
      */
     val getVendor: String
         get() {
@@ -732,7 +733,7 @@ object MySql {
         }
 
     /**
-     * 创建${MyApplication.instance().getString(R.string.pei)}送单,${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 创建配送单,配合事务使用
      */
     fun createAcceptance(ab: AcceptanceBean, date: String): String {
         val time = "to_date('$date','yyyy-MM-dd')"
@@ -744,7 +745,7 @@ object MySql {
     }
 
     /**
-     * 创建${MyApplication.instance().getString(R.string.pei)}送单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 创建配送单下的商品，配合事务使用
      */
     fun createAcceptanceItem(aib: AcceptanceItemBean, date: String): String {
         val time = "to_date('$date','yyyy-MM-dd')"
@@ -757,7 +758,7 @@ object MySql {
     }
 
     /**
-     * 得到今天最大的${MyApplication.instance().getString(R.string.pei)}送单
+     * 得到今天最大的配送单
      */
     fun getMaxAcceptanceId(date: String, num: String, type: Int): String {
         return if (type == 1) {
@@ -768,7 +769,7 @@ object MySql {
     }
 
     /**
-     * 得到${MyApplication.instance().getString(R.string.pei)}送单号的前缀
+     * 得到配送单号的前缀
      */
     fun getNowNum(date: String): String {
         var month = ""
@@ -919,7 +920,7 @@ object MySql {
     }
 
     /**
-     * 更新退货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新退货验收单，配合事务使用
      */
     fun updateReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "update rtnHead set " +
@@ -937,7 +938,7 @@ object MySql {
     }
 
     /**
-     * 更新验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 更新验收单下的商品，配合事务使用
      */
     fun updateReturnAcceptanceItem(raib: ReturnAcceptanceItemBean): String {
         return "update rtndtl set " +
@@ -949,7 +950,7 @@ object MySql {
     }
 
     /**
-     * 创建退货验收单，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 创建退货验收单，配合事务使用
      */
     fun createReturnAcceptance(rab: ReturnAcceptanceBean): String {
         return "insert into rtnHead " +
@@ -963,7 +964,7 @@ object MySql {
     }
 
     /**
-     * 穿件退货验收单下的商品，${MyApplication.instance().getString(R.string.pei)}合事务使用
+     * 穿件退货验收单下的商品，配合事务使用
      */
     fun createReturnAcceptanceItem(raib: ReturnAcceptanceItemBean): String {
         return "insert into rtndtl " +
@@ -1013,7 +1014,7 @@ object MySql {
     }
 
     /**
-     * 创建库调,必须${MyApplication.instance().getString(R.string.pei)}合事务使用!
+     * 创建库调,必须配合事务使用!
      */
     fun createAdjustment(ab: AdjustmentBean, date: String, recordNumber: Int): String {
         //创建库调
@@ -1061,7 +1062,7 @@ object MySql {
         }
 
     /**
-     * 获得退货${MyApplication.instance().getString(R.string.pei)}送商
+     * 获得退货配送商
      */
     val getReturnVendor: String
         get() {
@@ -1271,7 +1272,7 @@ object MySql {
      * 检测这个预约日是否已有此商品
      */
     fun judgmentReturnPurchase(aib: ArrayList<ReturnPurchaseItemBean>): String {
-        //因为来检测的必定是同一${MyApplication.instance().getString(R.string.pei)}送商的，因此拿第一个的预约时间就好了
+        //因为来检测的必定是同一配送商的，因此拿第一个的预约时间就好了
         if (aib.isEmpty()) throw Exception("method judgmentReturnPurchase aib list's item is null")
         var sql = "select *  " +
                 "from plnrtn  " +
@@ -1648,6 +1649,8 @@ object MySql {
                 "trs.busidate, " +
                 "trsStoreID, " +
                 "trsNumber, " +
+                "trsTime, " +
+                "o.ostorename, " +
                 "sum(trsQuantity) trsQuantity, " +
                 "0.0 + Count(*) trsItem, " +
                 "trs.storeID, " +
@@ -1655,18 +1658,20 @@ object MySql {
                 "round(sum(trsQuantity * trs.sell_cost * " +
                 "(1 + nvl(taxtype.taxRate, 0))), " +
                 "6) tax_sell_tot " +
-                "FROM trs, plu " +
+                "FROM ostore o, trs, plu " +
                 "left join taxtype " +
                 "on taxtype.storeID = plu.storeID " +
                 "AND taxtype.taxID = plu.taxID " +
                 "WHERE (trs.storeid = '${User.getUser().storeId}' AND " +
                 "trs.busidate = to_date('$date', 'yyyy-mm-dd')) " +
                 "AND (plu.ItemNumber = trs.ItemNumber AND plu.storeid = trs.storeid) " +
+                "and trsstoreid = o.ostoreid " +
                 "group by trs.storeID, " +
                 "trsNumber, " +
+                "trsTime, " +
+                "o.ostorename, " +
                 "trs.busidate, " +
                 "trsid, " +
-                "trs.storeUnitPrice, " +
                 "trsStoreID " +
                 "ORDER BY storeid, trs.busidate, trsid, trsNumber"
     }
@@ -1781,7 +1786,7 @@ object MySql {
         return "Insert into trs (Storeid,busidate,trsID,trsNumber,itemnumber,shipnumber,storeUnitPrice,unitCost, " +
                 "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorid,supplierid) " +
                 "values " +
-                "('${User.getUser().storeId}',to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd'),'0','${tib.trsNumber}','${tib.pluId}','${tib.shipNumber}',${tib.storeUnitPrice},${tib.unitCost}," +
+                "('${User.getUser().storeId}',to_date('${CStoreCalendar.getCurrentDate(0)}','yyyy-mm-dd'),'O','${tib.trsNumber}','${tib.pluId}','${tib.shipNumber}',${tib.storeUnitPrice},${tib.unitCost}," +
                 "'${tib.trsStoreId}',${tib.trsQty},'${User.getUser().uId}',sysdate + 0.001,sysdate,'00',${tib.sellCost},'${tib.vendorId}','${tib.supplierId}')\u000c"
     }
 
@@ -1793,7 +1798,7 @@ object MySql {
                 "set trsquantity = ${tib.trsQty}  " +
                 "where storeid = '${User.getUser().storeId}'  " +
                 "and busidate = to_date('${CStoreCalendar.getCurrentDate(0)}', 'yyyy-mm-dd')  " +
-                "and trsid = '0'  " +
+                "and trsid = 'O'  " +
                 "and trsnumber = '${tib.trsNumber}'  " +
                 "and itemnumber = '${tib.pluId}'\u000c"
     }
@@ -1959,7 +1964,7 @@ object MySql {
                     "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY, " +
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, " +
                     "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
                     "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
@@ -2007,7 +2012,7 @@ object MySql {
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status, " +
                     "plu.market_date, " +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, case when ana55.days<0 then 0 else ana55.days end days  , " +
                     "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +
                     "unit.unitName,ana55.Sale_Date,ana55.Dlv_Date,plu.UNIT_CLASS,plu.minimaOrderQuantity, " +
@@ -2070,7 +2075,7 @@ object MySql {
                     "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, " +
                     "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
                     "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
@@ -2135,7 +2140,7 @@ object MySql {
                     "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, " +
                     "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
                     "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
@@ -2185,7 +2190,7 @@ object MySql {
                     "cat.categoryName,plu.orderMode,ana55.Class_type,120 NOSALEDAY," +
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date," +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, " +
                     "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
                     "plu.returnType,nvl(dlvdtl.dlvQuantity,0) dlv, " +
@@ -2232,7 +2237,7 @@ object MySql {
                     "cat.categoryName,plu.orderMode,ana55.Class_type,120 nosaleday, " +
                     "nvl(sfitem.safe_qty,plu.face_qty) sfqty,plu.status,plu.market_date, " +
                     "plu.item_level layclass,plu.storeUnitPrice, " +
-                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '${MyApplication.instance().getString(R.string.pei)}' end ) send_type, " +
+                    "(case when plu.vendorID=plu.supplierID then '${MyApplication.instance().getString(R.string.zhi)}' else '配' end ) send_type, " +
                     "ana55.DMS,ana55.befInvQuantity, " +
                     "(case when ana55.days<0 then 0 else ana55.days end ) days, " +
                     "plu.returnType,nvl(dlv_temp.dlvQuantity,0) dlv, " +

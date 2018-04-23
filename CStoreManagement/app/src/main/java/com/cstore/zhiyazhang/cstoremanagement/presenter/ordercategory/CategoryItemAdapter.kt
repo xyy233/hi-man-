@@ -14,6 +14,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import java.text.DecimalFormat
 
@@ -24,6 +25,7 @@ import java.text.DecimalFormat
 class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Context, private val onTouch: RecyclerOnTouch, private val isType: String) : RecyclerView.Adapter<CategoryItemAdapter.ViewHolder>() {
 
     private val df = DecimalFormat("#####.####")
+    private val ip = MyApplication.getIP()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryItemAdapter.ViewHolder =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_order_category, parent, false))
@@ -86,7 +88,7 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         //这里double会变成1.0E-4。需要转换成string
         holder.dms.text = df.format(data[position].dms)
         holder.dma.text = df.format(data[position].dma)
-        Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${data[position].itemId}.do")
+        Glide.with(context).load("http://" + ip + ":8666/uploadIMG/${data[position].itemId}.png")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)
                 .crossFade()
@@ -101,11 +103,13 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         }
         if (data[position].dlvQTY2 == 0) {
             //D+1
+            holder.arriveDate.text = context.getString(R.string.tomorrow_count)
+            holder.arriveDate.setTextColor(ContextCompat.getColor(context, R.color.cstore_red))
         } else {
             //D+2
+            holder.arriveDate.text = context.getString(R.string.acquired_count)
+            holder.arriveDate.setTextColor(ContextCompat.getColor(context, R.color.add_less))
         }
-        holder.arriveDate.text = context.getString(R.string.tomorrow_count)
-        holder.arriveDate.setTextColor(ContextCompat.getColor(context, R.color.cstore_red))
         when {
             data[position].orderQTY > 0 -> holder.myCommodify.setBackgroundColor(ContextCompat.getColor(context, R.color.add_bg))
             data[position].orderQTY == 0 -> holder.myCommodify.setBackgroundColor(ContextCompat.getColor(context, R.color.white))

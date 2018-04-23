@@ -61,8 +61,12 @@ class TransferModel : TransferInterface {
             result.addAll(GsonUtil.getTrsItem(sqlResult))
         } catch (e: Exception) {
         }
+        if (sqlResult == "[]") {
+            return result
+        }
         return if (result.isEmpty()) {
-            msg.obj = result
+
+            msg.obj = sqlResult
             msg.what = ERROR
             handler.sendMessage(msg)
             null

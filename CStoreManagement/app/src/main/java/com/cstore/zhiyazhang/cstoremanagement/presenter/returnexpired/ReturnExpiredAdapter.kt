@@ -24,6 +24,7 @@ class ReturnExpiredAdapter(val data: ArrayList<ReturnExpiredBean>, private val t
         private val TYPE_ITEM = 1
         private val TYPE_FOOTER = 2
     }
+    private val ip = MyApplication.getIP()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -87,7 +88,7 @@ class ReturnExpiredAdapter(val data: ArrayList<ReturnExpiredBean>, private val t
             commodity_id.text = reb.itemNumber
 
 
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${reb.itemNumber}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${reb.itemNumber}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()
@@ -126,7 +127,7 @@ class ReturnExpiredAdapter(val data: ArrayList<ReturnExpiredBean>, private val t
 
         fun bindTwo(reb: ReturnExpiredBean) = with(itemView) {
             rtn_id.text = reb.itemNumber
-            Glide.with(context).load("http://watchstore.rt-store.com:8086/app/order/getImage${reb.itemNumber}.do")
+            Glide.with(context).load("http://$ip:8666/uploadIMG/${reb.itemNumber}.png")
                     .placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_error)
                     .crossFade()

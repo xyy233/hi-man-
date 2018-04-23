@@ -22,8 +22,8 @@ import java.util.List;
  */
 
 public class AttendancePresenter {
-    private static GenericView view;
-    private static AttendanceInterface model = new AttendanceModel();
+    private GenericView view;
+    private AttendanceInterface model = new AttendanceModel();
 
     public AttendancePresenter(GenericView view) {
         this.view = view;

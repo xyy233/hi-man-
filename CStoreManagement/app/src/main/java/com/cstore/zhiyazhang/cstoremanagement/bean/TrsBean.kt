@@ -8,19 +8,21 @@ import java.io.Serializable
  * on 2018/1/18 16:26.
  */
 data class TrsBean(
-        @SerializedName("trsid") val trsId: Int,
+        @SerializedName("trsid") val trsId: String,
         @SerializedName("busidate") val busiDate: String,
         @SerializedName("trsstoreid") val trsStoreId: String,
         @SerializedName("trsnumber") var trsNumber: String,
         @SerializedName("trsquantity") var trsQty: Int,
         @SerializedName("trsitem") var trsItem: Int,
+        @SerializedName("trstime") val trsTime: String,
+        @SerializedName("ostorename") val oStoreName: String,
         @SerializedName("storeunitprice") var storeUnitPrice: Double,
         var items: ArrayList<TrsItemBean>
 ) : Serializable
 
 
 data class TrsItemBean(
-        @SerializedName("trsid") val trsId: Int,
+        @SerializedName("trsid") val trsId: String,
         @SerializedName("trsstoreid") var trsStoreId: String,
         @SerializedName("trsnumber") var trsNumber: String,
         @SerializedName("trsquantity") var trsQty: Int,

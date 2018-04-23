@@ -213,37 +213,6 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                     orderretry.visibility = View.VISIBLE
                 }
             }
-/*            var result=SocketUtil.initSocket(ip,MySql.judgmentOrdt2).inquire()
-            if (result.contains("orderdate")||result=="[]"){
-                if (result=="[{\"orderdate\":\""+ MyTimeUtil.tomorrowDate+"\"}]"){
-                    //运行完成可以操作
-                    handler.post {
-                        orderLoading.visibility=View.GONE
-                    }
-                }else{
-                    result = SocketUtil.initSocket(ip,MySql.appOrdT2(),600).inquire()
-                    if (result=="0"){
-                        handler.post {
-                            orderLoading.visibility=View.GONE
-                        }
-                    }else{
-                        handler.post {
-                            MyToast.getLongToast(result)
-                            orderpro.visibility = View.GONE
-                            orderprotext.visibility = View.GONE
-                            orderretry.visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }else{
-                handler.post {
-                    MyToast.getLongToast(result)
-                    orderpro.visibility = View.GONE
-                    orderprotext.visibility = View.GONE
-                    orderretry.visibility = View.VISIBLE
-                }
-            }*/
-
         }).start()
     }
 
