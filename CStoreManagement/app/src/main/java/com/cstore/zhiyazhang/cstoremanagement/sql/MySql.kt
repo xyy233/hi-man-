@@ -265,6 +265,77 @@ object MySql {
     }
 
     /**
+     * 得到检测用的单品订货商品数据
+     */
+    fun unitOrder1(value: String): String {
+        return "select plu.itemNumber,plu.pluName, nvl(ord.requestNumber,'') requestNumber,nvl(ord.shipNumber,0) shipNumber, " +
+                "plu.vendorid,plu.supplierID,  " +
+                "to_char(to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd') + case to_char(to_date(' ${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd'), 'D') " +
+                "when '1' then orderDay7 " +
+                "when '2' then orderDay1 " +
+                "when '3' then orderDay2 " +
+                "when '4' then orderDay3 " +
+                "when '5' then orderDay4 " +
+                "when '6' then orderDay5 " +
+                "when '7' then orderDay6 " +
+                "end ,'yyyy-mm-dd' ) plnDlvDate, " +
+                "nvl(ord.storeUnitPrice,plu.storeUnitPrice) storeUnitPrice,nvl(ord.sell_cost,plu.sell_cost) sell_cost,plu.basic_cost unitCost " +
+                "from plu left join inv on inv.storeID=plu.storeID AND inv.itemNumber=plu.itemNumber " +
+                "AND inv.shipNumber=plu.shipNumber AND inv.busiDate= to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') " +
+                "left join ord on ord.storeID=plu.storeID AND ord.orderDate=to_date(' ${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd') AND ord.itemNumber=plu.itemNumber " +
+                "left join taxtype on taxtype.storeID=plu.storeID AND taxtype.taxID=plu.taxID " +
+                "left join itemplu on itemplu.storeid=plu.storeid and itemplu.itemnumber=plu.itemnumber " +
+                "where plu.storeid='${User.getUser().storeId}' " +
+                "AND (plu.itemNumber='$value' or itemplu.plunumber='$value') " +
+                "and plu.orderMode='Y' " +
+                "and plu.categorynumber <> '41' " +
+                "and (plu.item_area<>'O' or plu.item_area is null) " +
+                "and trim(plu.vendorid) is not null " +
+                "and to_date(' ${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd') between OrderBeginDate and OrderEndDate " +
+                "and case to_char(to_date(' ${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd'), 'D') " +
+                "when '1' then orderDay7 " +
+                "when '2' then orderDay1 " +
+                "when '3' then orderDay2 " +
+                "when '4' then orderDay3 " +
+                "when '5' then orderDay4 " +
+                "when '6' then orderDay5 " +
+                "when '7' then orderDay6 end <> 'X'\u0004"
+    }
+
+    /**
+     * 得到requestnumber
+     */
+    fun unitOrder2(vendorId: String, plnDlvDate: String): String {
+        return "select nvl(max( case when vendorid='$vendorId' and plndlvdate=to_date('$plnDlvDate','yyyy-mm-dd') then requestnumber else null end),  " +
+                "'${MyTimeUtil.nowYear()}'  " +
+                "|| decode('${MyTimeUtil.nowMonth()}', '01','A','02','B','03','C','04','D','05','E','06','F','07','G','08','H','09','I','10','J','11','K','12','L')  " +
+                "|| '1-000'  " +
+                "|| LPAD(NVL(SUBSTR(max(requestnumber),6,4),0)+1,4,'0')) value " +
+                "from ord " +
+                "where storeid='${User.getUser().storeId}' " +
+                "AND REQUESTNUMBER NOT LIKE '%OL%' " +
+                "and orderdate=to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd')\u0004"
+    }
+
+    /**
+     * 创建单品订货数据
+     */
+    fun unitOrder3(item: JudgmentUnitItemBean): String {
+        return "insert into ord " +
+                "(storeid, orderdate, ordertype, requestnumber,  " +
+                "orderstore, itemnumber, shipnumber, storeunitprice,  " +
+                "unitcost, ordactualquantity,  ordactualquantity1, " +
+                "plndlvdate, vendorid, supplierid, ordstatus,  " +
+                "updateuserid, updatedate, sell_cost) " +
+                "values " +
+                "('${User.getUser().storeId}', to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd'), '0', '${item.requestNumber}',  " +
+                "'${User.getUser().storeId}', '${item.itemNumber}', '${item.shipNumber}', '${item.storeUnitPrice}',  " +
+                "'${item.unitCost}', '0', '0',  " +
+                "to_date('${item.plnDlvDate}','yyyy-mm-dd'), '${item.vendorid}', '${item.supplierID}', '1',  " +
+                "'${User.getUser().uId}', sysdate, '${item.sellCost}')\u000c ${appOrdT2()}\u0004"
+    }
+
+    /**
      * 获得自用品分类
      */
     val getSelf: String
@@ -1884,7 +1955,7 @@ object MySql {
                     "where plu.storeID   = '${User.getUser().storeId}' " +
                     "and (plu.pluName = '$data' or plu.itemNumber = '$data')\u0004"
         } else {
-            //根据条码和档期
+            //根据条码
             "select plu.itemNumber,plu.pluName,plu.storeUnitPrice,plu.VendorID,plu.SupplierID,plu.unitCost,plu.shipNumber, " +
                     "round(plu.unitCost*(1+taxtype.taxrate),6) storeunitCost,round(plu.sell_cost*(1+taxtype.taxrate),6) storesell_cost , " +
                     "plu.ordertype,plu.returnType,plu.saletype,substr(plu.signType,7,1) mrktype,substr(plu.signType,6,1) trsType, " +

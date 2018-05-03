@@ -80,10 +80,11 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
         val i = Intent(this@InvErrorActivity, UnitInquiryActivity::class.java)
         i.putExtra("pluId", rData.toString())
         i.putExtra("flag", 1)
-        startActivityForResult(i, 0)
+        startActivity(i)
+        finish()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data!=null){
             when (resultCode) {
@@ -92,6 +93,6 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
                 }
             }
         }
-    }
+    }*/
 
 }

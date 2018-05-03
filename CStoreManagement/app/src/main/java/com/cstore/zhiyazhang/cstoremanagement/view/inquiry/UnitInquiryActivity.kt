@@ -19,6 +19,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyCameraUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.view.inverror.InvErrorActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_unit_inquiry.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -93,9 +94,11 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     override fun onBackPressed() {
-        if (flag == 1 && isSave) setResult(1, Intent())
-
-        super.onBackPressed()
+        if (flag == 1) {
+            startActivity(Intent(this@UnitInquiryActivity, InvErrorActivity::class.java))
+            finish()
+        } else
+            super.onBackPressed()
     }
 
     override fun initClick() {
@@ -242,6 +245,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         dialogView.dialog_edit.setText("")
         saveDialog.cancel()
     }
+
     private val ip = MyApplication.getIP()
     private fun mShowView(data: UnitInquiryBean) {
         val df = DecimalFormat("#0.00")

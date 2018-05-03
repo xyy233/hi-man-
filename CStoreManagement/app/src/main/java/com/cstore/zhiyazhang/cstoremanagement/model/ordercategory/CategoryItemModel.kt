@@ -2,6 +2,8 @@ package com.cstore.zhiyazhang.cstoremanagement.model.ordercategory
 
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.bean.CategoryItemBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.JudgmentUnitItemBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.UtilBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
@@ -22,27 +24,28 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
 
-            val result=
-                    if (categoryId=="-1")SocketUtil.initSocket(ip,MySql.getItemByEditCategory(orderBy)).inquire()
-                    else SocketUtil.initSocket(ip,MySql.getItemByCategoryId(categoryId,orderBy)).inquire()
+            val result =
+                    if (categoryId == "-1") SocketUtil.initSocket(ip, MySql.getItemByEditCategory(orderBy)).inquire()
+                    else SocketUtil.initSocket(ip, MySql.getItemByCategoryId(categoryId, orderBy)).inquire()
 
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            val items=ArrayList<CategoryItemBean>()
+            val items = ArrayList<CategoryItemBean>()
             try {
                 items.addAll(GsonUtil.getCategoryItem(result))
-            }catch (e:Exception){}
-            if (items.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=items
-                msg.what=SUCCESS
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -53,23 +56,24 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getAllItemByShelf(shelfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,MySql.getItemByShelfId(shelfId,orderBy)).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val result = SocketUtil.initSocket(ip, MySql.getItemByShelfId(shelfId, orderBy)).inquire()
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            val items=ArrayList<CategoryItemBean>()
+            val items = ArrayList<CategoryItemBean>()
             try {
                 items.addAll(GsonUtil.getCategoryItem(result))
-            }catch (e:Exception){}
-            if (items.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=items
-                msg.what=SUCCESS
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -80,26 +84,71 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getUnitItemByKeywords(keywords: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-        val msg=Message()
-        val ip= MyApplication.getIP()
-        if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-        val result=SocketUtil.initSocket(ip,MySql.unitOrder(keywords)).inquire()
-        if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val item = getJudgmentUnitData(keywords, msg, ip, handler) ?: return@Runnable
+            if (item.requestNumber == null || item.requestNumber == "") {
+                if (!createUnitOrd(item, msg, ip, handler)) return@Runnable
+            }
+            val result = SocketUtil.initSocket(ip, MySql.unitOrder(item.itemNumber)).inquire()
+            val items = ArrayList<CategoryItemBean>()
+            try {
+                items.addAll(GsonUtil.getCategoryItem(result))
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
+                handler.sendMessage(msg)
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+            }
+        }).start()
+    }
 
-        val items=ArrayList<CategoryItemBean>()
+    private fun createUnitOrd(item: JudgmentUnitItemBean, msg: Message, ip: String, handler: MyHandler.OnlyMyHandler): Boolean {
+        val requestNumber = SocketUtil.initSocket(ip, MySql.unitOrder2(item.vendorid!!, item.plnDlvDate!!)).inquire()
+        val values = ArrayList<UtilBean>()
         try {
-            items.addAll(GsonUtil.getCategoryItem(result))
-        }catch (e:Exception){}
-        if (items.isEmpty()){
-            msg.obj=result
-            msg.what= ERROR
-            handler.sendMessage(msg)
-        }else{
-            msg.obj=items
-            msg.what=SUCCESS
-            handler.sendMessage(msg)
+            values.addAll(GsonUtil.getUtilBean(requestNumber))
+        } catch (e: Exception) {
         }
-    }).start()
+        if (values.isEmpty()) {
+            msg.obj = requestNumber
+            msg.what = ERROR
+            handler.sendMessage(msg)
+            return false
+        }
+        item.requestNumber = values[0].value
+        val result = SocketUtil.initSocket(ip, MySql.unitOrder3(item)).inquire()
+        if (result == "1") return true
+        msg.obj = result
+        msg.what = ERROR
+        handler.sendMessage(msg)
+        return false
+    }
+
+    /**
+     * 得到用来判断的单品订货商品
+     */
+    private fun getJudgmentUnitData(key: String, msg: Message, ip: String, handler: MyHandler.OnlyMyHandler): JudgmentUnitItemBean? {
+        val result = SocketUtil.initSocket(ip, MySql.unitOrder1(key)).inquire()
+        if (!SocketUtil.judgmentNull(result, msg, handler)) return null
+        val item = ArrayList<JudgmentUnitItemBean>()
+        try {
+            item.addAll(GsonUtil.getUnitJudgment(result))
+        } catch (e: Exception) {
+        }
+        return if (item.isEmpty()) {
+            msg.obj = result
+            msg.what = ERROR
+            handler.sendMessage(msg)
+            null
+        } else
+            item[0]
     }
 
     /**
@@ -107,23 +156,24 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getAllItemBySelfId(selfId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,MySql.getSelfBySelfId(selfId, orderBy)).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val result = SocketUtil.initSocket(ip, MySql.getSelfBySelfId(selfId, orderBy)).inquire()
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            val items=ArrayList<CategoryItemBean>()
+            val items = ArrayList<CategoryItemBean>()
             try {
                 items.addAll(GsonUtil.getCategoryItem(result))
-            }catch (e:Exception){}
-            if (items.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=items
-                msg.what=SUCCESS
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -134,23 +184,24 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getNewItemById(nopId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,if (nopId == "0") MySql.getPromotion(orderBy) else MySql.getNewItemById(nopId, orderBy)).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val result = SocketUtil.initSocket(ip, if (nopId == "0") MySql.getPromotion(orderBy) else MySql.getNewItemById(nopId, orderBy)).inquire()
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            val items=ArrayList<CategoryItemBean>()
+            val items = ArrayList<CategoryItemBean>()
             try {
                 items.addAll(GsonUtil.getCategoryItem(result))
-            }catch (e:Exception){}
-            if (items.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=items
-                msg.what=SUCCESS
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -161,23 +212,24 @@ class CategoryItemModel : CategoryInterface {
      */
     override fun getAllFreshItem(categoryId: String, midId: String, orderBy: String, handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
-            val result=SocketUtil.initSocket(ip,MySql.getFreashItem(categoryId,midId,orderBy)).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val result = SocketUtil.initSocket(ip, MySql.getFreashItem(categoryId, midId, orderBy)).inquire()
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            val items=ArrayList<CategoryItemBean>()
+            val items = ArrayList<CategoryItemBean>()
             try {
                 items.addAll(GsonUtil.getCategoryItem(result))
-            }catch (e:Exception){}
-            if (items.isEmpty()){
-                msg.obj=result
-                msg.what= ERROR
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=items
-                msg.what=SUCCESS
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
             }
         }).start()
@@ -195,20 +247,20 @@ class CategoryItemModel : CategoryInterface {
                 sql.append(MySql.updateOrdItem(it.itemId, it.orderQTY))
             }
             sql.append(MySql.affairFoot)
-            val msg=Message()
-            val ip= MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip,msg,handler))return@Runnable
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             if (!CStoreCalendar.judgmentCalender(CStoreCalendar.getCurrentDate(2), msg, handler, 2)) return@Runnable
-            val result=SocketUtil.initSocket(ip,sql.toString()).inquire()
-            if (!SocketUtil.judgmentNull(result,msg,handler))return@Runnable
+            val result = SocketUtil.initSocket(ip, sql.toString()).inquire()
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
 
-            if (result=="0"){
-                msg.obj="0"
-                msg.what=SUCCESS
+            if (result == "0") {
+                msg.obj = "0"
+                msg.what = SUCCESS
                 handler.sendMessage(msg)
-            }else{
-                msg.obj=result
-                msg.what= ERROR
+            } else {
+                msg.obj = result
+                msg.what = ERROR
                 handler.sendMessage(msg)
             }
         }).start()

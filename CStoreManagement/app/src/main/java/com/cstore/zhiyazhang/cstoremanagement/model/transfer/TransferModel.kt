@@ -262,7 +262,8 @@ class TransferModel : TransferInterface {
             //没有单号，新建
             return trsNumberIsExits((MyTimeUtil.dayOfYear() + "1").toInt(), ip, msg, handler)
         }
-        return trsNumberIsExits(values[0].value!!.substring(8, 4).toInt() + 1, ip, msg, handler)
+        val number = values[0].value!!.substring(8, 12).toInt()
+        return trsNumberIsExits(number + 1, ip, msg, handler)
     }
 
     /**

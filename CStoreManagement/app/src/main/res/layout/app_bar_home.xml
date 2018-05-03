@@ -193,12 +193,40 @@
 
             </LinearLayout>
 
+
             <LinearLayout
+                android:layout_width="0dp"
+                android:layout_margin="5dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/gg6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                tools:ignore="UselessLeaf"/>
+                android:background="@color/white"
+                android:elevation="3dp"
+                android:foreground="@drawable/selector_foreground"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:stateListAnimator="@drawable/lift_on_touch"
+                android:transitionName="gg3"
+                android:visibility="gone"
+                tools:ignore="NestedWeights">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/train"
+                    android:src="@mipmap/ic_unit_order"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/panorama"/>
+            </LinearLayout>
 
 
         </LinearLayout>

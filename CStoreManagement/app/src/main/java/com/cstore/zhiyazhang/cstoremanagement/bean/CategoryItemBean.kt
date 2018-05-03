@@ -64,21 +64,34 @@ data class CategoryItemBean(
         /**
          * 是否能卖，String=Y\N
          */
-        @SerializedName("ordertype") val orderType:String,
+        @SerializedName("ordertype") val orderType: String,
         /**
          * 是否是促销品，String=Y\N
          */
-        @SerializedName("pro_yn") val proYN:String,
+        @SerializedName("pro_yn") val proYN: String,
         /**
          * DMS量
          */
-        val dms:Double=0.0,
+        val dms: Double = 0.0,
         /**
          * DMA量
          */
-        val dma:Double=0.0,
+        val dma: Double = 0.0,
         /**
          * 修改次数
          */
         var changeCount: Int = 0
-) :Serializable
+) : Serializable
+
+data class JudgmentUnitItemBean(
+        @SerializedName("itemnumber") val itemNumber: String,
+        @SerializedName("pluname") val pluName: String,
+        @SerializedName("requestnumber") var requestNumber: String?,
+        @SerializedName("shipnumber") val shipNumber: String?,
+        @SerializedName("vendorid") val vendorid: String?,
+        @SerializedName("supplierid") val supplierID: String?,
+        @SerializedName("plndlvdate") val plnDlvDate: String?,
+        @SerializedName("sell_cost") val sellCost: String?,
+        @SerializedName("storeunitprice") val storeUnitPrice: String?,
+        @SerializedName("unitcost") val unitCost: String?
+) : Serializable

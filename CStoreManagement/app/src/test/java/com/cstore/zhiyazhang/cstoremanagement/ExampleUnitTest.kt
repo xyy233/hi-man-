@@ -11,7 +11,7 @@ class ExampleUnitTest {
     @Test
     fun useAppContext() {
         val x="2018"
-        val xx=x.substring(2)
+        val xx=x.substring(4)
         val xxx=x.substring(1,2)
         val xxxx=0
     }

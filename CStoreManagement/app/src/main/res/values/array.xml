@@ -67,5 +67,8 @@
         <item>2018-02-28</item>
     </string-array>
 
-
+    <string-array name="options">
+        <item>相机</item>
+        <item>相册 </item>
+    </string-array>
 </resources>

@@ -137,3 +137,6 @@
 #alipay
 -keep class com.alipay.api.**{*;}
 -dontwarn com.alipay.api.**
+#Google pano
+-keep class ccom.google.**{*;}
+-dontwarn com.google.**

@@ -21,6 +21,10 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
     }
 
+    fun getUnitJudgment(data:String): ArrayList<JudgmentUnitItemBean> {
+        return Gson().fromJson<ArrayList<JudgmentUnitItemBean>>(data, object : TypeToken<ArrayList<JudgmentUnitItemBean>>() {}.type)
+    }
+
     fun getCategory(data: String): ArrayList<OrderCategoryBean> {
         return Gson().fromJson<ArrayList<OrderCategoryBean>>(data, object : TypeToken<ArrayList<OrderCategoryBean>>() {}.type)
     }

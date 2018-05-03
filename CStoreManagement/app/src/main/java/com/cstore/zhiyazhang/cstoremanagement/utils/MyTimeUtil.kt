@@ -168,6 +168,15 @@ object MyTimeUtil {
         return nowYear.toString().substring(2)
     }
 
+    fun nowMonth(): String {
+        val result = nowMonth
+        return if (result < 10) {
+            "0$result"
+        } else {
+            result.toString()
+        }
+    }
+
     /**
      * @return 获得当前时间
      */

@@ -23,6 +23,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.view.panorama.Panorama
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
@@ -135,6 +136,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 startActivity(Intent(this@HomeActivity, PayActivity::class.java),
                         ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, gg5, "gg3").toBundle())
             }
+        }
+        gg6.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, Panorama::class.java))
         }
     }
 
