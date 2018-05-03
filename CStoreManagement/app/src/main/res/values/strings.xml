@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复无台帐商品无法单品订货的异常\n</string>
+    <string name="bulletin">1.修复无台帐商品无法单品订货的异常\n2.修改订货页面样式及交互功能</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -25,6 +25,7 @@
     <string name="about">关于</string>
     <string name="declare">申明</string>
     <string name="update">更新</string>
+    <string name="refresh">刷新</string>
     <string name="noInternet">网络有问题，请查看联网状态并尝试刷新</string>
     <string name="socketError">请求出错，请重试</string>
     <string name="notFindIP">不能获得IP地址，请检查网络</string>
@@ -118,7 +119,8 @@
     <string name="maxOrMinError">最大量或最小量数据异常</string>
     <string name="duplicateData">存在重复数据</string>
     <string name="all_sku">可订商品数</string>
-    <string name="ord_qty">已订商品数</string>
+    <string name="ord_qty">已订品项数</string>
+    <string name="ord_count">已订商品数</string>
     <string name="order_price">已订货金额</string>
     <string name="order_sell">已订货成本</string>
     <string name="expected_count">预计强配：</string>

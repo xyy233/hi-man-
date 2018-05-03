@@ -80,6 +80,7 @@ object MySql {
     fun getAllCategory(): String {
         return "select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
                 "from cat,plu,ord,cat cat1  " +
                 "WHERE cat.storeid='${User.getUser().storeId}'  " +
@@ -100,8 +101,9 @@ object MySql {
                 "AND cat.categoryNumber<>'99'  " +
                 "GROUP BY ord.orderDate,plu.categoryNumber,cat.categoryName  " +
                 "union all " +
-                "select '-1' categorynumber, '${MyApplication.instance().getString(R.string.statistics)} ' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
+                "select '-1' categorynumber, '${MyApplication.instance().getString(R.string.statistics)} ' categoryname, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(ord_count) ord_count,sum(amt) amt, to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY-MM-DD')  orderdate from(select plu.categoryNumber,cat.categoryName, " +
                 "count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count, " +
                 "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt,ord.orderDate  " +
                 "from cat,plu,ord,cat cat1  " +
                 "WHERE cat.storeid='${User.getUser().storeId}'  " +
@@ -210,7 +212,7 @@ object MySql {
      */
     val getAllShelf: String
         get() {
-            return "Select gondra.GondraNumber,gondra.GondraNumber || ' - ' || gondra.GondraName as gondraname,count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku,sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt " +
+            return "Select gondra.GondraNumber,gondra.GondraNumber || ' - ' || gondra.GondraName as gondraname,count(*) tot_sku,sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku,sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count,sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt " +
                     "from itemgondra,ord,gondra " +
                     "where itemgondra.StoreID= '${User.getUser().storeId}' " +
                     "and ord.StoreID=itemgondra.StoreID " +
@@ -343,6 +345,7 @@ object MySql {
             return "select c.midcategorynumber,c.categoryname, " +
                     "count(*) tot_sku, " +
                     "sum(decode(sign(a.ordActualQuantity+a.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                    "sum(a.ordActualQuantity + a.ordActualQuantity1) ord_count, " +
                     "to_char(sum((a.ordActualQuantity+a.ordActualQuantity1)* a.sell_cost),'999999990.00') amt " +
                     "from ( " +
                     "select p.itemnumber,p.pluname,o.ordactualquantity,o.ordactualquantity1,p.categorynumber,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, p.sell_cost " +
@@ -375,10 +378,11 @@ object MySql {
      */
     val getNewItemId: String
         get() {
-            return "select * from (select distinct in_th_code,'${MyApplication.instance().getString(R.string.di)}'|| in_th_code ||'${MyApplication.instance().getString(R.string.qi)}' as title, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku, sum(amt) amt " +
+            return "select * from (select distinct in_th_code,'${MyApplication.instance().getString(R.string.di)}'|| in_th_code ||'${MyApplication.instance().getString(R.string.qi)}' as title, sum(tot_sku) tot_sku, sum(ord_sku) ord_sku,sum(ord_count) ord_count, sum(amt) amt " +
                     "from (select substr(p.in_th_code,1,3) in_th_code, " +
                     "count(*) tot_sku, " +
                     "sum(decode(sign(p.ordactualquantity+p.ordactualquantity1),1,1,0)) ord_sku, " +
+                    "sum(p.ordActualQuantity + p.ordActualQuantity1) ord_count, " +
                     "sum((p.ordactualquantity+p.ordactualquantity1)*p.storeunitprice) amt " +
                     "from (select a.in_th_code,a.itemnumber,b.ordActualQuantity,b.ordActualQuantity1,b.storeUnitPrice " +
                     "from plu a,ord b,appord_t2 c " +
@@ -394,6 +398,7 @@ object MySql {
                     "union " +
                     "select '0' in_th_code,'${MyApplication.instance().getString(R.string.promotion)}' title, count(*) tot_sku, " +
                     "sum(decode(sign(ordActualQuantity+ordActualQuantity1), 1,1,0)) ord_sku, " +
+                    "sum(ordActualQuantity + ordActualQuantity1) ord_count, " +
                     "sum((ordActualQuantity+ordActualQuantity1)*storeunitprice) amt " +
                     "from (Select to_char(x.sell_cost, '999999990.00') sell_cost, " +
                     "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.ordactualquantity1,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, " +
@@ -432,7 +437,8 @@ object MySql {
             return "SELECT distinct cat.categoryNumber,cat.midCategoryNumber," +
                     "(cat.categoryNumber || cat.midCategoryNumber || ':' || cat.categoryName) name," +
                     "count(*) tot_sku," +
-                    "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku," +
+                    "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                    "sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count, " +
                     "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt " +
                     "FROM cat,plu,ord " +
                     "WHERE cat.storeID='${User.getUser().storeId}' " +
@@ -458,7 +464,8 @@ object MySql {
             return "SELECT distinct cat.categoryNumber, cat.midCategoryNumber," +
                     "(cat.categoryNumber || cat.midCategoryNumber || ':' || cat.categoryName) name," +
                     "count(*) tot_sku," +
-                    "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku," +
+                    "sum(decode(sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                    "sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count, " +
                     "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt " +
                     "FROM cat,plu,ord " +
                     "WHERE cat.storeID='${User.getUser().storeId}' " +

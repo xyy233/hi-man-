@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/header_h"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="3dp"
         android:layout_marginStart="3dp"
         android:background="@color/windowBackground"
@@ -24,7 +24,7 @@
             android:layout_weight="0.6"
             android:background="@color/contract_bg"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_weight="0.4"
             android:background="@color/contract_bg"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
 
 
@@ -47,8 +47,21 @@
             android:layout_weight="0.4"
             android:background="@color/contract_bg"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/header_text3_5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_weight="0.4"
+            android:background="@color/contract_bg"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
 
 
         <TextView
@@ -59,7 +72,7 @@
             android:layout_weight="0.4"
             android:background="@color/contract_bg"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -67,13 +80,13 @@
     <LinearLayout
         android:id="@+id/header_v"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="75dp"
+        android:layout_height="55dp"
         android:layout_marginEnd="3dp"
         android:layout_marginStart="3dp"
         android:background="@color/windowBackground"
         android:elevation="2dp"
         android:gravity="center"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
@@ -83,7 +96,7 @@
             android:layout_weight="1"
             android:background="@color/contract_bg"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -99,7 +112,7 @@
                 android:layout_weight="1"
                 android:background="@color/contract_bg"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="NestedWeights"/>
 
@@ -111,7 +124,18 @@
                 android:layout_weight="1"
                 android:background="@color/contract_bg"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+
+            <TextView
+                android:id="@+id/header_text3_5_v"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/contract_bg"
+                android:gravity="center"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
 
 
@@ -122,7 +146,7 @@
                 android:layout_weight="1"
                 android:background="@color/contract_bg"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
 
         </LinearLayout>

@@ -15,7 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  * on 2017/7/25 13:43.
  * msg每次都要重置，ip每次都要检查
  */
-class OrderCategoryModel() : OrderCategoryInterface {
+class OrderCategoryModel : OrderCategoryInterface {
 
     override fun getAllCategory(handler: MyHandler.OnlyMyHandler) {
         Thread(Runnable {

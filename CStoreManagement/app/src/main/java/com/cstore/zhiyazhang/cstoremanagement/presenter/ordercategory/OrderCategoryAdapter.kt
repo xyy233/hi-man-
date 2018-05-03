@@ -17,14 +17,13 @@ import kotlinx.android.synthetic.main.item_type_vertical.view.*
  * Created by zhiya.zhang
  * on 2017/7/25 16:10.
  */
-class OrderCategoryAdapter(val type: String, val data: Any, private val listener: DataClickListener) :
+class OrderCategoryAdapter(val type: String, var data: Any, private val listener: DataClickListener) :
         RecyclerView.Adapter<OrderCategoryAdapter.ViewHolder>() {
 
     init {
         val d = PresenterUtil.judgmentClass(data)
         if (d == "null" || d == "item") {
-            data as ArrayList<*>
-            data.clear()
+            (data as ArrayList<*>).clear()
         }
     }
 
@@ -81,6 +80,8 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             inventory_h.text = ocb.allSku.toString()
             tonightCount_h.text = ocb.ordSku.toString()
             todayCount_h.text = ocb.ordPrice.toString()
+            ordCount_h.visibility = View.VISIBLE
+            ordCount_h.text = ocb.ordCount.toString()
             when {
                 ocb.categoryId == "-1" -> type_tag_h.visibility = View.GONE
                 ocb.ordSku != 0 -> {
@@ -96,6 +97,8 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             item_text1.text = sb.shelfName
             item_text2.text = sb.allSku.toString()
             item_text3.text = sb.ordSku.toString()
+            item_text3_5.visibility = View.VISIBLE
+            item_text3_5.text = sb.ordCount.toString()
             item_text4.text = sb.ordPrice.toString()
             typebg_v.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(), R.color.white))
             if (sb.ordSku != 0) {
@@ -112,6 +115,8 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             inventory_h.text = sb.allSku.toString()
             tonightCount_h.text = sb.ordSku.toString()
             todayCount_h.text = sb.ordPrice.toString()
+            ordCount_h.visibility = View.VISIBLE
+            ordCount_h.text = sb.ordCount.toString()
             if (sb.ordSku != 0) {
                 type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_h.visibility = View.VISIBLE
@@ -126,6 +131,8 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             inventory_h.text = nb.allSku.toString()
             tonightCount_h.text = nb.ordSku.toString()
             todayCount_h.text = nb.ordPrice.toString()
+            ordCount_h.visibility = View.VISIBLE
+            ordCount_h.text = nb.ordCount.toString()
             if (nb.ordSku != 0) {
                 type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_h.visibility = View.VISIBLE
@@ -141,6 +148,8 @@ class OrderCategoryAdapter(val type: String, val data: Any, private val listener
             inventory_h.text = fg.allSku.toString()
             tonightCount_h.text = fg.ordSku.toString()
             todayCount_h.text = fg.ordPrice.toString()
+            ordCount_h.visibility = View.VISIBLE
+            ordCount_h.text = fg.ordCount.toString()
             if (fg.ordSku != 0) {
                 type_tag_h.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.is_edit))
                 type_tag_h.visibility = View.VISIBLE

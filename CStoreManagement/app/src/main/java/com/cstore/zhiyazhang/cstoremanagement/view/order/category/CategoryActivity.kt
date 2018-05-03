@@ -10,9 +10,8 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCateg
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCategoryPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DataClickListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
-import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import kotlinx.android.synthetic.main.activity_order_category.*
 import kotlinx.android.synthetic.main.contract_type_recycler.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 class CategoryActivity(override val layoutId: Int = R.layout.activity_order_category) : MyActivity(), ContractTypeView {
 
 
-    var adapter: OrderCategoryAdapter? = null
+    private var adapter: OrderCategoryAdapter? = null
 
     override val isJustLook: Boolean
         get() = false
@@ -35,7 +34,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     override fun showUsaTime(isShow: Boolean) {
     }
 
-    private val mPresenter = OrderCategoryPresenter(this,this)
+    private val mPresenter = OrderCategoryPresenter(this, this)
 
     override fun initClick() {
         category_retry.setOnClickListener {
@@ -54,10 +53,10 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 "nop" -> {
                     mPresenter.getNOP()
                 }
-                "fresh1"->{
+                "fresh1" -> {
                     mPresenter.getFresh(1)
                 }
-                "fresh2"->{
+                "fresh2" -> {
                     mPresenter.getFresh(2)
                 }
             }
@@ -73,6 +72,8 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 header_text1.text = getString(R.string.type_name)
                 header_text2.text = getString(R.string.all_sku)
                 header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
                 header_text4.text = getString(R.string.order_price)
             }
             "shelf" -> {
@@ -82,6 +83,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 header_text1_v.text = getString(R.string.shelf_name)
                 header_text2_v.text = getString(R.string.all_sku)
                 header_text3_v.text = getString(R.string.ord_qty)
+                header_text3_5_v.text = getString(R.string.ord_count)
                 header_text4_v.text = getString(R.string.order_price)
             }
             "self" -> {
@@ -89,6 +91,8 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 header_text1.text = getString(R.string.self_value)
                 header_text2.text = getString(R.string.all_sku)
                 header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
                 header_text4.text = getString(R.string.order_sell)
             }
             "nop" -> {
@@ -96,20 +100,26 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 header_text1.text = getString(R.string.nop_value)
                 header_text2.text = getString(R.string.all_sku)
                 header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
                 header_text4.text = getString(R.string.order_price)
             }
-            "fresh1"->{
-                my_toolbar.title=getString(R.string.fresh1)
-                header_text1.text=getString(R.string.freshGroup)
+            "fresh1" -> {
+                my_toolbar.title = getString(R.string.fresh1)
+                header_text1.text = getString(R.string.freshGroup)
                 header_text2.text = getString(R.string.all_sku)
                 header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
                 header_text4.text = getString(R.string.order_price)
             }
-            "fresh2"->{
-                my_toolbar.title=getString(R.string.fresh2)
-                header_text1.text=getString(R.string.freshGroup)
+            "fresh2" -> {
+                my_toolbar.title = getString(R.string.fresh2)
+                header_text1.text = getString(R.string.freshGroup)
                 header_text2.text = getString(R.string.all_sku)
                 header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
                 header_text4.text = getString(R.string.order_price)
             }
         }
@@ -155,14 +165,14 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 i.putExtra("itemIds", (adapter?.data as ArrayList<NOPBean>))
                 startActivity(i)
             }
-            "fresh1"->{
+            "fresh1" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
                 i.putExtra("fg", rData as FreshGroup)
                 i.putExtra("whereIsIt", "fresh")
                 i.putExtra("itemIds", (adapter?.data as ArrayList<FreshGroup>))
                 startActivity(i)
             }
-            "fresh2"->{
+            "fresh2" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
                 i.putExtra("fg", rData as FreshGroup)
                 i.putExtra("whereIsIt", "fresh")
@@ -182,12 +192,26 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
     }
 
     override fun <T> showView(aData: T) {
-        when (aData) {
-            is OrderCategoryAdapter -> {
-                type_list.adapter = aData
-                this.adapter = aData
+        if (adapter == null) {
+            if (whereIsIt == "fresh1" || whereIsIt == "fresh2") {
+                adapter = OrderCategoryAdapter("fresh", aData as ArrayList<*>, object : DataClickListener {
+                    override fun <T> click(data: T) {
+                        requestSuccess(data)
+                    }
+                })
+            } else {
+                adapter = OrderCategoryAdapter(whereIsIt, aData as ArrayList<*>, object : DataClickListener {
+                    override fun <T> click(data: T) {
+                        requestSuccess(data)
+                    }
+                })
             }
-            else -> MyToast.getShortToast(getString(R.string.system_error))
+
+            type_list.adapter = adapter
+            this.adapter = adapter
+        } else {
+            adapter!!.data = aData as ArrayList<*>
+            adapter!!.notifyDataSetChanged()
         }
     }
 
@@ -202,8 +226,8 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 "shelf" -> mPresenter.getShelf()
                 "self" -> mPresenter.getSelf()
                 "nop" -> mPresenter.getNOP()
-                "fresh1"->mPresenter.getFresh(1)
-                "fresh2"->mPresenter.getFresh(2  )
+                "fresh1" -> mPresenter.getFresh(1)
+                "fresh2" -> mPresenter.getFresh(2)
             }
         } catch (e: Exception) {
         }

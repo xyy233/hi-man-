@@ -21,9 +21,13 @@ data class OrderCategoryBean(
          */
         @SerializedName("tot_sku") val allSku: Int,
         /**
-         * 已订商品总数
+         * 已订商品总项数
          */
         @SerializedName("ord_sku") var ordSku: Int,
+        /**
+         * 已订商品总数
+         */
+        @SerializedName("ord_count") var ordCount:Int,
         /**
          * 已订总金额
          */

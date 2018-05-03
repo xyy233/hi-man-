@@ -12,6 +12,7 @@ data class ShelfBean(
         @SerializedName("gondraname") val shelfName: String,
         @SerializedName("tot_sku") val allSku: Int,
         @SerializedName("ord_sku") val ordSku: Int,
+        @SerializedName("ord_count") val ordCount: Int,
         @SerializedName("amt") val ordPrice: Double
 ) : Serializable
 
@@ -20,6 +21,7 @@ data class SelfBean(
         @SerializedName("categoryname") val selfName: String,
         @SerializedName("tot_sku") val allSku: Int,
         @SerializedName("ord_sku") val ordSku: Int,
+        @SerializedName("ord_count") val ordCount: Int,
         @SerializedName("amt") val ordPrice: Double
 ) : Serializable
 
@@ -28,6 +30,7 @@ data class NOPBean(
         @SerializedName("title") val nopName: String,
         @SerializedName("tot_sku") val allSku: Int,
         @SerializedName("ord_sku") val ordSku: Int,
+        @SerializedName("ord_count") val ordCount: Int,
         @SerializedName("amt") val ordPrice: Double
 ) : Serializable
 
@@ -37,5 +40,6 @@ data class FreshGroup(
         @SerializedName("name") val name: String,
         @SerializedName("tot_sku") val allSku: Int,
         @SerializedName("ord_sku") val ordSku: Int,
+        @SerializedName("ord_count") val ordCount: Int,
         @SerializedName("amt") val ordPrice: Double
 ) : Serializable
