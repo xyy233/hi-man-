@@ -21,12 +21,12 @@ class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyAc
     /**
      * Glide回调监听
      */
-    val errorListener = object : RequestListener<String, GlideDrawable> {
+    private val errorListener = object : RequestListener<String, GlideDrawable> {
         override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
             try {
                 imageProgress.visibility = View.GONE
                 MyToast.getShortToast(e!!.message!!)
-            }catch (e:Exception){
+            } catch (e: Exception) {
 
             }
             return false
@@ -39,15 +39,24 @@ class ImageActivity(override val layoutId: Int = R.layout.activity_image) : MyAc
     }
 
     override fun initView() {
-        val cb = intent?.getSerializableExtra("cb") as ContractBean
         val photoView = findViewById<PhotoView>(R.id.zoom_image)
         photoView.isEnabled = true
-        Glide.with(this@ImageActivity)
-                .load(cb.img_url)
-                .error(R.mipmap.load_error)
-                .crossFade()
-                .listener(errorListener)
-                .into(photoView)
+        val type = intent?.getIntExtra("type", 0)
+        if (type == 0) {
+            val cb = intent?.getSerializableExtra("cb") as ContractBean
+            Glide.with(this@ImageActivity)
+                    .load(cb.img_url)
+                    .error(R.mipmap.load_error)
+                    .crossFade()
+                    .listener(errorListener)
+                    .into(photoView)
+        } else {
+            val ba = intent?.getByteArrayExtra("bmp")
+            Glide.with(this@ImageActivity)
+                    .load(ba)
+                    .crossFade()
+                    .into(photoView)
+        }
         //photoView.setOnPhotoTapListener { _, _, _ -> finishAfterTransition() }
         photoView.setOnClickListener { finishAfterTransition() }
     }

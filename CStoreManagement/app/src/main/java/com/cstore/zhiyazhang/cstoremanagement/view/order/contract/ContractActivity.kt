@@ -20,12 +20,10 @@ import android.widget.ArrayAdapter
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.ContractTypeBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractAdapter.Companion.LOADING_MORE
 import com.cstore.zhiyazhang.cstoremanagement.presenter.contract.ContractPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
@@ -250,6 +248,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         val intent = android.content.Intent(this@ContractActivity, ImageActivity::class.java)
         val transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this@ContractActivity, adapterView.commodifyImg, "image")
         intent.putExtra("cb", cb)
+        intent.putExtra("type",0)
         ActivityCompat.startActivity(this@ContractActivity, intent, transitionActivityOptions.toBundle())
         /*startActivity(intent,
                 ActivityOptions.makeSceneTransitionAnimation(this@ContractActivity, adapterView.commodifyImg, "image").toBundle())*/

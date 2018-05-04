@@ -95,6 +95,14 @@ class CheckInActivity(override val layoutId: Int = R.layout.activity_check_in) :
         return false
     }
 
+    override fun onBackPressed() {
+        if (getData1() == 1) {
+            startActivity(Intent(this@CheckInActivity, CheckInDYActivity::class.java))
+            finish()
+        }
+        super.onBackPressed()
+    }
+
     override fun initClick() {
         ordinary_check.setOnClickListener {
             ordinary_check.toggle()

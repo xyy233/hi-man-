@@ -26,7 +26,7 @@ class CheckInDYPresenter(private val view: GenericView) {
             }
 
             override fun listenerFailed(errorMessage: String) {
-                view.errorDealWith()
+                view.showPrompt(errorMessage)
                 view.hideLoading()
                 handler.cleanAll()
             }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/check_item"
+              android:layout_width="110dp"
+              android:layout_height="135dp"
+              android:layout_margin="3dp"
+              android:background="@color/white"
+              android:elevation="3dp"
+              android:foreground="@drawable/selector_foreground"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:stateListAnimator="@drawable/lift_on_touch"
+              tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/check_img"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/check"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@+id/check_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:maxLines="1"/>
+
+</LinearLayout>

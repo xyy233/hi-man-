@@ -42,11 +42,11 @@ object MyTimeUtil {
      * *
      * @return string
      */
-    private fun getStringByDate(date: Date): String {
-        return SimpleDateFormat("yyyy-MM-dd HH.mm.ss", Locale.CHINA).format(date)
+    fun getStringByDate(date: Date): String {
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(date)
     }
 
-    private fun getStringByDate2(date: Date): String {
+    fun getStringByDate2(date: Date): String {
         return SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(date)
     }
 
@@ -107,6 +107,10 @@ object MyTimeUtil {
     @Throws(ParseException::class)
     private fun getDateByString(date: String): Date {
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).parse(date)
+    }
+
+    fun getDateByString3(date: String): Date {
+        return SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).parse(date)
     }
 
     @JvmStatic
