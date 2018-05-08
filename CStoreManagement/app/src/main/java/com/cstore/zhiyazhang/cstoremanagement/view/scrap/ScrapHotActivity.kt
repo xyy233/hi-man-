@@ -96,13 +96,11 @@ class ScrapHotActivity(override val layoutId: Int = R.layout.activity_scrap_hot)
     override fun showLoading() {
         scrap_hot_refresh.isRefreshing = true
         scrap_hot_refresh.isEnabled = false
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
         scrap_hot_refresh.isRefreshing = false
         scrap_hot_refresh.isEnabled = true
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun errorDealWith() {

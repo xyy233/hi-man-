@@ -5,7 +5,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -20,8 +20,8 @@ object CStoreCalendar {
     private val data: ArrayList<CStoreCalendarBean> = ArrayList()//换日数据
     private var date: String? = null//上一次执行获得换日的日期
     val SUCCESS_MSG = "success"
-    val ERROR_MSG2 = "换日失败！请停止操作并退出重进应用或联系系统部！"
-    val ERROR_MSG = "获得换日表失败,请停止操作并退出重进应用或联系系统部"
+    val ERROR_MSG2 = "换日失败！请停止操作并退出重进应用！"
+    val ERROR_MSG = "获得换日表失败,请停止操作并退出重进应用"
 
     fun getCStoreCalendar(): ArrayList<CStoreCalendarBean>? {
         return data
@@ -45,7 +45,16 @@ object CStoreCalendar {
             return ERROR_MSG
         }
         data.clear()
-        data.addAll(GsonUtil.getCstoreCalendar(result))
+        val jsonData = ArrayList<CStoreCalendarBean>()
+        try {
+            jsonData.addAll(GsonUtil.getCstoreCalendar(result))
+        } catch (e: Exception) {
+
+        }
+        if (jsonData.size == 0) {
+            return ERROR_MSG
+        }
+        data.addAll(jsonData)
         date = MyTimeUtil.nowDate
         return SUCCESS_MSG
     }
@@ -55,7 +64,7 @@ object CStoreCalendar {
      */
     @JvmStatic
     fun getCurrentDate(type: Int): String {
-        if (data.isNotEmpty()){
+        if (data.isNotEmpty()) {
             //如果有的话在这里就已经return了
             data.filter { it.dateType == type }.forEach { return it.currentDate }
         }
@@ -67,7 +76,7 @@ object CStoreCalendar {
      * 得到换日日期
      */
     fun getChangeTime(type: Int): Int {
-        if (data.isNotEmpty()){
+        if (data.isNotEmpty()) {
             data.filter { it.dateType == type }.forEach { return getHourByString(it.changeTime) }
         }
         Handler().post { MyToast.getLongToast(ERROR_MSG) }
@@ -103,31 +112,6 @@ object CStoreCalendar {
      */
     private fun getHourByString(date: String): Int {
         return date.substring(0, 2).toInt()
-    }
-
-    /**
-     * 判断是否能执行创建或修改操作
-     */
-    fun judgmentCalender(date: String, msg: Message, handler: MyHandler.OnlyMyHandler, type: Int): Boolean {
-        if (CStoreCalendar.setCStoreCalendar() != SUCCESS_MSG) {
-            msg.obj = ERROR_MSG
-            msg.what = ERROR
-            handler.sendMessage(msg)
-            return false
-        }
-        //时间不对或或换日状态异常就报错
-        if (CStoreCalendar.getNowStatus(type) != 0 || CStoreCalendar.getCurrentDate(type) != date) {
-            val errorMsg = when {
-                CStoreCalendar.getNowStatus(type) == 1 -> "正在换日中，请等待换日完成！"
-                CStoreCalendar.getNowStatus(type) == 2 -> ERROR_MSG
-                else -> "当前日期不能进行操作"
-            }
-            msg.obj = errorMsg
-            msg.what = ERROR
-            handler.sendMessage(msg)
-            return false
-        }
-        return true
     }
 
     /**

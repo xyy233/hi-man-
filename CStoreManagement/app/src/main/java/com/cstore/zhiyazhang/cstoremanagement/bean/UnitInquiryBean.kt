@@ -39,11 +39,11 @@ data class UnitInquiryBean(
         @SerializedName("stockchange") val stockChange: String,
         @SerializedName("s_returntype") val sReturnType: String,
         @SerializedName("return_attr") val returnAttr: Int,
-        @SerializedName("invquantity") var invQty: Int,
+        @SerializedName("invquantity") var invQty: Int,//库存
         val dms: Double,
         val dma: Double,
         @SerializedName("item_level") val itemLevel: String,
         @SerializedName("keep_days") val keepDays: Int,
-        @SerializedName("min_qty") var minQty: Int,
+        @SerializedName("min_qty") var minQty: Int,//自设
         @SerializedName("go_market_days") val goMarketDays: Int
 ) : Serializable

@@ -25,7 +25,7 @@ object ReportListener {
                 .postString()
                 .url(AppUrl.UPLOAD_ERROR)
                 .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：$errorMessage,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$errorDate")
-                .addHeader("fileName", "${User.getUser().storeId}/${MyTimeUtil.nowTimeString}.txt")
+                .addHeader("fileName", "${User.getUser().storeId}/${MyTimeUtil.nowTimeString3}.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
 
@@ -53,7 +53,7 @@ object ReportListener {
                         .postString()
                         .url(AppUrl.UPLOAD_ERROR)
                         .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：应用崩溃,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$dataMsg")
-                        .addHeader("fileName", "Error/${User.getUser().storeId + MyTimeUtil.nowTimeString}.txt")
+                        .addHeader("fileName", "Error/${User.getUser().storeId + MyTimeUtil.nowTimeString3}.txt")
                         .build()
                         .execute(object : MyStringCallBack(object : MyListener {
 
@@ -71,32 +71,6 @@ object ReportListener {
                         })
             }
         }
-        /*val crashFile = getCrashFile()
-        if (crashFile.exists()) {
-            val data = MyJavaFun.getTxtFileMessage(crashFile)
-            if (data.isEmpty()) return
-            OkHttpUtils
-                    .postString()
-                    .url(AppUrl.UPLOAD_ERROR)
-                    .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：应用崩溃,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$data")
-                    .addHeader("fileName", "Error/${User.getUser().storeId + MyTimeUtil.nowTimeString}.txt")
-                    .build()
-                    .execute(object : MyStringCallBack(object : MyListener {
-
-                        override fun listenerSuccess(data: Any) {
-                        }
-
-                        override fun listenerFailed(errorMessage: String) {
-
-                        }
-                    }) {
-                        override fun onResponse(p0: String?, p1: Int) {
-                            //成功要删除
-                            crashFile.deleteRecursively()
-                        }
-
-                    })
-        }*/
     }
 
     /**

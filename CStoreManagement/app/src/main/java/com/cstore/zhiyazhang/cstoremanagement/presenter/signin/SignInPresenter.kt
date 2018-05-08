@@ -3,7 +3,7 @@ package com.cstore.zhiyazhang.cstoremanagement.presenter.signin
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.signin.SignInModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 
@@ -17,8 +17,7 @@ class SignInPresenter(private val view: SignInActivity) {
 
     fun login() {
         if (!PresenterUtil.judgmentInternet(view)) return
-
-        val handler = OnlyMyHandler.writeActivity(view)
+        val handler = MyHandler().writeActivity(view)
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User

@@ -85,6 +85,7 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         holder.orderTomorrow.text = data[position].itemTomorrow.toString()
         holder.orderPrice.text = data[position].itemPrice.toString()
         holder.editOrderQTY.text = data[position].orderQTY.toString()
+        holder.faceQty.text = data[position].faceQTY.toString()
         //这里double会变成1.0E-4。需要转换成string
         holder.dms.text = df.format(data[position].dms)
         holder.dma.text = df.format(data[position].dma)
@@ -100,6 +101,9 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         holder.less.setOnTouchListener { _, event ->
             onTouch.onTouchLessListener(data[position], event, position)
             true
+        }
+        holder.myCommodify.setOnClickListener {
+            onTouch.onClickImage(data[position], position)
         }
         if (data[position].dlvQTY2 == 0) {
             //D+1
@@ -137,6 +141,7 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
         val myCommodify = itemView.findViewById<LinearLayout>(R.id.my_commodify)!!
         val isNoBuy = itemView.findViewById<ImageView>(R.id.is_nobuy)!!
         val isPro = itemView.findViewById<ImageView>(R.id.is_pro)!!
+        val faceQty = itemView.findViewById<TextView>(R.id.face_qty)!!
         val dms = itemView.findViewById<TextView>(R.id.order_dms)!!
         val dma = itemView.findViewById<TextView>(R.id.order_dma)!!
         val dlvQty2 = itemView.findViewById<TextView>(R.id.tomorrow_arrival)!!

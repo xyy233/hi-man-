@@ -16,7 +16,10 @@ import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.signin.SignInPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -117,7 +120,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     }
 
     override fun hideLoading() {
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         progress.visibility = View.GONE
         wifi_hints.visibility = View.VISIBLE
         login.isEnabled = true

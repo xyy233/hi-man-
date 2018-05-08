@@ -31,7 +31,6 @@ interface GenericView {
      */
     fun hideLoading() {
         //注销handler里的数据
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     /**

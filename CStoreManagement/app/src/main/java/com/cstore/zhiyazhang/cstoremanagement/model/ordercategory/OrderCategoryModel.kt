@@ -6,8 +6,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -17,7 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class OrderCategoryModel : OrderCategoryInterface {
 
-    override fun getAllCategory(handler: MyHandler.OnlyMyHandler) {
+    override fun getAllCategory(handler: MyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -41,7 +41,7 @@ class OrderCategoryModel : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getAllShelf(handler: MyHandler.OnlyMyHandler) {
+    override fun getAllShelf(handler: MyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -65,7 +65,7 @@ class OrderCategoryModel : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getNewItemId(handler: MyHandler.OnlyMyHandler) {
+    override fun getNewItemId(handler: MyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -89,7 +89,7 @@ class OrderCategoryModel : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getSelf(handler: MyHandler.OnlyMyHandler) {
+    override fun getSelf(handler: MyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -113,7 +113,7 @@ class OrderCategoryModel : OrderCategoryInterface {
         }).start()
     }
 
-    override fun getFresh(freshType: Int, handler: MyHandler.OnlyMyHandler) {
+    override fun getFresh(freshType: Int, handler: MyHandler) {
         Thread(Runnable {
             val msg= Message()
             val ip = MyApplication.getIP()
@@ -139,9 +139,9 @@ class OrderCategoryModel : OrderCategoryInterface {
 }
 
 interface OrderCategoryInterface {
-    fun getAllCategory(handler:MyHandler.OnlyMyHandler)
-    fun getAllShelf(handler:MyHandler.OnlyMyHandler)
-    fun getNewItemId(handler:MyHandler.OnlyMyHandler)
-    fun getSelf(handler:MyHandler.OnlyMyHandler)
-    fun getFresh(freshType: Int, handler:MyHandler.OnlyMyHandler)
+    fun getAllCategory(handler:MyHandler)
+    fun getAllShelf(handler:MyHandler)
+    fun getNewItemId(handler:MyHandler)
+    fun getSelf(handler:MyHandler)
+    fun getFresh(freshType: Int, handler:MyHandler)
 }

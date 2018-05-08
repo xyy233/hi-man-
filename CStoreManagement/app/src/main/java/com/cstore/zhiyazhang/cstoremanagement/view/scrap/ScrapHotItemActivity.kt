@@ -290,7 +290,6 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_scrap_
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
@@ -299,7 +298,6 @@ class ScrapHotItemActivity(override val layoutId: Int = R.layout.activity_scrap_
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun errorDealWith() {

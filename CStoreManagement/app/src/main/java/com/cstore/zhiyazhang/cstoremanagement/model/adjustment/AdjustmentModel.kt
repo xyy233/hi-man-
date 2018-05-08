@@ -8,7 +8,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -17,7 +17,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class AdjustmentModel : AdjustmentInterface {
     private val TAG = "AdjustmentModel"
-    override fun getAllAdjustmentList(date: String, handler: MyHandler.OnlyMyHandler) {
+    override fun getAllAdjustmentList(date: String, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -47,7 +47,7 @@ class AdjustmentModel : AdjustmentInterface {
         }).start()
     }
 
-    override fun searchAdjustment(searchMsg: String, handler: MyHandler.OnlyMyHandler) {
+    override fun searchAdjustment(searchMsg: String, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -72,7 +72,7 @@ class AdjustmentModel : AdjustmentInterface {
         }).start()
     }
 
-    override fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler.OnlyMyHandler) {
+    override fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -109,25 +109,6 @@ class AdjustmentModel : AdjustmentInterface {
             handler.sendMessage(msg)
         }
         return true
-    }
-
-    /**
-     * 得到最大的id用于创建
-     */
-    private fun getMaxRecodeNumber(date: String, ip: String, msg: Message, handler: MyHandler.OnlyMyHandler): Int {
-        val result = SocketUtil.initSocket(ip, MySql.getAdjustmentMaxId(date)).inquire()
-        val id: Int
-        try {
-            val ids = GsonUtil.getUtilBean(result)
-            if (ids[0].value == null) return 0
-            id = ids[0].value!!.toInt()
-        } catch (e: Exception) {
-            msg.obj = result
-            msg.what = MyHandler.ERROR
-            handler.sendMessage(msg)
-            return -1
-        }
-        return id
     }
 
     /**
@@ -181,15 +162,15 @@ interface AdjustmentInterface {
     /**
      * 得到某天所有的库调信息
      */
-    fun getAllAdjustmentList(date: String, handler: MyHandler.OnlyMyHandler)
+    fun getAllAdjustmentList(date: String, handler: MyHandler)
 
     /**
      * 搜索库调商品
      */
-    fun searchAdjustment(searchMsg: String, handler: MyHandler.OnlyMyHandler)
+    fun searchAdjustment(searchMsg: String, handler: MyHandler)
 
     /**
      * 创建库调
      */
-    fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler.OnlyMyHandler)
+    fun createAdjustment(data: ArrayList<AdjustmentBean>, handler: MyHandler)
 }

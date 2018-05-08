@@ -19,7 +19,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyCameraUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.inverror.InvErrorActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_unit_inquiry.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -35,6 +34,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     private val presenter = UnitInquiryPresenter(this)
     private lateinit var dialogView: View
     private lateinit var saveDialog: AlertDialog
+    private var allData: UnitInquiryBean? = null
     /**
      * 0=库存 1=最小量
      */
@@ -94,8 +94,14 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     override fun onBackPressed() {
-        if (flag == 1) {
-            startActivity(Intent(this@UnitInquiryActivity, InvErrorActivity::class.java))
+        if (flag == 1 || flag == 2) {
+            val i = Intent()
+            if (allData != null) {
+                i.putExtra("inv", allData!!.invQty)
+                i.putExtra("min", allData!!.minQty)
+            }
+            i.putExtra("pluId", pluId)
+            setResult(flag, i)
             finish()
         } else
             super.onBackPressed()
@@ -166,7 +172,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     override fun initData() {
-        if (flag == 1) {
+        if (flag == 1 || flag == 2) {
             presenter.getData()
         }
     }
@@ -248,6 +254,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
 
     private val ip = MyApplication.getIP()
     private fun mShowView(data: UnitInquiryBean) {
+        allData = data
         val df = DecimalFormat("#0.00")
         Glide.with(this).load("http://$ip:8666/uploadIMG/${data.pluId}.png")
                 .placeholder(R.mipmap.loading)

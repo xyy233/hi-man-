@@ -4,7 +4,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.OrderCategoryInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.OrderCategoryModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
@@ -18,7 +18,8 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
 
     fun getAllCategory() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        anInterface.getAllCategory(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -29,12 +30,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        anInterface.getAllCategory(handler)
     }
 
     fun getShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        anInterface.getAllShelf(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -45,12 +48,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        anInterface.getAllShelf(handler)
     }
 
     fun getSelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        anInterface.getSelf(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -61,12 +66,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        anInterface.getSelf(handler)
     }
 
     fun getNOP() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        anInterface.getNewItemId(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -77,7 +84,8 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        anInterface.getNewItemId(handler)
     }
 
     /**
@@ -85,7 +93,8 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
      */
     fun getFresh(freshType: Int) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        anInterface.getFresh(freshType, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
@@ -96,6 +105,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        anInterface.getFresh(freshType, handler)
     }
 }

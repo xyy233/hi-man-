@@ -79,26 +79,6 @@ internal class SocketUtil {
          * 判断ip是否正确
          */
         @JvmStatic
-        fun judgmentIP(ip: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
-
-            val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
-            return if (wifiName == null || wifiName == "") {
-                msg.obj = MyApplication.instance().getString(R.string.cannt_mobile)
-                msg.what = MyHandler.ERROR
-                handler.sendMessage(msg)
-                false
-            } else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
-                msg.obj = ip
-                msg.what = MyHandler.ERROR
-                handler.sendMessage(msg)
-                false
-            } else true
-        }
-
-        /**
-         * 判断ip是否正确
-         */
-        @JvmStatic
         fun judgmentIP(ip: String, msg: Message, handler: MyHandler): Boolean {
 
             val wifiName = (MyApplication.instance().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo?.ssid
@@ -109,19 +89,6 @@ internal class SocketUtil {
                 false
             } else if (ip == MyApplication.instance().getString(R.string.notFindIP)) {
                 msg.obj = ip
-                msg.what = MyHandler.ERROR
-                handler.sendMessage(msg)
-                false
-            } else true
-        }
-
-        /**
-         * 判断得到的数据是否有值
-         */
-        @JvmStatic
-        fun judgmentNull(data: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
-            return if (data == "" || data == "[]") {
-                msg.obj = MyApplication.instance().applicationContext.getString(R.string.noMessage)
                 msg.what = MyHandler.ERROR
                 handler.sendMessage(msg)
                 false

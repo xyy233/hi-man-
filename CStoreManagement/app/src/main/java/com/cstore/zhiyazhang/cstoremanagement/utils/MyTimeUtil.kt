@@ -46,6 +46,10 @@ object MyTimeUtil {
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(date)
     }
 
+    fun getStringByDate3(date: Date): String {
+        return SimpleDateFormat("yyyy-MM-dd HH.mm.ss", Locale.CHINA).format(date)
+    }
+
     fun getStringByDate2(date: Date): String {
         return SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(date)
     }
@@ -189,6 +193,9 @@ object MyTimeUtil {
 
     val nowTimeString2: String
         get() = getStringByDate2(Date(System.currentTimeMillis()))
+
+    val nowTimeString3: String
+        get() = getStringByDate3(Date(System.currentTimeMillis()))
 
     val nowDate: String
         get() = getYMDStringByDate(Date(System.currentTimeMillis()))

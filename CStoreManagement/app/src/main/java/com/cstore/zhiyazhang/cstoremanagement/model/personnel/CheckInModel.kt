@@ -6,8 +6,8 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -15,7 +15,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  * on 2017/10/12 13:46.
  */
 class CheckInModel : CheckInInterface {
-    override fun checkInUser(type: Int, uId: String, bmp: Bitmap, handler: MyHandler.OnlyMyHandler) {
+    override fun checkInUser(type: Int, uId: String, bmp: Bitmap, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -79,7 +79,7 @@ class CheckInModel : CheckInInterface {
     /**
      * 检测输入的用户是否存在
      */
-    private fun judgmentUser(ip: String, uId: String, msg: Message, handler: MyHandler.OnlyMyHandler): Boolean {
+    private fun judgmentUser(ip: String, uId: String, msg: Message, handler: MyHandler): Boolean {
         val data = SocketUtil.initSocket(ip, MySql.signIn(uId)).inquire()
         return if (data == "" || data == "[]") {
             msg.obj = MyApplication.instance().applicationContext.getString(R.string.idError)
@@ -100,5 +100,5 @@ interface CheckInInterface {
     /**
      * 签到
      */
-    fun checkInUser(type: Int, uId: String, bmp: Bitmap, handler: MyHandler.OnlyMyHandler)
+    fun checkInUser(type: Int, uId: String, bmp: Bitmap, handler: MyHandler)
 }

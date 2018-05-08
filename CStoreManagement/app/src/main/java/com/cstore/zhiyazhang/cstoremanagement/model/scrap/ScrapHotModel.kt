@@ -8,8 +8,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -18,7 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class ScrapHotModel : ScrapHotInterface {
 
-    override fun getMidCategory(handler: MyHandler.OnlyMyHandler) {
+    override fun getMidCategory(handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -43,7 +43,7 @@ class ScrapHotModel : ScrapHotInterface {
         }).start()
     }
 
-    override fun getHotItem(midId: String, handler: MyHandler.OnlyMyHandler) {
+    override fun getHotItem(midId: String, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -67,7 +67,7 @@ class ScrapHotModel : ScrapHotInterface {
         }).start()
     }
 
-    override fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.OnlyMyHandler) {
+    override fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -112,15 +112,15 @@ interface ScrapHotInterface {
     /**
      * 得到热食的中类
      */
-    fun getMidCategory(handler: MyHandler.OnlyMyHandler)
+    fun getMidCategory(handler: MyHandler)
 
     /**
      * 得到热食的商品
      */
-    fun getHotItem(midId: String, handler: MyHandler.OnlyMyHandler)
+    fun getHotItem(midId: String, handler: MyHandler)
 
     /**
      * 提交报废信息
      */
-    fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler.OnlyMyHandler)
+    fun submitScrap(data: ArrayList<ScrapContractBean>, handler: MyHandler)
 }

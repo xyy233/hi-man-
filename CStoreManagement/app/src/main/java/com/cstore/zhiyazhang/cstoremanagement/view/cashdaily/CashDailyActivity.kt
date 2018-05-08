@@ -214,7 +214,6 @@ class CashDailyActivity(override val layoutId: Int = R.layout.activity_cashdaily
     }
 
     override fun hideLoading() {
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         loading.visibility = View.GONE
     }
 
@@ -238,6 +237,5 @@ class CashDailyActivity(override val layoutId: Int = R.layout.activity_cashdaily
         } else {
             loading_retry.visibility = View.VISIBLE
         }
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 }

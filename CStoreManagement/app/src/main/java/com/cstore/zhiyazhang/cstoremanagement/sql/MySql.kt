@@ -158,7 +158,7 @@ object MySql {
      */
     fun getItemByCategoryId(categoryId: String, sort: String): String {
         return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
-                " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
+                " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, nvl(x.safe_qty,x.face_qty) face_qty," +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p," +
@@ -173,7 +173,7 @@ object MySql {
 
     fun getItemByEditCategory(sort: String): String {
         return "Select to_char(x.sell_cost, '999999990.00') sell_cost, " +
-                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
+                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, nvl(x.safe_qty,x.face_qty) face_qty," +
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p, " +
@@ -229,7 +229,7 @@ object MySql {
      */
     fun getItemByShelfId(shelfId: String, sort: String): String {
         return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
-                " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, " +
+                " x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, nvl(x.safe_qty,x.face_qty) face_qty," +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p," +
@@ -255,7 +255,7 @@ object MySql {
     fun unitOrder(value: String): String {
         return "select * from " +
                 "(Select distinct x.itemnumber, to_char(x.sell_cost, '999999990.00') sell_cost," +
-                "x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.ordertype,x.pro_yn, " +
+                "x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.ordertype,x.pro_yn, nvl(x.safe_qty,x.face_qty) face_qty," +
                 "substr(p.signType,12,1) s_returntype, " +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p, itemplu i " +
@@ -365,8 +365,8 @@ object MySql {
      * 通过自用品id获得商品
      */
     fun getSelfBySelfId(selfId: String, orderBy: String): String {
-        return "select p.itemnumber,p.pluname,x.ordactualquantity,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, to_char(p.sell_cost,'999999990.00') storeunitprice,x.inv_qty,x.dlv_qty,p.ordertype,'N' pro_yn " +
-                "from ord x, plu p " +
+        return "select p.itemnumber,p.pluname,x.ordactualquantity,p.midcategorynumber,p.minimaorderquantity,p.maximaorderquantity,p.increaseorderquantity, to_char(p.sell_cost,'999999990.00') storeunitprice,x.inv_qty,x.dlv_qty,p.ordertype,'N' pro_yn, nvl(s.safe_qty,p.face_qty) face_qty " +
+                "from ord x, plu p left join sfitem s on s.item=p.itemnumber " +
                 "where x.itemnumber=p.itemnumber " +
                 "and x.orderdate=to_date('${MyTimeUtil.tomorrowDate}','yyyy-MM-dd') " +
                 "and p.categorynumber =99 " +
@@ -414,7 +414,7 @@ object MySql {
      * 根据档期获得商品
      */
     fun getNewItemById(id: String, orderBy: String): String {
-        return "Select to_char(x.sell_cost, 'fm999999990.00') sell_cost,x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, substr(p.signType,12,1) s_returntype, round(p.storeunitprice,2) storeunitprice " +
+        return "Select to_char(x.sell_cost, 'fm999999990.00') sell_cost,x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,nvl(x.safe_qty,x.face_qty) face_qty, substr(p.signType,12,1) s_returntype, round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p " +
                 "where x.itemnumber = p.itemnumber(+) " +
                 "AND nvl(x.market_date,TO_DATE('1970-01-01','YYYY-MM-DD'))>=(sysdate-60 ) " +
@@ -426,7 +426,7 @@ object MySql {
      * 获得促销品
      */
     fun getPromotion(orderBy: String): String {
-        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From appord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy\u0004"
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn,nvl(x.safe_qty,x.face_qty) face_qty, substr(p.signType,12,1) s_returntype,round(p.storeunitprice,2) storeunitprice From appord_t2 x,plu p where x.itemnumber = p.itemnumber(+)and pro_yn ='Y' $orderBy\u0004"
     }
 
     /**
@@ -488,7 +488,7 @@ object MySql {
      */
     fun getFreashItem(categoryId: String, midId: String, orderBy: String): String {
         return "Select to_char(x.sell_cost, '999999990.00') sell_cost," +
-                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, x.dms,x.ordertype,x.pro_yn," +
+                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity, x.dms,x.ordertype,x.pro_yn,nvl(x.safe_qty,x.face_qty) face_qty," +
                 "substr(p.signType,12,1) s_returntype," +
                 "round(p.storeunitprice,2) storeunitprice " +
                 "From appord_t2 x,plu p " +

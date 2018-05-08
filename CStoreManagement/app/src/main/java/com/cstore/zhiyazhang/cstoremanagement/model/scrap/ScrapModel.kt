@@ -7,8 +7,8 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
@@ -19,7 +19,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ScrapView
  */
 class ScrapModel(private val sView: ScrapView) : ScrapInterface {
 
-    override fun getAllScrap(handler: MyHandler.OnlyMyHandler) {
+    override fun getAllScrap(handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -44,7 +44,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
         }).start()
     }
 
-    override fun searchScrap(message: String, handler: MyHandler.OnlyMyHandler) {
+    override fun searchScrap(message: String, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             val ip = MyApplication.getIP()
@@ -69,7 +69,7 @@ class ScrapModel(private val sView: ScrapView) : ScrapInterface {
         }).start()
     }
 
-    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler.OnlyMyHandler) {
+    override fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
             if (data.size < 1) {
@@ -195,15 +195,15 @@ interface ScrapInterface {
     /**
      * 得到当前所有的报废信息
      */
-    fun getAllScrap(handler: MyHandler.OnlyMyHandler)
+    fun getAllScrap(handler: MyHandler)
 
     /**
      * 搜索报废品
      */
-    fun searchScrap(message: String, handler: MyHandler.OnlyMyHandler)
+    fun searchScrap(message: String, handler: MyHandler)
 
     /**
      * 提交所有报废
      */
-    fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler.OnlyMyHandler)
+    fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int, handler: MyHandler)
 }

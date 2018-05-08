@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.scrap.ScrapHotModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil.judgmentInternet
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
@@ -23,7 +23,8 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
      */
     fun getScrapHotMid() {
         if (!judgmentInternet(gView)) return
-        anInterface.getMidCategory(OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     try {
@@ -42,12 +43,14 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
                     gView.hideLoading()
                 }
             }
-        }))
+        })
+        anInterface.getMidCategory(handler)
     }
 
     fun getAllScraphot(midId: String) {
         if (!judgmentInternet(gView)) return
-        anInterface.getHotItem(midId, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     try {
@@ -66,12 +69,14 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
                     gView.hideLoading()
                 }
             }
-        }))
+        })
+        anInterface.getHotItem(midId, handler)
     }
 
     fun submitScrap(data: ArrayList<ScrapContractBean>) {
         if (!judgmentInternet(gView)) return
-        anInterface.submitScrap(data, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
                     try {
@@ -89,6 +94,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
                     gView.hideLoading()
                 }
             }
-        }))
+        })
+        anInterface.submitScrap(data, handler)
     }
 }

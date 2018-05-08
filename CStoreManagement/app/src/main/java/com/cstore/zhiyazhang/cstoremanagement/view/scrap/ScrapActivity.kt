@@ -578,7 +578,6 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun hideLoading() {
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         go_hot_scrap.isEnabled=true
         scrap_done.isEnabled = true
         date_util.isEnabled=true

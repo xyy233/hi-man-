@@ -18,63 +18,10 @@ import java.lang.ref.WeakReference
  */
 class MyHandler : Handler() {
 
-    companion object OnlyMyHandler : Handler() {
+    companion object {
         const val SUCCESS = 0
         const val ERROR = 1
         const val OTHER = 2
-        private var isRun: Boolean = false
-
-        private var mActivity: WeakReference<MyActivity>? = null
-        private var mListener: MyListener? = null
-
-        fun writeActivity(activity: MyActivity): OnlyMyHandler {
-            mActivity = WeakReference(activity)
-            isRun = true
-            return this
-        }
-
-        fun writeListener(myListener: MyListener): OnlyMyHandler {
-            mListener = myListener
-            isRun = true
-            return this
-        }
-
-        fun cleanAL() {
-            if (!isRun) {//还在运行就不允许清空
-                mActivity = null
-                mListener = null
-            }
-        }
-
-        override fun handleMessage(msg: Message) {
-            try {
-                if (mActivity != null && mListener != null) {
-                    if (mActivity!!.get() == null) {
-                        mListener!!.listenerFailed(MyApplication.instance().applicationContext.getString(R.string.system_error))
-                        isRun = false
-                        return
-                    }
-                    isRun = when (msg.what) {
-                        SUCCESS -> {
-                            mListener!!.listenerSuccess(msg.obj)
-                            false
-                        }
-                        ERROR -> {
-                            mListener!!.listenerFailed(msg.obj as String)
-                            false
-                        }
-                        OTHER -> {
-                            mListener!!.listenerOther(msg.obj)
-                            false
-                        }
-                        else -> false
-                    }
-                }
-            } catch (e: Exception) {
-                isRun = false
-                return
-            }
-        }
     }
 
     private var isRun: Boolean = false

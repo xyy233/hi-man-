@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复无台帐商品无法单品订货的异常\n2.修改订货页面样式及交互功能</string>
+    <string name="bulletin">1.修复五大异常商品过多时崩溃的异常\n2.新增订货时可修改商品库存及自设排面\n3.修复了一个会导致应用崩溃的问题\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -128,6 +128,7 @@
     <string name="tomorrow">明日预测：</string>
     <string name="today_arrival">今日到货：</string>
     <string name="tomorrow_arrival">明日到货：</string>
+    <string name="face_qty">排面量：</string>
     <string name="shelf_name">货架名</string>
     <string name="no_edit_msg">无修改数据</string>
     <string name="self_value">自用品项目</string>

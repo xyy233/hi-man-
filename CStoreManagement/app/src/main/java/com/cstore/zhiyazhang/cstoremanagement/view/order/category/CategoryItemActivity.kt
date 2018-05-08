@@ -25,6 +25,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryIt
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
+import com.cstore.zhiyazhang.cstoremanagement.view.inquiry.UnitInquiryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.google.gson.Gson
@@ -72,7 +73,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     private val layoutManager = MyLinearlayoutManager(this@CategoryItemActivity, LinearLayoutManager.VERTICAL, false)
     private var adapter: CategoryItemAdapter? = null
     private val presenter = CategoryItemPresenter(this, this, this, this)
-    private var changeCategory: OrderCategoryBean? = null
     private var isNext = false
     private var isLast = false
 
@@ -587,7 +587,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = false
         order_item_last.isEnabled = false
         layoutManager.setScrollEnabled(false)
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun hideLoading() {
@@ -595,7 +594,6 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         order_item_next.isEnabled = true
         order_item_last.isEnabled = true
         layoutManager.setScrollEnabled(true)
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     override fun <T> showView(aData: T) {
@@ -610,6 +608,33 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         adapter = null
         swipe_recycler.adapter = adapter
         noMessage.visibility = View.VISIBLE
+    }
+
+    override fun touchBox(cb: CategoryItemBean) {
+        val i = Intent(this@CategoryItemActivity, UnitInquiryActivity::class.java)
+        i.putExtra("pluId", cb.itemId)
+        i.putExtra("flag", 2)
+        startActivityForResult(i, 2)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null) {
+            when (resultCode) {
+                2 -> {
+                    val pluId = data.getStringExtra("pluId")
+                    val inv = data.getIntExtra("inv", 0)
+                    val face = data.getIntExtra("min", 0)
+                    if (adapter != null) {
+                        adapter!!.data.filter { it.itemId == pluId }.forEach {
+                            it.itemInv = inv
+                            it.faceQTY = face
+                        }
+                        adapter!!.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
     }
 
     override fun touchAdd(cb: CategoryItemBean, event: MotionEvent, position: Int) {

@@ -181,7 +181,6 @@ class InventoryAdjustmentActivity(override val layoutId: Int = R.layout.activity
         loading_progress.visibility = View.GONE
         loading_text.visibility = View.GONE
         loading_retry.visibility = View.VISIBLE
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
     }
 
     //搜索得到的数据

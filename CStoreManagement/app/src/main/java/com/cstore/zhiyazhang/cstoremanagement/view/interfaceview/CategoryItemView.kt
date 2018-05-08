@@ -15,25 +15,27 @@ interface CategoryItemView {
 
     val self: SelfBean
 
-    val nop:NOPBean
+    val nop: NOPBean
 
-    val fg:FreshGroup
+    val fg: FreshGroup
 
     val sort: String
 
     val whereIsIt: String
 
-    var nowId:String
+    var nowId: String
 
-    var nowMidId:String
+    var nowMidId: String
 
     fun touchAdd(cb: CategoryItemBean, event: MotionEvent, position: Int)
 
     fun touchLess(cb: CategoryItemBean, event: MotionEvent, position: Int)
 
+    fun touchBox(cb: CategoryItemBean)
+
     val categoryList: ArrayList<CategoryItemBean>
 
     fun updateDone()
 
-    fun getAllItemId():Serializable
+    fun getAllItemId(): Serializable
 }

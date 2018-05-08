@@ -7,7 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.CategoryInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.ordercategory.CategoryItemModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.RecyclerOnTouch
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
@@ -22,7 +22,8 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllItem() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getAllItemByCategory(cView.nowId, cView.sort, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -40,12 +41,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getAllItemByCategory(cView.nowId, cView.sort, handler)
     }
 
     fun getAllShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getAllItemByShelf(cView.nowId, cView.sort, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -63,12 +66,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getAllItemByShelf(cView.nowId, cView.sort, handler)
     }
 
     fun getAllSearch(keywords: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getUnitItemByKeywords(keywords, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -86,13 +91,15 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getUnitItemByKeywords(keywords, handler)
     }
 
 
     fun getAllSelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getAllItemBySelfId(cView.nowId,cView.sort, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -110,12 +117,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getAllItemBySelfId(cView.nowId, cView.sort, handler)
     }
 
     fun getAllNOP() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getNewItemById(cView.nowId,cView.sort, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -133,12 +142,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getNewItemById(cView.nowId, cView.sort, handler)
     }
 
     fun getAllFresh() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.getAllFreshItem(cView.nowId,cView.nowMidId,cView.sort, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
                 if (data.size == 0) {
@@ -156,12 +167,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.getAllFreshItem(cView.nowId, cView.nowMidId, cView.sort, handler)
     }
 
     fun updateAllCategory() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        mInterface.updateAllCategory(cView.categoryList, OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 cView.updateDone()
                 //gView.hideLoading()
@@ -171,12 +184,17 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                 gView.showPrompt(errorMessage)
                 gView.hideLoading()
             }
-        }))
+        })
+        mInterface.updateAllCategory(cView.categoryList, handler)
     }
 
     private fun getAdapter(data: ArrayList<CategoryItemBean>, isType: String): CategoryItemAdapter {
         return CategoryItemAdapter(data, context, object : RecyclerOnTouch {
-            override fun <T> onClickImage(objects: T, position: Int) {}
+            override fun <T> onClickImage(objects: T, position: Int) {
+                when (objects) {
+                    is CategoryItemBean -> cView.touchBox(objects)
+                }
+            }
 
             override fun <T> onTouchAddListener(objects: T, event: MotionEvent, position: Int) {
                 when (objects) {

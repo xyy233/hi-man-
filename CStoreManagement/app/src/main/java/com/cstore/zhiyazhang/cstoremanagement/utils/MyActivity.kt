@@ -68,9 +68,6 @@ abstract class MyActivity : AppCompatActivity(), GenericView {
     }
 
     override fun onDestroy() {
-        //删掉内容
-        MyHandler.OnlyMyHandler.cleanAL()
-        MyHandler.OnlyMyHandler.removeCallbacksAndMessages(null)
         //释放监听
         unregisterReceiver(mBroadcastReceiver)
         super.onDestroy()

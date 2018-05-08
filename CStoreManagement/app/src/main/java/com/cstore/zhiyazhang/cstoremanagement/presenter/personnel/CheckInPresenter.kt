@@ -18,7 +18,8 @@ class CheckInPresenter(private val gView: GenericView, private val activity: MyA
 
     fun checkInUser(uid: String, bmp: Bitmap) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        model.checkInUser(gView.getData1() as Int, uid, bmp, MyHandler.OnlyMyHandler.writeActivity(activity).writeListener(object : MyListener {
+        val handler = MyHandler().writeActivity(activity)
+        handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
@@ -29,6 +30,7 @@ class CheckInPresenter(private val gView: GenericView, private val activity: MyA
                 gView.errorDealWith()
                 gView.hideLoading()
             }
-        }))
+        })
+        model.checkInUser(gView.getData1() as Int, uid, bmp, handler)
     }
 }

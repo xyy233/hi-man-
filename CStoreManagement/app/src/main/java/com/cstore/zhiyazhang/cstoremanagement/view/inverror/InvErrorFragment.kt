@@ -23,14 +23,17 @@ import kotlinx.android.synthetic.main.fragment_cash_daily.*
 class InvErrorFragment : Fragment() {
     private val data = ArrayList<InvErrorBean>()
     private lateinit var view: GenericView
+    private var fragmentPosition = 0
 
     companion object {
         private val PAGE_DATA = "page_data"
+        private val PAGE_POSITION = "page_position"
 
-        fun newInstance(data: ArrayList<InvErrorBean>): InvErrorFragment {
+        fun newInstance(data: ArrayList<InvErrorBean>, position: Int): InvErrorFragment {
             val result = InvErrorFragment()
             val bundler = Bundle()
             bundler.putSerializable(PAGE_DATA, data)
+            bundler.putInt(PAGE_POSITION, position)
             result.arguments = bundler
             return result
         }
@@ -43,6 +46,7 @@ class InvErrorFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         data.addAll(arguments!!.getSerializable(PAGE_DATA) as ArrayList<InvErrorBean>)
+        fragmentPosition = arguments!!.getInt(PAGE_POSITION)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -53,8 +57,14 @@ class InvErrorFragment : Fragment() {
             override fun <T> onItemEdit(data: T, position: Int) {
                 data as InvErrorBean
                 view.requestSuccess(data.pluId)
+                view.requestSuccess2(position)
+                view.updateDone(fragmentPosition)
             }
         })
+    }
+
+    fun scrollReccycler(position: Int) {
+        cash_recycler.scrollToPosition(position)
     }
 
     override fun onDestroy() {

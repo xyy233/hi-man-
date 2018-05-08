@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.MenuItem
 import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.bean.InvErrorBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.inverror.InvErrorPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.ZoomOutPageTransformer
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.toolbar_layout.*
 class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily) : MyActivity() {
     private val tabIndicators = ArrayList<String>()
     private val presenter = InvErrorPresenter(this)
+    private var allDatas = ArrayList<InvErrorBean>()
     private lateinit var adapter: InvErrorPagerAdapter
 
     override fun initView() {
@@ -28,7 +30,7 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
         resources.getStringArray(R.array.errorInv).forEach { tabIndicators.add(it) }
         cash_daily_tab.setupWithViewPager(cash_daily_viewpager)
         cash_daily_viewpager.setPageTransformer(true, ZoomOutPageTransformer())
-        adapter = InvErrorPagerAdapter(supportFragmentManager, ArrayList(), tabIndicators)
+        adapter = InvErrorPagerAdapter(supportFragmentManager, tabIndicators)
         cash_daily_viewpager.adapter = adapter
     }
 
@@ -67,8 +69,9 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
     }
 
     override fun <T> showView(aData: T) {
-        aData as ArrayList<InvErrorFragment>
-        adapter.setFragments(aData)
+        aData as ArrayList<InvErrorBean>
+        allDatas = aData
+        adapter.setData(allDatas)
         cash_daily_viewpager.currentItem = 0
     }
 
@@ -77,22 +80,48 @@ class InvErrorActivity(override val layoutId: Int = R.layout.activity_cashdaily)
     }
 
     override fun <T> requestSuccess(rData: T) {
+        adapter.clearData()
         val i = Intent(this@InvErrorActivity, UnitInquiryActivity::class.java)
         i.putExtra("pluId", rData.toString())
         i.putExtra("flag", 1)
-        startActivity(i)
-        finish()
+        startActivityForResult(i, 1)
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /**
+     * 记录当前点击item的position
+     */
+    private var p: Int = 0
+
+    override fun <T> requestSuccess2(rData: T) {
+        if (rData is Int) p = rData
+    }
+
+    /**
+     * 记录当前的tab的position
+     */
+    private var t: Int = 0
+
+    override fun <T> updateDone(uData: T) {
+        if (uData is Int) t = uData
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data!=null){
+        if (data != null) {
             when (resultCode) {
                 1 -> {
-                    presenter.getAllFragment()
+                    val pluId = data.getStringExtra("pluId")
+                    val inv = data.getIntExtra("inv", 0)
+                    val min = data.getIntExtra("min", 0)
+                    allDatas.filter { it.pluId == pluId }.forEach {
+                        it.inv = inv
+                        it.sfQty = min
+                    }
+                    adapter.setData(allDatas)
+                    adapter.setScroll(p, t)
                 }
             }
         }
-    }*/
+    }
 
 }

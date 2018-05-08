@@ -6,10 +6,9 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.cstore.zhiyazhang.cstoremanagement.view.inverror.InvErrorFragment
 import java.text.DecimalFormat
 
 /**
@@ -28,30 +27,10 @@ class InvErrorMoel {
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             if (!invErrorFirst(ip, msg, handler)) return@Runnable
             val allData = getAllData(ip, msg, handler) ?: return@Runnable
-            val result = getFragments(allData, ip, msg, handler) ?: return@Runnable
-            msg.obj=result
+            msg.obj=allData
             msg.what=SUCCESS
             handler.sendMessage(msg)
         }).start()
-    }
-
-    private fun getFragments(allData: ArrayList<InvErrorBean>, ip: String, msg: Message, handler: MyHandler): ArrayList<InvErrorFragment>? {
-        val result = ArrayList<InvErrorFragment>()
-        return try {
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 1 } as ArrayList<InvErrorBean>))
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 2 } as ArrayList<InvErrorBean>))
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 3 } as ArrayList<InvErrorBean>))
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 4 } as ArrayList<InvErrorBean>))
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 5 } as ArrayList<InvErrorBean>))
-            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 6 } as ArrayList<InvErrorBean>))
-//            result.add(InvErrorFragment.newInstance(allData.filter { it.flag == 7 } as ArrayList<InvErrorBean>))
-            result
-        } catch (e: Exception) {
-            msg.obj = e.message.toString()
-            msg.what = ERROR
-            handler.sendMessage(msg)
-            null
-        }
     }
 
     /**

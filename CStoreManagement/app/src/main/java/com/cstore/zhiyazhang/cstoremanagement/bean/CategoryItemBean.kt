@@ -27,7 +27,7 @@ data class CategoryItemBean(
         /**
          * 库存
          */
-        @SerializedName("invquantity") val itemInv: Int,
+        @SerializedName("invquantity") var itemInv: Int,
         /**
          * 我的加量
          */
@@ -69,6 +69,10 @@ data class CategoryItemBean(
          * 是否是促销品，String=Y\N
          */
         @SerializedName("pro_yn") val proYN: String,
+        /**
+         * 总排面
+         */
+        @SerializedName("face_qty") var faceQTY:Int,
         /**
          * DMS量
          */

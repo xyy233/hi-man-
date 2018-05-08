@@ -10,8 +10,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.ERROR
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.OnlyMyHandler.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 
 /**
@@ -20,7 +20,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
  */
 class SignInModel : SignInInterface {
 
-    override fun login( uid:String, password:String, myHandler: MyHandler.OnlyMyHandler) {
+    override fun login( uid:String, password:String, myHandler: MyHandler) {
         Thread(Runnable {
             Looper.prepare()
             val msg = Message()
@@ -72,5 +72,5 @@ class SignInModel : SignInInterface {
 }
 
 interface SignInInterface {
-    fun login( uid:String, password:String, myHandler: MyHandler.OnlyMyHandler)
+    fun login( uid:String, password:String, myHandler: MyHandler)
 }

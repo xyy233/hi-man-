@@ -25,7 +25,7 @@ data class InvErrorBean(
         @SerializedName("ordermode") val orderMode: String,
         @SerializedName("class_type") val classType: String,
         @SerializedName("nosaleday") val noSaleDay: Int,
-        @SerializedName("sfqty") val sfQty: Int,
+        @SerializedName("sfqty") var sfQty: Int,
         val status: Int,
         @SerializedName("market_date") var marketDate: String,
         @SerializedName("layclass") val layClass: String,
@@ -43,7 +43,7 @@ data class InvErrorBean(
         @SerializedName("minimaorderquantity") val minImaOrderQuantity: Int,
         @SerializedName("th_code") val thCode: String,
         @SerializedName("th_code1") val thCode1: String,
-        @SerializedName("invquantity") val inv: Int,
+        @SerializedName("invquantity") var inv: Int,
         @SerializedName("orderseq") val orderSeq: Int,
         @SerializedName("display_yn") val disPlayYN: String
 ) : Serializable
