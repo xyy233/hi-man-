@@ -15,7 +15,7 @@ class WXPayPresenter(private val activity: PayCollectActivity) {
 
     fun wechatCollectMoney(key: String, money: Double) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -35,7 +35,7 @@ class WXPayPresenter(private val activity: PayCollectActivity) {
 
     fun wechatRefund(data: Map<String, String>) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 //退款成功
@@ -56,7 +56,7 @@ class WXPayPresenter(private val activity: PayCollectActivity) {
 
     fun wechatRefund(outTranNo: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 //退款成功

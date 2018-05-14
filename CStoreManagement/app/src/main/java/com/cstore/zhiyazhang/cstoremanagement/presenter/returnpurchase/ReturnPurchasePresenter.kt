@@ -27,7 +27,7 @@ class ReturnPurchasePresenter(private val activity: ReturnPurchaseActivity) {
      */
     fun getReasonList() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -49,7 +49,7 @@ class ReturnPurchasePresenter(private val activity: ReturnPurchaseActivity) {
      */
     fun getReturnPurchaseList(date: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -79,7 +79,7 @@ class ReturnPurchaseItemPresenter(private val activity: ReturnPurchaseItemActivi
      */
     fun updateReturnPurchase(date: String, rpb: ReturnedPurchaseBean) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.updateDone(data)
@@ -107,7 +107,7 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
      */
     fun getVendor() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -130,7 +130,7 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
      */
     fun getCommodity() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -159,7 +159,7 @@ class ReturnPurchaseCreatePresenter(private val activity: ReturnPurchaseCreateAc
      */
     fun createReturnPurchase(date: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.hideLoading()

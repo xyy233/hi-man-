@@ -17,7 +17,7 @@ class SignInPresenter(private val view: SignInActivity) {
 
     fun login() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as User

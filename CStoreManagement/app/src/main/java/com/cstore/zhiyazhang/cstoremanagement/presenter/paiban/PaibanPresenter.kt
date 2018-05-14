@@ -20,7 +20,7 @@ class PaibanPresenter(private val view: GenericView) {
      */
     fun getDataByDate() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.showView(data)
@@ -43,7 +43,7 @@ class PaibanPresenter(private val view: GenericView) {
      */
     fun editData(type: Int) {
         //if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.updateDone(data)

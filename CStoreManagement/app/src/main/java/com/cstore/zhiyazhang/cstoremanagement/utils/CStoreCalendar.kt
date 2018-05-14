@@ -60,6 +60,31 @@ object CStoreCalendar {
     }
 
     /**
+     * 类内部获取换日异常时开线程去获得数据
+     */
+    private fun threadSetCStoreCalendar() {
+        Thread(Runnable {
+            var result = ""
+            var i = 0
+            while (result == "" || result == "[]" || result == "0") {
+                result = SocketUtil.initSocket(MyApplication.getIP(), MySql.cstoreCalendar).inquire()
+                i++
+                if (i == 2) break
+            }
+            if (i == 2) return@Runnable
+            val jsonData = ArrayList<CStoreCalendarBean>()
+            try {
+                jsonData.addAll(GsonUtil.getCstoreCalendar(result))
+            } catch (e: Exception) {
+            }
+            if (jsonData.size == 0) return@Runnable
+            data.addAll(jsonData)
+            date = MyTimeUtil.nowDate
+            return@Runnable
+        }).start()
+    }
+
+    /**
      * 得到日期
      */
     @JvmStatic
@@ -68,19 +93,49 @@ object CStoreCalendar {
             //如果有的话在这里就已经return了
             data.filter { it.dateType == type }.forEach { return it.currentDate }
         }
-        Handler().post { MyToast.getLongToast(ERROR_MSG) }
-        return "type=$type, data=$data error!"
+        threadSetCStoreCalendar()
+        return errorGetCurrentDate(type)
     }
 
     /**
-     * 得到换日日期
+     * 得到换日时间
      */
     fun getChangeTime(type: Int): Int {
         if (data.isNotEmpty()) {
             data.filter { it.dateType == type }.forEach { return getHourByString(it.changeTime) }
         }
-        Handler().post { MyToast.getLongToast(ERROR_MSG) }
-        return 0
+        threadSetCStoreCalendar()
+        return errorGetChangeTime(type)
+    }
+
+    /**
+     * 用于获得换日日期异常后的获得方式
+     */
+    private fun errorGetCurrentDate(type: Int): String {
+        val nowHour = MyTimeUtil.nowHour
+        val nowDate = MyTimeUtil.nowDate
+        val tomorrowDate = MyTimeUtil.tomorrowDate
+        val dayAfterTomorrowDate = MyTimeUtil.dayAfterTomorrowDate
+        val changeHour = errorGetChangeTime(type)
+        //如果是订货换日本来就要加一天的，因此订货换日时间选择明天或后天
+        val result = if (type != 2) (if (nowHour > changeHour) tomorrowDate else nowDate) else (if (nowHour > changeHour) dayAfterTomorrowDate else tomorrowDate)
+        return result
+    }
+
+    /**
+     * 用于获得换日日期或时间异常后的获得换日时间方式
+     */
+    private fun errorGetChangeTime(type: Int): Int {
+        return when (type) {
+            0 -> 23
+            1 -> 17
+            2 -> 5
+            3 -> 18
+            4 -> 23
+            5 -> 18
+            6 -> 12
+            else -> 0
+        }
     }
 
 
@@ -88,7 +143,6 @@ object CStoreCalendar {
         if (data.isNotEmpty()) {
             data.filter { it.dateType == type }.forEach { return it.sceodResult }
         }
-        Handler().post { MyToast.getLongToast(ERROR_MSG) }
         return 0
     }
 

@@ -23,8 +23,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
-import com.cstore.zhiyazhang.cstoremanagement.view.panorama.Panorama
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -138,7 +138,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             }
         }
         gg6.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, Panorama::class.java))
+            startActivity(Intent(this@HomeActivity, TransferZActivity::class.java))
         }
     }
 
@@ -148,6 +148,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         registerReceiver(updateReceiver, intentFilter)
         this.startService(Intent(this, UpdateService::class.java))
         beginBulletin()
+        startService(Intent(this, TransferService::class.java))
     }
 
     /**

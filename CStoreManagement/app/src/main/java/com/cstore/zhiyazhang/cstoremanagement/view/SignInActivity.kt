@@ -34,11 +34,12 @@ import java.io.File
 class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : MyActivity(), SignInView, EasyPermissions.PermissionCallbacks {
 
 
-    var preferences: SharedPreferences? = null
+    private var preferences: SharedPreferences? = null
     private val mSigninPresenter: SignInPresenter = SignInPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //获得权限
         getPermissions()
     }
@@ -130,10 +131,18 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             is User -> {
                 showPrompt(rData.name + "您好,登陆成功")
                 ReportListener.reportEnter(rData.storeId)
-                val intent = Intent(this@SignInActivity, HomeActivity::class.java)
-                intent.putExtra("user", rData)
-                startActivity(intent)
-                finish()
+                val out = intent.getIntExtra("out", 0)
+                if (out == 1) {
+                    //中卫调拨的
+                    val i = Intent()
+                    setResult(0, i)
+                    onBackPressed()
+                }else{
+                    val intent = Intent(this@SignInActivity, HomeActivity::class.java)
+                    intent.putExtra("user", rData)
+                    startActivity(intent)
+                    finish()
+                }
             }
             else -> showPrompt(getString(R.string.system_error))
         }

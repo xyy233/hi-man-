@@ -1869,6 +1869,20 @@ object MySql {
     }
 
     /**
+     * 创建中卫调出单
+     */
+    fun createTrs(tb: TransItem, trsNumber: String, trsStore: String): String {
+        val trsNo = tb.storeTrsQty ?: tb.trsQty
+        return "Insert into trs (StoreId,busiDate,trsID,trsNumber,itemNumber,shipNumber,storeUnitPrice,unitCost, " +
+                "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorId,supplierId) " +
+                "select P.StoreId, to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') busiDate,  'I' trsId, '$trsNumber' trsNumber, P.itemNumber, P.shipNumber, " +
+                "P.storeUnitPrice, P.unitCost, '$trsStore' trsStoreId, $trsNo trsQuantity, '${User.getUser().uId}' updateUserId, sysdate updateDateTime, sysdate trsTime, '00' trsReasonNumber, P.sell_cost, P.vendorId, P.supplierId " +
+                "from plu P " +
+                "where p.storeId='${User.getUser().storeId}' " +
+                "and p.itemNumber='${tb.itemNo}'\u000c"
+    }
+
+    /**
      * 更新调出单
      */
     fun updateTrs(tib: TrsItemBean): String {

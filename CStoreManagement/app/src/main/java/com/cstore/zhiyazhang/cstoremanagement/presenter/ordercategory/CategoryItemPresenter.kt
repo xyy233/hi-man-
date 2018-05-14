@@ -22,7 +22,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllItem() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -47,7 +47,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -72,7 +72,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllSearch(keywords: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -98,7 +98,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllSelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -123,7 +123,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllNOP() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -148,7 +148,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun getAllFresh() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as ArrayList<CategoryItemBean>
@@ -173,7 +173,7 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
 
     fun updateAllCategory() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 cView.updateDone()

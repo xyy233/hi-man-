@@ -72,6 +72,7 @@
     <string name="coi">进销存管理</string>
     <string name="collect">手机收银</string>
     <string name="panorama">全景预览</string>
+    <string name="transz">中卫调拨</string>
     <!--登录-->
     <string name="pwdError">密码错误</string>
     <string name="idError">查询不到此帐号</string>
@@ -283,11 +284,14 @@
     <string name="trs_number">调拨单号:</string>
     <string name="ostore_id">往来店号:</string>
     <string name="ostore_id2">往来店号</string>
+    <string name="ostore_name">往来店名:</string>
     <string name="trs_count">调拨项数:</string>
+    <string name="dis_time">调拨时间:</string>
     <string name="trs_qty">调拨数量:</string>
     <string name="trs_type">调拨类型:</string>
     <string name="unit_cost_total">零售合计:</string>
     <string name="trs_date">调拨业务日:</string>
+    <string name="trs_qty2">修改数量:</string>
     <string name="trs_time">时间：</string>
     <string name="search_prompt">请在右侧输入品号查询</string>
     <string name="trs_please_edit_store">请输入要调出的门市并点击查询按钮！</string>
@@ -362,5 +366,6 @@
     <string name="name1">姓名</string>
     <string name="month">月</string>
     <string name="year">年</string>
+    <string name="trs_ts">如无修改不用管</string>
 
 </resources>

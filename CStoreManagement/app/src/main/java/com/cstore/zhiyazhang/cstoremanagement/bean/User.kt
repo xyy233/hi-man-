@@ -135,7 +135,7 @@ data class User(
             ue.putString("aliPartnerId", user.aliPartnerId)
             ue.putString("aliSecurityCode", user.aliSecurityCode)
             ue.apply()
-            User.refreshUser()
+            refreshUser()
         }
 
         /**

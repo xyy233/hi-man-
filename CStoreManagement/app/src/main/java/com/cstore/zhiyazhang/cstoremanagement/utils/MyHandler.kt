@@ -2,10 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.os.Handler
 import android.os.Message
-import android.util.Log
-import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
-import java.lang.ref.WeakReference
 
 /**
  * Created by zhiya.zhang
@@ -25,16 +22,9 @@ class MyHandler : Handler() {
     }
 
     private var isRun: Boolean = false
-    private var mActivity: WeakReference<MyActivity>? = null
     private var mListener: MyListener? = null
 
-    fun writeActivity(activity: MyActivity): com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler {
-        mActivity = WeakReference(activity)
-        isRun = true
-        return this
-    }
-
-    fun writeListener(myListener: MyListener): com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler {
+    fun writeListener(myListener: MyListener): MyHandler {
         mListener = myListener
         isRun = true
         return this
@@ -47,19 +37,13 @@ class MyHandler : Handler() {
 
     private fun cleanAL() {
         if (!isRun) {//还在运行就不允许清空
-            mActivity = null
             mListener = null
         }
     }
 
     override fun handleMessage(msg: Message) {
         try {
-            if (mActivity != null && mListener != null) {
-                if (mActivity!!.get() == null) {
-                    mListener!!.listenerFailed(MyApplication.instance().applicationContext.getString(R.string.system_error))
-                    isRun = false
-                    return
-                }
+            if (mListener != null) {
                 isRun = when (msg.what) {
                     SUCCESS -> {
                         mListener!!.listenerSuccess(msg.obj)
@@ -77,8 +61,14 @@ class MyHandler : Handler() {
                 }
             }
         } catch (e: Exception) {
-            Log.e("MyHandler", e.message)
             isRun = false
+            if (e.message != null) {
+                try {
+                    mListener!!.listenerFailed(e.message.toString())
+                } catch (e: Exception) {
+                    throw e
+                }
+            }
             return
         }
     }

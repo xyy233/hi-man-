@@ -23,7 +23,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
      */
     fun getScrapHotMid() {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
@@ -49,7 +49,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
 
     fun getAllScraphot(midId: String) {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
@@ -75,7 +75,7 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
 
     fun submitScrap(data: ArrayList<ScrapContractBean>) {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {

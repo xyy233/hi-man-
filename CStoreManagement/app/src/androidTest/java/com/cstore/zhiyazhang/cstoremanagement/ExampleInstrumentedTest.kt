@@ -10,8 +10,8 @@ import org.junit.Test
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        val x="2018"
-        val xx=x.substring(2)
+        val x="1"
+        val xx=x.padStart(3, '0')
         val xxx=x.substring(1,1)
         val xxxx=0
     }

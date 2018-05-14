@@ -3,7 +3,6 @@ package com.cstore.zhiyazhang.cstoremanagement.presenter.attendance
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.attendance.AttendanceRecordingInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.attendance.AttendanceRecordingModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
@@ -22,7 +21,7 @@ class AttendanceRecordingPresenter(private val view: GenericView) {
      */
     fun getWorkHours() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.requestSuccess(data)
@@ -53,7 +52,7 @@ class AttendanceRecordingPresenter(private val view: GenericView) {
             return
         }
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.showView(data)

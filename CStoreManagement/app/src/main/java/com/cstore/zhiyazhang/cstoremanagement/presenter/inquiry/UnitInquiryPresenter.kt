@@ -23,7 +23,7 @@ class UnitInquiryPresenter(private val view: GenericView) {
      */
     fun getData() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.showView(data)
@@ -47,7 +47,7 @@ class UnitInquiryPresenter(private val view: GenericView) {
             return
         }
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.requestSuccess(data)
@@ -72,7 +72,7 @@ class UnitInquiryPresenter(private val view: GenericView) {
             return
         }
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.requestSuccess2(data)

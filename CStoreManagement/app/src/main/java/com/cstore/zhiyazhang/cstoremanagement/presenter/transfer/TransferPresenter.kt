@@ -17,7 +17,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun getAllTrs(date: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -36,7 +36,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun searchCommodity(data: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -55,7 +55,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun editTrs(data: ArrayList<TrsItemBean>) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.updateDone(data)
@@ -74,7 +74,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun getAllTrsf() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -93,7 +93,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun createTrsf(data: ArrayList<TrsfItemBean>) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.updateDone(data)
@@ -112,7 +112,7 @@ class TransferPresenter(private val activity: MyActivity) {
 
     fun searchStore(data: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)

@@ -25,7 +25,7 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
      */
     fun getAllScrap() {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
@@ -53,7 +53,7 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
      */
     fun searchScrap(message: String) {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {
@@ -77,7 +77,7 @@ class ScrapPresenter(private val gView: GenericView, private val sView: ScrapVie
 
     fun submitScraps(data: ArrayList<ScrapContractBean>, reCode: Int) {
         if (!judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 handler.post {

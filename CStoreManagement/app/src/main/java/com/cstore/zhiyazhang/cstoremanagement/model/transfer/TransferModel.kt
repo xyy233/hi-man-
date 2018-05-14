@@ -240,57 +240,85 @@ class TransferModel : TransferInterface {
         return result.toString()
     }
 
-    /**
-     * 创建时获得单号
-     */
-    private fun getTrsNumber(ip: String, msg: Message, handler: MyHandler): String {
-        val sql = MySql.getMaxTrsNumber
-        val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-        //有单号
-        val values = ArrayList<UtilBean>()
-        try {
-            values.addAll(GsonUtil.getUtilBean(sqlResult))
-        } catch (e: Exception) {
-        }
-        if (values.isEmpty()) {
-            msg.obj = sqlResult
-            msg.what = ERROR
-            handler.sendMessage(msg)
-            return "ERROR"
-        }
-        if (values[0].value == null || values[0].value == "null") {
-            //没有单号，新建
-            return trsNumberIsExits((MyTimeUtil.dayOfYear() + "1").toInt(), ip, msg, handler)
-        }
-        val number = values[0].value!!.substring(8, 12).toInt()
-        return trsNumberIsExits(number + 1, ip, msg, handler)
-    }
-
-    /**
-     * 检查是否有重复的单号，重复就+1
-     */
-    private fun trsNumberIsExits(trsNumber: Int, ip: String, msg: Message, handler: MyHandler): String {
-        var finalTrsNum = trsNumber
-        var checkOrder = false
-        var count = 0
-        while (!checkOrder) {
-            val sql = MySql.isExistTrs(finalTrsNum.toString())
-            val result = SocketUtil.initSocket(ip, sql).inquire()
-            if (result == "[]") {
-                checkOrder = true
-            } else {
-                finalTrsNum++
+    companion object {
+        /**
+         * 创建时获得单号
+         */
+        fun getTrsNumber(ip: String, msg: Message, handler: MyHandler): String {
+            val sql = MySql.getMaxTrsNumber
+            val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
+            //有单号
+            val values = ArrayList<UtilBean>()
+            try {
+                values.addAll(GsonUtil.getUtilBean(sqlResult))
+            } catch (e: Exception) {
             }
-            if (count == 10) {
-                msg.obj = "检查重复单号出错：$result"
+            if (values.isEmpty()) {
+                msg.obj = sqlResult
                 msg.what = ERROR
                 handler.sendMessage(msg)
                 return "ERROR"
             }
-            count++
+            if (values[0].value == null || values[0].value == "null") {
+                //没有单号，新建
+                return trsNumberIsExits((MyTimeUtil.dayOfYear() + 1).toInt(), ip, msg, handler)
+            }
+            val number = values[0].value!!.substring(8, 12).toInt()
+            return trsNumberIsExits(number + 1, ip, msg, handler)
         }
-        return "${User.getUser().storeId}${MyTimeUtil.nowYear()}${finalTrsNum.toString().padStart(4, '0')}"
+
+
+        /**
+         * 检查是否有重复的单号，重复就+1
+         */
+        private fun trsNumberIsExits(trsNumber: Int, ip: String, msg: Message, handler: MyHandler): String {
+            var finalTrsNum = trsNumber
+            var checkOrder = false
+            var count = 0
+            val storeId = User.getUser().storeId
+            val year = MyTimeUtil.nowYear().substring(1)
+            val month = getMonth()
+            var result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
+            while (!checkOrder) {
+                val sql = MySql.isExistTrs(result)
+                val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
+                if (sqlResult == "[]") {
+                    checkOrder = true
+                } else {
+                    finalTrsNum++
+                }
+                result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
+                if (count == 10) {
+                    msg.obj = "检查重复单号出错：$sqlResult"
+                    msg.what = ERROR
+                    handler.sendMessage(msg)
+                    return "ERROR"
+                }
+                count++
+            }
+            return result
+        }
+
+        private fun getMonth(): String {
+            val month = MyTimeUtil.nowMonth
+            return when (month) {
+                1 -> "A"
+                2 -> "B"
+                3 -> "C"
+                4 -> "D"
+                5 -> "E"
+                6 -> "F"
+                7 -> "G"
+                8 -> "H"
+                9 -> "I"
+                10 -> "J"
+                11 -> "K"
+                12 -> "L"
+                else -> "M"
+            }
+        }
     }
+
 
 }
 

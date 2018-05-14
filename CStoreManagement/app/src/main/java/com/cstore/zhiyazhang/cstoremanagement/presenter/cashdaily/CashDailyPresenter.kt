@@ -23,7 +23,7 @@ class CashDailyPresenter(private val gView: GenericView, private val context: Co
     private val mInterface: CashDailyInterface = CashDailyModel()
     fun getAllCashDaily(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -40,7 +40,7 @@ class CashDailyPresenter(private val gView: GenericView, private val context: Co
 
     fun updateCashDaily(date: String, view: View, cd: CashDailyBean, value: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 if (cd.cdId == "1097") {

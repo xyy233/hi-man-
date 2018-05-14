@@ -47,6 +47,8 @@ class MyApplication : Application() {
                         if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
                             val ip = inetAddress.hostAddress
                             val ips = ip.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                            //测试
+//                            result = ips[0] + "." + ips[1] + "." + ips[2] + ".111"
                             result = ips[0] + "." + ips[1] + "." + ips[2] + ".100"
                             if (name.indexOf("wlan") != -1 && result != "") {
                                 return result

@@ -193,13 +193,6 @@
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_margin="5dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
             <LinearLayout
                 android:id="@+id/gg6"
                 android:layout_width="0dp"
@@ -212,20 +205,19 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg3"
-                android:visibility="gone"
+                android:transitionName="gg6"
                 tools:ignore="NestedWeights">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_unit_order"/>
+                    android:src="@mipmap/zw_trs"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/panorama"/>
+                    android:text="@string/transz"/>
             </LinearLayout>
 
 

@@ -18,7 +18,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
 
     fun getAllCategory() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -36,7 +36,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
 
     fun getShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -54,7 +54,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
 
     fun getSelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -72,7 +72,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
 
     fun getNOP() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -93,7 +93,7 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
      */
     fun getFresh(freshType: Int) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)

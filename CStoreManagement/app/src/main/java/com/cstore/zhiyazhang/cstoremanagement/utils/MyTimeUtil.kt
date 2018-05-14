@@ -177,12 +177,7 @@ object MyTimeUtil {
     }
 
     fun nowMonth(): String {
-        val result = nowMonth
-        return if (result < 10) {
-            "0$result"
-        } else {
-            result.toString()
-        }
+        return nowMonth.toString().padStart(2, '0')
     }
 
     /**
@@ -212,6 +207,16 @@ object MyTimeUtil {
             val calendar: Calendar = GregorianCalendar()
             calendar.time = date
             calendar.add(Calendar.DATE, 1)//把日期往后增加一天.整数往后推,负数往前移动
+            return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
+        }
+
+    //后天
+    val dayAfterTomorrowDate: String
+        get() {
+            val date = Date()//取时间
+            val calendar: Calendar = GregorianCalendar()
+            calendar.time = date
+            calendar.add(Calendar.DATE, 2)//把日期往后增加两天.整数往后推,负数往前移动
             return SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(calendar.time)
         }
 

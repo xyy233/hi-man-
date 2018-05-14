@@ -1,0 +1,82 @@
+package com.cstore.zhiyazhang.cstoremanagement.presenter.transfer
+
+import android.content.Context
+import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.bean.TransItem
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+
+/**
+ * Created by zhiya.zhang
+ * on 2018/5/11 12:24.
+ */
+class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdit: Boolean, val context: Context) : RecyclerView.Adapter<TransferZItemAdapter.ViewHolder>() {
+    override fun getItemCount(): Int = data.size
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //取消复用，edittext有复用的话就混乱了
+        holder.setIsRecyclable(false)
+        val d = data[position]
+        Glide.with(context).load("http://${MyApplication.getIP()}:8666/uploadIMG/${d.itemNo}.png")
+                .placeholder(R.mipmap.loading)
+                .error(R.mipmap.load_error)
+                .crossFade()
+                .into(holder.trsItem)
+        holder.id.text = d.itemNo
+        holder.name.text = d.itemName
+        holder.trsQty.text = d.trsQty.toString()
+        if (d.storeTrsQty != null) holder.trsQty2.setText(d.storeTrsQty.toString())
+        if (isShowEdit) {
+            holder.trsQty2.isEnabled = true
+            holder.trsQty2.inputType = InputType.TYPE_CLASS_NUMBER
+            holder.trsQty2.keyListener = DigitsKeyListener.getInstance("1234567890")
+            holder.trsQty2.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    try {
+                        //输入结束
+                        if (holder.trsQty2.text.toString() != "" && holder.trsQty2.text != null) {
+                            d.storeTrsQty = holder.trsQty2.text.toString().toInt()
+                        }
+                    } catch (e: Exception) {
+                        holder.trsQty2.setText("")
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+        } else {
+            holder.trsQty2.isEnabled = false
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_trsz_item, parent, false))
+
+    fun changeShowEdit(isShowEdit: Boolean) {
+        this.isShowEdit = isShowEdit
+        notifyDataSetChanged()
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val id = itemView.findViewById<TextView>(R.id.commodity_id)!!
+        val trsItem = itemView.findViewById<ImageView>(R.id.trs_item)!!
+        val name = itemView.findViewById<TextView>(R.id.commodity_name)!!
+        val trsQty = itemView.findViewById<TextView>(R.id.trs_qty)!!
+        val trsQty2 = itemView.findViewById<EditText>(R.id.trs_qty2)!!
+    }
+}

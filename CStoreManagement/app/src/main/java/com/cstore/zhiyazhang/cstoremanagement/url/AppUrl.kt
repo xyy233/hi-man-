@@ -9,6 +9,8 @@ object AppUrl {
 
     val USER_HEADER = "Authorization"
     val STORE_HEADER = "store_id"
+    val STOREHEADER = "storeid"
+    val HOUR = "hour"
     val CONNECTION_HEADER = "Connection"
     val CONNECTION_SWITCH = "close"
     val IS_JUST_LOOK = "is_just_look"
@@ -22,4 +24,7 @@ object AppUrl {
     val SEARCH_CONTRACT_URL = appIp + "order/getItemsByVague.do"
     val UPDATE_APP = appIp + "order/updateAPP.do"
     val UPLOAD_ERROR = appIp + "asset/uploadError.do"
+    val GET_ALL_TRANS = appIp + "trs/get.do"
+    val JUDGMENT_TRANS = appIp + "trs/count.do"
+    val UPDATE_TRANS = appIp + "trs/upd.do"
 }

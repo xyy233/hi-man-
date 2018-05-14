@@ -25,7 +25,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun getAcceptanceList(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
@@ -45,7 +45,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun getReturnAcceptanceList(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
@@ -65,7 +65,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun updateAcceptance(date: String, ab: AcceptanceBean) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(activity.getString(R.string.saveDone))
@@ -85,7 +85,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun updateReturnAcceptance(date: String, rab: ReturnAcceptanceBean) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
@@ -105,7 +105,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun getVendor() {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -125,7 +125,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun getCommodity(ab: AcceptanceBean?, vendorId: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
@@ -142,7 +142,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
 
     fun getReturnCommodity(rab: ReturnAcceptanceBean?, vendorId: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
@@ -162,7 +162,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun createAcceptance(date: String, ab: AcceptanceBean?, aib: ArrayList<AcceptanceItemBean>) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
@@ -182,7 +182,7 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
      */
     fun createReturnAcceptance(date: String, rab: ReturnAcceptanceBean?, raib: ArrayList<ReturnAcceptanceItemBean>) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)

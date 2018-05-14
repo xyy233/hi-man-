@@ -34,7 +34,7 @@ public class AttendancePresenter {
             return;
 
         assert (MyActivity) view.getData1() != null;
-        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        final MyHandler handler = new MyHandler();
         handler.writeListener(new MyListener() {
             @Override
             public void listenerOther(@NotNull Object data) {
@@ -76,7 +76,7 @@ public class AttendancePresenter {
             return;
 
         assert (MyActivity) view.getData1() != null;
-        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        final MyHandler handler = new MyHandler();
         handler.writeListener(new MyListener() {
             @Override
             public void listenerOther(@NotNull Object data) {
@@ -106,7 +106,7 @@ public class AttendancePresenter {
             return;
 
         assert (MyActivity) view.getData1() != null;
-        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        final MyHandler handler = new MyHandler();
         handler.writeListener(new MyListener() {
             @Override
             public void listenerOther(@NotNull Object data) {
@@ -139,7 +139,7 @@ public class AttendancePresenter {
             return;
 
         assert (MyActivity) view.getData1() != null;
-        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        final MyHandler handler = new MyHandler();
         handler.writeListener(new MyListener() {
             @Override
             public void listenerOther(@NotNull Object data) {
@@ -170,7 +170,7 @@ public class AttendancePresenter {
         if ((!PresenterUtil.INSTANCE.judgmentInternet(view)))
             return;
         assert (MyActivity) view.getData1() != null;
-        final MyHandler handler = new MyHandler().writeActivity((MyActivity) view.getData1());
+        final MyHandler handler = new MyHandler();
         handler.writeListener(new MyListener() {
             @Override
             public void listenerOther(@NotNull Object data) {

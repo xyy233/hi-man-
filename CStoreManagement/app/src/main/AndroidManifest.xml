@@ -47,6 +47,8 @@
         <service android:name=".view.UpdateService"/>
         <!--检测是否有交易未完成的service-->
         <service android:name=".view.PayDataService"/>
+        <!--检查调拨的service-->
+        <service android:name=".view.TransferService"/>
 
         <!--Home主页-->
         <activity
@@ -232,6 +234,14 @@
 
         <!--虚拟全景-->
         <activity android:name=".view.panorama.Panorama"/>
+
+        <!--中卫调拨-->
+        <activity android:name=".view.transfer.TransferZActivity"
+                  android:screenOrientation="portrait"/>
+
+        <!--中卫调拨详细页-->
+        <activity android:name=".view.transfer.TransferZItemActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ class InvErrorPresenter(private val view: GenericView) {
      */
     fun getAllFragment() {
         if (!PresenterUtil.judgmentInternet(view)) return
-        val handler = MyHandler().writeActivity(view.getData1() as MyActivity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 view.showView(data)

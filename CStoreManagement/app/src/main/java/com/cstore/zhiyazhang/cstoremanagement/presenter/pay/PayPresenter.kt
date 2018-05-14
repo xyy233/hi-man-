@@ -15,7 +15,7 @@ class PayPresenter(private val activity: PayActivity) {
 
     fun getCommodity(barCode: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -35,7 +35,7 @@ class PayPresenter(private val activity: PayActivity) {
 
     fun searchCommodity(key: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -55,7 +55,7 @@ class PayPresenter(private val activity: PayActivity) {
 
     fun updateCommodity(barCode: String, count:Int){
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -78,7 +78,7 @@ class PayPresenter(private val activity: PayActivity) {
      */
     fun deleteData() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)

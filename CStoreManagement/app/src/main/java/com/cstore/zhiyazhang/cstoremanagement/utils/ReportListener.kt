@@ -19,12 +19,12 @@ object ReportListener {
     /**
      * 上传操作信息
      */
-    fun report(errorMessage: String, errorDate: String) {
+    fun report(errorMessage: String, errorData: String) {
         if (!ConnectionDetector.getConnectionDetector().isOnline) return
         OkHttpUtils
                 .postString()
                 .url(AppUrl.UPLOAD_ERROR)
-                .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：$errorMessage,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$errorDate")
+                .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：$errorMessage,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$errorData")
                 .addHeader("fileName", "${User.getUser().storeId}/${MyTimeUtil.nowTimeString3}.txt")
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
@@ -71,6 +71,30 @@ object ReportListener {
                         })
             }
         }
+    }
+
+    /**
+     * 上传错误信息
+     */
+    fun reportError(errorMessage: String, errorData: String) {
+        if (!ConnectionDetector.getConnectionDetector().isOnline) return
+        OkHttpUtils
+                .postString()
+                .url(AppUrl.UPLOAD_ERROR)
+                .content("店号：${User.getUser().storeId},\r\n版本号：${MyApplication.getVersion()!!},\r\n动作信息：$errorMessage,\r\n时间：${MyTimeUtil.nowTimeString}，\r\n数据：$errorData")
+                .addHeader("fileName", "Error/${User.getUser().storeId + MyTimeUtil.nowTimeString3}.txt")
+                .build()
+                .execute(object : MyStringCallBack(object : MyListener {
+
+                    override fun listenerSuccess(data: Any) {
+                    }
+
+                    override fun listenerFailed(errorMessage: String) {
+                    }
+                }) {
+                    override fun onResponse(p0: String?, p1: Int) {
+                    }
+                })
     }
 
     /**

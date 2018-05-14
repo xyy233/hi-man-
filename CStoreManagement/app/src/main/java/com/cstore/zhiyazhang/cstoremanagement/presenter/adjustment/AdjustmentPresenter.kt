@@ -21,7 +21,7 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
      */
     fun getAdjustmentList(date: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
@@ -38,7 +38,7 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
 
     fun searchAdjustment(searchMsg: String) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
@@ -55,7 +55,7 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
 
     fun createAdjustment(data: ArrayList<AdjustmentBean>) {
         if (!PresenterUtil.judgmentInternet(gView)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)

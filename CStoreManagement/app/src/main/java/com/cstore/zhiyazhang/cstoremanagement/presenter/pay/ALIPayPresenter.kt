@@ -16,7 +16,7 @@ class ALIPayPresenter(private val activity: PayCollectActivity) {
 
     fun aliCollectMoney(key: String, money: Double) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -37,7 +37,7 @@ class ALIPayPresenter(private val activity: PayCollectActivity) {
     fun aliRefund(outTranNo: String) {
 
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 //退款成功

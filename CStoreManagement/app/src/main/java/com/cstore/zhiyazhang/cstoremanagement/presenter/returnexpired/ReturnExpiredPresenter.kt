@@ -16,7 +16,7 @@ class ReturnExpiredPresenter(private val activity: ReturnExpiredActivity) {
 
     fun getAll() {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.showView(data)
@@ -35,7 +35,7 @@ class ReturnExpiredPresenter(private val activity: ReturnExpiredActivity) {
 
     fun searchExpiredCommodity(data: String) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
@@ -54,7 +54,7 @@ class ReturnExpiredPresenter(private val activity: ReturnExpiredActivity) {
 
     fun getDateAll(date1: String, date2: String, checkIndex: Int) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess2(data)
@@ -73,7 +73,7 @@ class ReturnExpiredPresenter(private val activity: ReturnExpiredActivity) {
 
     fun saveData(changeData: ArrayList<ReturnExpiredBean>) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.updateDone(data)

@@ -16,7 +16,7 @@ class CashPayPresenter(private val activity: PayCollectActivity) {
 
     fun cashCollect(money: Double) {
         if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler().writeActivity(activity)
+        val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 activity.requestSuccess(data)
