@@ -14,6 +14,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.bean.TransTag
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
@@ -83,6 +85,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         dialogView.dialog_edit.hint = getString(R.string.please_edit_password_by_developer)
         dialogView.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
         dialogView.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
+
+        //华南关闭调拨入口
+        if (User.getUser().type == 1) {
+            gg6.visibility = View.GONE
+        }
     }
 
     override fun initClick() {
@@ -148,7 +155,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         registerReceiver(updateReceiver, intentFilter)
         this.startService(Intent(this, UpdateService::class.java))
         beginBulletin()
-        startService(Intent(this, TransferService::class.java))
+        //华东才开启调拨服务
+        if (User.getUser().type==0){
+            startService(Intent(this, TransferService::class.java))
+        }
     }
 
     /**
@@ -256,6 +266,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                                          sd.editSQL(null, "deleteTable")*/
                                         val cd = ContractTypeDao(this@HomeActivity)
                                         cd.editSQL(null, "deleteAll")
+                                        TransTag.cleanTag()
                                         Toast.makeText(this@HomeActivity, "清除完毕", Toast.LENGTH_SHORT).show()
                                     })
                                     .setNegativeButton("放弃") { _, _ -> }

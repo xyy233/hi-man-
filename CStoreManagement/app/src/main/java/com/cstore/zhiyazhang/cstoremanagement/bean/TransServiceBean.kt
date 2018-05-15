@@ -28,7 +28,8 @@ data class TransItem(
         @SerializedName("itemno") val itemNo: String,
         @SerializedName("item_name") val itemName: String,
         @SerializedName("trs_qty") var trsQty: Int,
-        @SerializedName("store_trs_qty") var storeTrsQty: Int?
+        @SerializedName("store_trs_qty") var storeTrsQty: Int?,
+        var inv: Int?
 ) : Serializable
 
 /**
@@ -76,6 +77,17 @@ data class TransTag(
             ts.putString("trs_store", User.getUser().storeId)
             ts.putString("date", tag.date)
             ts.putString("hour", tag.hour)
+            ts.apply()
+            refreshTag()
+        }
+
+        /**
+         * 清空
+         */
+        fun cleanTag() {
+            val sp = MyApplication.instance().applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
+            val ts = sp.edit()
+            ts.clear()
             ts.apply()
             refreshTag()
         }

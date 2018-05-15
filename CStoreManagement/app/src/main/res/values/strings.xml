@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复五大异常商品过多时崩溃的异常\n2.新增订货时可修改商品库存及自设排面\n3.修复了一个会导致应用崩溃的问题\n</string>
+    <string name="bulletin">1.修复换日崩溃异常\n2.新增中卫调拨\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>

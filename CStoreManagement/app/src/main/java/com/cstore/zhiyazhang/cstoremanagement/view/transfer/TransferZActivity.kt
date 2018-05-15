@@ -66,6 +66,13 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
             showPrompt("获得数据类型错误")
             errorDealWith()
         }
+
+        //更新最新调拨时间
+        val transTag = TransTag.getTransTag()
+        var hour = 0
+        (aData as TransResult).rows.forEach { if (it.disTime.toInt() > hour) hour = it.disTime.toInt() }
+        TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
+
         //测试
         //超过两小时的订单都不显示
         val nowHour = MyTimeUtil.nowHour
@@ -82,12 +89,6 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
             }
         })
         orderRecycler.adapter = adapter
-
-        //更新最新调拨时间
-        val transTag = TransTag.getTransTag()
-        var hour = 0
-        (aData as TransResult).rows.forEach { if (it.disTime.toInt() > hour) hour = it.disTime.toInt() }
-        TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -76,7 +76,11 @@ data class User(
         /**
          * 支付宝钱包安全码
          */
-        @SerializedName("alipay_security_code") val aliSecurityCode: String
+        @SerializedName("alipay_security_code") val aliSecurityCode: String,
+        /**
+         * 0=华东  1=华南
+         */
+        var type: Int?
 ) : Serializable {
     companion object {
 
@@ -105,7 +109,8 @@ data class User(
                         sp.getString("wxKeyStore", ""),
                         sp.getString("wxKeyPassword", ""),
                         sp.getString("aliPartnerId", ""),
-                        sp.getString("aliSecurityCode", "")
+                        sp.getString("aliSecurityCode", ""),
+                        sp.getInt("type", 0)
                 )
             }
             return staticUser!!
@@ -134,6 +139,8 @@ data class User(
             ue.putString("wxKeyPassword", user.wxKeyPassword)
             ue.putString("aliPartnerId", user.aliPartnerId)
             ue.putString("aliSecurityCode", user.aliSecurityCode)
+            val type = if (user.storeId[0].toUpperCase().toString() == "s") 1 else 0
+            ue.putInt("type", type)
             ue.apply()
             refreshUser()
         }
@@ -160,7 +167,8 @@ data class User(
                     sp.getString("wxKeyStore", ""),
                     sp.getString("wxKeyPassword", ""),
                     sp.getString("aliPartnerId", ""),
-                    sp.getString("aliSecurityCode", "")
+                    sp.getString("aliSecurityCode", ""),
+                    sp.getInt("type", 0)
             )
         }
     }

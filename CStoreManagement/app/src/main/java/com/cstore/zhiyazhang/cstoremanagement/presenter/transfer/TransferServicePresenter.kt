@@ -19,7 +19,7 @@ class TransferServicePresenter(private val view: GenericView) {
     private val model: TransferServiceInterface = TransferServiceModel()
 
     fun getJudgment() {
-        if (!ConnectionDetector.getConnectionDetector().isOnline) return
+        if (!ConnectionDetector.getConnectionDetector().isOnlineNoToast) return
         val user = User.getUser()
         if (user.storeId == "") return
         val listener = object : MyListener {
@@ -49,8 +49,25 @@ class TransferServicePresenter(private val view: GenericView) {
             override fun listenerSuccess(data: Any) {
                 val trs = Gson().fromJson(data as String, TransResult::class.java)
                 trs.rows.sortBy { it.trsType }
-                view.showView(trs)
-                view.hideLoading()
+                if (trs.rows.size == 0) {
+                    view.showView(trs)
+                    view.hideLoading()
+                    return
+                }
+                //获得库存
+                val handler = MyHandler()
+                handler.writeListener(object : MyListener {
+                    override fun listenerSuccess(data: Any) {
+                        view.showView(data)
+                        view.hideLoading()
+                    }
+
+                    override fun listenerFailed(errorMessage: String) {
+                        view.showPrompt(errorMessage)
+                        view.errorDealWith()
+                    }
+                })
+                model.getZWInv(trs, handler)
             }
 
             override fun listenerFailed(errorMessage: String) {

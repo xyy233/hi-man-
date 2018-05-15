@@ -1,13 +1,12 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.transfer
 
 import android.os.Message
-import com.cstore.zhiyazhang.cstoremanagement.bean.TransServiceBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.TransTag
-import com.cstore.zhiyazhang.cstoremanagement.bean.User
+import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferModel.Companion.getTrsNumber
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
@@ -27,6 +26,8 @@ class TransferServiceModel : TransferServiceInterface {
         OkHttpUtils
                 .get()
                 .url(AppUrl.GET_ALL_TRANS)
+                //测试
+//                .addHeader(AppUrl.STOREHEADER, "130902")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
@@ -38,10 +39,12 @@ class TransferServiceModel : TransferServiceInterface {
     }
 
     override fun getJudgment(user: User, myListener: MyListener) {
-        val tag=TransTag.getTransTag()
+        val tag = TransTag.getTransTag()
         OkHttpUtils
                 .get()
                 .url(AppUrl.JUDGMENT_TRANS)
+                //测试
+//                .addHeader(AppUrl.STOREHEADER, "130902")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, tag.hour)
                 .build()
@@ -72,6 +75,44 @@ class TransferServiceModel : TransferServiceInterface {
                 msg.what = ERROR
                 handler.sendMessage(msg)
             }
+        }).start()
+    }
+
+    /**
+     * 获得中卫商品库存
+     */
+    override fun getZWInv(tr: TransResult, handler: MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            val sql = MySql.zwSearchInv(tr)
+            val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
+            val result = ArrayList<UtilBean>()
+            try {
+                result.addAll(GsonUtil.getUtilBean(sqlResult))
+            } catch (e: Exception) {
+            }
+            if (result.isEmpty()) {
+                msg.obj = sqlResult
+                msg.what = ERROR
+            } else {
+                //分配库存
+                tr.rows
+                        .flatMap { it.items }
+                        .forEach { i ->
+                            try {
+                                result.filter { it.value == i.itemNo }.forEach {
+                                    val inv = it.value2
+                                    i.inv = inv!!.toInt()
+                                }
+                            } catch (e: Exception) {
+                            }
+                        }
+                msg.obj = tr
+                msg.what = SUCCESS
+            }
+            handler.sendMessage(msg)
         }).start()
     }
 
@@ -126,6 +167,11 @@ interface TransferServiceInterface {
      * 获得所有数据
      */
     fun getAllTrs(user: User, myListener: MyListener)
+
+    /**
+     * 获得库存
+     */
+    fun getZWInv(tr: TransResult, handler: MyHandler)
 
     /**
      * 获得判断数据

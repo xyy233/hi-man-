@@ -1883,6 +1883,25 @@ object MySql {
     }
 
     /**
+     * 中卫调拨获得当前库存
+     */
+    fun zwSearchInv(tr: TransResult): String {
+        val stores = StringBuilder()
+        tr.rows.forEach { it.items.forEach { stores.append("'${it.itemNo}',") } }
+        val finalStores = stores.toString().substring(0, stores.toString().length - 1)
+        return "select itemnumber value, " +
+                "(nvl(inv.befInvQuantity, 0) + nvl(inv.accDlvQuantity, 0) - " +
+                "nvl(inv.accRtnQuantity, 0) - nvl(inv.accSaleQuantity, 0) + " +
+                "nvl(inv.accSaleRtnQuantity, 0) - nvl(inv.accMrkQuantity, 0) + " +
+                "nvl(inv.accCshDlvQuantity, 0) - nvl(inv.accCshRtnQuantity, 0) + " +
+                "nvl(inv.accTrsQuantity, 0) + nvl(inv.accLeibianQuantity, 0) + " +
+                "nvl(inv.accAdjQuantity, 0) + nvl(inv.accHqAdjQuantity, 0)) as value2 " +
+                "from inv " +
+                "where busidate = to_date('${MyTimeUtil.nowDate}', 'yyyy-mm-dd') " +
+                "and itemnumber in ($finalStores)\u0004"
+    }
+
+    /**
      * 更新调出单
      */
     fun updateTrs(tib: TrsItemBean): String {

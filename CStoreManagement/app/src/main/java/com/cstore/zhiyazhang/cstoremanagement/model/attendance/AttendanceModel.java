@@ -18,6 +18,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil;
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.ERROR;
 import static com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.SUCCESS;
@@ -244,7 +245,7 @@ public class AttendanceModel implements AttendanceInterface {
                 if (!SocketUtil.judgmentIP(ip, msg, handler))
                     return;
                 String sql;
-                if (uId == null) {
+                if (uId == null || Objects.equals(uId, "")) {
                     //全部考勤
                     sql = MySql.changeAttendance(null, 1);
                 } else {

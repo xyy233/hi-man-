@@ -11,11 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransItem
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 
 /**
  * Created by zhiya.zhang
@@ -36,7 +38,21 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         holder.id.text = d.itemNo
         holder.name.text = d.itemName
         holder.trsQty.text = d.trsQty.toString()
+        if (d.inv != null) {
+            holder.invBox.visibility = View.VISIBLE
+            holder.inv.text = d.inv.toString()
+            //只有在可编辑的情况下才处理修改量
+            if (isShowEdit) {
+                //调拨量大于库存就要修改量为库存
+                if (d.trsQty > d.inv!!) {
+                    d.storeTrsQty = d.inv
+                }
+            }
+        } else {
+            holder.invBox.visibility = View.GONE
+        }
         if (d.storeTrsQty != null) holder.trsQty2.setText(d.storeTrsQty.toString())
+
         if (isShowEdit) {
             holder.trsQty2.isEnabled = true
             holder.trsQty2.inputType = InputType.TYPE_CLASS_NUMBER
@@ -46,6 +62,14 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
                     try {
                         //输入结束
                         if (holder.trsQty2.text.toString() != "" && holder.trsQty2.text != null) {
+                            val tq2 = holder.trsQty2.text.toString().toInt()
+                            if (d.inv != null) {
+                                if (tq2 > d.inv!!) {
+                                    d.storeTrsQty = d.inv
+                                    holder.trsQty2.setText(d.inv.toString())
+                                    MyToast.getShortToast("修改量不能大于库存")
+                                }
+                            }
                             d.storeTrsQty = holder.trsQty2.text.toString().toInt()
                         }
                     } catch (e: Exception) {
@@ -78,5 +102,7 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         val name = itemView.findViewById<TextView>(R.id.commodity_name)!!
         val trsQty = itemView.findViewById<TextView>(R.id.trs_qty)!!
         val trsQty2 = itemView.findViewById<EditText>(R.id.trs_qty2)!!
+        val invBox = itemView.findViewById<LinearLayout>(R.id.inv_box)!!
+        val inv = itemView.findViewById<TextView>(R.id.inv)!!
     }
 }

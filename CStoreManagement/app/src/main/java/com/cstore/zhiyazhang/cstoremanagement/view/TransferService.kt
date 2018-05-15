@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferServicePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
@@ -30,41 +31,47 @@ class TransferService : Service(), GenericView {
     private val secondNotificationId = 529//有新通知才显示的
     private lateinit var manager: NotificationManager
     private val presenter = TransferServicePresenter(this)
+    private lateinit var notification: Notification
     private val thread = Thread(Runnable {
         //首次开启先静止5s
         Thread.sleep(1000)
         while (true) {
+            Log.e(tag, "thread")
             val nowHour = MyTimeUtil.nowHour
-            if (nowHour == 10|| nowHour == 14){
-                //小时在10或14就每2分钟查询一次
+            if (nowHour == 10 || nowHour == 14) {
+                //小时在10或14就每30s查询一次
                 presenter.getJudgment()
-                Thread.sleep(1000 * 60 * 2)
-            }else if (nowHour in 8..17) {
-                //小时小于18大于7就5分钟查询一次
+                Thread.sleep(1000 * 30)
+            } else if (nowHour in 8..17) {
+                //小时小于18大于7就1分钟查询一次
                 presenter.getJudgment()
-                Thread.sleep(1000 * 60 * 5)
+                Thread.sleep(1000 * 60)
             } else {
-                //每小时查询一次
+                //每30m查询一次
                 presenter.getJudgment()
-                Thread.sleep(1000 * 60 * 60)
+                Thread.sleep(1000 * 60 * 30)
             }
         }
     })
 
     override fun onCreate() {
+        Log.e(tag, "onCreate")
         super.onCreate()
         initNotificationManager()
+        notification = initNoNotification()
+        startForeground(firstNotificationId, notification)
         thread.start()
     }
 
     override fun onDestroy() {
+        Log.e(tag, "onDestroy")
         //不移除之前通知
         stopForeground(false)
         super.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notification = initNoNotification()
+        Log.e(tag, "onStartCommand")
         startForeground(firstNotificationId, notification)
         return super.onStartCommand(intent, flags, startId)
     }
