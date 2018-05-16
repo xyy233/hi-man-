@@ -1,21 +1,23 @@
 package com.cstore.zhiyazhang.cstoremanagement.view
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
-import android.os.IBinder
+import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferServicePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZActivity
+import java.util.*
 
 
 /**
@@ -32,41 +34,102 @@ class TransferService : Service(), GenericView {
     private lateinit var manager: NotificationManager
     private val presenter = TransferServicePresenter(this)
     private lateinit var notification: Notification
-    private val thread = Thread(Runnable {
-        //首次开启先静止5s
-        Thread.sleep(1000)
-        while (true) {
-            Log.e(tag, "thread")
+    private var wakeLock: PowerManager.WakeLock? = null
+    private var timer: Timer? = null
+    private var timeTask: TimerTask? = null
+    private var nowTaskType = -1
+    private val handler = TransHandler()
+    private val listener = object : MyListener {
+        override fun listenerSuccess(data: Any) {
             val nowHour = MyTimeUtil.nowHour
-            if (nowHour == 10 || nowHour == 14) {
+            timer?.cancel()
+            timer = null
+            timer = Timer()
+            timeTask?.cancel()
+            timeTask = null
+            //重新定义TimerTask
+            timeTask = object : TimerTask() {
+                override fun run() {
+                    Log.e(tag, "timeTaskRun")
+                    val h = MyTimeUtil.nowHour
+                    presenter.getJudgment()
+                    var j = false
+                    if (h == 10 || h == 14) {
+                        if (nowTaskType != 0) {
+                            nowTaskType = 0
+                            j = true
+                        }
+                    } else if (h in 8..17) {
+                        if (nowTaskType != 1) {
+                            nowTaskType = 1
+                            j = true
+                        }
+                    } else {
+                        if (nowTaskType != 2) {
+                            nowTaskType = 2
+                            j = true
+                        }
+                    }
+                    if (j) {
+                        handler.sendMessage(Message())
+                    }
+                }
+            }
+
+            nowTaskType = if (nowHour == 10 || nowHour == 14) {
                 //小时在10或14就每30s查询一次
-                presenter.getJudgment()
-                Thread.sleep(1000 * 30)
+                timer!!.schedule(timeTask!!, 0, 1000 * 30)
+                0
             } else if (nowHour in 8..17) {
                 //小时小于18大于7就1分钟查询一次
-                presenter.getJudgment()
-                Thread.sleep(1000 * 60)
+                timer!!.schedule(timeTask!!, 0, 1000 * 60)
+                1
             } else {
                 //每30m查询一次
-                presenter.getJudgment()
-                Thread.sleep(1000 * 60 * 30)
+                timer!!.schedule(timeTask!!, 0, 1000 * 60 * 30)
+                2
             }
         }
-    })
+    }
+    /* private val thread = Thread(Runnable {
+         //首次开启先静止5s
+         Thread.sleep(1000)
+         while (true) {
+             Log.e(tag, "thread")
+             val nowHour = MyTimeUtil.nowHour
+             if (nowHour == 10 || nowHour == 14) {
+                 //小时在10或14就每30s查询一次
+                 presenter.getJudgment()
+                 Thread.sleep(1000 * 30)
+             } else if (nowHour in 8..17) {
+                 //小时小于18大于7就1分钟查询一次
+                 presenter.getJudgment()
+                 Thread.sleep(1000 * 60)
+             } else {
+                 //每30m查询一次
+                 presenter.getJudgment()
+                 Thread.sleep(1000 * 60 * 30)
+             }
+         }
+     })*/
 
     override fun onCreate() {
         Log.e(tag, "onCreate")
         super.onCreate()
+        handler.writeListener(listener)
         initNotificationManager()
         notification = initNoNotification()
         startForeground(firstNotificationId, notification)
-        thread.start()
+        acquireWakeLock()
+        handler.sendMessage(Message())
     }
 
     override fun onDestroy() {
         Log.e(tag, "onDestroy")
         //不移除之前通知
         stopForeground(false)
+        releaseWakeLock()
+        handler.cleanAll()
         super.onDestroy()
     }
 
@@ -106,8 +169,10 @@ class TransferService : Service(), GenericView {
                     .build()
         } else {
             val sound = Uri.parse("android.resource://" + packageName + "/" + R.raw.trs_mp3)
+            val vibrate = longArrayOf(0, 1000, 200, 1000, 200, 1000, 200, 1000, 200, 1000, 200)
             NotificationCompat.Builder(applicationContext, channelId)
                     .setSound(sound)
+                    .setVibrate(vibrate)
                     .setContentTitle(text)
                     .setContentText(text)
                     .setSmallIcon(R.mipmap.ic_logo)
@@ -176,7 +241,46 @@ class TransferService : Service(), GenericView {
         channel.group = groupPrimary
         channel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         if (type == 1) channel.setSound(Uri.parse("android.resource://" + packageName + "/" + R.raw.trs_mp3), Notification.AUDIO_ATTRIBUTES_DEFAULT)
+        if (type == 1) channel.vibrationPattern = longArrayOf(0, 1000, 200, 1000, 200, 1000, 200, 1000, 200, 1000, 200)
         manager.createNotificationChannel(channel)
+    }
+
+    @SuppressLint("WakelockTimeout")
+    private fun acquireWakeLock() {
+        if (wakeLock == null) {
+            val pm = this.getSystemService(Context.POWER_SERVICE) as PowerManager
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK or PowerManager.ON_AFTER_RELEASE, "PostLocationService")
+            if (wakeLock != null) {
+                wakeLock!!.acquire()
+            }
+        }
+    }
+
+    private fun releaseWakeLock() {
+        if (wakeLock != null) {
+            wakeLock!!.release()
+            wakeLock = null
+        }
+    }
+
+    class TransHandler : Handler() {
+        private var mListener: MyListener? = null
+        fun writeListener(myListener: MyListener): TransHandler {
+            mListener = myListener
+            return this
+        }
+
+        fun cleanAll() {
+            mListener = null
+            this.removeCallbacksAndMessages(null)
+        }
+
+        override fun handleMessage(msg: Message) {
+            if (mListener != null) {
+                mListener!!.listenerSuccess(1)
+            }
+        }
+
     }
 
 }

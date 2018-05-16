@@ -72,12 +72,19 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         var hour = 0
         (aData as TransResult).rows.forEach { if (it.disTime.toInt() > hour) hour = it.disTime.toInt() }
         TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
-
+        aData.rows.forEach {
+            var sellCost = 0.0
+            it.items.forEach {
+                if (it.sellCost != null) {
+                    sellCost += it.sellCost!!
+                }
+            }
+            it.sellCost = sellCost
+        }
         //测试
         //超过两小时的订单都不显示
         val nowHour = MyTimeUtil.nowHour
         val removeData = ArrayList<TransServiceBean>()
-        aData as TransResult
         aData.rows.forEach { if (nowHour >= it.disTime.toInt() + 2) removeData.add(it) }
         aData.rows.removeAll(removeData)
         adapter = TransferServiceAdapter(aData as TransResult, object : ItemClickListener {

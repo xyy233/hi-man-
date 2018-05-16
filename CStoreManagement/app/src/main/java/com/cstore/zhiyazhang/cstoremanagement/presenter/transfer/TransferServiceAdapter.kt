@@ -53,6 +53,12 @@ class TransferServiceAdapter(val tr: TransResult, private val onClick: ItemClick
             ostore_name.text = tb.trsStoreName
             trs_count.text = tb.items.size.toString()
             trs_qty.text = tb.trsQuantities.toString()
+            if (tb.sellCost != null) {
+                sell_cost_body.visibility = View.VISIBLE
+                sell_cost.text = tb.sellCost.toString()
+            } else {
+                sell_cost_body.visibility = View.GONE
+            }
             trsz_box.setOnClickListener { onClick.onItemClick(this@ViewHolder, position) }
         }
     }

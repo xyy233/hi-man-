@@ -79,7 +79,7 @@ class TransferServiceModel : TransferServiceInterface {
     }
 
     /**
-     * 获得中卫商品库存
+     * 获得中卫商品库存、零售
      */
     override fun getZWInv(tr: TransResult, handler: MyHandler) {
         Thread(Runnable {
@@ -104,7 +104,9 @@ class TransferServiceModel : TransferServiceInterface {
                             try {
                                 result.filter { it.value == i.itemNo }.forEach {
                                     val inv = it.value2
+                                    val sellCost = it.value3
                                     i.inv = inv!!.toInt()
+                                    i.sellCost = sellCost!!.toDouble()
                                 }
                             } catch (e: Exception) {
                             }

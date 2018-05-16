@@ -51,6 +51,12 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         } else {
             holder.invBox.visibility = View.GONE
         }
+        if (d.sellCost != null) {
+            holder.sellCostBox.visibility = View.VISIBLE
+            holder.sellCost.text = d.sellCost.toString()
+        } else {
+            holder.sellCostBox.visibility = View.GONE
+        }
         if (d.storeTrsQty != null) holder.trsQty2.setText(d.storeTrsQty.toString())
 
         if (isShowEdit) {
@@ -104,5 +110,7 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         val trsQty2 = itemView.findViewById<EditText>(R.id.trs_qty2)!!
         val invBox = itemView.findViewById<LinearLayout>(R.id.inv_box)!!
         val inv = itemView.findViewById<TextView>(R.id.inv)!!
+        val sellCostBox = itemView.findViewById<LinearLayout>(R.id.sell_cost_body)!!
+        val sellCost = itemView.findViewById<TextView>(R.id.sell_cost)!!
     }
 }
