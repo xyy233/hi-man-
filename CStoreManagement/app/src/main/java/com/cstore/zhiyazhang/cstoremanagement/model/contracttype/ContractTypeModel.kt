@@ -6,7 +6,7 @@ import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_HEADER
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.CONNECTION_SWITCH
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.USER_HEADER
-import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 
 /**

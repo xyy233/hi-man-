@@ -1,4 +1,4 @@
-package com.zhiyazhang.mykotlinapplication.utils
+package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.zhy.http.okhttp.callback.Callback

@@ -138,5 +138,8 @@
 -keep class com.alipay.api.**{*;}
 -dontwarn com.alipay.api.**
 #Google pano
--keep class ccom.google.**{*;}
+-keep class com.google.**{*;}
 -dontwarn com.google.**
+#tray
+-keep class net.grandcentrix.tray.**{*;}
+-dontwarn net.grandcentrix.tray.**

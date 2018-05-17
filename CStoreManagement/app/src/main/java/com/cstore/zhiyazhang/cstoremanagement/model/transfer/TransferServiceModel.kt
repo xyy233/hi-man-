@@ -1,6 +1,7 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.transfer
 
 import android.os.Message
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferModel.Companion.getTrsNumber
@@ -13,7 +14,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.google.gson.Gson
-import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.MediaType
 
@@ -39,7 +40,8 @@ class TransferServiceModel : TransferServiceInterface {
     }
 
     override fun getJudgment(user: User, myListener: MyListener) {
-        val tag = TransTag.getTransTag()
+        val tag = TransTag.getTransTag(true)
+        Log.e("TransferService", "Trans数据" + tag.toString())
         OkHttpUtils
                 .get()
                 .url(AppUrl.JUDGMENT_TRANS)

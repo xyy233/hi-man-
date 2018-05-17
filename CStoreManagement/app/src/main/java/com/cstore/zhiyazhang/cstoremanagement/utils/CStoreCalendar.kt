@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
-import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
@@ -154,10 +153,8 @@ object CStoreCalendar {
             data.filter { it.sceodResult == 2 }.forEach {
                 return false
             }
-        } else {
-            Handler().post { MyToast.getLongToast(ERROR_MSG) }
-            return false
         }
+        threadSetCStoreCalendar()
         return true
     }
 

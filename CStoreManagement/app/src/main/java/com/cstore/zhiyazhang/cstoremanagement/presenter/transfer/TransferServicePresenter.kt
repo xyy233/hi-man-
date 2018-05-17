@@ -1,5 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.transfer
 
+import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransServiceBean
@@ -26,11 +27,13 @@ class TransferServicePresenter(private val view: GenericView) {
             override fun listenerSuccess(data: Any) {
                 try {
                     val trs = Gson().fromJson(data as String, TransResult::class.java)
+                    Log.e("TransferService","当前数据："+data.toString())
                     //如果没有新的就不做处理了
                     if (trs.count == 0) {
                         return
+                    }else{
+                        view.requestSuccess(trs)
                     }
-                    view.requestSuccess(trs)
                 } catch (e: Exception) {
                     ReportListener.reportError("TransferService", e.message.toString())
                 }

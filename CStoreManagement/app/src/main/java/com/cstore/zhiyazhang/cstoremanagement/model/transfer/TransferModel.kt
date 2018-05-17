@@ -261,7 +261,7 @@ class TransferModel : TransferInterface {
             }
             if (values[0].value == null || values[0].value == "null") {
                 //没有单号，新建
-                return trsNumberIsExits((MyTimeUtil.dayOfYear() + 1).toInt(), ip, msg, handler)
+                return trsNumberIsExits((MyTimeUtil.nowDay() + "00").toInt(), ip, msg, handler)
             }
             val number = values[0].value!!.substring(8, 12).toInt()
             return trsNumberIsExits(number + 1, ip, msg, handler)
@@ -277,8 +277,8 @@ class TransferModel : TransferInterface {
             var count = 0
             val storeId = User.getUser().storeId
             val year = MyTimeUtil.nowYear().substring(1)
-            val month = getMonth()
-            var result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
+            val month = MyTimeUtil.getMonthToEn()
+            var result = "$storeId$year$month$finalTrsNum"
             while (!checkOrder) {
                 val sql = MySql.isExistTrs(result)
                 val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
@@ -287,7 +287,7 @@ class TransferModel : TransferInterface {
                 } else {
                     finalTrsNum++
                 }
-                result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
+                result = "$storeId$year$month$finalTrsNum"
                 if (count == 10) {
                     msg.obj = "检查重复单号出错：$sqlResult"
                     msg.what = ERROR
@@ -297,25 +297,6 @@ class TransferModel : TransferInterface {
                 count++
             }
             return result
-        }
-
-        private fun getMonth(): String {
-            val month = MyTimeUtil.nowMonth
-            return when (month) {
-                1 -> "A"
-                2 -> "B"
-                3 -> "C"
-                4 -> "D"
-                5 -> "E"
-                6 -> "F"
-                7 -> "G"
-                8 -> "H"
-                9 -> "I"
-                10 -> "J"
-                11 -> "K"
-                12 -> "L"
-                else -> "M"
-            }
         }
     }
 

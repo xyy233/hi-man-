@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -68,10 +69,12 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         }
 
         //更新最新调拨时间
-        val transTag = TransTag.getTransTag()
+        val transTag = TransTag.getTransTag(false)
         var hour = 0
         (aData as TransResult).rows.forEach { if (it.disTime.toInt() > hour) hour = it.disTime.toInt() }
+        transTag.hour = hour.toString()
         TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
+
         aData.rows.forEach {
             var sellCost = 0.0
             it.items.forEach {

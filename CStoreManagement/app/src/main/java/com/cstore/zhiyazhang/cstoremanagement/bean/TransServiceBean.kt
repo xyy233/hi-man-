@@ -1,9 +1,9 @@
 package com.cstore.zhiyazhang.cstoremanagement.bean
 
-import android.content.Context
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.google.gson.annotations.SerializedName
+import net.grandcentrix.tray.AppPreferences
 import java.io.Serializable
 
 /**
@@ -51,19 +51,22 @@ data class TransTag(
         //日期
         val date: String,
         //时间
-        val hour: String
+        var hour: String
 ) : Serializable {
     companion object {
         private var staticTransTag: TransTag? = null
         private val name = "trs_tag"
 
-        fun getTransTag(): TransTag {
-            if (staticTransTag == null) {
-                val sp = MyApplication.instance().applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
+        /**
+         * 如果isNew为true就获得最新的
+         */
+        fun getTransTag(isNew: Boolean): TransTag {
+            if (staticTransTag == null || isNew) {
+                val sp = AppPreferences(MyApplication.instance().applicationContext)
                 staticTransTag = TransTag(
-                        sp.getString("trs_store", User.getUser().storeId),
-                        sp.getString("date", MyTimeUtil.nowDate),
-                        sp.getString("hour", "0")
+                        sp.getString("trs_store", User.getUser().storeId)!!,
+                        sp.getString("date", MyTimeUtil.nowDate)!!,
+                        sp.getString("hour", "0")!!
                 )
             }
             //如果保存的日期不是今天或门市不对就初始化
@@ -74,12 +77,10 @@ data class TransTag(
         }
 
         fun saveTag(tag: TransTag) {
-            val sp = MyApplication.instance().applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
-            val ts = sp.edit()
-            ts.putString("trs_store", User.getUser().storeId)
-            ts.putString("date", tag.date)
-            ts.putString("hour", tag.hour)
-            ts.apply()
+            val sp = AppPreferences(MyApplication.instance().applicationContext)
+            sp.put("trs_store", User.getUser().storeId)
+            sp.put("date", tag.date)
+            sp.put("hour", tag.hour)
             refreshTag()
         }
 
@@ -87,19 +88,17 @@ data class TransTag(
          * 清空
          */
         fun cleanTag() {
-            val sp = MyApplication.instance().applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
-            val ts = sp.edit()
-            ts.clear()
-            ts.apply()
+            val sp = AppPreferences(MyApplication.instance().applicationContext)
+            sp.clear()
             refreshTag()
         }
 
         private fun refreshTag() {
-            val sp = MyApplication.instance().applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
+            val sp = AppPreferences(MyApplication.instance().applicationContext)
             staticTransTag = TransTag(
-                    sp.getString("trs_store", User.getUser().storeId),
-                    sp.getString("date", MyTimeUtil.nowDate),
-                    sp.getString("hour", "0")
+                    sp.getString("trs_store", User.getUser().storeId)!!,
+                    sp.getString("date", MyTimeUtil.nowDate)!!,
+                    sp.getString("hour", "0")!!
             )
         }
     }

@@ -172,6 +172,10 @@ object MyTimeUtil {
         return Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString().padStart(3, '0')
     }
 
+    fun nowDay(): String {
+        return todayDay.toString().padStart(2, '0')
+    }
+
     fun nowYear(): String {
         return nowYear.toString().substring(2)
     }
@@ -470,6 +474,28 @@ object MyTimeUtil {
             "12"
         } else {
             (month.toInt() - 1).toString()
+        }
+    }
+
+    /**
+     * 月份变英文
+     */
+    fun getMonthToEn(): String {
+        val month = MyTimeUtil.nowMonth
+        return when (month) {
+            1 -> "A"
+            2 -> "B"
+            3 -> "C"
+            4 -> "D"
+            5 -> "E"
+            6 -> "F"
+            7 -> "G"
+            8 -> "H"
+            9 -> "I"
+            10 -> "J"
+            11 -> "K"
+            12 -> "L"
+            else -> "M"
         }
     }
 }

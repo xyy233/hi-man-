@@ -156,8 +156,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         this.startService(Intent(this, UpdateService::class.java))
         beginBulletin()
         //华东才开启调拨服务
-        if (User.getUser().type==0){
-            startService(Intent(this, TransferService::class.java))
+        if (User.getUser().type == 0) {
+            if (!LivingService.isServiceWorked(this, TransferService.TAG)) {
+                startService(Intent(this, TransferService::class.java))
+            }
         }
     }
 

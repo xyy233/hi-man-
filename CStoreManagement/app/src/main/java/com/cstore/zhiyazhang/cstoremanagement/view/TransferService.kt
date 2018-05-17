@@ -10,10 +10,10 @@ import android.net.Uri
 import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
-import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferServicePresenter
+import com.cstore.zhiyazhang.cstoremanagement.utils.GlobalException
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZActivity
@@ -26,7 +26,11 @@ import java.util.*
  * 专门用来给卫星调拨用的前台服务
  */
 class TransferService : Service(), GenericView {
-    private val tag = "TransferService"
+    companion object {
+        val TAG = "com.cstore.zhiyazhang.cstoremanagement.view.TransferService"
+    }
+
+    private val tag="TransferService"
     private val channelId = "channel_first"
     private val channelName = "通知渠道"
     private val firstNotificationId = 528//前台服务常驻通知
@@ -38,6 +42,19 @@ class TransferService : Service(), GenericView {
     private var timer: Timer? = null
     private var timeTask: TimerTask? = null
     private var nowTaskType = -1
+    private val thread = Thread(Runnable {
+        val timer = Timer()
+        val task = object : TimerTask() {
+            override fun run() {
+                val b = LivingService.isServiceWorked(this@TransferService, LivingService.TAG)
+                if (!b) {
+                    val service = Intent(this@TransferService, LivingService::class.java)
+                    startService(service)
+                }
+            }
+        }
+        timer.schedule(task, 0, 1000 * 10)
+    })
     private val handler = TransHandler()
     private val listener = object : MyListener {
         override fun listenerSuccess(data: Any) {
@@ -50,7 +67,6 @@ class TransferService : Service(), GenericView {
             //重新定义TimerTask
             timeTask = object : TimerTask() {
                 override fun run() {
-                    Log.e(tag, "timeTaskRun")
                     val h = MyTimeUtil.nowHour
                     presenter.getJudgment()
                     var j = false
@@ -91,52 +107,30 @@ class TransferService : Service(), GenericView {
             }
         }
     }
-    /* private val thread = Thread(Runnable {
-         //首次开启先静止5s
-         Thread.sleep(1000)
-         while (true) {
-             Log.e(tag, "thread")
-             val nowHour = MyTimeUtil.nowHour
-             if (nowHour == 10 || nowHour == 14) {
-                 //小时在10或14就每30s查询一次
-                 presenter.getJudgment()
-                 Thread.sleep(1000 * 30)
-             } else if (nowHour in 8..17) {
-                 //小时小于18大于7就1分钟查询一次
-                 presenter.getJudgment()
-                 Thread.sleep(1000 * 60)
-             } else {
-                 //每30m查询一次
-                 presenter.getJudgment()
-                 Thread.sleep(1000 * 60 * 30)
-             }
-         }
-     })*/
 
     override fun onCreate() {
-        Log.e(tag, "onCreate")
         super.onCreate()
         handler.writeListener(listener)
         initNotificationManager()
         notification = initNoNotification()
-        startForeground(firstNotificationId, notification)
         acquireWakeLock()
         handler.sendMessage(Message())
+        //全局错误信息收集
+        Thread.setDefaultUncaughtExceptionHandler(GlobalException.instance)
     }
 
     override fun onDestroy() {
-        Log.e(tag, "onDestroy")
         //不移除之前通知
-        stopForeground(false)
+        stopForeground(true)
         releaseWakeLock()
         handler.cleanAll()
         super.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e(tag, "onStartCommand")
         startForeground(firstNotificationId, notification)
-        return super.onStartCommand(intent, flags, startId)
+        thread.start()
+        return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? {

@@ -6,7 +6,6 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyJavaFun.clearErrorTxtMessage
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyJavaFun.getErrorTxtMessage
-import com.zhiyazhang.mykotlinapplication.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 
 /**

@@ -7,9 +7,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.dayOfYear
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.deleteTime
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.nowYear
 
 /**
  * Created by zhiya.zhang
@@ -1804,10 +1802,12 @@ object MySql {
      */
     val getMaxTrsNumber: String
         get() {
+            val trsNumber = "${User.getUser().storeId}${MyTimeUtil.nowYear().substring(1)}${MyTimeUtil.getMonthToEn()}${MyTimeUtil.nowDay()}"
             return "select Max(TrsNumber) value from trs\n" +
                     "where storeID='${User.getUser().storeId}' and  trsID='O' and\n" +
-                    "trsnumber like '%${nowYear() + dayOfYear()}%'\u0004"
+                    "trsnumber like '%$trsNumber%'\u0004"
         }
+
 
     /**
      * 判断是否存在此单号
