@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_trsz"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
@@ -18,7 +19,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
@@ -29,7 +30,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/trs_item"
+                android:id="@+id/trs_img"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:padding="3dp"
@@ -46,8 +47,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:gravity="center|start"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -63,9 +67,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:gravity="center|start"
                 android:layout_marginTop="6dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
 
                 <LinearLayout
@@ -83,8 +90,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:paddingRight="4dp"
-                        android:text="ssssssssssssssssssssssssssssssssssssssssssssssssssss"/>
+                        android:paddingEnd="4dp"
+                        tools:ignore="RtlSymmetry"/>
 
 
                 </LinearLayout>
@@ -113,9 +120,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:gravity="center|start"
                 android:layout_marginTop="6dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -123,6 +133,7 @@
                     android:layout_weight="1">
 
                     <TextView
+                        android:id="@+id/trs_qty_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/trs_qty"/>
@@ -156,7 +167,9 @@
             <LinearLayout
                 android:id="@+id/trs_qty2_box"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:gravity="center|start"
                 android:layout_marginTop="6dp"
                 android:orientation="horizontal">
 

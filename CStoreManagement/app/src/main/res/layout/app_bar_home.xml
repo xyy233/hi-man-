@@ -226,7 +226,60 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="100dp"
+            android:layout_weight="1"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/gg7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:elevation="3dp"
+                android:foreground="@drawable/selector_foreground"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:stateListAnimator="@drawable/lift_on_touch"
+                android:transitionName="gg7"
+                tools:ignore="NestedWeights">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/train"
+                    android:src="@mipmap/w_shelves"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shelves"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf">
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:baselineAligned="true"
             android:gravity="center"

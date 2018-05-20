@@ -2,7 +2,6 @@ package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -66,6 +65,7 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         if (aData !is TransResult) {
             showPrompt("获得数据类型错误")
             errorDealWith()
+            return
         }
 
         //更新最新调拨时间
@@ -84,7 +84,7 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
             }
             it.sellCost = sellCost
         }
-        //测试
+        //测试 注释掉就显示
         //超过两小时的订单都不显示
         val nowHour = MyTimeUtil.nowHour
         val removeData = ArrayList<TransServiceBean>()

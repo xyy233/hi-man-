@@ -255,7 +255,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     private val ip = MyApplication.getIP()
     private fun mShowView(data: UnitInquiryBean) {
         allData = data
-        val df = DecimalFormat("#0.00")
+        val df = DecimalFormat("#####.##")
         Glide.with(this).load("http://$ip:8666/uploadIMG/${data.pluId}.png")
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.load_error)

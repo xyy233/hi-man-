@@ -27,11 +27,11 @@ class TransferServicePresenter(private val view: GenericView) {
             override fun listenerSuccess(data: Any) {
                 try {
                     val trs = Gson().fromJson(data as String, TransResult::class.java)
-                    Log.e("TransferService","当前数据："+data.toString())
+                    Log.e("TransferService", "当前数据：" + data.toString())
                     //如果没有新的就不做处理了
                     if (trs.count == 0) {
                         return
-                    }else{
+                    } else {
                         view.requestSuccess(trs)
                     }
                 } catch (e: Exception) {
@@ -50,27 +50,32 @@ class TransferServicePresenter(private val view: GenericView) {
         if (!PresenterUtil.judgmentInternet(view)) return
         val listener = object : MyListener {
             override fun listenerSuccess(data: Any) {
-                val trs = Gson().fromJson(data as String, TransResult::class.java)
-                trs.rows.sortBy { it.trsType }
-                if (trs.rows.size == 0) {
-                    view.showView(trs)
-                    view.hideLoading()
-                    return
-                }
-                //获得库存
-                val handler = MyHandler()
-                handler.writeListener(object : MyListener {
-                    override fun listenerSuccess(data: Any) {
-                        view.showView(data)
+                try {
+                    val trs = Gson().fromJson(data as String, TransResult::class.java)
+                    trs.rows.sortBy { it.trsType }
+                    if (trs.rows.size == 0) {
+                        view.showView(trs)
                         view.hideLoading()
+                        return
                     }
+                    //获得库存
+                    val handler = MyHandler()
+                    handler.writeListener(object : MyListener {
+                        override fun listenerSuccess(data: Any) {
+                            view.showView(data)
+                            view.hideLoading()
+                        }
 
-                    override fun listenerFailed(errorMessage: String) {
-                        view.showPrompt(errorMessage)
-                        view.errorDealWith()
-                    }
-                })
-                model.getZWInv(trs, handler)
+                        override fun listenerFailed(errorMessage: String) {
+                            view.showPrompt(errorMessage)
+                            view.errorDealWith()
+                        }
+                    })
+                    model.getZWInv(trs, handler)
+                } catch (e: Exception) {
+                    view.showPrompt(e.message.toString())
+                    view.errorDealWith()
+                }
             }
 
             override fun listenerFailed(errorMessage: String) {

@@ -50,11 +50,13 @@
         <!--检测是否有交易未完成的service-->
         <service android:name=".view.PayDataService"/>
         <!--检查调拨的service-->
-        <service android:name=".view.TransferService"
-                 android:process=":remote"/>
+        <service
+            android:name=".view.TransferService"
+            android:process=":remote"/>
         <!--保持存活的service-->
-        <service android:name=".view.LivingService"
-                 android:process=":remote"/>
+        <service
+            android:name=".view.LivingService"
+            android:process=":remote"/>
         <!--Home主页-->
         <activity
             android:name=".view.HomeActivity"
@@ -248,6 +250,21 @@
         <!--中卫调拨详细页-->
         <activity
             android:name=".view.transfer.TransferZItemActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--W冰箱-->
+        <activity
+            android:name=".view.WShelvesActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--中卫调拨冰箱-->
+        <activity
+            android:name=".view.shelves.ShelvesActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--中卫调拨冰箱详情-->
+        <activity
+            android:name=".view.shelves.ShelvesItemActivity"
             android:screenOrientation="portrait"/>
     </application>
 

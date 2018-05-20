@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.cstore.zhiyazhang.cstoremanagement.R
+import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 
 /**
  * Created by zhiya.zhang
@@ -43,4 +44,12 @@ class ConnectionDetector private constructor() {
             if (info != null) if (info.isConnected) if (info.state == NetworkInfo.State.CONNECTED) return true
             return false
         }
+
+    fun isOnline(view:GenericView):Boolean{
+        val connectivity = MyApplication.instance().applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val info = connectivity.activeNetworkInfo
+        if (info != null) if (info.isConnected) if (info.state == NetworkInfo.State.CONNECTED) return true
+        view.showPrompt(MyApplication.instance().applicationContext.getString(R.string.noInternet))
+        return false
+    }
 }

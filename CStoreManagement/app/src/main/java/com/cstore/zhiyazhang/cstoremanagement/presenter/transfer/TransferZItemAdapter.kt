@@ -18,12 +18,15 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransItem
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
  * on 2018/5/11 12:24.
  */
 class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdit: Boolean, val context: Context) : RecyclerView.Adapter<TransferZItemAdapter.ViewHolder>() {
+    private val df = DecimalFormat("#####.##")
+
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,7 +56,7 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         }
         if (d.sellCost != null) {
             holder.sellCostBox.visibility = View.VISIBLE
-            holder.sellCost.text = d.sellCost.toString()
+            holder.sellCost.text = df.format(d.sellCost.toString())
         } else {
             holder.sellCostBox.visibility = View.GONE
         }
@@ -104,7 +107,7 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val id = itemView.findViewById<TextView>(R.id.commodity_id)!!
-        val trsItem = itemView.findViewById<ImageView>(R.id.trs_item)!!
+        val trsItem = itemView.findViewById<ImageView>(R.id.trs_img)!!
         val name = itemView.findViewById<TextView>(R.id.commodity_name)!!
         val trsQty = itemView.findViewById<TextView>(R.id.trs_qty)!!
         val trsQty2 = itemView.findViewById<EditText>(R.id.trs_qty2)!!

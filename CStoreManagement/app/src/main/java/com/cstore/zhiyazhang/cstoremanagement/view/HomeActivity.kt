@@ -147,6 +147,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         gg6.setOnClickListener {
             startActivity(Intent(this@HomeActivity, TransferZActivity::class.java))
         }
+        gg7.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, WShelvesActivity::class.java))
+        }
     }
 
     override fun initData() {

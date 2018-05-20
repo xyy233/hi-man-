@@ -10,6 +10,7 @@ object AppUrl {
     val USER_HEADER = "Authorization"
     val STORE_HEADER = "store_id"
     val STOREHEADER = "storeid"
+    val SHELVES_ID = "shelvesid"
     val HOUR = "hour"
     val CONNECTION_HEADER = "Connection"
     val CONNECTION_SWITCH = "close"
@@ -27,4 +28,6 @@ object AppUrl {
     val GET_ALL_TRANS = appIp + "trs/get.do"
     val JUDGMENT_TRANS = appIp + "trs/count.do"
     val UPDATE_TRANS = appIp + "trs/upd.do"
+    val GET_SHELVES = appIp + "shelves/get.do"
+    val GET_SHELVES_ITEM = appIp + "shelves/get_item_stock.do"
 }

@@ -1,26 +1,25 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.panorama
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.view.Menu
-import android.view.MenuItem
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener
-import com.google.vr.sdk.widgets.pano.VrPanoramaView
-import kotlinx.android.synthetic.main.activity_panorama.*
-import kotlinx.android.synthetic.main.toolbar_layout.*
 
 /**
  * Created by zhiya.zhang
  * on 2018/4/25 16:10.
  */
 class Panorama(override val layoutId: Int = R.layout.activity_panorama) : MyActivity() {
-    private lateinit var option: VrPanoramaView.Options
+    override fun initView() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun initClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun initData() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+    /*private lateinit var option: VrPanoramaView.Options
     private lateinit var vrView: VrPanoramaView
     override fun initView() {
         my_toolbar.title = getString(R.string.panorama)
@@ -55,7 +54,7 @@ class Panorama(override val layoutId: Int = R.layout.activity_panorama) : MyActi
 
     private fun selectFromAlbum() {
         val intent = Intent("android.intent.action.GET_CONTENT")
-        intent.type = "image/*"
+        intent.type = "image*//*"
         startActivityForResult(intent, 1)
     }
 
@@ -111,6 +110,6 @@ class Panorama(override val layoutId: Int = R.layout.activity_panorama) : MyActi
             super.onDisplayModeChanged(newDisplayMode)
             //修改显示模式
         }
-    }
+    }*/
 
 }

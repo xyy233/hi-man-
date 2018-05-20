@@ -9,6 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.TransResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransServiceBean
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_trsz.view.*
+import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
@@ -31,6 +32,7 @@ class TransferServiceAdapter(val tr: TransResult, private val onClick: ItemClick
 
     class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind(tb: TransServiceBean, onClick: ItemClickListener, position: Int) = with(itemView) {
+            val df = DecimalFormat("#####.##")
             if (tb.trsType > 0) {
                 type.setImageResource(R.drawable.dr)
                 status.visibility = View.GONE
@@ -55,7 +57,7 @@ class TransferServiceAdapter(val tr: TransResult, private val onClick: ItemClick
             trs_qty.text = tb.trsQuantities.toString()
             if (tb.sellCost != null) {
                 sell_cost_body.visibility = View.VISIBLE
-                sell_cost.text = tb.sellCost.toString()
+                sell_cost.text = df.format(tb.sellCost.toString())
             } else {
                 sell_cost_body.visibility = View.GONE
             }

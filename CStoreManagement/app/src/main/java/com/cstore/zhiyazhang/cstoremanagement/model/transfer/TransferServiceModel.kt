@@ -41,7 +41,6 @@ class TransferServiceModel : TransferServiceInterface {
 
     override fun getJudgment(user: User, myListener: MyListener) {
         val tag = TransTag.getTransTag(true)
-        Log.e("TransferService", "Trans数据" + tag.toString())
         OkHttpUtils
                 .get()
                 .url(AppUrl.JUDGMENT_TRANS)

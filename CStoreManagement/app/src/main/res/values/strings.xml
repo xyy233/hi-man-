@@ -61,6 +61,7 @@
     <string name="cant_bgt_inv">数量不能大于库存</string>
     <string name="qrcode_error">条码错误</string>
     <string name="open_photo">开启相册</string>
+    <string name="view_all">查看全部</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
@@ -367,5 +368,9 @@
     <string name="month">月</string>
     <string name="year">年</string>
     <string name="trs_ts">如无修改不用管</string>
+
+    <!--中卫-->
+    <string name="shelves">W冰箱</string>
+    <string name="distribution">配送</string>
 
 </resources>

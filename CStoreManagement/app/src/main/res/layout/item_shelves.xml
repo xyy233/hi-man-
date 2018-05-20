@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shelves"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="3dp"
+    android:animateLayoutChanges="true"
+    android:background="@color/contract_bg"
+    android:clickable="true"
+    android:elevation="2dp"
+    android:focusable="true"
+    android:foreground="@drawable/selector_foreground"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:stateListAnimator="@drawable/lift_on_touch">
+
+    <TextView
+        android:id="@+id/shelves_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/shelves_address"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="14sp"/>
+
+</LinearLayout>
