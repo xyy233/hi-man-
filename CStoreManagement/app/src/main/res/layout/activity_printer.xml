@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/bluetooth_box"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/bluetooth_pro"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/ivOperationItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:src="@mipmap/ic_printer"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/tvOperationItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/ivOperationItem"
+            android:focusable="false"
+            android:text="@string/printer"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+        <Button
+            android:id="@+id/btConnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/tvOperationItem"
+            android:background="@drawable/button_connect_style"
+            android:focusable="false"
+            android:text="@string/disconnect"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            tools:ignore="RelativeOverlap"/>
+
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivOperationItem"
+            android:layout_gravity="center_vertical"
+            android:focusable="false"
+            android:gravity="start"
+            android:paddingStart="10sp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            tools:ignore="RtlSymmetry"/>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

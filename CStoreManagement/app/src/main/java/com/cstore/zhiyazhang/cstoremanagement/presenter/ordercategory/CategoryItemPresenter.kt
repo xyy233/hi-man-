@@ -34,12 +34,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getAllItemByCategory(cView.nowId, cView.sort, handler)
@@ -59,12 +61,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getAllItemByShelf(cView.nowId, cView.sort, handler)
@@ -84,12 +88,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getUnitItemByKeywords(keywords, handler)
@@ -110,12 +116,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getAllItemBySelfId(cView.nowId, cView.sort, handler)
@@ -135,12 +143,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getNewItemById(cView.nowId, cView.sort, handler)
@@ -160,12 +170,14 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
                     gView.showView(adapter)
                     gView.hideLoading()
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.getAllFreshItem(cView.nowId, cView.nowMidId, cView.sort, handler)
@@ -178,11 +190,13 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
             override fun listenerSuccess(data: Any) {
                 cView.updateDone()
                 //gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.updateAllCategory(cView.categoryList, handler)

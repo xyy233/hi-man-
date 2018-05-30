@@ -9,30 +9,27 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.TransResult
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransServiceBean
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.item_trsz.view.*
-import java.text.DecimalFormat
 
 /**
  * Created by zhiya.zhang
  * on 2018/5/11 10:13.
  */
 class TransferServiceAdapter(val tr: TransResult, private val onClick: ItemClickListener) : RecyclerView.Adapter<TransferServiceAdapter.ViewHolder>() {
-    private val data = tr.rows
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_trsz, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position], onClick, position)
+        holder.bind(tr.rows[position], onClick, position)
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return tr.rows.size
     }
 
     class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         fun bind(tb: TransServiceBean, onClick: ItemClickListener, position: Int) = with(itemView) {
-            val df = DecimalFormat("#####.##")
             if (tb.trsType > 0) {
                 type.setImageResource(R.drawable.dr)
                 status.visibility = View.GONE
@@ -55,9 +52,9 @@ class TransferServiceAdapter(val tr: TransResult, private val onClick: ItemClick
             ostore_name.text = tb.trsStoreName
             trs_count.text = tb.items.size.toString()
             trs_qty.text = tb.trsQuantities.toString()
-            if (tb.sellCost != null) {
+            if (tb.storeUnitPrice != null) {
                 sell_cost_body.visibility = View.VISIBLE
-                sell_cost.text = df.format(tb.sellCost.toString())
+                sell_cost.text = tb.storeUnitPrice.toString()
             } else {
                 sell_cost_body.visibility = View.GONE
             }

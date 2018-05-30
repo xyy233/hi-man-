@@ -19,6 +19,7 @@ import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
+import java.math.BigDecimal
 
 /**
  * Created by zhiya.zhang
@@ -75,14 +76,26 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         transTag.hour = hour.toString()
         TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
 
-        aData.rows.forEach {
-            var sellCost = 0.0
-            it.items.forEach {
-                if (it.sellCost != null) {
-                    sellCost += it.sellCost!!
-                }
-            }
-            it.sellCost = sellCost
+        for (d in aData.rows) {
+            val storeUnitPrice: Double = d.items
+                    .filter { it.storeUnitPrice != null }
+                    .map {
+                        try {
+                            val b = BigDecimal(it.storeUnitPrice!!)
+                            it.storeUnitPrice = b.setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+                            if (it.storeTrsQty != null) {
+                                it.storeUnitPrice!! * it.storeTrsQty!!
+                            } else {
+                                it.storeUnitPrice!! * it.trsQty
+                            }
+                        } catch (e: Exception) {
+                            it.storeUnitPrice!!
+                        }
+                    }
+                    .sum()
+            val b = BigDecimal(storeUnitPrice)
+            val result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+            d.storeUnitPrice = result
         }
         //测试 注释掉就显示
         //超过两小时的订单都不显示
@@ -119,6 +132,7 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
                             d as TransServiceBean
                             val t = adapter.tr.rows[p]
                             t.items = d.items
+                            t.storeUnitPrice = d.storeUnitPrice
                             t.trsQuantities = d.trsQuantities
                             t.requestNumber = d.requestNumber
                         }

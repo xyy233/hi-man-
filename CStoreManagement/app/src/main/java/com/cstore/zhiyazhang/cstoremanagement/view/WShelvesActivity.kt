@@ -9,6 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.distribution.DistributionActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.shelves.ShelvesActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_coi.*
@@ -41,7 +42,8 @@ class WShelvesActivity(override val layoutId: Int = R.layout.activity_coi) : MyA
                         startActivity(Intent(this@WShelvesActivity, ShelvesActivity::class.java))
                     }
                     1 -> {
-                        showPrompt("未开放")
+                        startActivity(Intent(this@WShelvesActivity, DistributionActivity::class.java))
+//                        showPrompt("未开放")
                     }
                 }
             }

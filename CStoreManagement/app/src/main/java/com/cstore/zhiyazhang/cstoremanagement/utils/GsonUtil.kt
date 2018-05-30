@@ -165,4 +165,8 @@ object GsonUtil {
     @JvmStatic fun getAttendanceRecordingBean(data: String): ArrayList<AttendanceRecordingBean> {
         return Gson().fromJson<ArrayList<AttendanceRecordingBean>>(data, object : TypeToken<ArrayList<AttendanceRecordingBean>>() {}.type)
     }
+
+    @JvmStatic fun getDistributionItemBean(data: String): ArrayList<DistributionItemBean> {
+        return Gson().fromJson<ArrayList<DistributionItemBean>>(data, object : TypeToken<ArrayList<DistributionItemBean>>() {}.type)
+    }
 }

@@ -2,7 +2,9 @@ package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.hardware.input.InputManager
 import android.provider.Settings
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.view.PayDataService
@@ -117,14 +119,30 @@ class MyApplication : Application() {
         fun getOnlyid(): String {
             return Settings.Secure.getString(instance().contentResolver, Settings.Secure.ANDROID_ID)
         }
+
+        /**
+         * 判断扫描枪
+         */
+        fun usbGunJudgment(): Boolean {
+            return try {
+                val im = instance!!.applicationContext.getSystemService(Context.INPUT_SERVICE) as InputManager
+                val devices = im.inputDeviceIds
+                devices
+                        .map { im.getInputDevice(it) }
+                        .map { it.name.toLowerCase() }
+                        .any { it.indexOf("barcode") != -1 || it.indexOf("bar code") != -1 || it.indexOf("scanner") != -1 }
+            } catch (e: Exception) {
+                false
+            }
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
 
         /*LeakCanary.install(this)
-        Stetho.initializeWithDefaults(this)*/
-
+        Stetho.initializeWithDefaults(this)
+*/
         instance = this
 
         ZXingLibrary.initDisplayOpinion(this)

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">喜士多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修复换日崩溃异常\n2.新增中卫调拨\n</string>
+    <string name="bulletin">1.修复出现多个调拨单的异常\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -371,6 +371,26 @@
 
     <!--中卫-->
     <string name="shelves">W冰箱</string>
-    <string name="distribution">配送</string>
+    <string name="distribution">W配送</string>
+    <string name="systrsqty">系统调拨数量：</string>
+    <string name="gettrsqty">拣货数量：</string>
+
+    <!--打印机-->
+    <string name="printer">打印机</string>
+    <string name="title_paired_devices">已配对</string>
+    <string name="title_other_devices">新设备</string>
+    <string name ="scan">扫描</string>
+    <string name ="none_paired">没有配对的设备</string>
+    <string name ="select_bluetooth_device">选择蓝牙设备</string>
+    <string name ="none_bluetooth_device_found">没有找到蓝牙设备</string>
+    <string name ="scaning">正在扫描。。。</string>
+    <string name="port_parameters_wrong">端口参数错误！</string>
+    <string name="port_parameters_is_not_save">端口参数未保存！</string>
+    <string name="disconnect">未连接</string>
+    <string name="cut">断开</string>
+    <string name="cutting">断开中</string>
+    <string name="connect">连接</string>
+    <string name="connected">已连接</string>
+    <string name="connecting">连接中</string>
 
 </resources>

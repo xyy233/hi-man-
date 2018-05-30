@@ -23,12 +23,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getAllCategory(handler)
@@ -41,12 +43,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getAllShelf(handler)
@@ -59,12 +63,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getSelf(handler)
@@ -77,12 +83,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getNewItemId(handler)
@@ -98,12 +106,14 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getFresh(freshType, handler)

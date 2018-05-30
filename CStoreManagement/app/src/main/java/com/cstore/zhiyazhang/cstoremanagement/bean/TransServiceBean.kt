@@ -21,7 +21,7 @@ data class TransServiceBean(
         @SerializedName("trs_qtys") var trsQuantities: Int,
         @SerializedName("upd_time") val updTime: String,
         @SerializedName("req_no") var requestNumber: String?,
-        var sellCost: Double?,
+        var storeUnitPrice: Double?,
         var items: ArrayList<TransItem>
 ) : Serializable
 
@@ -31,7 +31,7 @@ data class TransItem(
         @SerializedName("trs_qty") var trsQty: Int,
         @SerializedName("store_trs_qty") var storeTrsQty: Int?,
         var inv: Int?,
-        var sellCost: Double?
+        var storeUnitPrice: Double?
 ) : Serializable
 
 /**

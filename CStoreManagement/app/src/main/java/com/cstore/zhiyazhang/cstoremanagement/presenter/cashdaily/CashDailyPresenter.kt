@@ -28,11 +28,13 @@ class CashDailyPresenter(private val gView: GenericView, private val context: Co
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         mInterface.getAllCashDaily(date, handler)
@@ -58,12 +60,14 @@ class CashDailyPresenter(private val gView: GenericView, private val context: Co
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
                 gView.updateDone(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         mInterface.updateCashDaily(date, value, cd, handler)

@@ -17,6 +17,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <include
+        layout="@layout/scan_edit"/>
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
@@ -36,19 +39,33 @@
         app:layout_constraintTop_toBottomOf="@+id/view"/>
 
     <Button
+        android:id="@+id/done2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/xinqiaose"
+        android:foreground="@drawable/selector_foreground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        android:text="@string/sure"
+        android:textColor="@color/cstore_white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
         android:id="@+id/done"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/sure"
         android:foreground="@drawable/selector_foreground"
         android:stateListAnimator="@drawable/lift_on_touch"
+        android:text="@string/sure"
         android:textColor="@color/cstore_white"
         android:textSize="20sp"
-        android:text="@string/sure"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toEndOf="@+id/done2"/>
 
 
     <LinearLayout

@@ -15,6 +15,7 @@ import android.util.TypedValue
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -40,6 +41,8 @@ import java.io.Serializable
  * on 2017/7/26 14:23.
  */
 class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contract) : MyActivity(), CategoryItemView, EasyPermissions.PermissionCallbacks {
+
+    private val isGun = MyApplication.usbGunJudgment()
 
     override var nowMidId: String = ""
 
@@ -127,6 +130,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         swipe_recycler.layoutManager = layoutManager
         initSort()
         initSearch()
+        initGun()
+    }
+
+    private fun initGun() {
+        if (isGun) {
+            MyScanUtil.getFocusable(search_edit)
+            this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        }
     }
 
     override fun initClick() {
@@ -227,6 +238,17 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                         Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
                 true
+            } else if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                val msg = search_edit.text.toString().replace(" ", "")
+                if (msg == "") {
+                    false
+                } else {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+                    presenter.getAllSearch(msg)
+                    search_edit.setText("")
+                    true
+                }
             } else {
                 false
             }
@@ -602,12 +624,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         this.adapter = aData as CategoryItemAdapter
         if (aData.data.isEmpty()) errorDealWith()
         swipe_recycler.adapter = aData
+        if (isGun)MyScanUtil.getFocusable(search_edit)
     }
 
     override fun errorDealWith() {
         adapter = null
         swipe_recycler.adapter = adapter
         noMessage.visibility = View.VISIBLE
+        if (isGun)MyScanUtil.getFocusable(search_edit)
     }
 
     override fun touchBox(cb: CategoryItemBean) {

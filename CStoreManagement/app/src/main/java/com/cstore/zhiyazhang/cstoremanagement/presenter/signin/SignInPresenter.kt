@@ -24,11 +24,13 @@ class SignInPresenter(private val view: SignInActivity) {
                 view.saveUser(data)
                 view.requestSuccess(data)
                 view.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 view.showPrompt(errorMessage)
                 view.hideLoading()
+                handler.cleanAll()
             }
         })
         model.login(view.uid, view.password, handler)

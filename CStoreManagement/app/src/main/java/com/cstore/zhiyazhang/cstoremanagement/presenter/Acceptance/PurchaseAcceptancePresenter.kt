@@ -30,11 +30,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         model.getAcceptanceList(date, handler)
@@ -50,11 +52,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.getReturnAcceptanceList(date, handler)
@@ -70,11 +74,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(activity.getString(R.string.saveDone))
                 gView.updateDone(data)
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         model.updateAcceptance(date, ab, handler)
@@ -90,11 +96,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.showPrompt(MyApplication.instance().getString(R.string.saveDone))
                 gView.updateDone(data)
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         model.updateReturnAcceptance(date, rab, handler)
@@ -110,11 +118,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         model.getVendor(handler)
@@ -130,11 +140,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + "," + errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.getCommodity(ab, vendorId, handler)
@@ -147,11 +159,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + "," + errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.getReturnCommodity(rab, vendorId, handler)
@@ -167,11 +181,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.createAcceptance(date, ab, aib, handler)
@@ -187,11 +203,13 @@ class PurchaseAcceptancePresenter(private val gView: GenericView, private val ac
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(activity.getString(R.string.socketError) + errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.createReturnAcceptance(date, rab, raib, handler)

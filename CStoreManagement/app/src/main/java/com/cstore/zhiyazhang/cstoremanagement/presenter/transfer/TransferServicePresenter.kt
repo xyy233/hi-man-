@@ -8,8 +8,13 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
+import com.cstore.zhiyazhang.cstoremanagement.view.printer.PrinterActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZItemActivity
 import com.google.gson.Gson
 
 /**
@@ -35,12 +40,10 @@ class TransferServicePresenter(private val view: GenericView) {
                         view.requestSuccess(trs)
                     }
                 } catch (e: Exception) {
-                    ReportListener.reportError("TransferService", e.message.toString())
                 }
             }
 
             override fun listenerFailed(errorMessage: String) {
-                ReportListener.reportError("TransferService", errorMessage)
             }
         }
         model.getJudgment(user, listener)
@@ -64,11 +67,13 @@ class TransferServicePresenter(private val view: GenericView) {
                         override fun listenerSuccess(data: Any) {
                             view.showView(data)
                             view.hideLoading()
+                            handler.cleanAll()
                         }
 
                         override fun listenerFailed(errorMessage: String) {
                             view.showPrompt(errorMessage)
                             view.errorDealWith()
+                            handler.cleanAll()
                         }
                     })
                     model.getZWInv(trs, handler)

@@ -12,5 +12,10 @@ data class UtilBean(
         @SerializedName("value")
         val value: String?,//用于创建验收单时获得的最大单号
         val value2: String?,
-        val value3: String?
+        var value3: String?
+) : Serializable
+
+data class HttpBean(
+        val code: Int,
+        val msg: String
 ) : Serializable

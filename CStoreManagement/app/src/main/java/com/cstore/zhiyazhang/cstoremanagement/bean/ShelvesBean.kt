@@ -31,7 +31,7 @@ data class ShelvesItemBean(
         /**
          * 销售数量
          */
-        @SerializedName("sel_qty") val selQty: Int,
+        @SerializedName("sal_qty") val selQty: Int,
         /**
          * 用来判断是否是标题栏
          */

@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.scrap
 
-import android.os.Handler
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.ScrapContractBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
@@ -16,7 +15,6 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
  */
 class ScrapHotPresenter(private val gView: GenericView, private val activity: MyActivity) {
     private val anInterface = ScrapHotModel()
-    private val handler = Handler()
 
     /**
      * 得到报废热食中类
@@ -26,22 +24,20 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                handler.post {
-                    try {
-                        gView.requestSuccess(data)
-                        gView.hideLoading()
-                    } catch (e: Exception) {
-                        listenerFailed(activity.getString(R.string.socketError))
-                    }
+                try {
+                    gView.requestSuccess(data)
+                    gView.hideLoading()
+                } catch (e: Exception) {
+                    listenerFailed(activity.getString(R.string.socketError))
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
-                handler.post {
-                    gView.showPrompt(errorMessage)
-                    gView.errorDealWith()
-                    gView.hideLoading()
-                }
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getMidCategory(handler)
@@ -52,22 +48,20 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                handler.post {
-                    try {
-                        gView.requestSuccess(data)
-                        gView.hideLoading()
-                    } catch (e: Exception) {
-                        listenerFailed(activity.getString(R.string.socketError))
-                    }
+                try {
+                    gView.requestSuccess(data)
+                    gView.hideLoading()
+                } catch (e: Exception) {
+                    listenerFailed(activity.getString(R.string.socketError))
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
-                handler.post {
-                    gView.showPrompt(errorMessage)
-                    gView.errorDealWith()
-                    gView.hideLoading()
-                }
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.getHotItem(midId, handler)
@@ -78,21 +72,19 @@ class ScrapHotPresenter(private val gView: GenericView, private val activity: My
         val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                handler.post {
-                    try {
-                        gView.requestSuccess(data)
-                        gView.hideLoading()
-                    } catch (e: Exception) {
-                        listenerFailed(activity.getString(R.string.socketError))
-                    }
+                try {
+                    gView.requestSuccess(data)
+                    gView.hideLoading()
+                } catch (e: Exception) {
+                    listenerFailed(activity.getString(R.string.socketError))
                 }
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
-                handler.post {
-                    gView.showPrompt(errorMessage)
-                    gView.hideLoading()
-                }
+                gView.showPrompt(errorMessage)
+                gView.hideLoading()
+                handler.cleanAll()
             }
         })
         anInterface.submitScrap(data, handler)

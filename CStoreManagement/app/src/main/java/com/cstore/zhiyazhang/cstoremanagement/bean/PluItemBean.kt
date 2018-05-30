@@ -33,24 +33,4 @@ open class PluItemBean : Serializable {
     @SerializedName("stocktype")
     var stockType: String? = null
     var editCount: Int = 0
-
-/*    *//**
-     * 想不到办法用泛型，只能继承一个复制一个过去了
-     *//*
-    private fun setData(data: Any, pluId: String, pluName: String, storeUnitPrice: Double, shipNumber: String, unitCost: Double, sellCost: Double, invQty: Int, vendorId: String, supplierId: String, signType: String, stockType: String): Any {
-        data as PluItemBean
-        data.pluId = pluId
-        data.pluName = pluName
-        data.storeUnitPrice = storeUnitPrice
-        data.shipNumber = shipNumber
-        data.unitCost = unitCost
-        data.sellCost = sellCost
-        data.invQty = invQty
-        data.vendorId = vendorId
-        data.supplierId = supplierId
-        data.signType = signType
-        data.stockType = stockType
-        return data
-    }
-    */
 }

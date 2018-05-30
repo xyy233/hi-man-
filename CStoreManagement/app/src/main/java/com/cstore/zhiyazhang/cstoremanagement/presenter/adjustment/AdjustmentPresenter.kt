@@ -26,11 +26,13 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
             override fun listenerSuccess(data: Any) {
                 gView.showView(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
+                handler.cleanAll()
             }
         })
         model.getAllAdjustmentList(date, handler)
@@ -43,11 +45,13 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.searchAdjustment(searchMsg, handler)
@@ -60,11 +64,13 @@ class AdjustmentPresenter(private val gView: GenericView, private val context: C
             override fun listenerSuccess(data: Any) {
                 gView.updateDone(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.createAdjustment(data, handler)

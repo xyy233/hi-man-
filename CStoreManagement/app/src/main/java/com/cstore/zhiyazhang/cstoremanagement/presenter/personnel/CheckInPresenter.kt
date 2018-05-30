@@ -23,12 +23,14 @@ class CheckInPresenter(private val gView: GenericView, private val activity: MyA
             override fun listenerSuccess(data: Any) {
                 gView.requestSuccess(data)
                 gView.hideLoading()
+                handler.cleanAll()
             }
 
             override fun listenerFailed(errorMessage: String) {
                 gView.showPrompt(errorMessage)
                 gView.errorDealWith()
                 gView.hideLoading()
+                handler.cleanAll()
             }
         })
         model.checkInUser(gView.getData1() as Int, uid, bmp, handler)

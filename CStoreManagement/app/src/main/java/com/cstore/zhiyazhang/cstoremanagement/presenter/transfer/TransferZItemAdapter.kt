@@ -54,9 +54,13 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
         } else {
             holder.invBox.visibility = View.GONE
         }
-        if (d.sellCost != null) {
+        if (d.storeUnitPrice != null) {
             holder.sellCostBox.visibility = View.VISIBLE
-            holder.sellCost.text = df.format(d.sellCost.toString())
+            try {
+                holder.sellCost.text = df.format(d.storeUnitPrice.toString())
+            }catch (e:Exception){
+                holder.sellCost.text = d.storeUnitPrice.toString()
+            }
         } else {
             holder.sellCostBox.visibility = View.GONE
         }

@@ -1,7 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.transfer
 
 import android.os.Message
-import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferModel.Companion.getTrsNumber
@@ -12,9 +11,9 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.google.gson.Gson
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.MediaType
 
@@ -28,7 +27,8 @@ class TransferServiceModel : TransferServiceInterface {
                 .get()
                 .url(AppUrl.GET_ALL_TRANS)
                 //测试
-//                .addHeader(AppUrl.STOREHEADER, "130902")
+//                .addHeader(AppUrl.TRANDATE, "20180524")
+//                .addHeader(AppUrl.STOREHEADER, "010907")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
@@ -105,9 +105,9 @@ class TransferServiceModel : TransferServiceInterface {
                             try {
                                 result.filter { it.value == i.itemNo }.forEach {
                                     val inv = it.value2
-                                    val sellCost = it.value3
+                                    val storeUnitPrice = it.value3
                                     i.inv = inv!!.toInt()
-                                    i.sellCost = sellCost!!.toDouble()
+                                    i.storeUnitPrice = storeUnitPrice!!.toDouble()
                                 }
                             } catch (e: Exception) {
                             }

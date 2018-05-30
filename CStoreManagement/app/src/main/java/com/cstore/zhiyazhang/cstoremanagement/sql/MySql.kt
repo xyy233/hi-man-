@@ -1725,7 +1725,7 @@ object MySql {
                 "trs.busidate, " +
                 "trsStoreID, " +
                 "trsNumber, " +
-                "trsTime, " +
+                "max(trsTime) trsTime, " +
                 "o.ostorename, " +
                 "sum(trsQuantity) trsQuantity, " +
                 "0.0 + Count(*) trsItem, " +
@@ -1744,7 +1744,6 @@ object MySql {
                 "and trsstoreid = o.ostoreid " +
                 "group by trs.storeID, " +
                 "trsNumber, " +
-                "trsTime, " +
                 "o.ostorename, " +
                 "trs.busidate, " +
                 "trsid, " +
@@ -1896,7 +1895,7 @@ object MySql {
                 "nvl(inv.accCshDlvQuantity, 0) - nvl(inv.accCshRtnQuantity, 0) + " +
                 "nvl(inv.accTrsQuantity, 0) + nvl(inv.accLeibianQuantity, 0) + " +
                 "nvl(inv.accAdjQuantity, 0) + nvl(inv.accHqAdjQuantity, 0)) as value2, " +
-                "to_char(plu.sell_cost,'fm999,990.00') value3 " +
+                "to_char(plu.storeUnitPrice,'fm999,990.00') value3 " +
                 "from inv, plu " +
                 "where inv.itemnumber=plu.itemnumber " +
                 "and inv.busidate = to_date('${MyTimeUtil.nowDate}', 'yyyy-mm-dd') " +
@@ -2692,5 +2691,17 @@ object MySql {
                 "AND employee.employeeID not like '9%' " +
                 "AND nvl(emptypeno,'01') like '01'"
         return if (isShowManager) result + "\u0004" else result + "AND nvl(empstaff,'x') <> '01:店长'\u0004"
+    }
+
+    /*******************************************W冰箱*******************************************************/
+
+    fun getDistributionItem(key: String): String {
+        return "select p.itemnumber itemno,0 trs_qty,1 scan_qty,p.pluname item_name,c.categoryname big_name,c.categorynumber category,'N' date_type " +
+                "from plu p, cat c, itemplu i " +
+                "where p.itemnumber=i.itemnumber " +
+                "and p.categorynumber=c.categorynumber " +
+                "and c.midcategorynumber=' ' " +
+                "and c.microcategorynumber=' ' " +
+                "and i.plunumber='$key'\u0004"
     }
 }

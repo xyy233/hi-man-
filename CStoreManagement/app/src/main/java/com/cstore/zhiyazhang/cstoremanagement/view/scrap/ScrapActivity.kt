@@ -23,7 +23,6 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.scrap.ScrapAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.scrap.ScrapPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.AddLessClickListener
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
@@ -36,7 +35,6 @@ import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
 import kotlinx.android.synthetic.main.layout_date.*
 import kotlinx.android.synthetic.main.layout_date.view.*
 import kotlinx.android.synthetic.main.layout_search_line3.*
-import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -60,24 +58,6 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             else
                 editCount(beanData.mrkCount - 1, view, position)
         }
-/*
-
-        override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
-            view as ScrapAdapter.ViewHolder
-            dialogView.dialog_title.text = view.idName.text
-            dialogView.dialog_edit.setText(view.mrkCount.text)
-            dialogView.dialog_edit.inputType = InputType.TYPE_CLASS_NUMBER
-            dialogView.dialog_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
-            dialogView.dialog_edit.setSelection(dialogView.dialog_edit.text.length)
-            dialogView.dialog_save.setOnClickListener {
-                if (dialogView.dialog_edit.text.toString() == "") dialogView.dialog_edit.setText("0")
-                editCount(dialogView.dialog_edit.text.toString().toInt(), view, position)
-                if (scrap_done.visibility == View.GONE) scrap_done.visibility = View.VISIBLE
-                dialog.cancel()
-            }
-            dialog.show()
-        }
-*/
 
         override fun <T> onItemRemove(data: T, position: Int) {
             //在此为左滑右滑删除

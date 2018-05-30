@@ -1,10 +1,14 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils;
 
+import android.util.Log;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 /**
@@ -16,6 +20,7 @@ public class JavaFunUtil {
 
     /**
      * inputStream转换成byte
+     *
      * @param input 就是input
      * @return 转换完的byte
      * @throws IOException 流错误
@@ -32,6 +37,7 @@ public class JavaFunUtil {
 
     /**
      * inputStream转换成byte
+     *
      * @return 转换好的文件
      * @throws IOException 流错误
      */
@@ -46,5 +52,23 @@ public class JavaFunUtil {
         os.close();
         ins.close();
         return file;
+    }
+
+    public static String judgmentKey() {
+        try {
+            //获得外接USB输入设备的信息
+            Process p = Runtime.getRuntime().exec("cat /proc/bus/input/devices");
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = null;
+            StringBuilder result = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                String deviceInfo = line.trim();
+                result.append(deviceInfo).append("\n");
+                Log.e("Key", deviceInfo);
+            }
+            return result.toString();
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

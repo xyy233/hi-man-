@@ -65,7 +65,6 @@ class TransferModel : TransferInterface {
             return result
         }
         return if (result.isEmpty()) {
-
             msg.obj = sqlResult
             msg.what = ERROR
             handler.sendMessage(msg)
