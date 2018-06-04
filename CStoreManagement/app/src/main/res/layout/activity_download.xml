@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:text="@string/download_apk"/>
+
+        <com.cstore.zhiyazhang.cstoremanagement.utils.NumberProgressBar
+            android:id="@+id/npb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:max="100"
+            app:progress="0"
+            app:progress_reached_bar_height="1.5dp"
+            app:progress_reached_color="@color/cstore_red"
+            app:progress_text_color="@color/cstore_red"
+            app:progress_text_size="10sp"
+            app:progress_unreached_bar_height="0.75dp"
+            app:progress_unreached_color="#CCCCCC"/>
+
+    </LinearLayout>
+</LinearLayout>

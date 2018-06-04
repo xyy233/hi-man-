@@ -5,6 +5,11 @@
 
     <group>
         <item
+            android:id="@+id/nav_bluetooth"
+            android:icon="@drawable/ic_bluetooth"
+            android:title="@string/conn_bluetooth"
+            />
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/clearData"/>

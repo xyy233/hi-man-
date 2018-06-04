@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="70dp"
+    android:background="@color/item_bg">
 
     <RelativeLayout
         android:id="@+id/bluetooth_box"
@@ -55,9 +55,11 @@
         <Button
             android:id="@+id/btConnect"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/tvOperationItem"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button_connect_style"
             android:focusable="false"
             android:text="@string/disconnect"

@@ -13,8 +13,6 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
-import com.cstore.zhiyazhang.cstoremanagement.view.printer.PrinterActivity
-import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZItemActivity
 import com.google.gson.Gson
 
 /**
@@ -103,8 +101,11 @@ class TransferServicePresenter(private val view: GenericView) {
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
                 data as String
-                if (data != "SUCCESS") view.showPrompt(data)
-                else view.showPrompt(MyApplication.instance().applicationContext.getString(R.string.done))
+                if (data != "SUCCESS") {
+                    view.showPrompt(data)
+                } else {
+                    view.showPrompt(MyApplication.instance().applicationContext.getString(R.string.done))
+                }
                 view.updateDone(data)
                 view.hideLoading()
                 handler.cleanAll()

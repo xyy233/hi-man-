@@ -27,8 +27,8 @@ class DistributionModel : DistributionInterface {
         OkHttpUtils
                 .get()
                 .url(AppUrl.GET_DISTRIBUTION)
-                .addHeader(AppUrl.STOREHEADER, "130902")
-//                .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
+//                .addHeader(AppUrl.STOREHEADER, "130902")
+                .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .build()
                 .execute(object : MyStringCallBack(listener) {
                     override fun onResponse(response: String, id: Int) {
@@ -41,8 +41,8 @@ class DistributionModel : DistributionInterface {
         OkHttpUtils
                 .get()
                 .url(AppUrl.GET_DISTRIBUTION_ITEM)
-                .addHeader(AppUrl.STOREHEADER, "130902")
-//                .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
+//                .addHeader(AppUrl.STOREHEADER, "130902")
+                .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.SHELVES_ID, shelvesId)
                 .addHeader(AppUrl.DISTIME, disTime)
                 .build()

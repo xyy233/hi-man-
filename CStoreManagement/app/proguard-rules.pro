@@ -143,3 +143,27 @@
 #tray
 -keep class net.grandcentrix.tray.**{*;}
 -dontwarn net.grandcentrix.tray.**
+
+-ignorewarnings
+
+-keep class com.gprinter.**{*;}
+-dontwarn com.gprinter.**
+
+-keep class taobe.tec.jcc.**{*;}
+-dontwarn taobe.tec.jcc.**
+
+-keep class org.kobjects.**{*;}
+-dontwarn org.kobjects.**
+
+-keep class org.ksoap2.**{*;}
+-dontwarn org.ksoap2.**
+
+-keep class org.kxml2.**{*;}
+-dontwarn org.kxml2.**
+
+-keep class org.xmlpull.**{*;}
+-dontwarn org.xmlpull.**
+
+-keep class com.lidroid.xutils.**{*;}
+-dontwarn com.lidroid.xutils.**
+

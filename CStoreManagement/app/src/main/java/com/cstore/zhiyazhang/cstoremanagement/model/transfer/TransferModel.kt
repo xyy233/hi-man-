@@ -263,7 +263,7 @@ class TransferModel : TransferInterface {
                 return trsNumberIsExits((MyTimeUtil.nowDay() + "00").toInt(), ip, msg, handler)
             }
             val number = values[0].value!!.substring(8, 12).toInt()
-            return trsNumberIsExits(number + 1, ip, msg, handler)
+            return trsNumberIsExits((number + 1), ip, msg, handler)
         }
 
 
@@ -277,7 +277,7 @@ class TransferModel : TransferInterface {
             val storeId = User.getUser().storeId
             val year = MyTimeUtil.nowYear().substring(1)
             val month = MyTimeUtil.getMonthToEn()
-            var result = "$storeId$year$month$finalTrsNum"
+            var result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
             while (!checkOrder) {
                 val sql = MySql.isExistTrs(result)
                 val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
@@ -286,7 +286,7 @@ class TransferModel : TransferInterface {
                 } else {
                     finalTrsNum++
                 }
-                result = "$storeId$year$month$finalTrsNum"
+                result = "$storeId$year$month${finalTrsNum.toString().padStart(4, '0')}"
                 if (count == 10) {
                     msg.obj = "检查重复单号出错：$sqlResult"
                     msg.what = ERROR

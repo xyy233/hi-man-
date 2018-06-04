@@ -1,8 +1,11 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
+import android.content.Context
 import android.content.Intent
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
@@ -14,7 +17,9 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferService
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferZItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.nowHour
+import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
+import com.gprinter.service.GpPrintService
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import java.math.BigDecimal
@@ -24,13 +29,10 @@ import java.math.BigDecimal
  * on 2018/5/11 12:11.
  */
 class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order) : MyActivity() {
-
-    companion object {
-        val XXXXX="123"
-    }
     private lateinit var trsData: TransServiceBean
     private val presenter = TransferServicePresenter(this)
     private lateinit var adapter: TransferZItemAdapter
+    private var conn: PrinterServiceConnection? = null
 
     private lateinit var showAction: Animation
     private lateinit var hideAction: Animation
@@ -53,14 +55,17 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(my_toolbar)
         orderRecycler.layoutManager = MyLinearlayoutManager(this@TransferZItemActivity, LinearLayout.VERTICAL, false)
+        toolbar_btn.text = "打印"
         //没有记录的门市、调出的、产生两小时内的才确认需要处理
         if (trsData.requestNumber == null && trsData.trsType < 0 && nowHour <= trsData.disTime.toInt() + 2) {
             done.visibility = View.VISIBLE
         } else {
             done.visibility = View.GONE
         }
+        toolbar_btn.visibility = View.VISIBLE
         showAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in)
         hideAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out)
+        connection()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -70,13 +75,33 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
         return true
     }
 
+
+    private fun connection() {
+        conn = PrinterServiceConnection(null)
+        val i = Intent(this, GpPrintService::class.java)
+        bindService(i, conn, Context.BIND_AUTO_CREATE)
+    }
+
     override fun initClick() {
         done.setOnClickListener {
-            presenter.doneTrs()
+            AlertDialog.Builder(ContextThemeWrapper(this@TransferZItemActivity, R.style.AlertDialogCustom))
+                    .setTitle("提示")
+                    .setMessage("是否提交？")
+                    .setPositiveButton("提交") { _, _ ->
+                        showRetry(false)
+                        presenter.doneTrs()
+                    }
+                    .setNegativeButton("取消", null)!!.show()
         }
         orderretry.setOnClickListener {
-            showRetry(false)
-            presenter.doneTrs()
+            AlertDialog.Builder(ContextThemeWrapper(this@TransferZItemActivity, R.style.AlertDialogCustom))
+                    .setTitle("提示")
+                    .setMessage("是否提交？")
+                    .setPositiveButton("提交") { _, _ ->
+                        showRetry(false)
+                        presenter.doneTrs()
+                    }
+                    .setNegativeButton("取消", null)!!.show()
         }
         orderRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
@@ -98,11 +123,51 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
                 }
             }
         })
+        toolbar_btn.setOnClickListener {
+            print()
+        }
+        orderLoading.setOnClickListener {
+            showPrompt(getString(R.string.wait_loading))
+        }
+    }
+
+    private fun print() {
+        if (trsData.requestNumber == null) {
+            showPrompt("请确认调拨单后再打印")
+            return
+        }
+        if (conn!!.getConnectState()) {
+            //打印
+            if (trsData.requestNumber == null || trsData.requestNumber == "") {
+                conn!!.printZWTrs(trsData, "调拨拣货单")
+            } else {
+                conn!!.printZWTrs(trsData, "调拨送货单")
+            }
+        } else {
+            //去连接
+            conn!!.goActivity(this@TransferZItemActivity, true)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 28) {
+            print()
+        }
     }
 
     override fun <T> updateDone(uData: T) {
         adapter.changeShowEdit(false)
         done.visibility = View.GONE
+        toolbar_btn.visibility = View.VISIBLE
+        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+                .setTitle("打印提示")
+                .setMessage("是否打印拣货单？")
+                .setPositiveButton("确认", { _, _ ->
+                    print()
+                })
+                .setNegativeButton("放弃") { _, _ -> }
+                .show()
     }
 
     override fun initData() {

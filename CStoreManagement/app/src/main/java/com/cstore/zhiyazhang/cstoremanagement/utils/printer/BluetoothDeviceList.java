@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -38,7 +37,7 @@ public class BluetoothDeviceList extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(5);
         setContentView(R.layout.dialog_bluetooth_list);
         Log.e(DEBUG_TAG, "On Create");
         tvPairedDevice = findViewById(R.id.tvPairedDevices);
@@ -124,9 +123,7 @@ public class BluetoothDeviceList extends Activity {
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED
                     .equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.select_bluetooth_device);
-                Log.i("tag", "finish discovery" + mNewDevicesArrayAdapter.getCount());
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
                     String noDevices = getResources().getText(
                             R.string.none_bluetooth_device_found).toString();
@@ -138,7 +135,6 @@ public class BluetoothDeviceList extends Activity {
 
     private void discoveryDevice() {
         // Indicate scanning in the title
-        setProgressBarIndeterminateVisibility(true);
         setTitle(R.string.scaning);
         // Turn on sub-title for new devices
         tvNewDevice.setVisibility(View.VISIBLE);

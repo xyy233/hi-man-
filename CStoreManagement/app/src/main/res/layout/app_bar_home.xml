@@ -38,262 +38,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/home_recycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:ignore="DisableBaselineAlignment">
+            android:layout_height="wrap_content"/>
 
-            <LinearLayout
-                android:id="@+id/gg1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                tools:ignore="NestedWeights">
+    </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/order"
-                    android:src="@mipmap/ic_home_shopping"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/order"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/coi"
-                    android:src="@mipmap/ic_home_invest"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/coi"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg3"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_home_instock"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/in_stock"/>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/home_notice"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="true"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/gg4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg3"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_personnel"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/personnel"/>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/gg5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg3"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/ic_collect"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/collect"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gg6"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg6"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/zw_trs"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/transz"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="true"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/gg7"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:foreground="@drawable/selector_foreground"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:stateListAnimator="@drawable/lift_on_touch"
-                android:transitionName="gg7"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/train"
-                    android:src="@mipmap/w_shelves"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/shelves"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                tools:ignore="UselessLeaf">
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                tools:ignore="UselessLeaf">
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="true"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/home_notice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/delete_red"
-                android:textSize="20sp"/>
-
-        </LinearLayout>
+            android:textColor="@color/delete_red"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 

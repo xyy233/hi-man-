@@ -28,7 +28,7 @@ class TransferServiceModel : TransferServiceInterface {
                 .url(AppUrl.GET_ALL_TRANS)
                 //测试
 //                .addHeader(AppUrl.TRANDATE, "20180524")
-//                .addHeader(AppUrl.STOREHEADER, "010907")
+//                .addHeader(AppUrl.STOREHEADER, "170104")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
@@ -45,7 +45,7 @@ class TransferServiceModel : TransferServiceInterface {
                 .get()
                 .url(AppUrl.JUDGMENT_TRANS)
                 //测试
-//                .addHeader(AppUrl.STOREHEADER, "130902")
+//                .addHeader(AppUrl.STOREHEADER, "170104")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, tag.hour)
                 .build()
@@ -67,10 +67,20 @@ class TransferServiceModel : TransferServiceInterface {
             try {
                 //通过强制转换为数字判断是否正确
                 result.toInt()
-                val resultData = requestData(data, 0)
-                msg.obj = resultData
-                msg.what = SUCCESS
-                handler.sendMessage(msg)
+                val judgementSql = MySql.judgmentTrsNumber(data.requestNumber!!)
+                val jResult = SocketUtil.initSocket(ip, judgementSql).inquire()
+                val jr = GsonUtil.getUtilBean(jResult)
+                if ((jr[0].value)!!.toInt() == 0) {
+                    msg.obj = "创建订单异常！请重试！"
+                    msg.what = ERROR
+                    handler.sendMessage(msg)
+                    return@Runnable
+                }else{
+                    val resultData = requestData(data, 0)
+                    msg.obj = resultData
+                    msg.what = SUCCESS
+                    handler.sendMessage(msg)
+                }
             } catch (e: Exception) {
                 msg.obj = result
                 msg.what = ERROR

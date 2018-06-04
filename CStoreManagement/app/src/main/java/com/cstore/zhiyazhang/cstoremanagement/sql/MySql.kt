@@ -1882,6 +1882,13 @@ object MySql {
     }
 
     /**
+     * 检测是否已存在单号
+     */
+    fun judgmentTrsNumber(trsNumber:String):String{
+        return "SELECT count(*) value FROM trs where busidate=trunc(sysdate) and trsnumber='$trsNumber'"
+    }
+
+    /**
      * 中卫调拨获得当前库存
      */
     fun zwSearchInv(tr: TransResult): String {

@@ -18,8 +18,10 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.TrsItemBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
+import com.gprinter.service.GpPrintService
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_transfer_item.*
 import kotlinx.android.synthetic.main.layout_search_line.*
@@ -38,6 +40,7 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
     private lateinit var showAction: Animation
     private lateinit var hideAction: Animation
     private var oStore: OStoreBean? = null
+    private var conn: PrinterServiceConnection? = null
 
     override fun initView() {
         my_toolbar.title = getString(R.string.transfer)
@@ -68,6 +71,15 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
             adapter = TransferItemAdapter(date, data!!.items, onClick)
         }
         trs_recycler.adapter = adapter
+        toolbar_btn.text = "打印"
+        toolbar_btn.visibility = View.VISIBLE
+        connection()
+    }
+
+    private fun connection() {
+        conn = PrinterServiceConnection(null)
+        val i = Intent(this, GpPrintService::class.java)
+        bindService(i, conn, Context.BIND_AUTO_CREATE)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -75,6 +87,20 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
             android.R.id.home -> onBackPressed()
         }
         return true
+    }
+
+    private fun print() {
+        if (data != null) {
+            if (conn!!.getConnectState()) {
+                //打印
+                conn!!.printTrs(data!!)
+            } else {
+                //去连接
+                conn!!.goActivity(this@TransferItemActivity, true)
+            }
+        } else {
+            showPrompt("无可打印数据")
+        }
     }
 
     override fun initClick() {
@@ -160,16 +186,23 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
             i.putExtra("whereIsIt", "return")
             startActivityForResult(i, 0)
         }
+        toolbar_btn.setOnClickListener {
+            print()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
-            val code = data.getStringExtra("message")
-            if (code != null) {
-                presenter.searchCommodity(code)
+            if (resultCode == 28) {
+                print()
             } else {
-                showPrompt(getString(R.string.qrcode_error))
+                val code = data.getStringExtra("message")
+                if (code != null) {
+                    presenter.searchCommodity(code)
+                } else {
+                    showPrompt(getString(R.string.qrcode_error))
+                }
             }
         }
     }

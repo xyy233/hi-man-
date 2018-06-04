@@ -58,7 +58,7 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
             holder.sellCostBox.visibility = View.VISIBLE
             try {
                 holder.sellCost.text = df.format(d.storeUnitPrice.toString())
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 holder.sellCost.text = d.storeUnitPrice.toString()
             }
         } else {
@@ -78,7 +78,11 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
                             val tq2 = holder.trsQty2.text.toString().toInt()
                             if (d.inv != null) {
                                 if (tq2 > d.inv!!) {
-                                    d.storeTrsQty = d.inv
+                                    if (d.inv!! < 0) {
+                                        d.storeTrsQty = 0
+                                    }else{
+                                        d.storeTrsQty = d.inv
+                                    }
                                     holder.trsQty2.setText(d.inv.toString())
                                     MyToast.getShortToast("修改量不能大于库存")
                                 }

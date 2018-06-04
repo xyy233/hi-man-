@@ -2,18 +2,19 @@ package com.cstore.zhiyazhang.cstoremanagement.view.printer
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.os.IBinder
 import android.os.RemoteException
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.printer.BluetoothDeviceList
-import com.gprinter.aidl.GpService
+import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
 import com.gprinter.command.GpCom
 import com.gprinter.io.GpDevice
 import com.gprinter.io.PortParameters
@@ -25,8 +26,8 @@ import kotlinx.android.synthetic.main.activity_printer.*
  * Created by zhiya.zhang
  * on 2018/5/30 10:55.
  */
-class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : MyActivity() {
-    private var mGpService: GpService? = null
+class PrinterActivity : Activity() {
+    private var conn: PrinterServiceConnection? = null
 
     companion object {
         val CONNECT_STATUS = "connect.status"
@@ -39,13 +40,22 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
 
     private lateinit var mPortParam: PortParameters
     private val database = PortParamDataBase(this)
-    private var conn: PrinterServiceConnection? = null
+    private var isFinish = false
 
-    override fun initView() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestWindowFeature(5)
+        setContentView(R.layout.activity_printer)
+        isFinish = intent.getBooleanExtra("isFinish", false)
+        connection()
+        initView()
+        initClick()
+    }
+
+    private fun initView() {
         initPortParam()
         startMyService()
         registerBroadcast()
-        connection()
     }
 
     private fun registerBroadcast() {
@@ -56,8 +66,14 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
 
     private fun initPortParam() {
         mPortParam = database.queryPortParamDataBase("0")
+        mPortParam.portOpenState = intent.getBooleanExtra("status", false)
+        btConnect.text = if (mPortParam.portOpenState) {
+            getString(R.string.cut)
+        } else {
+            getString(R.string.connect)
+        }
         val info = "接口：蓝牙   地址：${
-        if (mPortParam.portType == PortParameters.BLUETOOTH) {
+        if (mPortParam.portType == PortParameters.BLUETOOTH && mPortParam.bluetoothAddr != "") {
             mPortParam.bluetoothAddr
         } else {
             "未匹配"
@@ -67,7 +83,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
     }
 
     private fun connection() {
-        conn = PrinterServiceConnection()
+        conn = PrinterServiceConnection(null)
         val i = Intent(this, GpPrintService::class.java)
         bindService(i, conn, Context.BIND_AUTO_CREATE)
     }
@@ -77,7 +93,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
         startService(i)
     }
 
-    override fun initClick() {
+    private fun initClick() {
         btConnect.setOnClickListener {
             //短按链接
             mPortParam.portType = PortParameters.BLUETOOTH
@@ -86,13 +102,13 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
                 if (!mPortParam.portOpenState) {
                     if (checkPortParamters()) {
                         try {
-                            mGpService!!.closePort(0)
+                            conn!!.mGpService!!.closePort(0)
                         } catch (e: RemoteException) {
                             e.printStackTrace()
                         }
                         if (mPortParam.portType == PortParameters.BLUETOOTH) {
                             try {
-                                rel = mGpService!!.openPort(0, mPortParam.portType, mPortParam.bluetoothAddr, 0)
+                                rel = conn!!.mGpService!!.openPort(0, mPortParam.portType, mPortParam.bluetoothAddr, 0)
                             } catch (e: RemoteException) {
                                 e.printStackTrace()
                             }
@@ -100,7 +116,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
                         val r = GpCom.ERROR_CODE.values()[rel]
                         if (r != GpCom.ERROR_CODE.SUCCESS) {
                             if (r == GpCom.ERROR_CODE.DEVICE_ALREADY_OPEN) {
-                                mPortParam.portOpenState = true
+                                mPortParam.portOpenState = conn!!.getConnectState()
                                 btConnect.text = getString(R.string.cut)
                             } else {
                                 showPrompt(GpCom.getErrorText(r))
@@ -113,7 +129,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
                     showLoading()
                     btConnect.text = getString(R.string.cutting)
                     try {
-                        mGpService!!.closePort(0)
+                        conn!!.mGpService!!.closePort(0)
                     } catch (e: RemoteException) {
                         e.printStackTrace()
                     }
@@ -135,9 +151,6 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
                     .show()
             true
         }
-    }
-
-    override fun initData() {
     }
 
     private fun getBluetoothDevice(): Boolean {
@@ -179,7 +192,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
         if (requestCode == 0) {
             if (resultCode == Activity.RESULT_OK) {
                 var bundle: Bundle? = Bundle()
-                bundle = data!!.getExtras()
+                bundle = data!!.extras
                 var param = bundle!!.getInt(GpPrintService.PORT_TYPE)
                 mPortParam.portType = param
                 var str = bundle.getString(GpPrintService.IP_ADDR)
@@ -228,7 +241,7 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
 
     private fun setPortParamToView() {
         val info = "接口：蓝牙   地址：${
-        if (mPortParam.portType == PortParameters.BLUETOOTH) {
+        if (mPortParam.portType == PortParameters.BLUETOOTH && mPortParam.bluetoothAddr != "") {
             mPortParam.bluetoothAddr
         } else {
             "未匹配"
@@ -237,35 +250,13 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
         tvInfo.text = info
     }
 
-    internal inner class PrinterServiceConnection : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {
-            Log.i("ServiceConnection", "onServiceDisconnected() called")
-            mGpService = null
-        }
 
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mGpService = GpService.Stub.asInterface(service)
-        }
-    }
-
-    override fun hideLoading() {
+    private fun hideLoading() {
         bluetooth_pro.visibility = View.GONE
     }
 
-    override fun showLoading() {
+    private fun showLoading() {
         bluetooth_pro.visibility = View.VISIBLE
-    }
-
-    private fun getConnectState(): Boolean {
-        var result = false
-        try {
-            if (mGpService!!.getPrinterConnectStatus(1) == GpDevice.STATE_CONNECTED) {
-                result = true
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return result
     }
 
     private val printerStatusBroadcastReceiver = object : BroadcastReceiver() {
@@ -273,28 +264,41 @@ class PrinterActivity(override val layoutId: Int = R.layout.activity_printer) : 
             if (GpCom.ACTION_CONNECT_STATUS == intent.action) {
                 val type = intent.getIntExtra(GpPrintService.CONNECT_STATUS, 0)
                 val id = intent.getIntExtra(GpPrintService.PRINTER_ID, 0)
-                if (type == GpDevice.STATE_CONNECTING) {
-                    showLoading()
-                    btConnect.isEnabled = false
-                    mPortParam.portOpenState = false
-                    btConnect.text = getString(R.string.connecting)
-                } else if (type == GpDevice.STATE_NONE) {
-                    hideLoading()
-                    btConnect.isEnabled = true
-                    mPortParam.portOpenState = false
-                    btConnect.text = getString(R.string.connect)
-                } else if (type == GpDevice.STATE_VALID_PRINTER) {
-                    hideLoading()
-                    btConnect.isEnabled = true
-                    mPortParam.portOpenState = true
-                    btConnect.text = getString(R.string.cut)
-                } else if (type == GpDevice.STATE_INVALID_PRINTER) {
-                    hideLoading()
-                    btConnect.isEnabled = true
-                    showPrompt("请使用公司派发打印机！")
+                when (type) {
+                    GpDevice.STATE_CONNECTING -> {
+                        showLoading()
+                        btConnect.isEnabled = false
+                        mPortParam.portOpenState = false
+                        btConnect.text = getString(R.string.connecting)
+                    }
+                    GpDevice.STATE_NONE -> {
+                        hideLoading()
+                        btConnect.isEnabled = true
+                        mPortParam.portOpenState = false
+                        btConnect.text = getString(R.string.connect)
+                    }
+                    GpDevice.STATE_VALID_PRINTER -> {
+                        hideLoading()
+                        btConnect.isEnabled = true
+                        mPortParam.portOpenState = conn!!.getConnectState()
+                        btConnect.text = getString(R.string.cut)
+                        if (isFinish) {
+                            setResult(28, Intent())
+                            finish()
+                        }
+                    }
+                    GpDevice.STATE_INVALID_PRINTER -> {
+                        hideLoading()
+                        btConnect.isEnabled = true
+                        showPrompt("请使用公司派发打印机！")
+                    }
                 }
             }
         }
+    }
+
+    private fun showPrompt(msg: String) {
+        MyToast.getLongToast(msg)
     }
 
     override fun onDestroy() {

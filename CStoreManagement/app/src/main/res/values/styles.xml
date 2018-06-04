@@ -18,6 +18,10 @@
         <!--<item name="android:windowAnimationStyle">@style/activityAnim</item>-->
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+
+    </style>
+
     <!-- 使用style方式定义activity切换动画 -->
     <style name="activityAnim">
         <!--打开新的Activity并进入新的Activity展示的动画-->
@@ -57,7 +61,7 @@
     </style>
 
     <!--提示框字体大小设置-->
-    <style name="AlertDialogCustom" parent="Animation.AppCompat.Dialog">
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:textSize">14sp</item>
     </style>
 

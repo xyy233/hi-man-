@@ -139,7 +139,8 @@ data class User(
             ue.putString("wxKeyPassword", user.wxKeyPassword)
             ue.putString("aliPartnerId", user.aliPartnerId)
             ue.putString("aliSecurityCode", user.aliSecurityCode)
-            val type = if (user.storeId[0].toUpperCase().toString() == "s") 1 else 0
+            val s=user.storeId[0].toLowerCase().toString()
+            val type = if (s == "s") 1 else 0
             ue.putInt("type", type)
             ue.apply()
             refreshUser()

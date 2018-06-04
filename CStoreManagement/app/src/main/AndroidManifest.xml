@@ -19,13 +19,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.hardware.usb.accessory" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.hardware.usb.accessory"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
 
     <application
@@ -47,10 +49,10 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <!--登录页-->
-        <!--android:name=".view.SignInActivity"-->
+
+        <!--载入界面-->
         <activity
-            android:name=".view.printer.PrinterActivity"
+            android:name=".view.update.LoadingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -60,8 +62,15 @@
             </intent-filter>
         </activity>
 
+
+        <!--登录页-->
+        <activity
+            android:name=".view.SignInActivity"
+            android:screenOrientation="portrait"/>
+
         <!--更新用的service-->
         <service android:name=".view.UpdateService"/>
+        <service android:name=".view.update.DownloadService"/>
         <!--检测是否有交易未完成的service-->
         <service android:name=".view.PayDataService"/>
         <!--检查调拨的service-->
@@ -308,16 +317,24 @@
             android:screenOrientation="portrait"/>
 
         <!--打印机-->
-        <!--   <activity
-               android:name=".view.printer.PrinterActivity"
-               android:screenOrientation="portrait"/>-->
+        <activity
+            android:name=".view.printer.PrinterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"/>
 
         <!--查询蓝牙设备-->
         <activity
             android:name=".utils.printer.BluetoothDeviceList"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Dialog"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog"/>
+
+        <!--更新页面-->
+        <activity
+            android:name=".view.update.DownloadActivity"
             android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

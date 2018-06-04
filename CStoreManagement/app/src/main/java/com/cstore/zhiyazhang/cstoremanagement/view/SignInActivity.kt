@@ -10,8 +10,8 @@ import android.hardware.Camera
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
@@ -24,7 +24,6 @@ import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.SignInView
 import kotlinx.android.synthetic.main.activity_signin.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import java.io.File
 
 
 /**
@@ -46,7 +45,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
-
         //尝试获得之前的用户
         preferences = getSharedPreferences("idpwd", Context.MODE_PRIVATE)
         //如果获得了就直接输入否则为""
@@ -57,6 +55,8 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
             save_id.isChecked = true
             if (user_password.text.toString() != "") save_pwd.isChecked = true
         }
+        detail_box.visibility = View.VISIBLE
+        detail_box.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_slide_in))
     }
 
     override fun initClick() {
@@ -137,7 +137,7 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
                     val i = Intent()
                     setResult(0, i)
                     onBackPressed()
-                }else{
+                } else {
                     val intent = Intent(this@SignInActivity, HomeActivity::class.java)
                     intent.putExtra("user", rData)
                     startActivity(intent)
@@ -175,20 +175,16 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     private fun getPermissions() {
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             if (judgmentPermissions()) {
-                deleteDownload()
-                deleteAlphaDownload()
             }
         } else {
             if (!cameraIsCanUse()) {
-                MyToast.getLongToast("您未开启相机权限，请开启相机权限！")
+                MyToast.getLongToast("您未开启权限，请开启权限！")
                 val intent = Intent()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
                 intent.data = Uri.fromParts("package", this@SignInActivity.packageName, null)
                 this@SignInActivity.startActivity(intent)
             }
-            deleteDownload()
-            deleteAlphaDownload()
         }
     }
 
@@ -218,10 +214,10 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
         return isCanUse
     }
 
-    //获得相机权限
+    //获得权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
     private fun judgmentPermissions(): Boolean {
-        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, getString(R.string.openCamera), 1, *perms)
             return false
@@ -244,27 +240,5 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
 
     //获取权限成功
     override fun onPermissionsGranted(requestCode: Int, list: List<String>) {
-        deleteDownload()
-        deleteAlphaDownload()
-    }
-
-    //检查删除安装包
-    private fun deleteDownload() {
-        val versionName = "CStoreManagement.apk"
-        val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
-        val f = File(downloadPath)
-        if (f.exists()) {
-            f.delete()
-        }
-    }
-
-    //删除预览版安装包
-    private fun deleteAlphaDownload() {
-        val versionName = "CStoreManagementAlpha.apk"
-        val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
-        val f = File(downloadPath)
-        if (f.exists()) {
-            f.delete()
-        }
     }
 }
