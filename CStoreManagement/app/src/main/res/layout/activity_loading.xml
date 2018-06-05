@@ -36,4 +36,39 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/pg_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_box">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:text="@string/download_apk"/>
+
+        <com.cstore.zhiyazhang.cstoremanagement.utils.NumberProgressBar
+            android:id="@+id/npb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            app:max="100"
+            app:progress="0"
+            app:progress_reached_bar_height="3dp"
+            app:progress_reached_color="@color/cstore_red"
+            app:progress_text_color="@color/cstore_red"
+            app:progress_text_size="10sp"
+            app:progress_unreached_bar_height="1.5dp"
+            app:progress_unreached_color="#CCCCCC"/>
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

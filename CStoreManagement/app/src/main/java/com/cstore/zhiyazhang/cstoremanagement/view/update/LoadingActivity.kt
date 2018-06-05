@@ -1,13 +1,17 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.update
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import android.hardware.Camera
-import android.net.Uri
+import android.content.ServiceConnection
 import android.os.Environment
+import android.os.IBinder
 import android.support.v7.app.AlertDialog
 import android.view.ContextThemeWrapper
+import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
@@ -16,7 +20,6 @@ import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 import com.google.gson.Gson
 import com.zhy.http.okhttp.OkHttpUtils
@@ -32,44 +35,57 @@ import java.io.File
  */
 class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : MyActivity(), EasyPermissions.PermissionCallbacks {
 
+    private var isBindService: Boolean = false
+    private val conn = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as DownloadService.DownloadBinder
+            val downloadService = binder.service
+
+            //接口回调，下载进度
+            downloadService.setOnProgressListener(object : DownloadService.OnProgressListener {
+                override fun onProgress(fraction: Float) {
+                    npb!!.progress = (fraction * 100).toInt()
+
+                    //判断是否真的下载完成进行安装了，以及是否注册绑定过服务
+                    if (fraction == DownloadService.UNBIND_SERVICE && isBindService) {
+                        unBind()
+                        isBindService = false
+                        finish()
+                    }
+                }
+            })
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+
+        }
+    }
+
+    private fun unBind() {
+        unbindService(conn)
+    }
+
+    private var isUpdate = false
 
     private val animation = TranslateAnimation(0f, 0f, 0f, -590f)
+
+    private val updateAnimation = TranslateAnimation(0f, 0f, 0f, -100f)
+
+    private var downloadUrl: String? = null
 
     private val myListener = object : MyListener {
 
         override fun listenerSuccess(data: Any) {
             val updates = Gson().fromJson(data as String, UpdateBean::class.java)
-            if (MyApplication.getVersion()!!.indexOf("Alpha") == -1) {
-                //线上版本
-                //如果版本号不同就去下载
-                if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
-                    val versionUrl = updates.downloadUrl
-                    val versionName = "CStoreManagement.apk"
-                    val i = Intent(this@LoadingActivity, DownloadActivity::class.java)
-                    i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_URL, versionUrl)
-                    i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_NAME, versionName)
-                    startActivity(i)
-                    finish()
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                } else {
-                    image_box.startAnimation(animation)
-                }
+            //如果版本号不同就去下载
+            if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
+                isUpdate = true
+                downloadUrl = updates.downloadUrl
+                image_box.startAnimation(updateAnimation)
+                pg_box.visibility = View.VISIBLE
+                pg_box.startAnimation(AnimationUtils.loadAnimation(this@LoadingActivity, R.anim.anim_slide_in))
             } else {
-                //预览版
-
-                //如果版本名不同就去下载
-                if ((updates as UpdateBean).alphaVerNumber > MyApplication.getVersionNum()) {
-                    val versionUrl = updates.downloadUrl
-                    val versionName = "CStoreManagementAlpha.apk"
-                    val i = Intent(this@LoadingActivity, DownloadActivity::class.java)
-                    i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_URL, versionUrl)
-                    i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_NAME, versionName)
-                    startActivity(i)
-                    finish()
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                } else {
-                    image_box.startAnimation(animation)
-                }
+                image_box.startAnimation(animation)
             }
         }
 
@@ -109,6 +125,30 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
             }
 
         })
+        updateAnimation.duration = 1000
+        updateAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                val layoutX = image_box.left
+                val layoutY = image_box.top + -100
+                val tempWidth = image_box.width
+                val tempHeight = image_box.height
+                image_box.clearAnimation()
+                image_box.layout(layoutX, layoutY, layoutX + tempWidth, layoutY + tempHeight)
+                val versionUrl = downloadUrl
+                val versionName = "CStoreManagement.apk"
+                val i = Intent(this@LoadingActivity, DownloadService::class.java)
+                i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_URL, versionUrl)
+                i.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_NAME, versionName)
+                isBindService = bindService(i, conn, Context.BIND_AUTO_CREATE)
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+            }
+
+        })
     }
 
     override fun initClick() {
@@ -116,6 +156,14 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
 
     override fun initData() {
         getPermissions()
+    }
+
+    override fun onBackPressed() {
+        if (isUpdate){
+            showPrompt(getString(R.string.wait_loading))
+        }else{
+            super.onBackPressed()
+        }
     }
 
     private fun judgementUpdate() {
@@ -161,45 +209,10 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
                 judgementUpdate()
             }
         } else {
-            if (!cameraIsCanUse()) {
-                MyToast.getLongToast("您未开启权限，请开启权限！")
-                val intent = Intent()
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
-                intent.data = Uri.fromParts("package", this@LoadingActivity.packageName, null)
-                this@LoadingActivity.startActivity(intent)
-            }else{
-                deleteAlphaDownload()
-                deleteDownload()
-                judgementUpdate()
-            }
+            deleteAlphaDownload()
+            deleteDownload()
+            judgementUpdate()
         }
-    }
-
-    /**
-     * 返回true 表示可以使用  返回false表示不可以使用
-     */
-    private fun cameraIsCanUse(): Boolean {
-        var isCanUse = true
-        var mCamera: Camera? = null
-        try {
-            mCamera = Camera.open()
-            val mParameters = mCamera!!.parameters //针对魅族手机
-            mCamera.parameters = mParameters
-        } catch (e: Exception) {
-            isCanUse = false
-        }
-
-        if (mCamera != null) {
-            try {
-                mCamera.release()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return isCanUse
-            }
-
-        }
-        return isCanUse
     }
 
     //获得权限

@@ -28,7 +28,7 @@ class TransferServiceModel : TransferServiceInterface {
                 .url(AppUrl.GET_ALL_TRANS)
                 //测试
 //                .addHeader(AppUrl.TRANDATE, "20180524")
-//                .addHeader(AppUrl.STOREHEADER, "170104")
+//                .addHeader(AppUrl.STOREHEADER, "120901")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
@@ -39,13 +39,56 @@ class TransferServiceModel : TransferServiceInterface {
                 })
     }
 
+
+    private fun judgmentIsRequestNumber(data: TransServiceBean, msg: Message, handler: MyHandler): Boolean {
+        val response = OkHttpUtils
+                .get()
+                .url(AppUrl.GET_ALL_TRANS)
+                //测试
+//                .addHeader(AppUrl.TRANDATE, "20180524")
+//                .addHeader(AppUrl.STOREHEADER, "120901")
+                .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
+                .addHeader(AppUrl.HOUR, "0")
+                .build()
+                .execute()
+        if (response.isSuccessful) {
+            val trs = Gson().fromJson(response.body().string(), TransResult::class.java)
+            if (trs.code == 0) {
+                trs.rows.filter {
+                    it.storeId == data.storeId
+                    it.trsStoreId == data.trsStoreId
+                    it.disTime == data.disTime
+                }.forEach {
+                    if (it.requestNumber != null) {
+                        msg.what = ERROR
+                        msg.obj = "已产生数据，不能创建！请退出重进！"
+                        handler.sendMessage(msg)
+                        return false
+                    }
+                }
+                return true
+            } else {
+                msg.what = ERROR
+                msg.obj = response
+                handler.sendMessage(msg)
+                return false
+            }
+        } else {
+            msg.what = ERROR
+            val x = response.body().string().toString()
+            msg.obj = x.substring(x.indexOf("HTTP Status 500 - ") + 18, x.indexOf("</h1><div class=\"line\">"))
+            handler.sendMessage(msg)
+            return false
+        }
+    }
+
     override fun getJudgment(user: User, myListener: MyListener) {
         val tag = TransTag.getTransTag(true)
         OkHttpUtils
                 .get()
                 .url(AppUrl.JUDGMENT_TRANS)
                 //测试
-//                .addHeader(AppUrl.STOREHEADER, "170104")
+//                .addHeader(AppUrl.STOREHEADER, "120901")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, tag.hour)
                 .build()
@@ -61,6 +104,7 @@ class TransferServiceModel : TransferServiceInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
             val sql = getCreateTrsSql(data, ip, msg, handler)
             if (sql == "ERROR") return@Runnable
             val result = SocketUtil.initSocket(ip, sql).inquire()
@@ -75,7 +119,7 @@ class TransferServiceModel : TransferServiceInterface {
                     msg.what = ERROR
                     handler.sendMessage(msg)
                     return@Runnable
-                }else{
+                } else {
                     val resultData = requestData(data, 0)
                     msg.obj = resultData
                     msg.what = SUCCESS
