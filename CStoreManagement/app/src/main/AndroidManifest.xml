@@ -330,11 +330,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog"/>
 
-        <!--更新页面-->
-        <activity
-            android:name=".view.update.DownloadActivity"
-            android:screenOrientation="portrait"/>
-
     </application>
 
 </manifest>

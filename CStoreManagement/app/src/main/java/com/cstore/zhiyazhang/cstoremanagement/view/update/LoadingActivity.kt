@@ -155,6 +155,10 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     }
 
     override fun initData() {
+    }
+
+    override fun onStart() {
+        super.onStart()
         getPermissions()
     }
 

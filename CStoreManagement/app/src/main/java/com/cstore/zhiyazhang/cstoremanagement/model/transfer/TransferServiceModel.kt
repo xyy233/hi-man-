@@ -28,7 +28,7 @@ class TransferServiceModel : TransferServiceInterface {
                 .url(AppUrl.GET_ALL_TRANS)
                 //测试
 //                .addHeader(AppUrl.TRANDATE, "20180524")
-//                .addHeader(AppUrl.STOREHEADER, "120901")
+//                .addHeader(AppUrl.STOREHEADER, "010802")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
@@ -46,12 +46,12 @@ class TransferServiceModel : TransferServiceInterface {
                 .url(AppUrl.GET_ALL_TRANS)
                 //测试
 //                .addHeader(AppUrl.TRANDATE, "20180524")
-//                .addHeader(AppUrl.STOREHEADER, "120901")
+//                .addHeader(AppUrl.STOREHEADER, "010802")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
                 .addHeader(AppUrl.HOUR, "0")
                 .build()
                 .execute()
-        if (response.isSuccessful) {
+        if (response.isSuccessful) {2
             val trs = Gson().fromJson(response.body().string(), TransResult::class.java)
             if (trs.code == 0) {
                 trs.rows.filter {
@@ -104,7 +104,8 @@ class TransferServiceModel : TransferServiceInterface {
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
+            //不知道为什么门市有异常，测试是没问题的，先禁止掉
+//            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
             val sql = getCreateTrsSql(data, ip, msg, handler)
             if (sql == "ERROR") return@Runnable
             val result = SocketUtil.initSocket(ip, sql).inquire()

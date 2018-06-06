@@ -13,6 +13,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.*
 import android.webkit.MimeTypeMap
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -215,7 +216,11 @@ class DownloadService : Service() {
                     if (downIdUri != null) {
 //                        下载完成
 //                        val file="${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
-                        installAPK(downIdUri)
+                        try {
+                            installAPK(downIdUri)
+                        } catch (e: Exception) {
+                            MyToast.getLongToast("打开安装文件失败，请自行进入Download文件下安装软件，错误代码：${e.message.toString()}")
+                        }
                     }
                     if (onProgressListener != null) {
                         onProgressListener!!.onProgress(UNBIND_SERVICE)

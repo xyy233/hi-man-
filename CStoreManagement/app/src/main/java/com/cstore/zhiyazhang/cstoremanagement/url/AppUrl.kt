@@ -10,6 +10,7 @@ object AppUrl {
     val USER_HEADER = "Authorization"
     val STORE_HEADER = "store_id"
     val STOREHEADER = "storeid"
+    val TRSSTOREID = "trs_storeid"
     val SHELVES_ID = "shelvesid"
     val TRANDATE = "tran_date"
     val DISTIME = "dis_time"
@@ -30,6 +31,7 @@ object AppUrl {
     val GET_ALL_TRANS = appIp + "trs/get.do"
     val JUDGMENT_TRANS = appIp + "trs/count.do"
     val UPDATE_TRANS = appIp + "trs/upd.do"
+    val CAN_CREATE_TRANS = appIp + "trs/can_create.do"//检测是否能保存，传递storeid,trs_storeid,dis_time
     val GET_SHELVES = appIp + "shelves/get.do"
     val GET_SHELVES_ITEM = appIp + "shelves/get_item_stock.do"
     val GET_DISTRIBUTION = appIp + "distribution/get.do"
