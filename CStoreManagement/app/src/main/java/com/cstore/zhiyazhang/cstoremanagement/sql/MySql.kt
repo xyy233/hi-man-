@@ -610,7 +610,7 @@ object MySql {
      * 创建报废,配合事务头脚使用
      */
     fun insertScrap(data: ScrapContractBean): String {
-        return "insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values (${User.getUser().storeId}, trunc(sysdate), ${data.recordNumber}, ${data.scrapId}, '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', ${User.getUser().uId}, sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
+        return "insert into mrk (storeid, busidate, recordnumber, itemnumber, shipnumber, storeunitprice, unitcost, mrkquantity, mrkreasonnumber, updateuserid, updatedatetime, citem_yn, sell_cost, recycle_yn) values ('${User.getUser().storeId}', trunc(sysdate), '${data.recordNumber}', '${data.scrapId}', '0', ${data.unitPrice}, ${data.unitCost}, ${data.mrkCount}, '00', '${User.getUser().uId}', sysdate, '${data.citemYN}', ${data.sellCost}, '${data.recycleYN}');"
     }
 
     /**

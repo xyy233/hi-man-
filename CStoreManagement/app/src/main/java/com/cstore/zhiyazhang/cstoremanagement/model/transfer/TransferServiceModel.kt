@@ -43,33 +43,27 @@ class TransferServiceModel : TransferServiceInterface {
     private fun judgmentIsRequestNumber(data: TransServiceBean, msg: Message, handler: MyHandler): Boolean {
         val response = OkHttpUtils
                 .get()
-                .url(AppUrl.GET_ALL_TRANS)
+                .url(AppUrl.CAN_CREATE_TRANS)
                 //测试
-//                .addHeader(AppUrl.TRANDATE, "20180524")
 //                .addHeader(AppUrl.STOREHEADER, "010802")
                 .addHeader(AppUrl.STOREHEADER, User.getUser().storeId)
-                .addHeader(AppUrl.HOUR, "0")
+                .addHeader(AppUrl.TRSSTOREID, data.trsStoreId)
+                .addHeader(AppUrl.DISTIME, data.disTime)
                 .build()
                 .execute()
-        if (response.isSuccessful) {2
-            val trs = Gson().fromJson(response.body().string(), TransResult::class.java)
+        if (response.isSuccessful) {
+            val trs = Gson().fromJson(response.body().string(), TransCanCreate::class.java)
             if (trs.code == 0) {
-                trs.rows.filter {
-                    it.storeId == data.storeId
-                    it.trsStoreId == data.trsStoreId
-                    it.disTime == data.disTime
-                }.forEach {
-                    if (it.requestNumber != null) {
-                        msg.what = ERROR
-                        msg.obj = "已产生数据，不能创建！请退出重进！"
-                        handler.sendMessage(msg)
-                        return false
-                    }
+                if (!trs.canCreate) {
+                    msg.what = ERROR
+                    msg.obj = "已产生数据，不能创建！请退出重进！"
+                    handler.sendMessage(msg)
+                    return false
                 }
                 return true
             } else {
                 msg.what = ERROR
-                msg.obj = response
+                msg.obj = response.body().string().toString()
                 handler.sendMessage(msg)
                 return false
             }
@@ -105,18 +99,18 @@ class TransferServiceModel : TransferServiceInterface {
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
             //不知道为什么门市有异常，测试是没问题的，先禁止掉
-//            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
+            //2018-06-07 修改测试，稳了？发个版本瞧瞧
+            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
             val sql = getCreateTrsSql(data, ip, msg, handler)
             if (sql == "ERROR") return@Runnable
             val result = SocketUtil.initSocket(ip, sql).inquire()
             try {
-                //通过强制转换为数字判断是否正确
-                result.toInt()
+                //通过查询是否已有此单号判断是否创建成功
                 val judgementSql = MySql.judgmentTrsNumber(data.requestNumber!!)
                 val jResult = SocketUtil.initSocket(ip, judgementSql).inquire()
                 val jr = GsonUtil.getUtilBean(jResult)
                 if ((jr[0].value)!!.toInt() == 0) {
-                    msg.obj = "创建订单异常！请重试！"
+                    msg.obj = "创建订单异常！请重试！$result"
                     msg.what = ERROR
                     handler.sendMessage(msg)
                     return@Runnable
@@ -127,7 +121,7 @@ class TransferServiceModel : TransferServiceInterface {
                     handler.sendMessage(msg)
                 }
             } catch (e: Exception) {
-                msg.obj = result
+                msg.obj = e.message.toString()
                 msg.what = ERROR
                 handler.sendMessage(msg)
             }

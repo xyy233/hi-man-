@@ -12,6 +12,7 @@ import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.cstore.zhiyazhang.cstoremanagement.R
@@ -21,6 +22,8 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.pay.PayPresenter
 import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
 import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyScanUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.uuzuche.lib_zxing.activity.CaptureFragment
@@ -38,6 +41,8 @@ import java.text.DecimalFormat
  * 去PayCollectActivity的时候intent传递参数action，0=收款，1=退款
  */
 class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivity() {
+
+    private val isGun = MyApplication.usbGunJudgment()
 
     private val presenter = PayPresenter(this)
 
@@ -103,6 +108,14 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         CodeUtils.setFragmentArgs(captureFragment, R.layout.pay_camera)
         captureFragment.analyzeCallback = analyzeCallback
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
+        if (isGun){
+            MyScanUtil.getFocusable(search_edit)
+            this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+            cover.visibility = View.GONE
+            pay_search_line.visibility = View.VISIBLE
+            isOk = false
+            isFlash=true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -128,35 +141,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
 
     override fun onStart() {
         super.onStart()
-/*
-        adapter.removeItem()
-        pay_receivable.text="0.0"
-        pay_all_money.text="0.0"
-        pay_all_discount.text = "0.0"*/
-
         judgmentSqlData()
-
-        /*Thread(Runnable {
-            //10s
-            var i = 10 * 1000
-            while (i > 100) {
-                i -= 50
-                val manager = CameraManager.get()
-                if (manager == null) {
-                    Thread.sleep(50)
-                    continue
-                } else {
-                    if (manager.camera == null) {
-                        Thread.sleep(50)
-                        continue
-                    }
-                    Thread.sleep(50)
-                    CodeUtils.isLightEnable(true)
-                    isFlash=false
-                    break
-                }
-            }
-        }).start()*/
     }
 
     /**
@@ -216,11 +201,35 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         }
         search_edit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.searchCommodity(search_edit.text.toString())
+                val msg = search_edit.text.toString().replace(" ", "")
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+                val datas = msg.split("|")
+                val data = if (datas.size > 1) {
+                    datas[datas.size - 1]
+                } else {
+                    msg
+                }
+                presenter.searchCommodity(data)
                 search_edit.setText("")
                 true
+            }else if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                val msg = search_edit.text.toString().replace(" ", "")
+                if (msg == "") {
+                    false
+                } else {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+                    val datas = msg.split("|")
+                    val data = if (datas.size > 1) {
+                        datas[datas.size - 1]
+                    } else {
+                        msg
+                    }
+                    presenter.searchCommodity(data)
+                    search_edit.setText("")
+                    true
+                }
             } else {
                 false
             }
@@ -281,6 +290,8 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
             updateAllData()
         }
         refreshCamera()
+
+        if (isGun)MyScanUtil.getFocusable(search_edit)
     }
 
     /**
@@ -304,6 +315,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
 
     override fun errorDealWith() {
         refreshCamera()
+        if (isGun)MyScanUtil.getFocusable(search_edit)
     }
 
     //清空数据成功

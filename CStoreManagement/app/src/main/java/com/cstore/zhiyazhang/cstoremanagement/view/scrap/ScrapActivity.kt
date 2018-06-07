@@ -118,6 +118,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         mItemTOuchHelper.attachToRecyclerView(scrap_recycler)
         dialogView = View.inflate(this@ScrapActivity, R.layout.dialog_cashdaily, null)
         dialog = initDialog()
+        showDone(true)
     }
 
     override fun initData() {
@@ -197,7 +198,11 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                 if (adapter.data.size > 0) {
                     i = adapter.data.sortedByDescending { it.recordNumber }[0].recordNumber
                 }
-                presenter.submitScraps(editData, i)
+                if (editData.size > 0) {
+                    presenter.submitScraps(editData, i)
+                } else {
+                    showPrompt(getString(R.string.noSaveMessage))
+                }
             }
         }
     }
@@ -217,7 +222,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      * 如果时间不在今天就弹错误
      */
     private fun goTodayPrompt() {
-        AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
+        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                 .setTitle("提示")
                 .setMessage("进行报废操作要切换回今天，是否切换？")
                 .setPositiveButton("切换到今天", { _, _ ->
@@ -249,7 +254,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             if (MyTimeUtil.nowHour > 23) {
                 showDatePickDlg()
             } else {
-                AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
+                AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("您有未提交的修改，是否放弃？")
                         .setPositiveButton("提交修改", { _, _ ->
@@ -275,7 +280,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             if (MyTimeUtil.nowHour > 23) {
                 super.onBackPressed()
             } else {
-                AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
+                AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("您有未提交的修改，是否放弃？")
                         .setPositiveButton("提交修改", { _, _ ->
@@ -303,7 +308,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun judgmentGoHot() {
         if (editData.size != 0) {
-            AlertDialog.Builder(ContextThemeWrapper(this,R.style.AlertDialogCustom))
+            AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                     .setTitle("提示")
                     .setMessage("您有未提交的修改，是否放弃？")
                     .setPositiveButton("提交修改", { _, _ ->
@@ -330,10 +335,10 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
             run {
                 val myCalendar = Calendar.getInstance()
                 myCalendar.timeInMillis = System.currentTimeMillis()
-                val m=if (month + 1<10)"0${month + 1}" else (month + 1).toString()
-                val d= if (day < 10) "0$day" else day.toString()
+                val m = if (month + 1 < 10) "0${month + 1}" else (month + 1).toString()
+                val d = if (day < 10) "0$day" else day.toString()
                 val selectDate = (year.toString() + m + d).toInt()
-                val nowDate=MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
+                val nowDate = MyTimeUtil.getYMDStringByDate3(myCalendar.time).toInt()
                 if (selectDate > nowDate) {
                     showPrompt("不能选择未来日期")
                     return@run
@@ -440,7 +445,9 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                                     data.editCount = 1
                                     data.action = 0
                                     if (i == 0) {
-                                        handler.post { adapter.addItem(data.copy()) }
+                                        handler.post {
+                                            adapter.addItem(data.copy())
+                                        }
                                     }
                                     if (e == 0) {
                                         try {
@@ -518,6 +525,13 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         }
     }
 
+    private fun showDone(s: Boolean) {
+        if (s)
+            scrap_done.visibility = View.VISIBLE
+        else
+            scrap_done.visibility = View.GONE
+    }
+
     /**
      * 写入数据到统计中
      */
@@ -549,20 +563,20 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
     }
 
     override fun showLoading() {
-        go_hot_scrap.isEnabled=false
+        go_hot_scrap.isEnabled = false
         scrap_done.isEnabled = false
-        date_util.isEnabled=false
-        search_qrcode.isEnabled=false
-        search_btn.isEnabled=false
+        date_util.isEnabled = false
+        search_qrcode.isEnabled = false
+        search_btn.isEnabled = false
         loading.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        go_hot_scrap.isEnabled=true
+        go_hot_scrap.isEnabled = true
         scrap_done.isEnabled = true
-        date_util.isEnabled=true
-        search_qrcode.isEnabled=true
-        search_btn.isEnabled=true
+        date_util.isEnabled = true
+        search_qrcode.isEnabled = true
+        search_btn.isEnabled = true
         loading.visibility = View.GONE
     }
 
@@ -599,93 +613,13 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
         if (i == 0) editData.add(scb.copy())
         view.mrkCount.text = nowCount.toString()
         view.allPrice.text = (scb.unitPrice * nowCount).toFloat().toString()
-        if (scb.mrkCount>0)
-            view.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.add_bg))
+        if (scb.mrkCount > 0)
+            view.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(), R.color.add_bg))
         else
-            view.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(),R.color.white))
+            view.itemBg.setBackgroundColor(ContextCompat.getColor(MyApplication.instance(), R.color.white))
     }
 
-    /* private fun addCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-         val nowCount = scb.mrkCount + 1
-         val nowEditCount = scb.editCount + 1
-         if (nowCount > 999) {
-             handler.post { showPrompt(getString(R.string.maxCNoAdd)) }
-             return
-         }
-         if (scb.action == 2) {
-             scb.action = 1
-         }
-         scb.mrkCount = nowCount
-         scb.editCount = nowEditCount
-         var i = 0
-         editData.filter { it.scrapId == scb.scrapId }.forEach {
-             i++
-             if (it.action == 2) {
-                 scb.action = 1
-             }
-             it.mrkCount = nowCount
-             it.editCount = nowEditCount
-         }
-         if (i == 0) editData.add(scb.copy())
-         handler.post {
-             view.mrkCount.text = scb.mrkCount.toString()
-             view.allPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()
-         }
-     }
 
-     private fun lessCount(view: ScrapAdapter.ViewHolder, scb: ScrapContractBean) {
-         val nowCount = scb.mrkCount - 1
-         val nowEditCount = scb.editCount - 1
-         if (nowCount < 0) {
-             handler.post { showPrompt(getString(R.string.minCNoLess)) }
-             return
-         }
-         if (nowCount == 0) {
-             var i = 0
-             editData.filter { it.scrapId == scb.scrapId }.forEach {
-                 when (it.action) {
-                     0 -> {
-                         editData.remove(it)
-                     }//如果是创建就代表是新的直接删除
-                     1 -> {
-                         i++
-                         it.action = 2
-                     }//如果是更新就代表是数据库中的，需要修改动作为delete去处理
-                 }
-             }
-             scb.mrkCount = nowCount
-             scb.editCount = nowEditCount
-             if (scb.action!=0)scb.action = 2
-             if (i == 0) editData.add(scb.copy())
-             handler.post {
-                 view.scrapCount.text = scb.mrkCount.toString()
-                 view.scrapPrice.text=scb.unitPrice.toString()
-             }
-             return
-         }
-         scb.mrkCount = nowCount
-         scb.editCount = nowEditCount
-         var i = 0
-         editData.filter { it.scrapId == scb.scrapId }.forEach {
-             i++
-             it.mrkCount = nowCount
-             it.editCount = nowEditCount
-         }
-         if (i == 0) editData.add(scb.copy())
-         handler.post {
-             view.scrapCount.text = scb.mrkCount.toString()
-             view.scrapPrice.text=(scb.mrkCount*scb.unitPrice).toFloat().toString()
-         }
-     }
-
-     private fun runOrStopEdit() {
-         if (isOnLongClick) {
-             layoutManager.setScrollEnabled(false)
-         } else {
-             layoutManager.setScrollEnabled(true)
-         }
-     }
- */
     /**
      * 获得相机权限
      */

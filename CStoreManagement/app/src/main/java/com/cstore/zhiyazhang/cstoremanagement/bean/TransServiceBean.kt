@@ -44,6 +44,14 @@ data class TransResult(
 ) : Serializable
 
 /**
+ * 判断是否能创建的对象
+ */
+data class TransCanCreate(
+        val code: Int,
+        @SerializedName("can_create") val canCreate: Boolean
+) : Serializable
+
+/**
  * 程序用来判断是否是新调拨的tag类
  */
 data class TransTag(

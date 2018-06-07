@@ -17,8 +17,8 @@ android {
         applicationId "com.cstore.zhiyazhang.cstoremanagement"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 70
-        versionName "18.06.06.0"
+        versionCode 71
+        versionName "18.06.07.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
