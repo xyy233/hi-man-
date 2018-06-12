@@ -12,6 +12,7 @@
     android:layout_marginTop="3dp"
     android:background="@color/white"
     android:clickable="true"
+    android:descendantFocusability="blocksDescendants"
     android:elevation="2dp"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -375,6 +376,7 @@
                                 android:layout_height="30dp"
                                 android:layout_marginEnd="25dp"
                                 android:background="@color/add_less"
+                                android:focusable="false"
                                 android:foreground="@drawable/selector_foreground"
                                 android:src="@mipmap/ic_less"
                                 android:stateListAnimator="@drawable/lift_on_touch"/>
@@ -392,16 +394,15 @@
                                 android:layout_marginEnd="5dp"
                                 android:background="@color/add_less"
                                 android:elevation="1dp"
+                                android:focusable="false"
                                 android:foreground="@drawable/selector_foreground"
                                 android:src="@mipmap/ic_add"
                                 android:stateListAnimator="@drawable/lift_on_touch"/>
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                 </LinearLayout>
-
 
             </LinearLayout>
 

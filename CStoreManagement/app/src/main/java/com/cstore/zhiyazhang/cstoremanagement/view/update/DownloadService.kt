@@ -12,8 +12,11 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.os.*
+import android.support.v4.content.FileProvider
 import android.webkit.MimeTypeMap
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -202,22 +205,20 @@ class DownloadService : Service() {
             val downId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             when (intent.action) {
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> if (downloadId == downId && downId != (-1).toLong() && downloadManager != null) {
-                    val downIdUri = downloadManager!!.getUriForDownloadedFile(downloadId)
-                    /*val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$downloadName"
+//                    val downIdUri = downloadManager!!.getUriForDownloadedFile(downloadId)
+                    val downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$downloadName"
                     val file = File(downloadPath)
                     if (!file.exists()) return
                     val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         FileProvider.getUriForFile(MyApplication.instance().applicationContext, "cstore.zhiyazhang.cstoremanagement.fileprovider", file)
                     } else {
                         Uri.parse("file://" + file.toString())
-                    }*/
+                    }
                     close()
 
-                    if (downIdUri != null) {
-//                        下载完成
-//                        val file="${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
+                    if (uri != null) {
                         try {
-                            installAPK(downIdUri)
+                            installAPK(uri)
                         } catch (e: Exception) {
                             MyToast.getLongToast("打开安装文件失败，请自行进入Download文件下安装软件，错误代码：${e.message.toString()}")
                         }
@@ -242,7 +243,7 @@ class DownloadService : Service() {
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         i.setDataAndType(apkPath, "application/vnd.android.package-archive")
-        startActivity(i)
+        MyApplication.instance().applicationContext.startActivity(i)
     }
 
     /**

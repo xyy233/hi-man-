@@ -95,11 +95,11 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
 
     override fun initView() {
         previousIntent = intent
-        order_item_next.visibility=View.GONE
-        order_item_last.visibility=View.GONE
+        order_item_next.visibility = View.GONE
+        order_item_last.visibility = View.GONE
         if (!isJustLook) {
             done.setOnClickListener {
-                if (MyTimeUtil.nowHour<18){
+                if (MyTimeUtil.nowHour < 18) {
                     changeData.removeAll(changeData.filter { it.changeCount == 0 })
                     if (changeData.size == 0) {
                         showPrompt(getString(R.string.noEditMsg))
@@ -107,7 +107,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
                     }
                     ReportListener.report("保存订量", Gson().toJson(changeData))
                     presenter.updateAllContract()
-                }else showPrompt("超出订货时间，不能保存")
+                } else showPrompt("超出订货时间，不能保存")
             }
         } else {
             done.visibility = View.GONE
@@ -177,7 +177,7 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
      * 判断用户是否有对订量修改，如果修改过要提示
      */
     private fun judgmentUpdate() {
-        if (MyTimeUtil.nowHour>18){
+        if (MyTimeUtil.nowHour > 18) {
             super.onBackPressed()
             return
         }
@@ -248,20 +248,34 @@ class ContractActivity(override val layoutId: Int = R.layout.activity_contract) 
         val intent = android.content.Intent(this@ContractActivity, ImageActivity::class.java)
         val transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this@ContractActivity, adapterView.commodifyImg, "image")
         intent.putExtra("cb", cb)
-        intent.putExtra("type",0)
+        intent.putExtra("type", 0)
         ActivityCompat.startActivity(this@ContractActivity, intent, transitionActivityOptions.toBundle())
         /*startActivity(intent,
                 ActivityOptions.makeSceneTransitionAnimation(this@ContractActivity, adapterView.commodifyImg, "image").toBundle())*/
     }
 
     override fun touchAdd(cb: ContractBean, event: MotionEvent, position: Int) {
-        val adapterView: ContractAdapter.ViewHolder = swipe_recycler.findViewHolderForAdapterPosition(position) as ContractAdapter.ViewHolder
-        onTouchChange("add", event.action, adapterView, cb)
+        try {
+            val view = swipe_recycler.findViewHolderForAdapterPosition(position)
+            if (view != null) {
+                val adapterView = view as ContractAdapter.ViewHolder
+                onTouchChange("add", event.action, adapterView, cb)
+            }
+        } catch (e: Exception) {
+
+        }
     }
 
     override fun touchLess(cb: ContractBean, event: MotionEvent, position: Int) {
-        val adapterView: ContractAdapter.ViewHolder = swipe_recycler.findViewHolderForAdapterPosition(position) as ContractAdapter.ViewHolder
-        onTouchChange("less", event.action, adapterView, cb)
+        try {
+            val view = swipe_recycler.findViewHolderForAdapterPosition(position)
+            if (view!=null){
+                val adapterView = view as ContractAdapter.ViewHolder
+                onTouchChange("less", event.action, adapterView, cb)
+            }
+        } catch (e: Exception) {
+
+        }
     }
 
     var mt: Thread? = null

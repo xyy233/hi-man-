@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
 
 
     <application
@@ -73,9 +73,11 @@
         <service android:name=".view.update.DownloadService"/>
         <!--检测是否有交易未完成的service-->
         <service android:name=".view.PayDataService"/>
+        <!--检查异常调拨并处理的service-->
+        <service android:name=".view.transfer.TransferErrorService"/>
         <!--检查调拨的service-->
         <service
-            android:name=".view.TransferService"
+            android:name=".view.transfer.TransferService"
             android:process=":remote"/>
         <!--保持存活的service-->
         <service

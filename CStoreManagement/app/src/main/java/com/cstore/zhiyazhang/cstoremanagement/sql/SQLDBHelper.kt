@@ -15,6 +15,7 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
         db.execSQL(ALIPayData.ALIPayEntry.SQLITE_CREATE)
         db.execSQL(CashPayData.CashPayEntry.SQLITE_CREATE)
         db.execSQL(ContractTypeData.ContractTypeEntry.SQLITE_CREATE)
+        db.execSQL(TranData.TranEntry.SQLITE_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -22,6 +23,7 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
         db.execSQL(ALIPayData.ALIPayEntry.SQLITE_DELETE_ENTRIES)
         db.execSQL(CashPayData.CashPayEntry.SQLITE_DELETE_ENTRIES)
         db.execSQL(ContractTypeData.ContractTypeEntry.SQLITE_DELETE_ENTRIES)
+        db.execSQL(TranData.TranEntry.SQLITE_DELETE_ENTRIES)
         onCreate(db)
     }
 
@@ -32,7 +34,7 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
 
 object SQLData {
     val DB_NAME = "app_cstore.db"
-    val DB_VERSION = 9
+    val DB_VERSION = 11
     val TEXT_TYPE = " TEXT"
     val COMMA_SEP = ","
     val DOUBLE_TYPE = " REAL"

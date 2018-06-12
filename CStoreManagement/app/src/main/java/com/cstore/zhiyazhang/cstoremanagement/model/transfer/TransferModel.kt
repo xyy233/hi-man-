@@ -262,7 +262,11 @@ class TransferModel : TransferInterface {
                 //没有单号，新建
                 return trsNumberIsExits((MyTimeUtil.nowDay() + "00").toInt(), ip, msg, handler)
             }
-            val number = values[0].value!!.substring(8, 12).toInt()
+            val number = try{
+                values[0].value!!.substring(8).toInt()
+            }catch (e:Exception){
+                return trsNumberIsExits((MyTimeUtil.nowDay() + "00").toInt(), ip, msg, handler)
+            }
             return trsNumberIsExits((number + 1), ip, msg, handler)
         }
 

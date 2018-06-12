@@ -8,8 +8,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.InputType
-import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -25,6 +23,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyScanUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.utils.QRcodeResolve.qrCodeResolve
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyDividerItemDecoration
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -92,8 +91,6 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         /*toolbar_time.text = "退款"
         toolbar_time.visibility = View.VISIBLE*/
         search_edit.hint = getString(R.string.idorcode)
-        search_edit.inputType = InputType.TYPE_CLASS_NUMBER
-        search_edit.keyListener = DigitsKeyListener.getInstance("1234567890")
         my_toolbar.title = "收款"
         toolbar_btn.text = "清空"
         toolbar_btn.visibility = View.VISIBLE
@@ -108,13 +105,13 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         CodeUtils.setFragmentArgs(captureFragment, R.layout.pay_camera)
         captureFragment.analyzeCallback = analyzeCallback
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
-        if (isGun){
+        if (isGun) {
             MyScanUtil.getFocusable(search_edit)
             this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             cover.visibility = View.GONE
             pay_search_line.visibility = View.VISIBLE
             isOk = false
-            isFlash=true
+            isFlash = true
         }
     }
 
@@ -179,7 +176,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
             pay_search_line.visibility = View.VISIBLE
             isOk = false
             CodeUtils.isLightEnable(false)
-            isFlash=true
+            isFlash = true
         }
         switch_flash.setOnClickListener {
             CodeUtils.isLightEnable(isFlash)
@@ -190,7 +187,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
             pay_search_line.visibility = View.GONE
             refreshCamera()
             CodeUtils.isLightEnable(true)
-            isFlash=false
+            isFlash = false
         }
         search_btn.setOnClickListener {
             presenter.searchCommodity(search_edit.text.toString())
@@ -200,33 +197,22 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
             search_edit.setText("")
         }
         search_edit.setOnEditorActionListener { _, actionId, _ ->
+            val msg = search_edit.text.toString().replace(" ", "")
+            val code = qrCodeResolve(msg)[0]
+//            val msg=" http://wx2.rt-store.com/api/wechat/disc-show.jsp?code=\$20180615\$2400\$6932571070011"
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val msg = search_edit.text.toString().replace(" ", "")
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
-                val datas = msg.split("|")
-                val data = if (datas.size > 1) {
-                    datas[datas.size - 1]
-                } else {
-                    msg
-                }
-                presenter.searchCommodity(data)
+                presenter.searchCommodity(code)
                 search_edit.setText("")
                 true
-            }else if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                val msg = search_edit.text.toString().replace(" ", "")
+            } else if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
                 if (msg == "") {
                     false
                 } else {
                     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
-                    val datas = msg.split("|")
-                    val data = if (datas.size > 1) {
-                        datas[datas.size - 1]
-                    } else {
-                        msg
-                    }
-                    presenter.searchCommodity(data)
+                    presenter.searchCommodity(code)
                     search_edit.setText("")
                     true
                 }
@@ -291,7 +277,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
         }
         refreshCamera()
 
-        if (isGun)MyScanUtil.getFocusable(search_edit)
+        if (isGun) MyScanUtil.getFocusable(search_edit)
     }
 
     /**
@@ -315,7 +301,7 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
 
     override fun errorDealWith() {
         refreshCamera()
-        if (isGun)MyScanUtil.getFocusable(search_edit)
+        if (isGun) MyScanUtil.getFocusable(search_edit)
     }
 
     //清空数据成功

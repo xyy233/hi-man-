@@ -22,7 +22,9 @@ data class TransServiceBean(
         @SerializedName("upd_time") val updTime: String,
         @SerializedName("req_no") var requestNumber: String?,
         var storeUnitPrice: Double?,
-        var items: ArrayList<TransItem>
+        var items: ArrayList<TransItem>,
+        var isSc: Int?,//是否上传至sc
+        var isInt: Int?//是否上传至网络
 ) : Serializable
 
 data class TransItem(
@@ -39,7 +41,7 @@ data class TransItem(
  */
 data class TransResult(
         val code: Int,
-        val count: Int,
+        var count: Int,
         val rows: ArrayList<TransServiceBean>
 ) : Serializable
 

@@ -8,6 +8,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceModel
+import com.cstore.zhiyazhang.cstoremanagement.sql.TranDao
 import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
@@ -21,6 +22,7 @@ import com.google.gson.Gson
  */
 class TransferServicePresenter(private val view: GenericView) {
     private val model: TransferServiceInterface = TransferServiceModel()
+    private val db = TranDao.instance()
 
     fun getJudgment() {
         if (!ConnectionDetector.getConnectionDetector().isOnlineNoToast) return
@@ -52,7 +54,7 @@ class TransferServicePresenter(private val view: GenericView) {
         val listener = object : MyListener {
             override fun listenerSuccess(data: Any) {
                 try {
-                    val trs = Gson().fromJson(data as String, TransResult::class.java)
+                    val trs = getTrsByJudgment(data as String)
                     trs.rows.sortBy { it.trsType }
                     if (trs.rows.size == 0) {
                         view.showView(trs)
@@ -89,6 +91,31 @@ class TransferServicePresenter(private val view: GenericView) {
         model.getAllTrs(User.getUser(), listener)
     }
 
+    /**
+     * 得到数据，通过比对sqlite中数据
+     */
+    private fun getTrsByJudgment(data: String): TransResult {
+        //请求得到的数据
+        val httpResult = Gson().fromJson(data, TransResult::class.java)
+        //得到数据库数据
+        val d = db.getAllData()
+        val sqlResult = TransResult(0, d.size, d)
+        //重复数据不管网络的，只获取本地的，本地为准,
+        val repeatData = ArrayList<TransServiceBean>()
+        for (sb in sqlResult.rows) {
+            httpResult.rows.filterTo(repeatData) { sb.storeId == it.storeId && sb.trsStoreId == it.trsStoreId && sb.disTime == it.disTime && sb.trsType == it.trsType }
+        }
+        //删掉重复数据
+        httpResult.rows.removeAll(repeatData)
+        //新数据就新建
+        if (httpResult.rows.size > 0) {
+            db.insertSQL(httpResult.rows)
+            sqlResult.rows.addAll(httpResult.rows)
+        }
+        sqlResult.count = sqlResult.rows.size
+        return sqlResult
+    }
+
     fun doneTrs() {
         val data = view.getData1()
         if (data !is TransServiceBean) {
@@ -117,6 +144,6 @@ class TransferServicePresenter(private val view: GenericView) {
                 handler.cleanAll()
             }
         })
-        model.doneTrs(data, handler)
+        model.doneTrs(db, data, handler)
     }
 }

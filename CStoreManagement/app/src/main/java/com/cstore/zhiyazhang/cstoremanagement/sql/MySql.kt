@@ -1803,7 +1803,7 @@ object MySql {
         get() {
             val trsNumber = "${User.getUser().storeId}${MyTimeUtil.nowYear().substring(1)}${MyTimeUtil.getMonthToEn()}${MyTimeUtil.nowDay()}"
             return "select Max(TrsNumber) value from trs\n" +
-                    "where storeID='${User.getUser().storeId}' and  trsID='O' and\n" +
+                    "where storeID='${User.getUser().storeId}' and busidate=trunc(sysdate) and  trsID='O' and\n" +
                     "trsnumber like '%$trsNumber%'\u0004"
         }
 

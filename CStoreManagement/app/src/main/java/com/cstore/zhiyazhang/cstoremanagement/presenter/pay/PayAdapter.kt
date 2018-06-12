@@ -28,14 +28,14 @@ class PayAdapter(val data: ArrayList<PayBean>, private val listener: ItemClickLi
         holder.discount.text = discount
 
         holder.less.setOnClickListener {
-            if (data[position].quantity!=0){
-                listener.onItemRemove(data[position].barCode,0)
-            }else{
+            if (data[position].quantity > 0) {
+                listener.onItemRemove(data[position].barCode, 0)
+            } else {
                 MyToast.getShortToast(MyApplication.instance().getString(R.string.minCNoLess))
             }
         }
         holder.add.setOnClickListener {
-            listener.onItemRemove(data[position].barCode,1)
+            listener.onItemRemove(data[position].barCode, 1)
         }
     }
 

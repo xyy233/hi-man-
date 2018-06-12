@@ -3,7 +3,6 @@ package com.cstore.zhiyazhang.cstoremanagement.presenter.inquiry
 import com.cstore.zhiyazhang.cstoremanagement.bean.UnitInquiryBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.inquiry.UnitInquiryModel
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
@@ -32,6 +31,7 @@ class UnitInquiryPresenter(private val view: GenericView) {
             }
 
             override fun listenerFailed(errorMessage: String) {
+                view.errorDealWith(errorMessage)
                 view.showPrompt(errorMessage)
                 view.hideLoading()
                 handler.cleanAll()

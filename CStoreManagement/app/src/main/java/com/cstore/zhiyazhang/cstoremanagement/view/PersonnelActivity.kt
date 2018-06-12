@@ -90,7 +90,11 @@ class PersonnelActivity(override val layoutId: Int = R.layout.activity_in_stock)
                         }
                     }
                     1 -> {
-                        startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))
+                        if (User.getUser().type == 0) {
+                            startActivity(Intent(this@PersonnelActivity, CheckInActivity::class.java))
+                        }else{
+                            showPrompt("华南暂未开放")
+                        }
                     }
                     2 -> {
                         if (User.getUser().groupId == "01" || User.getUser().groupId == "02" || User.getUser().groupId == "03") {

@@ -3,7 +3,7 @@
     <string name="app_name">喜士多移动管理</string>
     <string name="app_name2">喜市多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.修改更新机制\n2.增强调拨准确性\n</string>
+    <string name="bulletin">1.增强调拨准确性\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>

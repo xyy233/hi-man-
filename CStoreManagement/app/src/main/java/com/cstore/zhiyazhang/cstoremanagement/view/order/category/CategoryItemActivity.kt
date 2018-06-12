@@ -25,6 +25,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.CategoryItemPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.QRcodeResolve.qrCodeResolve
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
 import com.cstore.zhiyazhang.cstoremanagement.view.inquiry.UnitInquiryActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.CategoryItemView
@@ -237,6 +238,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 val imm = getSystemService(
                         Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+                search_edit.setText("")
                 true
             } else if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
                 val msg = search_edit.text.toString().replace(" ", "")
@@ -245,7 +247,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 } else {
                     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
-                    presenter.getAllSearch(msg)
+                    presenter.getAllSearch(qrCodeResolve(msg)[0])
                     search_edit.setText("")
                     true
                 }
@@ -624,14 +626,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         this.adapter = aData as CategoryItemAdapter
         if (aData.data.isEmpty()) errorDealWith()
         swipe_recycler.adapter = aData
-        if (isGun)MyScanUtil.getFocusable(search_edit)
+        if (isGun) MyScanUtil.getFocusable(search_edit)
     }
 
     override fun errorDealWith() {
         adapter = null
         swipe_recycler.adapter = adapter
         noMessage.visibility = View.VISIBLE
-        if (isGun)MyScanUtil.getFocusable(search_edit)
+        if (isGun) MyScanUtil.getFocusable(search_edit)
     }
 
     override fun touchBox(cb: CategoryItemBean) {

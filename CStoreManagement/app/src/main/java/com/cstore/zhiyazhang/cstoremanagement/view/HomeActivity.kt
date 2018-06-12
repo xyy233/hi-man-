@@ -25,10 +25,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransTag
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
-import com.cstore.zhiyazhang.cstoremanagement.sql.ALIPayDao
-import com.cstore.zhiyazhang.cstoremanagement.sql.CashPayDao
-import com.cstore.zhiyazhang.cstoremanagement.sql.ContractTypeDao
-import com.cstore.zhiyazhang.cstoremanagement.sql.WXPayDao
+import com.cstore.zhiyazhang.cstoremanagement.sql.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar
 import com.cstore.zhiyazhang.cstoremanagement.utils.CStoreCalendar.ERROR_MSG
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -36,6 +33,8 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
+import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferErrorService
+import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferService
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferZActivity
 import com.gprinter.service.GpPrintService
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
@@ -71,9 +70,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
-        if (User.getUser().type==0){
+        if (User.getUser().type == 0) {
             toolbar.title = resources.getString(R.string.app_name)
-        }else{
+        } else {
             toolbar.title = resources.getString(R.string.app_name2)
         }
         setSupportActionBar(toolbar)
@@ -156,6 +155,11 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 startService(Intent(this, TransferService::class.java))
             }
         }
+        if (!LivingService.isServiceWorked(MyApplication.instance().applicationContext, TransferErrorService.TAG)) {
+            startService(Intent(MyApplication.instance().applicationContext, TransferErrorService::class.java))
+        }
+        val td = TranDao.instance()
+        td.deleteSQL()
         val data = ArrayList<LogoBean>()
         setData(data)
         home_recycler.adapter = LogoAdapter(this@HomeActivity, data, object : ItemClickListener {
@@ -207,9 +211,9 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         data.add(LogoBean(R.mipmap.ic_home_invest, getString(R.string.coi), 1))
         data.add(LogoBean(R.mipmap.ic_home_instock, getString(R.string.in_stock), 2))
         data.add(LogoBean(R.mipmap.ic_personnel, getString(R.string.personnel), 3))
-        data.add(LogoBean(R.mipmap.ic_collect, getString(R.string.collect), 4))
+//        data.add(LogoBean(R.mipmap.ic_collect, getString(R.string.collect), 4))
         //华东才开启中卫
-        if (User.getUser().type==0){
+        if (User.getUser().type == 0) {
             data.add(LogoBean(R.mipmap.zw_trs, getString(R.string.transz), 5))
             data.add(LogoBean(R.mipmap.w_shelves, getString(R.string.shelves), 6))
         }
@@ -271,6 +275,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             }
         }
     }
+
     /**
      * 错误异常不允许点击
      */
@@ -313,6 +318,8 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                                          sd.editSQL(null, "deleteTable")*/
                                         val cd = ContractTypeDao(this@HomeActivity)
                                         cd.editSQL(null, "deleteAll")
+                                        val td = TranDao.instance()
+                                        td.clearSQL()
                                         TransTag.cleanTag()
                                         Toast.makeText(this@HomeActivity, "清除完毕", Toast.LENGTH_SHORT).show()
                                     })

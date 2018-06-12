@@ -224,6 +224,10 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
         return trsData
     }
 
+    override fun getData2(): Any? {
+        return this
+    }
+
     /**
      * 显示重试按钮
      * @param type true显示 false隐藏

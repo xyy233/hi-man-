@@ -12,6 +12,8 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
  * 类本身就是一个handler，和内部的静态handler区别在于，内部handler是全局唯一，相当于static final，
  * MyHandler相当于只是一个对象，用来new一个handler使用，因此不像内部handler会自动处理防止泄漏
  * 内部handler用于socket，外部handler用于其他
+ *
+ * 2018-06-12修改，简简单单就好，删代码！
  */
 class MyHandler : Handler() {
 

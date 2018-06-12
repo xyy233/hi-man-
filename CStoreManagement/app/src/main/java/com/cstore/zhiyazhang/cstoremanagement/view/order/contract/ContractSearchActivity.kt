@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
+import com.cstore.zhiyazhang.cstoremanagement.utils.QRcodeResolve.qrCodeResolve
 import com.cstore.zhiyazhang.cstoremanagement.view.order.category.CategoryItemActivity
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -81,52 +82,38 @@ class ContractSearchActivity : AppCompatActivity() {
     }
 
     private fun runMsg(msg: String) {
-        val datas = msg.split("|")
-        val data = if (datas.size > 1) {
-            datas[datas.size - 1]
-        } else {
-            msg
-        }
+        val data = qrCodeResolve(msg)
         when (intent.getStringExtra("whereIsIt")) {
             "unitord" -> {
                 val i = Intent(this@ContractSearchActivity, CategoryItemActivity::class.java)
                 i.putExtra("whereIsIt", "unitord")
-                i.putExtra("search_message", data)
+                i.putExtra("search_message", data[0])
                 startActivity(i)
                 finish()
             }
             "result" -> {
                 val i = Intent()
-                i.putExtra("message", data)
+                i.putExtra("message", data[0])
                 setResult(0, i)
                 finish()
             }
             "return" -> {
                 val i = Intent()
-                i.putExtra("message", data)
+                i.putExtra("message", data[0])
                 setResult(0, i)
                 finish()
             }
             "distribution" -> {
-                val barDate = if (datas.size > 1) {
-                    try {
-                        datas[1] + " " + datas[2]
-                    } catch (e: Exception) {
-                        ""
-                    }
-                } else {
-                    ""
-                }
                 val i = Intent()
-                i.putExtra("message", data)
-                i.putExtra("bar", barDate)
+                i.putExtra("message", data[0])
+                i.putExtra("bar", data[1])
                 setResult(0, i)
                 finish()
             }
             else -> {
                 val i = Intent(this@ContractSearchActivity, ContractActivity::class.java)
                 i.putExtra("is_search", true)
-                i.putExtra("search_message", data)
+                i.putExtra("search_message", data[0])
                 i.putExtra("is_all", false)
                 startActivity(i)
                 finish()

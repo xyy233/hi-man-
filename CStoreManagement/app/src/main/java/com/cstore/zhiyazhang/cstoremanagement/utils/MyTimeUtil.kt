@@ -88,8 +88,8 @@ object MyTimeUtil {
     /**
      * 删除年月日只要时间
      */
-    fun deleteDate(date: String): String {
-        if (date.isEmpty() || date == "null") {
+    fun deleteDate(date: String?): String {
+        if (date == null || date.isEmpty() || date == "null") {
             return "无"
         }
         return try {

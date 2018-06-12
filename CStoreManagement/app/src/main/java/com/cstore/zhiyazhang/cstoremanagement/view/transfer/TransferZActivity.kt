@@ -2,6 +2,7 @@ package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -13,8 +14,10 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferServiceAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferServicePresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
+import com.cstore.zhiyazhang.cstoremanagement.view.LivingService
 import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_order.*
@@ -75,6 +78,8 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         (aData as TransResult).rows.forEach { if (it.disTime.toInt() > hour) hour = it.disTime.toInt() }
         transTag.hour = hour.toString()
         TransTag.saveTag(TransTag(User.getUser().storeId, transTag.date, hour.toString()))
+
+        Log.e("TranService", TransTag.getTransTag(true).hour)
 
         for (d in aData.rows) {
             val storeUnitPrice: Double = d.items
@@ -158,6 +163,13 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         orderLoading.visibility = View.GONE
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (!LivingService.isServiceWorked(MyApplication.instance().applicationContext, TransferErrorService.TAG)) {
+            startService(Intent(MyApplication.instance().applicationContext, TransferErrorService::class.java))
+        }
+    }
+
     /**
      * 显示重试按钮
      * @param type true显示 false隐藏
@@ -172,6 +184,10 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
             orderpro.visibility = View.VISIBLE
             orderprotext.visibility = View.VISIBLE
         }
+    }
+
+    override fun getData2(): Any? {
+        return this
     }
 
 }

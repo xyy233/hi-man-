@@ -7,6 +7,7 @@ import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -15,10 +16,8 @@ import com.bumptech.glide.Glide
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.UnitInquiryBean
 import com.cstore.zhiyazhang.cstoremanagement.presenter.inquiry.UnitInquiryPresenter
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyCameraUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.QRcodeResolve.qrCodeResolve
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_unit_inquiry.*
 import kotlinx.android.synthetic.main.dialog_cashdaily.view.*
@@ -31,6 +30,7 @@ import java.text.DecimalFormat
  * on 2018/1/30 16:17.
  */
 class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_inquiry) : MyActivity() {
+    private val isGun = MyApplication.usbGunJudgment()
     private val presenter = UnitInquiryPresenter(this)
     private lateinit var dialogView: View
     private lateinit var saveDialog: AlertDialog
@@ -83,6 +83,10 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
                 showPrompt("出现异常，请联系系统部！")
                 onBackPressed()
             }
+        }
+        if (isGun) {
+            MyScanUtil.getFocusable(search_edit)
+            this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
     }
 
@@ -139,11 +143,18 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
             saveDialog.show()
         }
         search_edit.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                editSearch()
-                true
-            } else {
-                false
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    whereSearch = 0
+                    editSearch()
+                    true
+                }
+                EditorInfo.IME_ACTION_UNSPECIFIED -> {
+                    whereSearch = 1
+                    editSearch()
+                    true
+                }
+                else -> false
             }
         }
         search_btn.setOnClickListener {
@@ -159,15 +170,16 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     }
 
     private fun editSearch() {
-        msg = search_edit.text.toString().trim()
+        msg = qrCodeResolve(search_edit.text.toString().trim())[0]
+
         if (msg.isEmpty()) {
-            showPrompt(getString(R.string.noMessage))
+//            showPrompt(getString(R.string.noMessage))
         } else {
-            whereSearch = 0
             showDetail(false)
-            search_edit.setText("")
             presenter.getData()
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(search_edit.windowToken, 0)
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(search_edit.windowToken, 0)
+            search_edit.setText("")
         }
     }
 
@@ -226,6 +238,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         if (aData is UnitInquiryBean) {
             uib = aData
             mShowView(aData)
+            if (isGun) MyScanUtil.getFocusable(search_edit)
         } else {
             showPrompt("错误的数据类型！")
         }
@@ -234,6 +247,10 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
     override fun errorDealWith() {
         dialogView.dialog_progress.visibility = View.GONE
         dialogView.dialog_edit.setText("")
+    }
+
+    override fun <T> errorDealWith(eData: T) {
+        if (isGun) MyScanUtil.getFocusable(search_edit)
     }
 
     override fun <T> requestSuccess(rData: T) {
