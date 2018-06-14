@@ -230,10 +230,10 @@ class TranDao(context: Context) {
      */
     fun getAberrantData(): ArrayList<TransServiceBean> {
         val db = tranHelper.readableDatabase
-        val sql = "select * from $TRAN_TABLE_NAME where $REQ_NO is not null and ($IS_SC = ? or $IS_INT = ?)"
+        val sql = "select * from $TRAN_TABLE_NAME where $REQ_NO is not null and $TRS_TYPE = ? and ($IS_SC = ? or $IS_INT = ?)"
         var cursor: Cursor? = null
         try {
-            cursor = db.rawQuery(sql, arrayOf("0", "0"))
+            cursor = db.rawQuery(sql, arrayOf("-1", "0", "0"))
             if (cursor.count > 0) {
                 val result = ArrayList<TransServiceBean>()
                 while (cursor.moveToNext()) {

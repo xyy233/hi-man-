@@ -1164,7 +1164,7 @@ object MySql {
             sql = "SELECT A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
                     "round(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
                     "NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
-                    "NVL(C.END_QTY,0) END_QTY, " +
+                    "NVL(C.END_QTY,0) invquantity, " +
                     "NVL(D.RTN_QUANTITY_ALLOWED,9999) RTN_QUANTITY_ALLOWED " +
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
@@ -1188,7 +1188,7 @@ object MySql {
             sql = "SELECT A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
                     "round(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
                     "NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
-                    "NVL(C.END_QTY,0) END_QTY, " +
+                    "NVL(C.END_QTY,0) invquantity, " +
                     "NVL(D.RTN_QUANTITY_ALLOWED,9999) RTN_QUANTITY_ALLOWED " +
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
@@ -1218,7 +1218,7 @@ object MySql {
             sql += "SELECT A.RETURNENDDATE,A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
                     "ROUND(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
                     "NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
-                    "NVL(C.END_QTY,0) END_QTY, " +
+                    "NVL(C.END_QTY,0) invquantity, " +
                     "NVL(D.RTN_QUANTITY_ALLOWED,9999) RTN_QUANTITY_ALLOWED " +
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
@@ -1248,7 +1248,7 @@ object MySql {
             sql += "SELECT A.RETURNENDDATE,A.STOREID,A.ITEMNUMBER,A.PLUNAME,A.STOREUNITPRICE,A.UNITCOST,A.VENDORID,A.SUPPLIERID,A.SELL_COST,A.RETURN_ATTR, " +
                     "ROUND(A.SELL_COST*(1+nvl(E.taxRate,0)),6) tax_sell_cost, " +
                     "NVL(B.FACEQUANTITY,0) FACEQUANTITY,DECODE(NVL(B.FACEQUANTITY,0),0,9999,DECODE(SUBSTR(A.STOREID,1,1),'S',9999,DECODE(A.RETURN_ATTR,'2',0,'3',0,9999))) CHECK_FACEQTY, " +
-                    "NVL(C.END_QTY,0) END_QTY, " +
+                    "NVL(C.END_QTY,0) invquantity, " +
                     "NVL(D.RTN_QUANTITY_ALLOWED,9999) RTN_QUANTITY_ALLOWED " +
                     "FROM PLU A,ITEMFACEQTY B,TODAY_INV C,HQ_RTN_CTL D, TAXTYPE E " +
                     "WHERE TRUNC(SYSDATE) BETWEEN A.RETURNBEGINDATE-1 AND A.RETURNENDDATE-1 " +
@@ -1937,23 +1937,6 @@ object MySql {
                     "group by trsnumber  " +
                     "order by trsnumber desc\u0004"
         }
-
-    /**
-     * 创建调入单
-     */
-    fun createTrsf(tib: TrsfItemBean): String {
-        return "insert into trs(STOREID, BUSIDATE, TRSID, TRSNUMBER, ITEMNUMBER, SHIPNUMBER,  " +
-                "STOREUNITPRICE, UNITCOST, TRSSTOREID, TRSQUANTITY, TRSTIME, TRSREASONNUMBER,  " +
-                "UPDATEUSERID, UPDATEDATETIME, SELL_COST, VENDORID, SUPPLIERID)  " +
-                "select P.STOREID,to_date('${CStoreCalendar.getCurrentDate(0)}' ,'yyyy-mm-dd') busidate, 'I' TRSID, TRSNUMBER,P.ITEMNUMBER,SHIPNUMBER,  " +
-                "P.STOREUNITPRICE, T.UNITCOST, TRSSTOREID, TRSQUANTITY, sysdate TRSTIME, '00' TRSREASONNUMBER,  " +
-                "'${User.getUser().uId}',SYSDATE, P.SELL_COST, VENDORID, SUPPLIERID  " +
-                "FROM TRS_HQ T, PLU P  " +
-                "WHERE T.STOREID = P.STOREID  " +
-                "AND T.ITEMNUMBER = P.ITEMNUMBER  " +
-                "AND T.TRSNUMBER = '${tib.trsNumber}'\u000c " +
-                "update trs_hq set status = '1' where trsnumber ='${tib.trsNumber}'\u0004"
-    }
 
 
     /******************************************单品查询**********************************************************/

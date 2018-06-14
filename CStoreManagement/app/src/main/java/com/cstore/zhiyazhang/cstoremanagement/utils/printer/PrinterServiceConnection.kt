@@ -74,17 +74,24 @@ internal class PrinterServiceConnection(var mGpService: GpService?) : ServiceCon
             val str = "${it.itemNo} ${it.itemName}"
             esc.addText(str)
             esc.addSetHorAndVerMotionUnits(7.toByte(), 0.toByte())
-            val i = " ${it.itemName}".length
-            if (i in 14..16) {
+            val i = str.length
+            if (i>=21){
                 esc.addPrintAndLineFeed()
-                esc.addText("  ")
+                esc.addText("       ")
                 esc.addSetHorAndVerMotionUnits(7.toByte(), 0.toByte())
             }
+            val trsQty = it.trsQty
             esc.addSetAbsolutePrintPosition(14.toShort())
-            val trsQty = it.storeTrsQty ?: it.trsQty
             esc.addText(trsQty.toString())
             esc.addPrintAndLineFeed()//打印并换行
         }
+        /*data.items.forEach {
+            val header = (it.storeTrsQty ?: it.trsQty).toString().padEnd(3, ' ')
+            val str = "$header${it.itemNo} ${it.itemName}"
+            esc.addText(str)
+            esc.addSetHorAndVerMotionUnits(7.toByte(), 0.toByte())
+            esc.addPrintAndLineFeed()//打印并换行
+        }*/
         esc.addQueryPrinterStatus()// 加入查询打印机状态，打印完成后，此时会接收到GpCom.ACTION_DEVICE_STATUS广播
         esc.addPrintAndFeedLines(6.toByte())
         val datas = esc.command // 发送数据
@@ -135,6 +142,13 @@ internal class PrinterServiceConnection(var mGpService: GpService?) : ServiceCon
             esc.addText(trsQty.toString())
             esc.addPrintAndLineFeed()//打印并换行
         }
+        /*data.items.forEach {
+            val header = it.trsQty.toString().padEnd(3, ' ')
+            val str = "$header${it.pluId} ${it.pluName}"
+            esc.addText(str)
+            esc.addSetHorAndVerMotionUnits(7.toByte(), 0.toByte())
+            esc.addPrintAndLineFeed()//打印并换行
+        }*/
         esc.addQueryPrinterStatus()// 加入查询打印机状态，打印完成后，此时会接收到GpCom.ACTION_DEVICE_STATUS广播
         esc.addPrintAndFeedLines(6.toByte())
         val datas = esc.command // 发送数据

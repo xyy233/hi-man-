@@ -163,9 +163,9 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     }
 
     override fun onBackPressed() {
-        if (isUpdate){
+        if (isUpdate) {
             showPrompt(getString(R.string.wait_loading))
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -222,9 +222,9 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     //获得权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
     private fun judgmentPermissions(): Boolean {
-        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.openCamera), 1, *perms)
+            EasyPermissions.requestPermissions(this, getString(R.string.open_permission), 1, *perms)
             return false
         }
         return true

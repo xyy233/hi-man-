@@ -154,25 +154,6 @@ class TransferModel : TransferInterface {
         }).start()
     }
 
-    override fun createTrsf(data: ArrayList<TrsfItemBean>, handler: MyHandler) {
-        Thread(Runnable {
-            val msg = Message()
-            val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            val sql = getCreateTrsfSql(data)
-            val sqlResult = SocketUtil.initSocket(ip, sql).inquire()
-            try {
-                val x = sqlResult.toInt()
-                msg.obj = x
-                msg.what = SUCCESS
-            } catch (e: Exception) {
-                msg.obj = sqlResult
-                msg.what = ERROR
-            }
-            handler.sendMessage(msg)
-        }).start()
-    }
-
     override fun searchStore(data: String, handler: MyHandler) {
         Thread(Runnable {
             val msg = Message()
@@ -200,14 +181,6 @@ class TransferModel : TransferInterface {
             }
             handler.sendMessage(msg)
         }).start()
-    }
-
-    private fun getCreateTrsfSql(data: ArrayList<TrsfItemBean>): String {
-        val result = StringBuilder()
-        data.forEach {
-            result.append(MySql.createTrsf(it))
-        }
-        return data.toString()
     }
 
     /**
@@ -330,13 +303,10 @@ interface TransferInterface {
     fun getAllTrsf(handler: MyHandler)
 
     /**
-     * 选中的调拨单转入
-     */
-    fun createTrsf(data: ArrayList<TrsfItemBean>, handler: MyHandler)
-
-    /**
      * 根据店号查找门市确定是否存在
      * @param data 店号
      */
     fun searchStore(data: String, handler: MyHandler)
 }
+
+

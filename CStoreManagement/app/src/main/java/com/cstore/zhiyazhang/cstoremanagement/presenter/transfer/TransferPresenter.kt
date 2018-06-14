@@ -1,7 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.presenter.transfer
 
 import com.cstore.zhiyazhang.cstoremanagement.bean.TrsItemBean
-import com.cstore.zhiyazhang.cstoremanagement.bean.TrsfItemBean
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferModel
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -89,25 +88,6 @@ class TransferPresenter(private val activity: MyActivity) {
             }
         })
         model.getAllTrsf(handler)
-    }
-
-    fun createTrsf(data: ArrayList<TrsfItemBean>) {
-        if (!PresenterUtil.judgmentInternet(activity)) return
-        val handler = MyHandler()
-        handler.writeListener(object : MyListener {
-            override fun listenerSuccess(data: Any) {
-                activity.updateDone(data)
-                activity.hideLoading()
-                handler.cleanAll()
-            }
-
-            override fun listenerFailed(errorMessage: String) {
-                activity.showPrompt(errorMessage)
-                activity.hideLoading()
-                handler.cleanAll()
-            }
-        })
-        model.createTrsf(data, handler)
     }
 
     fun searchStore(data: String) {

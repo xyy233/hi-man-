@@ -132,10 +132,6 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
     }
 
     private fun print() {
-        if (trsData.requestNumber == null) {
-            showPrompt("请确认调拨单后再打印")
-            return
-        }
         if (conn!!.getConnectState()) {
             //打印
             if (trsData.requestNumber == null || trsData.requestNumber == "") {

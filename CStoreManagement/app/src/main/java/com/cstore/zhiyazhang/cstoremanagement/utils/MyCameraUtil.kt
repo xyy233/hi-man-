@@ -42,7 +42,7 @@ object MyCameraUtil : EasyPermissions.PermissionCallbacks {
     private fun judgmentPermissions(activity: AppCompatActivity): Boolean {
         val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (!EasyPermissions.hasPermissions(activity, *perms)) {
-            EasyPermissions.requestPermissions(activity, activity.getString(R.string.openCamera), 1, *perms)
+            EasyPermissions.requestPermissions(activity, activity.getString(R.string.open_permission), 1, *perms)
             return false
         }
         return true

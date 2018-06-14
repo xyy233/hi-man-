@@ -154,7 +154,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
                     if (judgmentCarmer()) goQRCode()
                 } else {
                     if (cameraIsCanUse()) goQRCode() else {
-                        showPrompt(getString(R.string.openCamera))
+                        showPrompt(getString(R.string.open_permission))
                         val intent = Intent()
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"

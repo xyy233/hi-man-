@@ -74,8 +74,8 @@ object MyTimeUtil {
      * 删除时间只要年月日
      */
     @JvmStatic
-    fun deleteTime(date: String): String {
-        if (date.isEmpty() || date == "null") {
+    fun deleteTime(date: String?): String {
+        if (date == null || date.isEmpty() || date == "null") {
             return "无"
         }
         return try {

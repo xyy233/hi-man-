@@ -48,7 +48,11 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
             if (isShowEdit) {
                 //调拨量大于库存就要修改量为库存
                 if (d.trsQty > d.inv!!) {
-                    d.storeTrsQty = d.inv
+                    if (d.inv!! < 0) {
+                        d.storeTrsQty = 0
+                    } else {
+                        d.storeTrsQty = d.inv
+                    }
                 }
             }
         } else {
@@ -76,15 +80,20 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
                         //输入结束
                         if (holder.trsQty2.text.toString() != "" && holder.trsQty2.text != null) {
                             val tq2 = holder.trsQty2.text.toString().toInt()
+                            if (tq2 == 0) {
+                                d.storeTrsQty = 0
+                                return
+                            }
                             if (d.inv != null) {
                                 if (tq2 > d.inv!!) {
                                     if (d.inv!! < 0) {
                                         d.storeTrsQty = 0
-                                    }else{
+                                    } else {
                                         d.storeTrsQty = d.inv
+                                        MyToast.getShortToast("修改量不能大于库存")
                                     }
-                                    holder.trsQty2.setText(d.inv.toString())
-                                    MyToast.getShortToast("修改量不能大于库存")
+                                    holder.trsQty2.setText(d.storeTrsQty.toString())
+                                    return
                                 }
                             }
                             d.storeTrsQty = holder.trsQty2.text.toString().toInt()

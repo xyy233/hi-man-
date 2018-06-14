@@ -12,7 +12,7 @@
     <string name="please_edit_password">请输入密码</string>
     <string name="please_edit_password_by_developer">请输入从开发人员处获得的密码</string>
     <string name="login">登录</string>
-    <string name="openCamera">您未开启相机权限，请开启相机权限！</string>
+    <string name="open_permission">您未开启所需权限，请开启权限！</string>
     <string name="clearData">清空数据</string>
     <string name="clear">清空</string>
     <string name="search">查找</string>
