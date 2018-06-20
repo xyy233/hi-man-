@@ -54,7 +54,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 view as LogoAdapter.ViewHolder
                 when (data[position].position) {
-                    //测试
+                //测试
                     0 -> {
                         if (User.getUser().cnt == 0) {
                             MyToast.getShortToast(getString(R.string.cnt_not_use))
@@ -109,10 +109,15 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     9 -> {
-                        val intent = Intent(this@ContractOrder, ReturnPurchaseActivity::class.java)
+                        val intent = Intent(this@ContractOrder, CategoryActivity::class.java)
+                        intent.putExtra(whereIsIt, "ord")
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
                     10 -> {
+                        val intent = Intent(this@ContractOrder, ReturnPurchaseActivity::class.java)
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
+                    }
+                    11 -> {
                         AlertDialog.Builder(this@ContractOrder)
                                 .setTitle("提示")
                                 .setMessage("是否需要一键下单？")
@@ -125,7 +130,7 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
                                 })
                                 .show()
                     }
-                    11 -> {
+                    12 -> {
                         val intent = Intent(this@ContractOrder, ReturnExpiredActivity::class.java)
                         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this@ContractOrder, view.orderItem, "orderItem").toBundle())
                     }
@@ -177,10 +182,10 @@ class ContractOrder(override val layoutId: Int = R.layout.activity_order) : MyAc
         data.add(LogoBean(R.mipmap.ic_supplies_order, getString(R.string.supplies_order), 6))
         data.add(LogoBean(R.mipmap.ic_order_fresh1, getString(R.string.fresh1), 7))
         data.add(LogoBean(R.mipmap.ic_order_fresh2, getString(R.string.fresh2), 8))
-        data.add(LogoBean(R.mipmap.ic_return_purchase, getString(R.string.return_purchase), 9))
-        data.add(LogoBean(R.mipmap.ic_under_order, getString(R.string.under_order), 10))
-//        data.add(LogoBean(R.drawable.ic_transparent, "", 11))
-        data.add(LogoBean(R.mipmap.ic_return_expired, getString(R.string.return_expired), 11))
+        data.add(LogoBean(R.mipmap.ic_ord_contract, getString(R.string.ord_contract), 9))
+        data.add(LogoBean(R.mipmap.ic_return_purchase, getString(R.string.return_purchase), 10))
+        data.add(LogoBean(R.mipmap.ic_under_order, getString(R.string.under_order), 11))
+        data.add(LogoBean(R.mipmap.ic_return_expired, getString(R.string.return_expired), 12))
         data.sortBy { it.position }
     }
 

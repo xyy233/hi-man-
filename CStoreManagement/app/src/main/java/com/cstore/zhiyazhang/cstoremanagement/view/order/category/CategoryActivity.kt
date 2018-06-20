@@ -9,7 +9,6 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.*
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCategoryAdapter
 import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCategoryPresenter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DataClickListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
 import kotlinx.android.synthetic.main.activity_order_category.*
@@ -58,6 +57,9 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 "fresh2" -> {
                     mPresenter.getFresh(2)
                 }
+                "ord" -> {
+                    mPresenter.getOrdCategory()
+                }
             }
         }
     }
@@ -70,6 +72,15 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 my_toolbar.title = getString(R.string.category_order)
                 header_text1.text = getString(R.string.type_name)
                 header_text2.text = getString(R.string.all_sku)
+                header_text3.text = getString(R.string.ord_qty)
+                header_text3_5.visibility = View.VISIBLE
+                header_text3_5.text = getString(R.string.ord_count)
+                header_text4.text = getString(R.string.order_price)
+            }
+            "ord" -> {
+                my_toolbar.title = getString(R.string.ord_contract)
+                header_text1.text = getString(R.string.type_name)
+                header_text2.visibility = View.GONE
                 header_text3.text = getString(R.string.ord_qty)
                 header_text3_5.visibility = View.VISIBLE
                 header_text3_5.text = getString(R.string.ord_count)
@@ -143,6 +154,13 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
                 i.putExtra("itemIds", (adapter?.data as ArrayList<OrderCategoryBean>))
                 startActivity(i)
             }
+            "ord" -> {
+                val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
+                i.putExtra("category", rData as OrderCategoryBean)
+                i.putExtra("whereIsIt", "ord")
+                i.putExtra("itemIds", (adapter?.data as ArrayList<OrderCategoryBean>))
+                startActivity(i)
+            }
             "shelf" -> {
                 val i = Intent(this@CategoryActivity, CategoryItemActivity::class.java)
                 i.putExtra("shelf", rData as ShelfBean)
@@ -191,14 +209,14 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
 
     override fun <T> showView(aData: T) {
         if (adapter == null) {
-            if (whereIsIt == "fresh1" || whereIsIt == "fresh2") {
-                adapter = OrderCategoryAdapter("fresh", aData as ArrayList<*>, object : DataClickListener {
+            adapter = if (whereIsIt == "fresh1" || whereIsIt == "fresh2") {
+                OrderCategoryAdapter("fresh", aData as ArrayList<*>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         requestSuccess(data)
                     }
                 })
             } else {
-                adapter = OrderCategoryAdapter(whereIsIt, aData as ArrayList<*>, object : DataClickListener {
+                OrderCategoryAdapter(whereIsIt, aData as ArrayList<*>, object : DataClickListener {
                     override fun <T> click(data: T) {
                         requestSuccess(data)
                     }
@@ -221,6 +239,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         try {
             when (whereIsIt) {
                 "category" -> mPresenter.getAllCategory()
+                "ord" -> mPresenter.getOrdCategory()
                 "shelf" -> mPresenter.getShelf()
                 "self" -> mPresenter.getSelf()
                 "nop" -> mPresenter.getNOP()

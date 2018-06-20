@@ -51,6 +51,33 @@ class CategoryItemModel : CategoryInterface {
         }).start()
     }
 
+    override fun getOrdItemByCategory(categoryId: String, orderBy: String, handler: MyHandler) {
+        Thread(Runnable {
+            val msg = Message()
+            val ip = MyApplication.getIP()
+            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
+
+            val result = SocketUtil.initSocket(ip, MySql.getItemByOrdCategoryId(categoryId, orderBy)).inquire()
+
+            if (!SocketUtil.judgmentNull(result, msg, handler)) return@Runnable
+
+            val items = ArrayList<CategoryItemBean>()
+            try {
+                items.addAll(GsonUtil.getCategoryItem(result))
+            } catch (e: Exception) {
+            }
+            if (items.isEmpty()) {
+                msg.obj = result
+                msg.what = ERROR
+                handler.sendMessage(msg)
+            } else {
+                msg.obj = items
+                msg.what = SUCCESS
+                handler.sendMessage(msg)
+            }
+        }).start()
+    }
+
     /**
      * 根据货架id获得商品
      */
@@ -272,6 +299,11 @@ interface CategoryInterface {
      * 通过categoryId获得item
      */
     fun getAllItemByCategory(categoryId: String, orderBy: String, handler: MyHandler)
+
+    /**
+     * 通过categoryId获得已订Item
+     */
+    fun getOrdItemByCategory(categoryId: String, orderBy: String, handler: MyHandler)
 
     /**
      * 根据货架id获得商品

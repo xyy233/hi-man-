@@ -9,10 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceModel
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranDao
-import com.cstore.zhiyazhang.cstoremanagement.utils.ConnectionDetector
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
-import com.cstore.zhiyazhang.cstoremanagement.utils.PresenterUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
 
@@ -97,6 +94,11 @@ class TransferServicePresenter(private val view: GenericView) {
     private fun getTrsByJudgment(data: String): TransResult {
         //请求得到的数据
         val httpResult = Gson().fromJson(data, TransResult::class.java)
+        //删除两小时前数据
+        val nowHour = MyTimeUtil.nowHour
+        val removeData = ArrayList<TransServiceBean>()
+        httpResult.rows.forEach { if (nowHour >= it.disTime.toInt() + 2) removeData.add(it) }
+        httpResult.rows.removeAll(removeData)
         //得到数据库数据
         val d = db.getAllData()
         val sqlResult = TransResult(0, d.size, d)

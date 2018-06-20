@@ -3,7 +3,7 @@
     <string name="app_name">喜士多移动管理</string>
     <string name="app_name2">喜市多移动管理</string>
     <!--公告展示内容-->
-    <string name="bulletin">1.增强调拨准确性\n</string>
+    <string name="bulletin">1.增强调拨准确性\n2.添加订货一览表\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">账户</string>
@@ -233,6 +233,7 @@
     <string name="judgment_inv">检查库存</string>
     <string name="confirm_data">确认选中资料</string>
     <string name="return_expired">过期品预约退货</string>
+    <string name="ord_contract">已订商品一览表</string>
     <string name="return_expired1">预约退货新增</string>
     <string name="return_expired2">预约退货查询</string>
     <string name="all">全部</string>
@@ -380,11 +381,11 @@
     <string name="printer">打印机</string>
     <string name="title_paired_devices">已配对</string>
     <string name="title_other_devices">新设备</string>
-    <string name ="scan">扫描</string>
-    <string name ="none_paired">没有配对的设备</string>
-    <string name ="select_bluetooth_device">选择蓝牙设备</string>
-    <string name ="none_bluetooth_device_found">没有找到蓝牙设备</string>
-    <string name ="scaning">正在扫描。。。</string>
+    <string name="scan">扫描</string>
+    <string name="none_paired">没有配对的设备</string>
+    <string name="select_bluetooth_device">选择蓝牙设备</string>
+    <string name="none_bluetooth_device_found">没有找到蓝牙设备</string>
+    <string name="scaning">正在扫描。。。</string>
     <string name="port_parameters_wrong">端口参数错误！</string>
     <string name="port_parameters_is_not_save">端口参数未保存！</string>
     <string name="disconnect">未连接</string>

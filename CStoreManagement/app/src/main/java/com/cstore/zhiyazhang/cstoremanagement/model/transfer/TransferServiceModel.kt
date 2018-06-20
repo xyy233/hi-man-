@@ -9,12 +9,9 @@ import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferModel.Compa
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranDao
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
-import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
 import com.cstore.zhiyazhang.cstoremanagement.view.LivingService
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferErrorService
@@ -314,7 +311,7 @@ class TransferServiceModel : TransferServiceInterface {
         data.requestNumber = trsNumber
         val result = StringBuilder()
         data.items.forEach {
-            result.append(MySql.createTrs(it, trsNumber, data.trsStoreId))
+            result.append(MySql.createTrs(it, trsNumber, data.trsStoreId, MyTimeUtil.nowDate))
         }
         result.append("\u0004")
         return result.toString()
@@ -326,7 +323,7 @@ class TransferServiceModel : TransferServiceInterface {
     private fun getServiceCreateTrsSql(data: TransServiceBean): String {
         val result = StringBuilder()
         data.items.forEach {
-            result.append(MySql.createTrs(it, data.requestNumber!!, data.trsStoreId))
+            result.append(MySql.createTrs(it, data.requestNumber!!, data.trsStoreId, data.busiDate ?: MyTimeUtil.nowDate))
         }
         result.append("\u0004")
         return result.toString()

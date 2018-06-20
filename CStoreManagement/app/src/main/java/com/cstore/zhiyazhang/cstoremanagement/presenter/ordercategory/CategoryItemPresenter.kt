@@ -47,6 +47,33 @@ class CategoryItemPresenter(private val gView: GenericView, private val cView: C
         mInterface.getAllItemByCategory(cView.nowId, cView.sort, handler)
     }
 
+    fun getOrdItem() {
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        val handler = MyHandler()
+        handler.writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                data as ArrayList<CategoryItemBean>
+                if (data.size == 0) {
+                    gView.errorDealWith()
+                    gView.hideLoading()
+                } else {
+                    val adapter = getAdapter(data, "ord")
+                    gView.showView(adapter)
+                    gView.hideLoading()
+                }
+                handler.cleanAll()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+                handler.cleanAll()
+            }
+        })
+        mInterface.getOrdItemByCategory(cView.nowId, cView.sort, handler)
+    }
+
     fun getAllShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
         val handler = MyHandler()

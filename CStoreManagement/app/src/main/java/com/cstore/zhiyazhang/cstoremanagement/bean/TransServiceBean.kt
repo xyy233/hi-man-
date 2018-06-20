@@ -24,7 +24,8 @@ data class TransServiceBean(
         var storeUnitPrice: Double?,
         var items: ArrayList<TransItem>,
         var isSc: Int?,//是否上传至sc
-        var isInt: Int?//是否上传至网络
+        var isInt: Int?,//是否上传至网络
+        var busiDate: String?
 ) : Serializable
 
 data class TransItem(

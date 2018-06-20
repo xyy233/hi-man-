@@ -186,8 +186,14 @@ class TranDao(context: Context) {
                 values.put(REQ_NO, bean.requestNumber)
                 val items = Gson().toJson(bean.items)
                 values.put(ITEMS, items)
-                if (bean.isSc == null) bean.isSc = 0
-                if (bean.isInt == null) bean.isInt = 0
+                //如果已存在单号就判断为成功
+                if (bean.requestNumber!=null){
+                    bean.isSc=1
+                    bean.isInt=1
+                }else{
+                    if (bean.isSc == null) bean.isSc = 0
+                    if (bean.isInt == null) bean.isInt = 0
+                }
                 values.put(IS_SC, bean.isSc)
                 values.put(IS_INT, bean.isInt)
                 db.insertOrThrow(TRAN_TABLE_NAME, null, values)
@@ -230,10 +236,10 @@ class TranDao(context: Context) {
      */
     fun getAberrantData(): ArrayList<TransServiceBean> {
         val db = tranHelper.readableDatabase
-        val sql = "select * from $TRAN_TABLE_NAME where $REQ_NO is not null and $TRS_TYPE = ? and ($IS_SC = ? or $IS_INT = ?)"
+        val sql = "select * from $TRAN_TABLE_NAME where $TRAN_DATE = ? and $REQ_NO is not null and $TRS_TYPE = ? and ($IS_SC = ? or $IS_INT = ?)"
         var cursor: Cursor? = null
         try {
-            cursor = db.rawQuery(sql, arrayOf("-1", "0", "0"))
+            cursor = db.rawQuery(sql, arrayOf(MyTimeUtil.nowDate, "-1", "0", "0"))
             if (cursor.count > 0) {
                 val result = ArrayList<TransServiceBean>()
                 while (cursor.moveToNext()) {
@@ -301,6 +307,7 @@ class TranDao(context: Context) {
         val items = Gson().fromJson<ArrayList<TransItem>>(itemsJson, object : TypeToken<ArrayList<TransItem>>() {}.type)
         val isSc = cursor.getInt(cursor.getColumnIndex(IS_SC))
         val isInt = cursor.getInt(cursor.getColumnIndex(IS_INT))
-        return TransServiceBean(storeId, storeName, type, trsStoreId, trsStoreName, trsType, disTime, trsQtys, updTime, reqNo, null, items, isSc, isInt)
+        val busiDate = cursor.getString(cursor.getColumnIndex(TRAN_DATE))
+        return TransServiceBean(storeId, storeName, type, trsStoreId, trsStoreName, trsType, disTime, trsQtys, updTime, reqNo, null, items, isSc, isInt, busiDate)
     }
 }

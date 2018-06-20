@@ -37,6 +37,14 @@ class CategoryItemAdapter(val data: ArrayList<CategoryItemBean>, val context: Co
                 holder.price.visibility = View.GONE
                 holder.sell.visibility = View.VISIBLE
             }
+            "ord" -> {
+                holder.add.visibility=View.GONE
+                holder.less.visibility=View.GONE
+                holder.add.isEnabled = false
+                holder.less.isEnabled = false
+                holder.add.setBackgroundColor(ContextCompat.getColor(context, R.color.sort_gray))
+                holder.less.setBackgroundColor(ContextCompat.getColor(context, R.color.sort_gray))
+            }
         }
         //对是否能订的做处理
         when (data[position].orderType) {

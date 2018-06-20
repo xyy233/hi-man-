@@ -87,6 +87,11 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
                 nowId = category.categoryId
                 toolbar.title = category.categoryName
             }
+            "ord" -> {
+                nowId = category.categoryId
+                toolbar.title = category.categoryName
+                done.visibility = View.GONE
+            }
             "shelf" -> {
                 nowId = shelf.shelfId
                 toolbar.title = shelf.shelfName
@@ -311,6 +316,9 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             "category" -> {
                 presenter.getAllItem()
             }
+            "ord" -> {
+                presenter.getOrdItem()
+            }
             "shelf" -> {
                 presenter.getAllShelf()
             }
@@ -334,6 +342,21 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         isNext = false
         when (whereIsIt) {
             "category" -> {
+                val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
+                for (i in itemIdData.indices) {
+                    if (itemIdData[i].categoryId == nowId) {
+                        if (i == itemIdData.size - 1) {
+                            nowId = itemIdData[0].categoryId
+                            toolbar.title = itemIdData[0].categoryName
+                        } else {
+                            nowId = itemIdData[i + 1].categoryId
+                            toolbar.title = itemIdData[i + 1].categoryName
+                        }
+                        break
+                    }
+                }
+            }
+            "ord" -> {
                 val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {
@@ -419,6 +442,21 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         isLast = false
         when (whereIsIt) {
             "category" -> {
+                val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
+                for (i in itemIdData.indices) {
+                    if (itemIdData[i].categoryId == nowId) {
+                        if (i == 0) {
+                            nowId = itemIdData[itemIdData.size - 1].categoryId
+                            toolbar.title = itemIdData[itemIdData.size - 1].categoryName
+                        } else {
+                            nowId = itemIdData[i - 1].categoryId
+                            toolbar.title = itemIdData[i - 1].categoryName
+                        }
+                        break
+                    }
+                }
+            }
+            "ord" -> {
                 val itemIdData = (getAllItemId() as ArrayList<OrderCategoryBean>)
                 for (i in itemIdData.indices) {
                     if (itemIdData[i].categoryId == nowId) {

@@ -90,7 +90,6 @@ class SignInActivity(override val layoutId: Int = R.layout.activity_signin) : My
     @SuppressLint("SetTextI18n")
     override fun initData() {
         app_version.text = "v: ${MyApplication.getVersion()}"
-        ReportListener.reportError()
     }
 
     override fun onStart() {

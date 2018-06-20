@@ -125,6 +125,34 @@ object MySql {
     }
 
     /**
+     * 获得已订商品的大类
+     */
+    fun getOrdCategory(): String {
+        return "select plu.categoryNumber,cat.categoryName,count(*) tot_sku, " +
+                "sum(  decode(  sign(ord.ordActualQuantity+ord.ordActualQuantity1), 1,1,0)) ord_sku, " +
+                "sum(ord.ordActualQuantity + ord.ordActualQuantity1) ord_count, " +
+                "sum((ord.ordActualQuantity+ord.ordActualQuantity1)*ord.storeUnitPrice) amt " +
+                "from cat,plu,ord,cat cat1 " +
+                "WHERE cat.storeid='${User.getUser().storeId}' " +
+                "AND trim(cat.categoryNumber) is not null " +
+                "AND trim(cat.midcategoryNumber) is null " +
+                "AND trim(cat.microcategoryNumber) is null " +
+                "AND plu.storeID=cat.storeID " +
+                "AND plu.categoryNumber=cat.categoryNumber " +
+                "AND plu.storeID=ord.storeID " +
+                "AND plu.itemNumber=ord.itemNumber " +
+                "AND ord.orderDate=to_date('${CStoreCalendar.getCurrentDate(2)}','YYYY/MM/DD') " +
+                "and ord.ordactualquantity != 0 " +
+                "AND plu.storeID=cat1.storeID " +
+                "AND plu.categoryNumber=cat1.categoryNumber " +
+                "AND plu.midCategoryNumber=cat1.midCategoryNumber " +
+                "AND trim(cat1.midCategoryNumber) is not null " +
+                "AND trim(cat1.microCategoryNumber) is null " +
+                "GROUP BY plu.categoryNumber,cat.categoryName " +
+                "order by PLU.CATEGORYNUMBER\u0004"
+    }
+
+    /**
      * 得到所有修改过的数据统计
      */
     fun getAllEditData(): String {
@@ -164,9 +192,30 @@ object MySql {
                 "group by itemnumber) y " +
                 "where x.itemnumber= y.item_no(+) " +
                 "and x.itemnumber = p.itemnumber(+) " +
+                "and x.orderdate=to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd') " +
                 "and x.categorynumber like '$categoryId' " +
                 "and x.midCategoryNumber like '%' " +
                 "AND Fresh_YN='N' $sort\u0004"
+    }
+
+    /**
+     * 通过大类id得到已订商品
+     */
+    fun getItemByOrdCategoryId(categoryId: String, sort: String): String {
+        return "Select to_char(x.sell_cost, '999999990.00') sell_cost, " +
+                "x.itemnumber,x.pluname,x.quantity,x.invquantity,x.ordactualquantity,x.dlv_qty,x.d1_dfs,x.INCREASEORDERQUANTITY,x.minimaorderquantity,x.maximaorderquantity,x.dms,x.ordertype,x.pro_yn, nvl(x.safe_qty,x.face_qty) face_qty, " +
+                "substr(p.signType,12,1) s_returntype, " +
+                "round(p.storeunitprice,2) storeunitprice " +
+                "From appord_t2 x,plu p, " +
+                "(select itemnumber item_no from itemgondra where storeid='${User.getUser().storeId}' and gondranumber like '%' " +
+                "group by itemnumber) y " +
+                "where x.itemnumber= y.item_no(+) " +
+                "and x.itemnumber = p.itemnumber(+) " +
+                "and x.orderdate=to_date('${CStoreCalendar.getCurrentDate(2)}','yyyy-mm-dd') " +
+                "and x.ordactualquantity != 0 " +
+                "and x.categorynumber like '$categoryId' " +
+                "and x.midCategoryNumber like '%'" +
+                "$sort\u0004"
     }
 
     fun getItemByEditCategory(sort: String): String {
@@ -1870,11 +1919,11 @@ object MySql {
     /**
      * 创建中卫调出单
      */
-    fun createTrs(tb: TransItem, trsNumber: String, trsStore: String): String {
+    fun createTrs(tb: TransItem, trsNumber: String, trsStore: String, busiDate:String): String {
         val trsNo = tb.storeTrsQty ?: tb.trsQty
         return "Insert into trs (StoreId,busiDate,trsID,trsNumber,itemNumber,shipNumber,storeUnitPrice,unitCost, " +
                 "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorId,supplierId) " +
-                "select P.StoreId, to_date('${MyTimeUtil.nowDate}','yyyy-mm-dd') busiDate,  'O' trsId, '$trsNumber' trsNumber, P.itemNumber, P.shipNumber, " +
+                "select P.StoreId, to_date('$busiDate','yyyy-mm-dd') busiDate,  'O' trsId, '$trsNumber' trsNumber, P.itemNumber, P.shipNumber, " +
                 "P.storeUnitPrice, P.unitCost, '$trsStore' trsStoreId, $trsNo trsQuantity, '${User.getUser().uId}' updateUserId, sysdate updateDateTime, sysdate trsTime, '00' trsReasonNumber, P.sell_cost, P.vendorId, P.supplierId " +
                 "from plu P " +
                 "where p.storeId='${User.getUser().storeId}' " +
@@ -1884,7 +1933,7 @@ object MySql {
     /**
      * 检测是否已存在单号
      */
-    fun judgmentTrsNumber(trsNumber:String):String{
+    fun judgmentTrsNumber(trsNumber: String): String {
         return "SELECT count(*) value FROM trs where busidate=trunc(sysdate) and trsnumber='$trsNumber'"
     }
 

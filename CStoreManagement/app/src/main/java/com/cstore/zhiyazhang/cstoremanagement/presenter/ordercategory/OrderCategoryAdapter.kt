@@ -38,6 +38,9 @@ class OrderCategoryAdapter(val type: String, var data: Any, private val listener
             "category" -> {
                 holder.bindCategory((data as ArrayList<OrderCategoryBean>)[position], listener)
             }
+            "ord" -> {
+                holder.bindOrd((data as ArrayList<OrderCategoryBean>)[position], listener)
+            }
             "shelf" -> {
                 holder.bindShelf((data as ArrayList<ShelfBean>)[position], listener)
             }
@@ -56,6 +59,9 @@ class OrderCategoryAdapter(val type: String, var data: Any, private val listener
     override fun getItemCount(): Int {
         when (type) {
             "category" -> {
+                return (data as ArrayList<OrderCategoryBean>).size
+            }
+            "ord"->{
                 return (data as ArrayList<OrderCategoryBean>).size
             }
             "shelf" -> {
@@ -90,6 +96,17 @@ class OrderCategoryAdapter(val type: String, var data: Any, private val listener
                 }
                 else -> type_tag_h.visibility = View.GONE
             }
+            setOnClickListener { listener.click(ocb) }
+        }
+
+        fun bindOrd(ocb: OrderCategoryBean, listener: DataClickListener) = with(itemView) {
+            type_h.text = ocb.categoryName
+            inventory_h.visibility = View.GONE
+            tonightCount_h.text = ocb.ordSku.toString()
+            todayCount_h.text = ocb.ordPrice.toString()
+            ordCount_h.visibility = View.VISIBLE
+            ordCount_h.text = ocb.ordCount.toString()
+            type_tag_h.visibility = View.GONE
             setOnClickListener { listener.click(ocb) }
         }
 

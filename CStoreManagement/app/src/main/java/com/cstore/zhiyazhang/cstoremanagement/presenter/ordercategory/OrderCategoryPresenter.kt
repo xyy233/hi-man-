@@ -36,6 +36,26 @@ class OrderCategoryPresenter(private val gView: GenericView, private val activit
         anInterface.getAllCategory(handler)
     }
 
+    fun getOrdCategory(){
+        if (!PresenterUtil.judgmentInternet(gView)) return
+        val handler = MyHandler()
+        handler.writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                gView.showView(data)
+                gView.hideLoading()
+                handler.cleanAll()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                gView.showPrompt(errorMessage)
+                gView.errorDealWith()
+                gView.hideLoading()
+                handler.cleanAll()
+            }
+        })
+        anInterface.getOrdCategory(handler)
+    }
+
     fun getShelf() {
         if (!PresenterUtil.judgmentInternet(gView)) return
         val handler = MyHandler()

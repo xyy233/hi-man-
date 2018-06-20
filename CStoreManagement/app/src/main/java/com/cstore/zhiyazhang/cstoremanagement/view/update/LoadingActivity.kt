@@ -20,6 +20,7 @@ import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
+import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
 import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 import com.google.gson.Gson
 import com.zhy.http.okhttp.OkHttpUtils
@@ -155,6 +156,7 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     }
 
     override fun initData() {
+        ReportListener.reportError()
     }
 
     override fun onStart() {

@@ -214,6 +214,7 @@ class DownloadService : Service() {
                     } else {
                         Uri.parse("file://" + file.toString())
                     }
+
                     close()
 
                     if (uri != null) {
