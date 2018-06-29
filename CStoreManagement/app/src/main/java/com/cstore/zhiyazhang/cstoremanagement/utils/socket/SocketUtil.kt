@@ -182,9 +182,9 @@ internal class SocketUtil {
             mySocket.connect(InetSocketAddress(host, PORT), loadingTime * 1000)
             mySocket.soTimeout = loadingTime * 1000
             os = mySocket.getOutputStream()
-            os!!.write(address.toByteArray())
+            os!!.write((address + "\u0004").toByteArray())
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, os)
-            bw = BufferedWriter(OutputStreamWriter(os!!))
+//            bw = BufferedWriter(OutputStreamWriter(os!!))
             `is` = mySocket.getInputStream()
             br = BufferedReader(InputStreamReader(`is`!!))
             mySocket.shutdownOutput()

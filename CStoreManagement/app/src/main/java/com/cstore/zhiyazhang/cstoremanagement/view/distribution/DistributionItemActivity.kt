@@ -126,7 +126,7 @@ class DistributionItemActivity(override val layoutId: Int = R.layout.activity_or
         }
         done2.setOnClickListener {
             val i = Intent(this@DistributionItemActivity, ContractSearchActivity::class.java)
-            i.putExtra("whereIsIt", "distribution")
+            i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.FP)
             startActivityForResult(i, 0)
         }
     }
@@ -167,7 +167,7 @@ class DistributionItemActivity(override val layoutId: Int = R.layout.activity_or
         adapter = DistributionItemAdapter(aData, this, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {
                 val i = Intent(this@DistributionItemActivity, ContractSearchActivity::class.java)
-                i.putExtra("whereIsIt", "distribution")
+                i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.FP)
                 startActivityForResult(i, 0)
             }
 

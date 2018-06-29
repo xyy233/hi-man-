@@ -24,6 +24,16 @@ import kotlinx.android.synthetic.main.activity_contract_search.*
  * on 2017/6/19 14:38.
  */
 class ContractSearchActivity : AppCompatActivity() {
+
+    companion object {
+        val MJB = "MobileGo"
+        val FP = "distribution"
+        val RTN = "return"
+        val RES = "result"
+        val UNIT = "unitord"
+        val WHERE_IS_IT = "whereIsIt"
+    }
+
     private val isGun = MyApplication.usbGunJudgment()
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
@@ -58,11 +68,11 @@ class ContractSearchActivity : AppCompatActivity() {
             }
         }
         //qrcode
-        var captureFragment = CaptureFragment()
+        val captureFragment = CaptureFragment()
         CodeUtils.setFragmentArgs(captureFragment, R.layout.my_camera)
         captureFragment.analyzeCallback = analyzeCallback
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
-        val isReturn = intent.getStringExtra("whereIsIt")
+        val isReturn = intent.getStringExtra(WHERE_IS_IT)
         if (isReturn != null && isReturn == "return") {
             camera_search_box.visibility = View.VISIBLE
             collect_money.setOnClickListener {
@@ -83,31 +93,37 @@ class ContractSearchActivity : AppCompatActivity() {
 
     private fun runMsg(msg: String) {
         val data = qrCodeResolve(msg)
-        when (intent.getStringExtra("whereIsIt")) {
-            "unitord" -> {
+        when (intent.getStringExtra(WHERE_IS_IT)) {
+            UNIT -> {
                 val i = Intent(this@ContractSearchActivity, CategoryItemActivity::class.java)
-                i.putExtra("whereIsIt", "unitord")
+                i.putExtra(WHERE_IS_IT, UNIT)
                 i.putExtra("search_message", data[0])
                 startActivity(i)
                 finish()
             }
-            "result" -> {
+            RES -> {
                 val i = Intent()
                 i.putExtra("message", data[0])
                 setResult(0, i)
                 finish()
             }
-            "return" -> {
+            RTN -> {
                 val i = Intent()
                 i.putExtra("message", data[0])
                 setResult(0, i)
                 finish()
             }
-            "distribution" -> {
+            FP -> {
                 val i = Intent()
                 i.putExtra("message", data[0])
                 i.putExtra("bar", data[1])
                 setResult(0, i)
+                finish()
+            }
+            MJB -> {
+                val i = Intent()
+                i.putExtra("message", data[0])
+                setResult(1, i)
                 finish()
             }
             else -> {

@@ -11,6 +11,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.ordercategory.OrderCateg
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.DataClickListener
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.ContractTypeView
+import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import kotlinx.android.synthetic.main.activity_order_category.*
 import kotlinx.android.synthetic.main.contract_type_recycler.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
@@ -28,7 +29,7 @@ class CategoryActivity(override val layoutId: Int = R.layout.activity_order_cate
         get() = false
 
     override val whereIsIt: String
-        get() = intent.getStringExtra("whereIsIt")
+        get() = intent.getStringExtra(ContractSearchActivity.WHERE_IS_IT)
 
     override fun showUsaTime(isShow: Boolean) {
     }

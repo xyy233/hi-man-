@@ -21,7 +21,7 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<CategoryItemBean>>(data, object : TypeToken<ArrayList<CategoryItemBean>>() {}.type)
     }
 
-    fun getUnitJudgment(data:String): ArrayList<JudgmentUnitItemBean> {
+    fun getUnitJudgment(data: String): ArrayList<JudgmentUnitItemBean> {
         return Gson().fromJson<ArrayList<JudgmentUnitItemBean>>(data, object : TypeToken<ArrayList<JudgmentUnitItemBean>>() {}.type)
     }
 
@@ -110,8 +110,8 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<ReturnExpiredBean>>(data, object : TypeToken<ArrayList<ReturnExpiredBean>>() {}.type)
     }
 
-    fun getAli(data:String):AliQueryBean{
-        return Gson().fromJson(data,AliQueryBean::class.java)
+    fun getAli(data: String): AliQueryBean {
+        return Gson().fromJson(data, AliQueryBean::class.java)
     }
 
     fun getTrs(data: String): ArrayList<TrsBean> {
@@ -126,11 +126,11 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<TrsfItemBean>>(data, object : TypeToken<ArrayList<TrsfItemBean>>() {}.type)
     }
 
-    fun getOStore(data:String): ArrayList<OStoreBean> {
+    fun getOStore(data: String): ArrayList<OStoreBean> {
         return Gson().fromJson<ArrayList<OStoreBean>>(data, object : TypeToken<ArrayList<OStoreBean>>() {}.type)
     }
 
-    fun getPlu(data:String): ArrayList<PluItemBean> {
+    fun getPlu(data: String): ArrayList<PluItemBean> {
         return Gson().fromJson<ArrayList<PluItemBean>>(data, object : TypeToken<ArrayList<PluItemBean>>() {}.type)
     }
 
@@ -146,27 +146,48 @@ object GsonUtil {
         return Gson().fromJson<ArrayList<PaibanBean>>(data, object : TypeToken<ArrayList<PaibanBean>>() {}.type)
     }
 
-    @JvmStatic fun getAttendance(data: String): ArrayList<AttendanceBean> {
+    @JvmStatic
+    fun getAttendance(data: String): ArrayList<AttendanceBean> {
         return Gson().fromJson<ArrayList<AttendanceBean>>(data, object : TypeToken<ArrayList<AttendanceBean>>() {}.type)
     }
 
-    @JvmStatic fun getAttendanceUser(data: String): ArrayList<PaibanAttendanceBean> {
+    @JvmStatic
+    fun getAttendanceUser(data: String): ArrayList<PaibanAttendanceBean> {
         return Gson().fromJson<ArrayList<PaibanAttendanceBean>>(data, object : TypeToken<ArrayList<PaibanAttendanceBean>>() {}.type)
     }
 
-    @JvmStatic fun getUserBBTypeBean(data: String): ArrayList<UserBBTypeBean> {
+    @JvmStatic
+    fun getUserBBTypeBean(data: String): ArrayList<UserBBTypeBean> {
         return Gson().fromJson<ArrayList<UserBBTypeBean>>(data, object : TypeToken<ArrayList<UserBBTypeBean>>() {}.type)
     }
 
-    @JvmStatic fun getWorkHoursBean(data: String): ArrayList<WorkHoursBean> {
+    @JvmStatic
+    fun getWorkHoursBean(data: String): ArrayList<WorkHoursBean> {
         return Gson().fromJson<ArrayList<WorkHoursBean>>(data, object : TypeToken<ArrayList<WorkHoursBean>>() {}.type)
     }
 
-    @JvmStatic fun getAttendanceRecordingBean(data: String): ArrayList<AttendanceRecordingBean> {
+    @JvmStatic
+    fun getAttendanceRecordingBean(data: String): ArrayList<AttendanceRecordingBean> {
         return Gson().fromJson<ArrayList<AttendanceRecordingBean>>(data, object : TypeToken<ArrayList<AttendanceRecordingBean>>() {}.type)
     }
 
-    @JvmStatic fun getDistributionItemBean(data: String): ArrayList<DistributionItemBean> {
+    @JvmStatic
+    fun getDistributionItemBean(data: String): ArrayList<DistributionItemBean> {
         return Gson().fromJson<ArrayList<DistributionItemBean>>(data, object : TypeToken<ArrayList<DistributionItemBean>>() {}.type)
+    }
+
+    @JvmStatic
+    fun getMobileDetail(data: String): ArrayList<MobileDetailGsonBean> {
+        return Gson().fromJson<ArrayList<MobileDetailGsonBean>>(data, object : TypeToken<ArrayList<MobileDetailGsonBean>>() {}.type)
+    }
+
+    @JvmStatic
+    fun getMobilePlu(data: String): ArrayList<MobilePluBean> {
+        return Gson().fromJson<ArrayList<MobilePluBean>>(data, object : TypeToken<ArrayList<MobilePluBean>>() {}.type)
+    }
+
+    @JvmStatic
+    fun getMobileGondola(data: String): ArrayList<MobileGondolaGsonBean> {
+        return Gson().fromJson<ArrayList<MobileGondolaGsonBean>>(data, object : TypeToken<ArrayList<MobileGondolaGsonBean>>() {}.type)
     }
 }

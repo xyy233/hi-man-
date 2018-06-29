@@ -32,6 +32,7 @@ import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
+import com.cstore.zhiyazhang.cstoremanagement.view.mobilego.MobileGoActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.pay.PayActivity
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferErrorService
 import com.cstore.zhiyazhang.cstoremanagement.view.transfer.TransferService
@@ -147,7 +148,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
         val intentFilter = IntentFilter()
         intentFilter.addAction("com.cstore.zhiyazhang.UPDATE")
         registerReceiver(updateReceiver, intentFilter)
-        this.startService(Intent(this, UpdateService::class.java))
+//        this.startService(Intent(this, UpdateService::class.java))
         beginBulletin()
         //华东才开启调拨服务
         if (User.getUser().type == 0) {
@@ -201,6 +202,10 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                         startActivity(Intent(this@HomeActivity, WShelvesActivity::class.java),
                                 ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, view.itemView, "gg3").toBundle())
                     }
+                    7 -> {
+                        startActivity(Intent(this@HomeActivity, MobileGoActivity::class.java),
+                                ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity, view.itemView, "gg3").toBundle())
+                    }
                 }
             }
         })
@@ -217,6 +222,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             data.add(LogoBean(R.mipmap.zw_trs, getString(R.string.transz), 5))
             data.add(LogoBean(R.mipmap.w_shelves, getString(R.string.shelves), 6))
         }
+        data.add(LogoBean(R.drawable.no_img, getString(R.string.mobile_go), 7))
     }
 
     /**

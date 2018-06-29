@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <include
+        layout="@layout/layout_camera_search"/>
+
+    <EditText
+        android:id="@+id/gun_key"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:enabled="false"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:textColor="@color/transparent"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:ignore="LabelFor"/>
+
+    <TextView
+        android:id="@+id/scan_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+    <ProgressBar
+        android:id="@+id/pgb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="160dp"
+        android:visibility="gone"/>
+
+</FrameLayout>

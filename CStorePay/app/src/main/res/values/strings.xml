@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CStorePay</string>
+    <string name="prompt_qrcode">将二维码/条码放入框内，即可自动扫描</string>
+    <string name="noMessage">未查询到内容</string>
+    <string name="not_read_pay_msg">无法读取支付信息！</string>
+    <string name="open_permission">您未开启所需权限，请开启权限！</string>
+    <string name="get_permissions">重新获得权限</string>
+    <string name="scan_prompt_pos">请扫描POS机离线收银二维码！</string>
+    <string name="scan_prompt_user">请扫描客户支付二维码！</string>
+    <string name="notFindIP">不能获得IP地址，请检查网络</string>
+</resources>

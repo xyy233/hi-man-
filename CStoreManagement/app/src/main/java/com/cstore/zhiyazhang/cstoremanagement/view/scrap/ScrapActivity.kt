@@ -241,7 +241,7 @@ class ScrapActivity(override val layoutId: Int = R.layout.activity_scrap) : MyAc
      */
     private fun goQRCode() {
         val i = Intent(this@ScrapActivity, ContractSearchActivity::class.java)
-        i.putExtra("whereIsIt", "result")
+        i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.RES)
         startActivityForResult(i, 0)
     }
 

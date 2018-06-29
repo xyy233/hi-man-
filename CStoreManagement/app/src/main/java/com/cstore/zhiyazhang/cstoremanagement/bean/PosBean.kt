@@ -12,5 +12,8 @@ import java.io.Serializable
 data class PosBean(
         @SerializedName("tel_seq")var telSeq:String,
         @SerializedName("ass_pos")var assPos:Int,
+        /**
+         * 交易序号
+         */
         @SerializedName("next_tranno")var nextTranNo:Int
 ):Serializable

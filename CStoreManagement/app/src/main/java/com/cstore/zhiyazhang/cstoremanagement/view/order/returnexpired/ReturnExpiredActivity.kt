@@ -129,7 +129,7 @@ class ReturnExpiredActivity(override val layoutId: Int = R.layout.activity_cashd
      */
     fun goAdd() {
         val intent = Intent(this@ReturnExpiredActivity, ContractSearchActivity::class.java)
-        intent.putExtra("whereIsIt", "return")
+        intent.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.RTN)
         startActivityForResult(intent, 0)
     }
 

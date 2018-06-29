@@ -163,7 +163,7 @@ class UnitInquiryActivity(override val layoutId: Int = R.layout.activity_unit_in
         qrcode.setOnClickListener {
             if (MyCameraUtil.getPermissions(this)) {
                 val i = Intent(this@UnitInquiryActivity, ContractSearchActivity::class.java)
-                i.putExtra("whereIsIt", "return")
+                i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.RTN)
                 startActivityForResult(i, 0)
             }
         }

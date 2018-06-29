@@ -63,6 +63,7 @@
     <string name="qrcode_error">条码错误</string>
     <string name="open_photo">开启相册</string>
     <string name="view_all">查看全部</string>
+    <string name="download_apk">发现新版本，正在下载安装包</string>
     <!--主页-->
     <string name="store_photo">商形相机</string>
     <string name="commerce">商业</string>
@@ -395,6 +396,11 @@
     <string name="connected">已连接</string>
     <string name="connecting">连接中</string>
     <string name="conn_bluetooth">连接蓝牙打印机</string>
-    <string name="download_apk">发现新版本，正在下载安装包</string>
+
+    <!--魔急便-->
+    <string name="mobile_go">魔急便</string>
+    <string name="purchase">补货</string>
+    <string name="mobile_count">数量：</string>
+
 
 </resources>

@@ -36,13 +36,21 @@ class CheckInModel : CheckInInterface {
             }
             val user = GsonUtil.getUser(userData)[0]
             val watermarkText = uId + "  ${user.name}" + "\n" + MyTimeUtil.nowTimeString
-            val waterBmp = MyImage.createWatermark(bmp, watermarkText)
+            var fileName = ""
             val date = MyTimeUtil.nowTimeString2
             //这里创建文件夹的日期要加一，不知道为什么，但是在考勤里面拿资料的时候就是日期+1的
             val address = if (type == 0) {
-                "fileput C:\\rtcvs\\arr_photo\\${MyTimeUtil.tomorrowDate2}\\${User.getUser().storeId + uId + date}.jpg\u0004"
+                fileName = "${User.getUser().storeId + uId + date}.jpg"
+                "fileput C:\\rtcvs\\arr_photo\\${MyTimeUtil.tomorrowDate2}\\$fileName\u0004"
             } else {
-                "fileput C:\\rtcvs\\sign\\${MyTimeUtil.nowDate3}\\${User.getUser().storeId + uId + date}_daye.jpg\u0004"
+                fileName = "${User.getUser().storeId + uId + date}_daye.jpg"
+                "fileput C:\\rtcvs\\sign\\${MyTimeUtil.nowDate3}\\$fileName\u0004"
+            }
+            val waterBmp = MyImage.createWatermark(bmp, watermarkText)
+            if (!MyImage.saveImage(waterBmp, fileName)) {
+                msg.what = ERROR
+                msg.obj = "无法保存图片"
+                handler.sendMessage(msg)
             }
             val data = SocketUtil.initSocket(ip).inquire(waterBmp, address)
             if (data == "0") {

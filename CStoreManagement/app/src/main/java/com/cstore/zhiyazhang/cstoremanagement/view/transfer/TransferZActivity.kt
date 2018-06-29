@@ -106,7 +106,11 @@ class TransferZActivity(override val layoutId: Int = R.layout.activity_order) : 
         //超过两小时的订单都不显示
         val nowHour = MyTimeUtil.nowHour
         val removeData = ArrayList<TransServiceBean>()
-        aData.rows.forEach { if (nowHour >= it.disTime.toInt() + 2) removeData.add(it) }
+        aData.rows.forEach {
+            if (nowHour >= it.disTime.toInt() + 2) removeData.add(it)
+            //2018-06-26新增，小于当前记录小时的数据不显示
+            else if (it.disTime.toInt() < transTag.hour.toInt()) removeData.add(it)
+        }
         aData.rows.removeAll(removeData)
         adapter = TransferServiceAdapter(aData as TransResult, object : ItemClickListener {
             override fun onItemClick(view: RecyclerView.ViewHolder, position: Int) {

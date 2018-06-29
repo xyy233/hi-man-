@@ -264,14 +264,14 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
             if (android.os.Build.VERSION.SDK_INT >= 23) {
                 if (judgmentCarmer()) {
                     val i = Intent(this@CategoryItemActivity, ContractSearchActivity::class.java)
-                    i.putExtra("whereIsIt", "unitord")
+                    i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.UNIT)
                     startActivity(i)
                     finish()
                 }
             } else {
                 if (cameraIsCanUse()) {
                     val i = Intent(this@CategoryItemActivity, ContractSearchActivity::class.java)
-                    i.putExtra("whereIsIt", "unitord")
+                    i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.UNIT)
                     startActivity(i)
                     finish()
                 } else {
@@ -604,7 +604,8 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
         }
 
     override val whereIsIt: String
-        get() = intent.getStringExtra("whereIsIt")
+        get() = intent.getStringExtra(ContractSearchActivity.WHERE_IS_IT)
+
 
     override val categoryList: ArrayList<CategoryItemBean>
         get() = changeData
@@ -914,7 +915,7 @@ class CategoryItemActivity(override val layoutId: Int = R.layout.activity_contra
     //获取权限成功
     override fun onPermissionsGranted(requestCode: Int, list: List<String>) {
         val i = Intent(this@CategoryItemActivity, ContractSearchActivity::class.java)
-        i.putExtra("whereIsIt", "unitord")
+        i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.UNIT)
         startActivity(i)
     }
 

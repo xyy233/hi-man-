@@ -1919,7 +1919,7 @@ object MySql {
     /**
      * 创建中卫调出单
      */
-    fun createTrs(tb: TransItem, trsNumber: String, trsStore: String, busiDate:String): String {
+    fun createTrs(tb: TransItem, trsNumber: String, trsStore: String, busiDate: String): String {
         val trsNo = tb.storeTrsQty ?: tb.trsQty
         return "Insert into trs (StoreId,busiDate,trsID,trsNumber,itemNumber,shipNumber,storeUnitPrice,unitCost, " +
                 "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorId,supplierId) " +
@@ -1957,6 +1957,7 @@ object MySql {
                 "and inv.busidate = to_date('${MyTimeUtil.nowDate}', 'yyyy-mm-dd') " +
                 "and inv.itemnumber in ($finalStores)\u0004"
     }
+
 
     /**
      * 更新调出单
@@ -2742,5 +2743,64 @@ object MySql {
                 "and c.midcategorynumber=' ' " +
                 "and c.microcategorynumber=' ' " +
                 "and i.plunumber='$key'\u0004"
+    }
+
+    /********************************************魔急便*******************************************************/
+
+    /**
+     * 得到十天内的所有魔急便操作数据
+     */
+    fun getMobileData(): String {
+        return "SELECT th.tran_no,th.drivercode,th.arrive_time,tr.itemno,tr.qty,tr.max_qty,th.op_code FROM mjb_tranhead th, mjb_trandtl tr where th.tran_no=tr.tran_no and th.arrive_time>=trunc(sysdate-10)"
+    }
+
+    /**
+     * 根据条码查询到商品
+     */
+    fun getMobileItem(data: String): String {
+        return "SELECT m.itemnumber, m.pluname, m.storeunitprice, i.plunumber FROM mjb_plu m,itemplu i where m.itemnumber=i.itemnumber and plunumber='$data'\u0004"
+    }
+
+    /**
+     * 得到所有货架信息
+     */
+    fun getMobileGondola(): String {
+        return "SELECT p.itemnumber, p.pluname, p.storeunitprice, g.gondolaid, g.gondolaname, g.qty FROM mjb_gondolagroup g, mjb_plu p where g.itemnumber=p.itemnumber\u0004"
+    }
+
+    /**
+     * 得到今日最大单号
+     */
+    fun getMobileMaxTranNo(): String {
+        return "select value " +
+                "from (select t.tran_no value,row_number() over(order by t.tran_no desc) n " +
+                "from mjb_tranhead t " +
+                "where t.tran_no like '${MyTimeUtil.nowDate3}%' " +
+                "group by t.tran_no) " +
+                "where n=1\u0004"
+    }
+
+    /**
+     * 创建完成后确认是否已创建
+     */
+    fun getMobileIsExist(tranNo: String): String {
+        return "SELECT th.tran_no,th.drivercode,th.arrive_time,tr.itemno,tr.qty,tr.max_qty,th.op_code FROM mjb_tranhead th, mjb_trandtl tr where th.tran_no=tr.tran_no and th.tran_no=$tranNo"
+    }
+
+    /**
+     * 得到创建操作记录的语句
+     */
+    fun getMobileInsert(data: MobileDetailBean, mjbRtnMsg: String): String {
+        val result = StringBuilder()
+        result.append("insert into mjb_tranhead (storeid, tran_no, drivercode, arrive_time, max_amt, mjb_rtn_msg, op_code)" +
+                "values" +
+                "('${User.getUser().storeId}','${data.tranNo}','${data.driverCode}',sysdate, ${data.maxAmt},'$mjbRtnMsg','${data.opCode}')\u000c")
+        data.detail.forEach {
+            result.append("insert into mjb_trandtl (storeid, tran_no, itemno, qty, max_qty)" +
+                    "values" +
+                    "('${User.getUser().storeId}','${data.tranNo}','${it.itemNo}',${it.qty},${it.maxQty})\u000c")
+        }
+        result.append("\u0004")
+        return result.toString()
     }
 }

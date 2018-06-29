@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#5ac1d4</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="textColorPrimary">#000000</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#000000</color>
+    <color name="windowBackground">#dbdcdc</color>
+
+    <color name="pink">#FF4081</color>
+
+    <color name="black">#000000</color>
+    <color name="black_gray">#464547</color>
+    <color name="white">#ffffff</color>
+    <color name="grayw">#d9d6c3</color>
+    <color name="gray">#77787b</color>
+    <color name="gray2">#c9c9ca</color>
+    <color name="sort_gray">#dcdcdd</color>
+    <!--青褐-->
+    <color name="qinghe">#121a2a</color>
+    <!--银鼠-->
+    <color name="yingshu">#6f6d85</color>
+    <!--象牙色-->
+    <color name="xiangya">#f2eada</color>
+    <!--透明色-->
+    <color name="touming">#00000000</color>
+
+    <!--半透明灰色-->
+    <color name="touminghui">#88323232</color>
+
+    <color name="line">#dcdcdd</color>
+    <color name="gray3">#F2F2F2</color>
+    <color name="blackLine">#55000000</color>
+
+    <color name="cstore_red">#e1241f</color>
+    <color name="cstore_green">#15833b</color>
+    <color name="cstore_white">#feeeed</color>
+
+    <color name="sure">#f8b62c</color>
+
+    <color name="blue">#145b7d</color>
+    <color name="xinqiaose">#50b7c1</color>
+    <color name="delete_red">#88ff0000</color>
+
+    <color name="contract_bg">#d7ebf0</color>
+    <color name="item_bg">#b4b5b5</color>
+    <color name="add_less">#5bc1d5</color>
+    <color name="less_bg">#c4e0ce</color>
+    <color name="add_bg">#faf8cb</color>
+    <color name="is_edit">#eeefef</color>
+    <color name="type_name">#48b7c5</color>
+
+    <!--现金日报-->
+    <color name="item_green1">#8fed8f</color>
+    <color name="item_green2">#fefedf</color>
+
+    <color name="count_text">#009943</color>
+    <color name="black90">#383431</color><!--黑色 -->
+    <color name="dimgray">#696969</color><!--暗灰色 -->
+    <color name="whitesmoke">#F5F5F5</color><!--烟白色 -->
+</resources>

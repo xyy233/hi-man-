@@ -88,8 +88,8 @@ class PayActivity(override val layoutId: Int = R.layout.activity_pay) : MyActivi
     }
 
     override fun initView() {
-        /*toolbar_time.text = "退款"
-        toolbar_time.visibility = View.VISIBLE*/
+        toolbar_time.text = "退款"
+        toolbar_time.visibility = View.VISIBLE
         search_edit.hint = getString(R.string.idorcode)
         my_toolbar.title = "收款"
         toolbar_btn.text = "清空"

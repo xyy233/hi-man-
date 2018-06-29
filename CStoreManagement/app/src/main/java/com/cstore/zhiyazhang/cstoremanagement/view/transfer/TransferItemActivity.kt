@@ -183,7 +183,7 @@ class TransferItemActivity(override val layoutId: Int = R.layout.activity_transf
         }
         qrcode.setOnClickListener {
             val i = Intent(this@TransferItemActivity, ContractSearchActivity::class.java)
-            i.putExtra("whereIsIt", "return")
+            i.putExtra(ContractSearchActivity.WHERE_IS_IT, ContractSearchActivity.RTN)
             startActivityForResult(i, 0)
         }
         toolbar_btn.setOnClickListener {

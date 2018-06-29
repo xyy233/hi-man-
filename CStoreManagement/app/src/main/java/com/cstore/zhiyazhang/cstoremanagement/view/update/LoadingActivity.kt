@@ -77,16 +77,20 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     private val myListener = object : MyListener {
 
         override fun listenerSuccess(data: Any) {
-            val updates = Gson().fromJson(data as String, UpdateBean::class.java)
-            //如果版本号不同就去下载
-            if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
-                isUpdate = true
-                downloadUrl = updates.downloadUrl
-                image_box.startAnimation(updateAnimation)
-                pg_box.visibility = View.VISIBLE
-                pg_box.startAnimation(AnimationUtils.loadAnimation(this@LoadingActivity, R.anim.anim_slide_in))
-            } else {
-                image_box.startAnimation(animation)
+            try {
+                val updates = Gson().fromJson(data as String, UpdateBean::class.java)
+                //如果版本号不同就去下载
+                if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
+                    isUpdate = true
+                    downloadUrl = updates.downloadUrl
+                    image_box.startAnimation(updateAnimation)
+                    pg_box.visibility = View.VISIBLE
+                    pg_box.startAnimation(AnimationUtils.loadAnimation(this@LoadingActivity, R.anim.anim_slide_in))
+                } else {
+                    image_box.startAnimation(animation)
+                }
+            } catch (e: Exception) {
+                listenerFailed(data as String)
             }
         }
 
