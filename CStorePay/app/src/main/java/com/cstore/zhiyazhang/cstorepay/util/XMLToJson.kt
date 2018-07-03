@@ -9,7 +9,7 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson
 object XMLToJson {
     fun xmlToJson(data: String): String {
         return try {
-            val result = XmlToJson.Builder(data).build()
+            val result = XmlToJson.Builder(data.replace("\n", "")).build()
             result.toJson().toString()
         } catch (e: Exception) {
             e.printStackTrace()

@@ -62,7 +62,7 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
         } else {
             done.visibility = View.GONE
         }
-        toolbar_btn.visibility = View.VISIBLE
+//        toolbar_btn.visibility = View.VISIBLE
         showAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in)
         hideAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out)
         connection()
@@ -156,13 +156,19 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
         adapter.changeShowEdit(false)
         done.visibility = View.GONE
         toolbar_btn.visibility = View.VISIBLE
-        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+        /*AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                 .setTitle("打印提示")
                 .setMessage("是否打印拣货单？")
                 .setPositiveButton("确认", { _, _ ->
                     print()
                 })
                 .setNegativeButton("放弃") { _, _ -> }
+                .show()*/
+        AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
+                .setTitle("提示")
+                .setMessage("调拨完成！")
+                .setPositiveButton("确认", { _, _ ->
+                })
                 .show()
     }
 

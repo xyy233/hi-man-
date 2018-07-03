@@ -10,6 +10,7 @@ import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.view.PayDataService
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.zhy.http.okhttp.OkHttpUtils
+import com.zhy.http.okhttp.https.HttpsUtils
 import okhttp3.OkHttpClient
 import java.net.Inet4Address
 import java.net.NetworkInterface
@@ -147,9 +148,12 @@ class MyApplication : Application() {
 
         ZXingLibrary.initDisplayOpinion(this)
 
+
+        val sslParams = HttpsUtils.getSslSocketFactory(null, null, null)
         val okHttp: OkHttpClient = OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .build()
         OkHttpUtils.initClient(okHttp)
 

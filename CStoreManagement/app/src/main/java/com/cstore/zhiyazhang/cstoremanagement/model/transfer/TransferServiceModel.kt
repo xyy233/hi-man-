@@ -72,7 +72,7 @@ class TransferServiceModel : TransferServiceInterface {
         } else {
             msg.what = ERROR
             val x = response.body().string().toString()
-            msg.obj = x.substring(x.indexOf("HTTP Status 500 - ") + 18, x.indexOf("</h1><div class=\"line\">"))
+            msg.obj = x.substring(x.indexOf("HTTP Status") + 25, x.indexOf("</h1><div class=\"line\">"))
             handler.sendMessage(msg)
             return false
         }

@@ -5,11 +5,14 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
+import android.view.View
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.LogoBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.MobileDriverBean
+import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
+import com.cstore.zhiyazhang.cstoremanagement.model.mobile.MobileUtil
 import com.cstore.zhiyazhang.cstoremanagement.presenter.LogoAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.cstore.zhiyazhang.cstoremanagement.view.order.contract.ContractSearchActivity
 import com.zhiyazhang.mykotlinapplication.utils.recycler.ItemClickListener
 import kotlinx.android.synthetic.main.activity_coi.*
@@ -25,6 +28,21 @@ class MobileGoActivity(override val layoutId: Int = R.layout.activity_coi) : MyA
     }
 
     private var driverCode: String? = null
+    private val driverListener = object : MyListener {
+        override fun listenerSuccess(data: Any) {
+            data as MobileDriverBean
+            hideLoading()
+            showPrompt("司机${data.data.driverName}检测通过！")
+        }
+
+        override fun listenerFailed(errorMessage: String) {
+            hideLoading()
+            showPrompt("检测未通过！$errorMessage")
+            finish()
+        }
+    }
+
+
     override fun initView() {
         my_toolbar.title = getString(R.string.mobile_go)
         my_toolbar.setNavigationIcon(R.drawable.ic_action_back)
@@ -67,11 +85,10 @@ class MobileGoActivity(override val layoutId: Int = R.layout.activity_coi) : MyA
                 val msg = data.getStringExtra("message")
                 if (msg != null) {
                     driverCode = msg
-                    return
+                    showLoading()
+                    MobileUtil.judgmentDriver(driverCode!!, driverListener)
                 }
             }
-            MyToast.getLongToast("司机检测未通过！")
-            finish()
         }
     }
 
@@ -85,6 +102,14 @@ class MobileGoActivity(override val layoutId: Int = R.layout.activity_coi) : MyA
             android.R.id.home -> onBackPressed()
         }
         return true
+    }
+
+    override fun showLoading() {
+        loading.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        loading.visibility = View.GONE
     }
 
 }

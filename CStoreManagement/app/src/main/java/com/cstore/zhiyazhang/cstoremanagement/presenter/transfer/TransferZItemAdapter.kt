@@ -48,10 +48,12 @@ class TransferZItemAdapter(val data: ArrayList<TransItem>, private var isShowEdi
             if (isShowEdit) {
                 //调拨量大于库存就要修改量为库存
                 if (d.trsQty > d.inv!!) {
-                    if (d.inv!! < 0) {
-                        d.storeTrsQty = 0
-                    } else {
-                        d.storeTrsQty = d.inv
+                    if (d.storeTrsQty==null){
+                        if (d.inv!! < 0) {
+                            d.storeTrsQty = 0
+                        } else {
+                            d.storeTrsQty = d.inv
+                        }
                     }
                 }
             }

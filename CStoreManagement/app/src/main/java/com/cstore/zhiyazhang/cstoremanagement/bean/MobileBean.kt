@@ -189,3 +189,20 @@ data class MobileGondolaGsonBean(
         @SerializedName("gondolaname") val gondolaName: String,
         @SerializedName("qty") val qty: Int
 ) : Serializable
+
+data class MobileDriverBean(
+        val data: MobileDataBean,
+        @SerializedName("err_msg")val errMsg:String,
+        @SerializedName("err_code")val errCode:String,
+        val success:Boolean
+) : Serializable
+
+data class MobileErrorBean(
+        @SerializedName("err_msg")val errMsg:String,
+        @SerializedName("err_code")val errCode:String,
+        val success:Boolean
+):Serializable
+
+data class MobileDataBean(
+        val driverName: String
+) : Serializable

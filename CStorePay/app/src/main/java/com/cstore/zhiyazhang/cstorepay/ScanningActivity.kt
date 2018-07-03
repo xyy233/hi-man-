@@ -62,12 +62,12 @@ class ScanningActivity : AppCompatActivity() {
             "            <out_trade_no>1111121636801</out_trade_no>\n" +
             "            <result_code>ORDER_SUCCESS_PAY_SUCCESS</result_code>\n" +
             "            <total_fee>3.90</total_fee>\n" +
-            "            <trade_no>2018062621001004700531808391</trade_no>\n" +
+            "            <trade_no>2018062621001004700531808391\n" +
+            "</trade_no>\n" +
             "        </alipay>\n" +
             "    </response>\n" +
             "    <sign>993bc78bce31e7e40ca5a4997ef4ba88</sign>\n" +
-            "    <sign_type>MD5\n" +
-            "    </sign_type>\n" +
+            "    <sign_type>MD5</sign_type>\n" +
             "</alipay>"
     private val isGun = MyApplication.usbGunJudgment()
     private val capture = CaptureFragment()

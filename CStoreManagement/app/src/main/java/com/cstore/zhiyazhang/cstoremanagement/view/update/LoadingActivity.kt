@@ -95,9 +95,14 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
         }
 
         override fun listenerFailed(errorMessage: String) {
+            val msg = try {
+                errorMessage.substring(errorMessage.indexOf("HTTP Status") + 25, errorMessage.indexOf("</h1><div class=\"line\">"))
+            } catch (e: Exception) {
+                errorMessage
+            }
             AlertDialog.Builder(ContextThemeWrapper(this@LoadingActivity, R.style.AlertDialogCustom))
                     .setTitle("提示")
-                    .setMessage("网络异常，请重试或联系系统部\n$errorMessage")
+                    .setMessage("网络异常，请重试或联系系统部\n$msg")
                     .setPositiveButton("重试") { _, _ ->
                         judgementUpdate()
                     }
