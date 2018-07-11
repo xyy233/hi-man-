@@ -17,5 +17,6 @@ data class UtilBean(
 
 data class HttpBean(
         val code: Int,
+        val data: Any?,
         val msg: String
 ) : Serializable

@@ -94,25 +94,6 @@
 #动态权限
 -keep class pub.devrel.easypermissions.**{*;}
 -dontwarn pub.devrel.easypermissions.**
-#Glide图形加载
--keep class com.bumptech.glide.**{*;}
--dontwarn com.bumptech.glide.**
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-#图片view,随意拖动放大缩小
--keep class com.github.chrisbanes.photoview.**{*;}
--dontwarn com.github.chrisbanes.photoview.**
-
-##http请求
-#-dontwarn com.squareup.okhttp3.**
-#-keep class com.squareup.okhttp3.** { *;}
-#-dontwarn okio.**
-#-keep class com.zhy.http.okhttp.**{*;}
-#-keep class com.zhy.http.okhttp.**
-
 #okhttputils
 -dontwarn com.zhy.http.**
 -keep class com.zhy.http.**{*;}
@@ -122,7 +103,6 @@
 #okio
 -dontwarn okio.**
 -keep class okio.**{*;}
-
 #Gson
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.** { *; }
@@ -134,39 +114,9 @@
 #wxpay
 -keep class com.github.wxpay.sdk.**{*;}
 -dontwarn com.github.wxpay.sdk.**
-#alipay
--keep class com.alipay.api.**{*;}
--dontwarn com.alipay.api.**
-#Google pano
-#-keep class com.google.**{*;}
-#-dontwarn com.google.**
-#tray
--keep class net.grandcentrix.tray.**{*;}
--dontwarn net.grandcentrix.tray.**
-
--ignorewarnings
-
--keep class com.gprinter.**{*;}
--dontwarn com.gprinter.**
-
--keep class taobe.tec.jcc.**{*;}
--dontwarn taobe.tec.jcc.**
-
--keep class org.kobjects.**{*;}
--dontwarn org.kobjects.**
-
--keep class org.ksoap2.**{*;}
--dontwarn org.ksoap2.**
-
--keep class org.kxml2.**{*;}
--dontwarn org.kxml2.**
-
--keep class org.xmlpull.**{*;}
--dontwarn org.xmlpull.**
-
--keep class com.lidroid.xutils.**{*;}
--dontwarn com.lidroid.xutils.**
 
 -keep fr.arnaudguyon.xmltojsonlib.**{*;}
 -dontwarn fr.arnaudguyon.xmltojsonlib.**
+
+-ignorewarnings
 

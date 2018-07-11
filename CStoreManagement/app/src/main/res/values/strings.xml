@@ -377,6 +377,12 @@
     <string name="distribution">W配送</string>
     <string name="systrsqty">系统调拨数量：</string>
     <string name="gettrsqty">拣货数量：</string>
+    <string name="trs_fee">配送费：</string>
+    <string name="click_edit_trs_fee">(点击修改上传)</string>
+    <string name="trs_done">确认收货</string>
+    <string name="trs_is_done">已送达</string>
+    <string name="delivery_time">发货时间：</string>
+    <string name="trs_whether_done">是否确认已收到当前调拨</string>
 
     <!--打印机-->
     <string name="printer">打印机</string>

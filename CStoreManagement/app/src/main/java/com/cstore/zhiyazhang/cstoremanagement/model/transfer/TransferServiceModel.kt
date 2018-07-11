@@ -110,7 +110,7 @@ class TransferServiceModel : TransferServiceInterface {
                     if (data.isInt == 0) {
                         data.isInt = goInternet(data)
                     }
-                    db.updateSQL(data, data.isSc!!, data.isInt!!)
+                    db.updateSQL(data)
                 } catch (e: Exception) {
                 }
             }
@@ -129,7 +129,9 @@ class TransferServiceModel : TransferServiceInterface {
             if (sql == "ERROR") return@Runnable
             val isSc = goSC(data.requestNumber!!, sql, ip)
             val isInt = goInternet(data)
-            db.updateSQL(data, isSc, isInt)
+            data.isSc = isSc
+            data.isInt = isInt
+            db.updateSQL(data)
 
             //如果有异常产生就去开启服务
             try {
@@ -180,54 +182,6 @@ class TransferServiceModel : TransferServiceInterface {
             0
         }
     }
-
-    /*override fun doneTrs(db: TranDao, data: TransServiceBean, handler: MyHandler) {
-        Thread(Runnable {
-            val msg = Message()
-            val ip = MyApplication.getIP()
-            if (!SocketUtil.judgmentIP(ip, msg, handler)) return@Runnable
-            //不知道为什么门市有异常，测试是没问题的，先禁止掉
-            //2018-06-07 修改测试，稳了？发个版本瞧瞧
-            if (!judgmentIsRequestNumber(data, msg, handler)) return@Runnable
-            val sql = getCreateTrsSql(data, ip, msg, handler)
-            if (sql == "ERROR") return@Runnable
-            //改为先上传总部再插入数据库,只有上传总部成功才能插入数据库
-            val resultData = requestData(data, 0)
-            if (resultData != "SUCCESS") {
-                msg.what = ERROR
-                msg.obj = resultData
-                handler.sendMessage(msg)
-                return@Runnable
-            }
-            val result = SocketUtil.initSocket(ip, sql).inquire()
-            try {
-                //通过查询是否已有此单号判断是否创建成功
-                val judgementSql = MySql.judgmentTrsNumber(data.requestNumber!!)
-                val jResult = SocketUtil.initSocket(ip, judgementSql).inquire()
-                val jr = GsonUtil.getUtilBean(jResult)
-                if ((jr[0].value)!!.toInt() == 0) {
-                    //把总部数据覆盖回去
-                    data.requestNumber = null
-                    requestData(data, 0)
-                    msg.obj = "创建订单异常！请重试！$result"
-                    msg.what = ERROR
-                    handler.sendMessage(msg)
-                    return@Runnable
-                } else {
-                    msg.obj = "SUCCESS"
-                    msg.what = SUCCESS
-                    handler.sendMessage(msg)
-                }
-            } catch (e: Exception) {
-                //把总部数据覆盖回去
-                data.requestNumber = null
-                requestData(data, 0)
-                msg.obj = "服务器异常，确定连在内网中，确定服务器正常"
-                msg.what = ERROR
-                handler.sendMessage(msg)
-            }
-        }).start()
-    }*/
 
     /**
      * 获得中卫商品库存、零售
@@ -286,7 +240,7 @@ class TransferServiceModel : TransferServiceInterface {
             if (count == 10) {
                 try {
                     val x = response.body().string().toString()
-                    x.substring(x.indexOf("HTTP Status 500 - ") + 18, x.indexOf("</h1><div class=\"line\">"))
+                    x.substring(x.indexOf("HTTP Status") + 25, x.indexOf("</h1><div class=\"line\">"))
                 } catch (e: Exception) {
                     "网络异常！"
                 }
@@ -329,6 +283,82 @@ class TransferServiceModel : TransferServiceInterface {
         return result.toString()
     }
 
+    override fun updateDone(db: TranDao, tb: TransServiceBean, handler: MyHandler) {
+        val json = Gson().toJson(tb)
+        OkHttpUtils.postString()
+                .url(AppUrl.UPDATE_TRS_DONE)
+                .content(json)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .build()
+                .execute(object : MyStringCallBack(object : MyListener {
+                    override fun listenerSuccess(data: Any) {
+                        val msg = Message()
+                        tb.isDone = 1
+                        db.updateSQL(tb)
+                        msg.obj = data
+                        msg.what = SUCCESS
+                        handler.sendMessage(msg)
+                    }
+
+                    override fun listenerFailed(errorMessage: String) {
+                        val msg = Message()
+                        msg.obj = errorMessage
+                        msg.what = ERROR
+                        handler.sendMessage(msg)
+                    }
+                }) {
+                    override fun onResponse(response: String?, id: Int) {
+                        try {
+                            val result = Gson().fromJson(response!!, HttpBean::class.java)
+                            if (result.code == 0)
+                                this.listener.listenerSuccess("")
+                            else
+                                this.listener.listenerFailed(result.msg)
+                        } catch (e: Exception) {
+                            this.listener.listenerFailed(e.message.toString())
+                        }
+                    }
+                })
+    }
+
+    override fun updateFee(db: TranDao, tb: TransServiceBean, handler: MyHandler) {
+        val json = Gson().toJson(tb)
+        OkHttpUtils.postString()
+                .url(AppUrl.UPDATE_TRS_FEE)
+                .content(json)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .build()
+                .execute(object : MyStringCallBack(object : MyListener {
+                    override fun listenerSuccess(data: Any) {
+                        val msg = Message()
+                        db.updateSQL(tb)
+                        msg.obj = data
+                        msg.what = SUCCESS
+                        handler.sendMessage(msg)
+                    }
+
+                    override fun listenerFailed(errorMessage: String) {
+                        val msg = Message()
+                        msg.obj = errorMessage
+                        msg.what = ERROR
+                        handler.sendMessage(msg)
+                    }
+                }) {
+                    override fun onResponse(response: String?, id: Int) {
+                        try {
+                            val result = Gson().fromJson(response!!, HttpBean::class.java)
+                            if (result.code == 0) {
+                                this.listener.listenerSuccess("")
+                            } else {
+                            }
+                            this.listener.listenerFailed(result.msg)
+                        } catch (e: Exception) {
+                            this.listener.listenerFailed(e.message.toString())
+                        }
+                    }
+                })
+    }
+
 }
 
 interface TransferServiceInterface {
@@ -353,4 +383,14 @@ interface TransferServiceInterface {
     fun doneTrs(db: TranDao, data: TransServiceBean, handler: MyHandler)
 
     fun serviceDoneTrs(db: TranDao, datas: ArrayList<TransServiceBean>, handler: MyHandler)
+
+    /**
+     * 插入调出的配送费
+     */
+    fun updateFee(db: TranDao, tb: TransServiceBean, handler: MyHandler)
+
+    /**
+     * 调入确认送达
+     */
+    fun updateDone(db: TranDao, tb: TransServiceBean, handler: MyHandler)
 }

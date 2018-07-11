@@ -1,8 +1,6 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
-import android.os.Looper
 import android.os.Message
-import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
@@ -38,9 +36,6 @@ object CStoreCalendar {
             if (i == 2) break
         }
         if (i == 2) {
-            Log.e("CStoreCalendar", "获得换日表失败")
-            Looper.prepare()
-            Looper.loop()
             return ERROR_MSG
         }
         data.clear()

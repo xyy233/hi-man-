@@ -10,9 +10,12 @@ import android.util.Log
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransItem
 import com.cstore.zhiyazhang.cstoremanagement.bean.TransServiceBean
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.COMMA_SEP
+import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.DOUBLE_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.INT_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.sql.SQLData.TEXT_TYPE
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.DIS_TIME
+import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.FEE_UPD_TIME
+import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.IS_DONE
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.IS_INT
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.IS_SC
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.ITEMS
@@ -22,6 +25,7 @@ import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.S
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRAN_DATE
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRAN_ID
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRAN_TABLE_NAME
+import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRS_FEE
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRS_QTYS
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRS_STORE_ID
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranData.TranEntry.Companion.TRS_STORE_NAME
@@ -58,6 +62,9 @@ object TranData {
             val ITEMS = "items"
             val IS_SC = "is_sc"//是否上传sc  1==完成  0==未完成
             val IS_INT = "is_int"//是否网络上传总部 1==完成  0==未完成
+            val IS_DONE = "isDone"//是否已验收，只对调入
+            val TRS_FEE = "trsFee"//配送费用，只对调出
+            val FEE_UPD_TIME = "feeUpdTime"//配送时间，只对调出
             val CREATE_TIME = "create_time"
 
             val SQLITE_CREATE = "create table if not exists $TRAN_TABLE_NAME (" +
@@ -76,6 +83,9 @@ object TranData {
                     "$ITEMS$TEXT_TYPE$COMMA_SEP" +
                     "$IS_SC$INT_TYPE$COMMA_SEP" +
                     "$IS_INT$INT_TYPE$COMMA_SEP" +
+                    "$IS_DONE$INT_TYPE$COMMA_SEP" +
+                    "$TRS_FEE$DOUBLE_TYPE$COMMA_SEP" +
+                    "$FEE_UPD_TIME$TEXT_TYPE$COMMA_SEP" +
                     "$CREATE_TIME DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')))"
 
             val SQLITE_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TRAN_TABLE_NAME"
@@ -100,14 +110,17 @@ class TranDao(context: Context) {
     /**
      * 更新调拨数据
      */
-    fun updateSQL(bean: TransServiceBean, isSc: Int, isInt: Int) {
+    fun updateSQL(bean: TransServiceBean) {
         val db = tranHelper.writableDatabase
         db!!.beginTransaction()
         try {
             val values = ContentValues()
             values.put(REQ_NO, bean.requestNumber)
-            values.put(IS_SC, isSc)
-            values.put(IS_INT, isInt)
+            values.put(IS_SC, bean.isSc)
+            values.put(IS_INT, bean.isInt)
+            values.put(IS_DONE, bean.isDone)
+            values.put(TRS_FEE, bean.trsFee)
+            values.put(FEE_UPD_TIME, bean.feeUpdTime)
             val items = Gson().toJson(bean.items)
             values.put(ITEMS, items)
             db.update(TRAN_TABLE_NAME, values, "$TRAN_DATE=? and $STORE_ID=? and $TRS_STORE_ID=? and $DIS_TIME=? and $TRS_TYPE=?",
@@ -186,11 +199,15 @@ class TranDao(context: Context) {
                 values.put(REQ_NO, bean.requestNumber)
                 val items = Gson().toJson(bean.items)
                 values.put(ITEMS, items)
+                if (bean.isDone == null) bean.isDone = 0
+                values.put(IS_DONE, bean.isDone)
+                values.put(TRS_FEE, bean.trsFee)
+                values.put(FEE_UPD_TIME, bean.feeUpdTime)
                 //如果已存在单号就判断为成功
-                if (bean.requestNumber!=null){
-                    bean.isSc=1
-                    bean.isInt=1
-                }else{
+                if (bean.requestNumber != null) {
+                    bean.isSc = 1
+                    bean.isInt = 1
+                } else {
                     if (bean.isSc == null) bean.isSc = 0
                     if (bean.isInt == null) bean.isInt = 0
                 }
@@ -236,10 +253,10 @@ class TranDao(context: Context) {
      */
     fun getAberrantData(): ArrayList<TransServiceBean> {
         val db = tranHelper.readableDatabase
-        val sql = "select * from $TRAN_TABLE_NAME where $TRAN_DATE = ? and $REQ_NO is not null and $TRS_TYPE = ? and ($IS_SC = ? or $IS_INT = ?)"
+        val sql = "select * from $TRAN_TABLE_NAME where $REQ_NO is not null and $TRS_TYPE = ? and ($IS_SC = ? or $IS_INT = ?)"
         var cursor: Cursor? = null
         try {
-            cursor = db.rawQuery(sql, arrayOf(MyTimeUtil.nowDate, "-1", "0", "0"))
+            cursor = db.rawQuery(sql, arrayOf("-1", "0", "0"))
             if (cursor.count > 0) {
                 val result = ArrayList<TransServiceBean>()
                 while (cursor.moveToNext()) {
@@ -308,6 +325,9 @@ class TranDao(context: Context) {
         val isSc = cursor.getInt(cursor.getColumnIndex(IS_SC))
         val isInt = cursor.getInt(cursor.getColumnIndex(IS_INT))
         val busiDate = cursor.getString(cursor.getColumnIndex(TRAN_DATE))
-        return TransServiceBean(storeId, storeName, type, trsStoreId, trsStoreName, trsType, disTime, trsQtys, updTime, reqNo, null, items, isSc, isInt, busiDate)
+        val isDone = cursor.getInt(cursor.getColumnIndex(IS_DONE))
+        val trsFee = cursor.getString(cursor.getColumnIndex(TRS_FEE))?.toDouble()
+        val feeUpdTime = cursor.getString(cursor.getColumnIndex(FEE_UPD_TIME))
+        return TransServiceBean(storeId, storeName, type, trsStoreId, trsStoreName, trsType, disTime, trsQtys, updTime, reqNo, null, items, isSc, isInt, busiDate, isDone, trsFee, feeUpdTime)
     }
 }

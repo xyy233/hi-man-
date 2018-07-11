@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.view.transfer
 
-import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -17,9 +16,7 @@ import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferService
 import com.cstore.zhiyazhang.cstoremanagement.presenter.transfer.TransferZItemAdapter
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil.nowHour
-import com.cstore.zhiyazhang.cstoremanagement.utils.printer.PrinterServiceConnection
 import com.cstore.zhiyazhang.cstoremanagement.utils.recycler.MyLinearlayoutManager
-import com.gprinter.service.GpPrintService
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import java.math.BigDecimal
@@ -32,7 +29,7 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
     private lateinit var trsData: TransServiceBean
     private val presenter = TransferServicePresenter(this)
     private lateinit var adapter: TransferZItemAdapter
-    private var conn: PrinterServiceConnection? = null
+//    private var conn: PrinterServiceConnection? = null
 
     private lateinit var showAction: Animation
     private lateinit var hideAction: Animation
@@ -65,7 +62,7 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
 //        toolbar_btn.visibility = View.VISIBLE
         showAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in)
         hideAction = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out)
-        connection()
+//        connection()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -76,11 +73,11 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
     }
 
 
-    private fun connection() {
+    /*private fun connection() {
         conn = PrinterServiceConnection(null)
         val i = Intent(this, GpPrintService::class.java)
         bindService(i, conn, Context.BIND_AUTO_CREATE)
-    }
+    }*/
 
     override fun initClick() {
         done.setOnClickListener {
@@ -124,14 +121,14 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
             }
         })
         toolbar_btn.setOnClickListener {
-            print()
+//            print()
         }
         orderLoading.setOnClickListener {
             showPrompt(getString(R.string.wait_loading))
         }
     }
 
-    private fun print() {
+    /*private fun print() {
         if (conn!!.getConnectState()) {
             //打印
             if (trsData.requestNumber == null || trsData.requestNumber == "") {
@@ -143,12 +140,12 @@ class TransferZItemActivity(override val layoutId: Int = R.layout.activity_order
             //去连接
             conn!!.goActivity(this@TransferZItemActivity, true)
         }
-    }
+    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 28) {
-            print()
+//            print()
         }
     }
 

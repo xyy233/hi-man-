@@ -222,7 +222,7 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
             data.add(LogoBean(R.mipmap.zw_trs, getString(R.string.transz), 5))
             data.add(LogoBean(R.mipmap.w_shelves, getString(R.string.shelves), 6))
         }
-        data.add(LogoBean(R.drawable.no_img, getString(R.string.mobile_go), 7))
+//        data.add(LogoBean(R.drawable.no_img, getString(R.string.mobile_go), 7))
     }
 
     /**

@@ -34,7 +34,7 @@ class SQLDBHelper(context: Context) : SQLiteOpenHelper(context, SQLData.DB_NAME,
 
 object SQLData {
     val DB_NAME = "app_cstore.db"
-    val DB_VERSION = 11
+    val DB_VERSION = 12
     val TEXT_TYPE = " TEXT"
     val COMMA_SEP = ","
     val DOUBLE_TYPE = " REAL"

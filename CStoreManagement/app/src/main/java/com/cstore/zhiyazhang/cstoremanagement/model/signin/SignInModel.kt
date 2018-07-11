@@ -1,6 +1,5 @@
 package com.cstore.zhiyazhang.cstoremanagement.model.signin
 
-import android.os.Looper
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
@@ -22,7 +21,6 @@ class SignInModel : SignInInterface {
 
     override fun login( uid:String, password:String, myHandler: MyHandler) {
         Thread(Runnable {
-            Looper.prepare()
             val msg = Message()
             val ip = MyApplication.getIP()
             if (!SocketUtil.judgmentIP(ip, msg, myHandler)) return@Runnable
@@ -66,7 +64,6 @@ class SignInModel : SignInInterface {
                     myHandler.sendMessage(msg)
                 }
             }
-            Looper.loop()
         }).start()
     }
 }

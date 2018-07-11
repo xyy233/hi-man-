@@ -18,8 +18,10 @@ object AppUrl {
     val CONNECTION_HEADER = "Connection"
     val CONNECTION_SWITCH = "close"
     val IS_JUST_LOOK = "is_just_look"
+    val requestNumber = "requestnumber"
 
     private var appIp: String = "http://wx2.rt-store.com/app/"//"http://watchstore.rt-store.com:8086/app/"
+    val APP_CONFIG = appIp + "config.do"
     val CONTRACT_TYPE_URL = appIp + "order/getGroups.do"
     val CONTRACT_URL = appIp + "order/getItemsByGroupId.do"
     val ALL_EDITT_CONTRACT = appIp + "order/getUpdatedItems.do"
@@ -37,4 +39,6 @@ object AppUrl {
     val GET_DISTRIBUTION = appIp + "distribution/get.do"
     val GET_DISTRIBUTION_ITEM = appIp + "distribution/get_item.do"
     val GET_DISTRIBUTION_SAVE = appIp + "distribution/save.do"
+    val UPDATE_TRS_FEE = appIp + "trs/updateFee.do"
+    val UPDATE_TRS_DONE = appIp + "trs/updateDone.do"
 }

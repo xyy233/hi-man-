@@ -9,6 +9,7 @@ import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceInterface
 import com.cstore.zhiyazhang.cstoremanagement.model.transfer.TransferServiceModel
 import com.cstore.zhiyazhang.cstoremanagement.sql.TranDao
+import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl.requestNumber
 import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.interfaceview.GenericView
 import com.google.gson.Gson
@@ -147,5 +148,55 @@ class TransferServicePresenter(private val view: GenericView) {
             }
         })
         model.doneTrs(db, data, handler)
+    }
+
+    fun updateFee() {
+        val data = view.getData1()
+        if (data == null || data !is TransServiceBean) {
+            view.showPrompt("数据类型错误！")
+            return
+        }
+        if (!PresenterUtil.judgmentInternet(view)) return
+        val handler = MyHandler()
+        handler.writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                view.updateDone(requestNumber)
+                view.hideLoading()
+                handler.cleanAll()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                view.showPrompt(errorMessage)
+                view.errorDealWith(errorMessage)
+                view.hideLoading()
+                handler.cleanAll()
+            }
+        })
+        model.updateFee(db, data, handler)
+    }
+
+    fun updateDone() {
+        val data = view.getData1()
+        if (data == null || data !is TransServiceBean) {
+            view.showPrompt("数据类型错误！")
+            return
+        }
+        if (!PresenterUtil.judgmentInternet(view)) return
+        val handler = MyHandler()
+        handler.writeListener(object : MyListener {
+            override fun listenerSuccess(data: Any) {
+                view.updateDone(requestNumber)
+                view.hideLoading()
+                handler.cleanAll()
+            }
+
+            override fun listenerFailed(errorMessage: String) {
+                view.showPrompt(errorMessage)
+                view.errorDealWith(errorMessage)
+                view.hideLoading()
+                handler.cleanAll()
+            }
+        })
+        model.updateDone(db, data, handler)
     }
 }

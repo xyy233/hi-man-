@@ -25,7 +25,10 @@ data class TransServiceBean(
         var items: ArrayList<TransItem>,
         var isSc: Int?,//是否上传至sc
         var isInt: Int?,//是否上传至网络
-        var busiDate: String?
+        var busiDate: String?,
+        var isDone: Int?,//是否确定到达，只对调入有效
+        @SerializedName("trs_fee")var trsFee: Double?,//配送费用，只对调出有效
+        @SerializedName("fee_upd_time")var feeUpdTime: String?//送出时间
 ) : Serializable
 
 data class TransItem(

@@ -12,7 +12,7 @@ data class User(
         /**
          * 店号
          */
-        @SerializedName("storeid") val storeId: String,
+        @SerializedName("storeid") var storeId: String,
         /**
          * 人id
          */
@@ -113,6 +113,7 @@ data class User(
                         sp.getInt("type", 0)
                 )
             }
+//            staticUser!!.storeId="150904"
             return staticUser!!
         }
 

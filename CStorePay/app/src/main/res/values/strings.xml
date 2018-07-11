@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CStorePay</string>
+    <string name="app_name">喜士多移动收银</string>
     <string name="prompt_qrcode">将二维码/条码放入框内，即可自动扫描</string>
     <string name="noMessage">未查询到内容</string>
     <string name="not_read_pay_msg">无法读取支付信息！</string>

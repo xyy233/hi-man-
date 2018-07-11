@@ -2,8 +2,6 @@ package com.cstore.zhiyazhang.cstorepay
 
 import org.junit.Test
 
-import org.junit.Assert.*
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -12,6 +10,10 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val x = "ERRORaaaaaaaaaaaa"
+        val xx = x.substring(0, 5)
+        print(xx)
+        val xxx = x.substring(0, 4)
+        print(xxx)
     }
 }

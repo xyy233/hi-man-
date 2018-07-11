@@ -17,8 +17,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.cstore.zhiyazhang.cstorepay.ali.AliPayUtil
 import com.cstore.zhiyazhang.cstorepay.bean.PayMsgBean
-import com.cstore.zhiyazhang.cstorepay.util.*
+import com.cstore.zhiyazhang.cstorepay.util.MyApplication
+import com.cstore.zhiyazhang.cstorepay.util.MyHandler
 import com.cstore.zhiyazhang.cstorepay.util.MyHandler.Companion.ERROR
+import com.cstore.zhiyazhang.cstorepay.util.MyListener
+import com.cstore.zhiyazhang.cstorepay.util.QRCodeResolve
 import com.cstore.zhiyazhang.cstorepay.wechat.WXPayConfigImpl
 import com.github.wxpay.sdk.WXPay
 import com.uuzuche.lib_zxing.activity.CaptureFragment
@@ -30,45 +33,6 @@ import kotlinx.android.synthetic.main.activity_scanning.*
  * on 2018/6/21 16:04.
  */
 class ScanningActivity : AppCompatActivity() {
-    private val textXml = "<?xml version=\"1.0\" encoding=\"GBK\"?>\n" +
-            "<alipay>\n" +
-            "    <is_success>T</is_success>\n" +
-            "    <request>\n" +
-            "        <param name=\"_input_charset\">utf-8</param>\n" +
-            "        <param name=\"subject\">C-Store</param>\n" +
-            "        <param name=\"dynamic_id\">285224384006121648</param>\n" +
-            "        <param name=\"sign\">b451ed4444e0635df4e2687e58bb3be3</param>\n" +
-            "        <param name=\"it_b_pay\">5m</param>\n" +
-            "        <param name=\"product_code\">BARCODE_PAY_OFFLINE</param>\n" +
-            "        <param name=\"dynamic_id_type\">qr_code</param>\n" +
-            "        <param name=\"out_trade_no\">1111121636801</param>\n" +
-            "        <param name=\"partner\">2088801054284657</param>\n" +
-            "        <param name=\"service\">alipay.acquire.createandpay</param>\n" +
-            "        <param name=\"total_fee\">3.9</param>\n" +
-            "        <param name=\"sign_type\">MD5</param>\n" +
-            "        <param name=\"seller_id\">2088801054284657</param>\n" +
-            "    </request>\n" +
-            "    <response>\n" +
-            "        <alipay>\n" +
-            "            <buyer_logon_id>186****5028</buyer_logon_id>\n" +
-            "            <buyer_user_id>2088802572822707</buyer_user_id>\n" +
-            "            <fund_bill_list>\n" +
-            "                <TradeFundBill>\n" +
-            "                    <amount>3.90</amount>\n" +
-            "                    <fund_channel>10</fund_channel>\n" +
-            "                </TradeFundBill>\n" +
-            "            </fund_bill_list>\n" +
-            "            <gmt_payment>2018-06-26 16:42:24</gmt_payment>\n" +
-            "            <out_trade_no>1111121636801</out_trade_no>\n" +
-            "            <result_code>ORDER_SUCCESS_PAY_SUCCESS</result_code>\n" +
-            "            <total_fee>3.90</total_fee>\n" +
-            "            <trade_no>2018062621001004700531808391\n" +
-            "</trade_no>\n" +
-            "        </alipay>\n" +
-            "    </response>\n" +
-            "    <sign>993bc78bce31e7e40ca5a4997ef4ba88</sign>\n" +
-            "    <sign_type>MD5</sign_type>\n" +
-            "</alipay>"
     private val isGun = MyApplication.usbGunJudgment()
     private val capture = CaptureFragment()
     private var isOk = true
@@ -87,7 +51,6 @@ class ScanningActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scanning)
-        val x = XMLToJson.xmlToJson(textXml)
         initView()
         initGun()
         initScan()
@@ -156,7 +119,7 @@ class ScanningActivity : AppCompatActivity() {
         val handler = MyHandler()
         handler.writeListener(object : MyListener {
             override fun listenerSuccess(data: Any) {
-                confirmationPay("成功", "交易完成！", true)
+                confirmationPay("完成", "$data", true)
                 hideLoading()
                 handler.cleanAll()
             }
@@ -212,19 +175,19 @@ class ScanningActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                 .setTitle("交易$title")
                 .setMessage(msg)
+                .setCancelable(false)
                 .setPositiveButton("确认") { _, _ -> }
         if (isOk) {
             dialog.show()
+            nowAction = PAY_MSG
+            scan_prompt.text = getString(R.string.scan_prompt_pos)
+            scan_prompt.startAnimation(showAction)
+            refreshCamera()
         } else {
             dialog.setNegativeButton("重试") { _, _ ->
                 refreshCamera()
             }.show()
         }
-
-        nowAction = PAY_MSG
-        scan_prompt.text = getString(R.string.scan_prompt_pos)
-        scan_prompt.startAnimation(showAction)
-        refreshCamera()
     }
 
     /**
@@ -234,6 +197,7 @@ class ScanningActivity : AppCompatActivity() {
         AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                 .setTitle("请确认金额")
                 .setMessage("交易金额为 ${payMsg.payAmount} 是否确认？")
+                .setCancelable(false)
                 .setPositiveButton("确认") { _, _ ->
                     nowAction = PAY_USER
                     val s = "需支付${payMsg.payAmount}元,${getString(R.string.scan_prompt_user)}"

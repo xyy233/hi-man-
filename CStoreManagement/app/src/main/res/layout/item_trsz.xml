@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/trsz_box"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
@@ -17,6 +16,7 @@
     app:cardElevation="2dp">
 
     <LinearLayout
+        android:id="@+id/trsz_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -202,6 +202,35 @@
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"/>
+
+        <LinearLayout
+            android:id="@+id/trs_fee_box"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/delete_red"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/trs_fee_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/trs_fee"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/trs_fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/click_edit_trs_fee"
+                android:textSize="16sp"/>
         </LinearLayout>
 
     </LinearLayout>
