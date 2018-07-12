@@ -265,7 +265,7 @@ class TransferServiceModel : TransferServiceInterface {
         data.requestNumber = trsNumber
         val result = StringBuilder()
         data.items.forEach {
-            result.append(MySql.createTrs(it, trsNumber, data.trsStoreId, MyTimeUtil.nowDate))
+            result.append(MySql.createTrs(it, trsNumber, data.trsStoreId, MyTimeUtil.nowTimeString))
         }
         result.append("\u0004")
         return result.toString()
@@ -277,7 +277,7 @@ class TransferServiceModel : TransferServiceInterface {
     private fun getServiceCreateTrsSql(data: TransServiceBean): String {
         val result = StringBuilder()
         data.items.forEach {
-            result.append(MySql.createTrs(it, data.requestNumber!!, data.trsStoreId, data.busiDate ?: MyTimeUtil.nowDate))
+            result.append(MySql.createTrs(it, data.requestNumber!!, data.trsStoreId, data.busiDate ?: MyTimeUtil.nowTimeString))
         }
         result.append("\u0004")
         return result.toString()

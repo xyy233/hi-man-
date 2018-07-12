@@ -315,23 +315,23 @@ class HomeActivity(override val layoutId: Int = R.layout.activity_home) : MyActi
                 AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                         .setTitle("提示")
                         .setMessage("是否在相关人员提示下操作？此步骤会对正常使用造成不可预知影响！")
-                        .setPositiveButton("确认清空", { _, _ ->
+                        .setPositiveButton("确认清空") { _, _ ->
                             AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogCustom))
                                     .setTitle("提示")
                                     .setMessage("请确认是否清空")
-                                    .setPositiveButton("确认", { _, _ ->
+                                    .setPositiveButton("确认") { _, _ ->
                                         /* val sd = ScrapDao(this@HomeActivity)
-                                         sd.editSQL(null, "deleteTable")*/
+                                                                                     sd.editSQL(null, "deleteTable")*/
                                         val cd = ContractTypeDao(this@HomeActivity)
                                         cd.editSQL(null, "deleteAll")
                                         val td = TranDao.instance()
                                         td.clearSQL()
                                         TransTag.cleanTag()
                                         Toast.makeText(this@HomeActivity, "清除完毕", Toast.LENGTH_SHORT).show()
-                                    })
+                                    }
                                     .setNegativeButton("放弃") { _, _ -> }
                                     .show()
-                        })
+                        }
                         .setNegativeButton("放弃") { _, _ -> }
                         .show()
             }

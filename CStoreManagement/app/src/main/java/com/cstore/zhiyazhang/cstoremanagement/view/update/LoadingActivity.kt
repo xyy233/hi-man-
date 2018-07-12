@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.IBinder
 import android.support.v7.app.AlertDialog
@@ -15,6 +16,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
@@ -106,9 +108,9 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
                     .setPositiveButton("重试") { _, _ ->
                         judgementUpdate()
                     }
-                    .setNegativeButton("退出", { _, _ ->
+                    .setNegativeButton("退出") { _, _ ->
                         finish()
-                    })
+                    }
                     .show()
         }
     }
@@ -182,9 +184,12 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
     }
 
     private fun judgementUpdate() {
+        val storeId = if (User.getUser().storeId == "") "000000" else User.getUser().storeId
         OkHttpUtils
                 .get()
-                .url(AppUrl.UPDATE_APP)
+                .url(AppUrl.NEW_UPDATE_APP)
+//                .url(AppUrl.UPDATE_APP)
+                .addHeader(AppUrl.STOREHEADER, storeId)
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
@@ -224,16 +229,25 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
                 judgementUpdate()
             }
         } else {
-            deleteAlphaDownload()
-            deleteDownload()
-            judgementUpdate()
+            if (judgmentPermissions2()) {
+                deleteAlphaDownload()
+                deleteDownload()
+                judgementUpdate()
+            }
         }
+    }
+
+    private fun judgmentPermissions2(): Boolean {
+        val pm = packageManager
+        val read = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.READ_EXTERNAL_STORAGE", packageName))
+        val write = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", packageName))
+        return read && write
     }
 
     //获得权限
     @pub.devrel.easypermissions.AfterPermissionGranted(1)
     private fun judgmentPermissions(): Boolean {
-        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE)
+        val perms = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE)
         if (!EasyPermissions.hasPermissions(this, *perms)) {
             EasyPermissions.requestPermissions(this, getString(R.string.open_permission), 1, *perms)
             return false

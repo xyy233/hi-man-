@@ -86,7 +86,7 @@ class DownloadService : Service() {
         val mimeString = mimeTypeMap.getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
         request.setMimeType(mimeString)
         /**设置通知栏是否可见 */
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
         /**如果我们希望下载的文件可以被系统的Downloads应用扫描到并管理，
          * 我们需要调用Request对象的setVisibleInDownloadsUi方法，传递参数true. */
         request.setVisibleInDownloadsUi(true)
@@ -180,9 +180,7 @@ class DownloadService : Service() {
                 bytesAndStatus[2] = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
             }
         } finally {
-            if (cursor != null) {
-                cursor.close()
-            }
+            cursor?.close()
         }
         return bytesAndStatus
     }

@@ -13,12 +13,13 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.webkit.MimeTypeMap
 import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
+import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyToast
 import com.google.gson.Gson
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
 import com.zhy.http.okhttp.OkHttpUtils
 import java.io.File
 
@@ -51,32 +52,15 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
             val updates = Gson().fromJson(data as String, UpdateBean::class.java)
             downloadPath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath}${File.separator}$versionName"
             val intent = Intent("com.cstore.zhiyazhang.UPDATE")
-            if (MyApplication.getVersion()!!.indexOf("Alpha") == -1) {
-                //线上版本
-
-                //如果版本名不同就去下载
-                if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
-                    intent.putExtra("is_new", true)
-                    sendBroadcast(intent)
-                    versionUrl = updates.downloadUrl
-                    downloadAPK()
-                } else {
-                    intent.putExtra("is_new", false)
-                    sendBroadcast(intent)
-                }
+            //如果版本名不同就去下载
+            if ((updates as UpdateBean).versionNumber > MyApplication.getVersionNum()) {
+                intent.putExtra("is_new", true)
+                sendBroadcast(intent)
+                versionUrl = updates.downloadUrl
+                downloadAPK()
             } else {
-                //预览版
-
-                //如果版本名不同就去下载
-                if ((updates as UpdateBean).alphaVerNumber > MyApplication.getVersionNum()) {
-                    intent.putExtra("is_new", true)
-                    sendBroadcast(intent)
-                    versionUrl = updates.alphaDownloadUrl
-                    downloadAPK()
-                } else {
-                    intent.putExtra("is_new", false)
-                    sendBroadcast(intent)
-                }
+                intent.putExtra("is_new", false)
+                sendBroadcast(intent)
             }
         }
 
@@ -91,7 +75,8 @@ class UpdateService(value: String = "UpdateService") : IntentService(value) {
     private fun judgmentVersion() {
         OkHttpUtils
                 .get()
-                .url(AppUrl.UPDATE_APP)
+                .url(AppUrl.NEW_UPDATE_APP)
+                .addHeader(AppUrl.STOREHEADER,User.getUser().storeId)
                 .addHeader(AppUrl.CONNECTION_HEADER, AppUrl.CONNECTION_SWITCH)
                 .build()
                 .execute(object : MyStringCallBack(myListener) {
