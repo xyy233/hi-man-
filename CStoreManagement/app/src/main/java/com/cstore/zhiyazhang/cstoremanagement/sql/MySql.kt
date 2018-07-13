@@ -1153,10 +1153,10 @@ object MySql {
         //更新库存,为了更好分辨就多加一个+=
         result +=
                 "update inv set accAdjQuantity=accAdjQuantity + ${ab.adjQTY} " +
-                        "where storeID='${User.getUser().storeId}' " +
-                        "and busiDate=to_date('$date','yyyy-MM-dd') " +
-                        "and ItemNumber='${ab.itemId}' " +
-                        "and shipNumber='${ab.shipNumber}';"
+                "where storeID='${User.getUser().storeId}' " +
+                "and busiDate=to_date('$date','yyyy-MM-dd') " +
+                "and ItemNumber='${ab.itemId}' " +
+                "and shipNumber='${ab.shipNumber}';"
         return result
     }
 
@@ -1924,7 +1924,7 @@ object MySql {
         return "Insert into trs (StoreId,busiDate,trsID,trsNumber,itemNumber,shipNumber,storeUnitPrice,unitCost, " +
                 "trsStoreID,trsQuantity,UpdateUserID,UpdateDateTime,trsTime,trsReasonNumber,sell_cost,vendorId,supplierId) " +
                 "select P.StoreId, to_date('$busiDate','yyyy-mm-dd') busiDate,  'O' trsId, '$trsNumber' trsNumber, P.itemNumber, P.shipNumber, " +
-                "P.storeUnitPrice, P.unitCost, '$trsStore' trsStoreId, $trsNo trsQuantity, '${User.getUser().uId}' updateUserId, sysdate updateDateTime, to_date('$busiDate','yyyy-mm-dd hh24:mi:ss') trsTime, '00' trsReasonNumber, P.sell_cost, P.vendorId, P.supplierId " +
+                "P.storeUnitPrice, P.unitCost, '$trsStore' trsStoreId, $trsNo trsQuantity, '${User.getUser().uId}' updateUserId, sysdate updateDateTime, sysdate trsTime, '00' trsReasonNumber, P.sell_cost, P.vendorId, P.supplierId " +
                 "from plu P " +
                 "where p.storeId='${User.getUser().storeId}' " +
                 "and p.itemNumber='${tb.itemNo}'\u000c"
@@ -1944,17 +1944,18 @@ object MySql {
         val stores = StringBuilder()
         tr.rows.forEach { it.items.forEach { stores.append("'${it.itemNo}',") } }
         val finalStores = stores.toString().substring(0, stores.toString().length - 1)
-        return "select inv.itemnumber value, " +
-                "(nvl(inv.befInvQuantity, 0) + nvl(inv.accDlvQuantity, 0) - " +
-                "nvl(inv.accRtnQuantity, 0) - nvl(inv.accSaleQuantity, 0) + " +
-                "nvl(inv.accSaleRtnQuantity, 0) - nvl(inv.accMrkQuantity, 0) + " +
-                "nvl(inv.accCshDlvQuantity, 0) - nvl(inv.accCshRtnQuantity, 0) + " +
-                "nvl(inv.accTrsQuantity, 0) + nvl(inv.accLeibianQuantity, 0) + " +
-                "nvl(inv.accAdjQuantity, 0) + nvl(inv.accHqAdjQuantity, 0)) as value2, " +
-                "to_char(plu.storeUnitPrice,'fm999,990.00') value3 " +
-                "from inv, plu " +
-                "where inv.itemnumber=plu.itemnumber " +
-                "and inv.busidate = to_date('${MyTimeUtil.nowDate}', 'yyyy-mm-dd') " +
+        return "select inv.itemnumber value,  " +
+                "greatest((nvl(inv.befInvQuantity, 0) + nvl(inv.accDlvQuantity, 0) -  " +
+                "nvl(inv.accRtnQuantity, 0) - nvl(inv.accSaleQuantity, 0) +  " +
+                "nvl(inv.accSaleRtnQuantity, 0) - nvl(inv.accMrkQuantity, 0) +  " +
+                "nvl(inv.accCshDlvQuantity, 0) - nvl(inv.accCshRtnQuantity, 0) +  " +
+                "nvl(inv.accTrsQuantity, 0) + nvl(inv.accLeibianQuantity, 0) +  " +
+                "nvl(inv.accAdjQuantity, 0) + nvl(inv.accHqAdjQuantity, 0) " +
+                "-nvl(inv.outside_inv,0)),0) as value2, " +
+                "to_char(plu.storeUnitPrice,'fm999,990.00') value3  " +
+                "from inv, plu  " +
+                "where inv.itemnumber=plu.itemnumber  " +
+                "and inv.busidate = to_date('${MyTimeUtil.nowDate}', 'yyyy-mm-dd')  " +
                 "and inv.itemnumber in ($finalStores)\u0004"
     }
 

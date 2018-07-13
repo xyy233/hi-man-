@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Environment
 import android.os.IBinder
 import android.support.v7.app.AlertDialog
@@ -19,10 +20,7 @@ import com.cstore.zhiyazhang.cstoremanagement.bean.UpdateBean
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyActivity
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
-import com.cstore.zhiyazhang.cstoremanagement.utils.MyStringCallBack
-import com.cstore.zhiyazhang.cstoremanagement.utils.ReportListener
+import com.cstore.zhiyazhang.cstoremanagement.utils.*
 import com.cstore.zhiyazhang.cstoremanagement.view.SignInActivity
 import com.google.gson.Gson
 import com.zhy.http.okhttp.OkHttpUtils
@@ -233,6 +231,13 @@ class LoadingActivity(override val layoutId: Int = R.layout.activity_loading) : 
                 deleteAlphaDownload()
                 deleteDownload()
                 judgementUpdate()
+            } else {
+                MyToast.getLongToast("您未开启权限，请开启权限！")
+                val intent = Intent()
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                intent.data = Uri.fromParts("package", this@LoadingActivity.packageName, null)
+                this@LoadingActivity.startActivity(intent)
             }
         }
     }

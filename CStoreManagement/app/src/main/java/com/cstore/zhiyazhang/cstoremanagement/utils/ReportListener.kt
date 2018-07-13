@@ -1,11 +1,13 @@
 package com.cstore.zhiyazhang.cstoremanagement.utils
 
 import android.os.Environment
+import com.cstore.zhiyazhang.cstoremanagement.bean.AppVersionData
 import com.cstore.zhiyazhang.cstoremanagement.bean.User
 import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyJavaFun.clearErrorTxtMessage
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyJavaFun.getErrorTxtMessage
+import com.google.gson.Gson
 import com.zhy.http.okhttp.OkHttpUtils
 
 /**
@@ -101,11 +103,16 @@ object ReportListener {
      */
     fun reportEnter(storeId: String) {
         if (!ConnectionDetector.getConnectionDetector().isOnline) return
+        val phoneId = MyApplication.getOnlyid()
+        val verNum = MyApplication.getVersionNum()
+        val androidVer = MyApplication.getAndroidVersion()
+        val phoneName = MyApplication.getPhoneName()
+        val avd = AppVersionData(phoneId, storeId, verNum.toString(), phoneName, androidVer)
+        val data = Gson().toJson(avd)
         OkHttpUtils
                 .postString()
-                .url(AppUrl.UPLOAD_ERROR)
-                .content("版本号：${MyApplication.getVersion()!!}")
-                .addHeader("fileName", "$storeId/login.txt")
+                .url(AppUrl.APP_VERSION_UPLOAD)
+                .content(data)
                 .build()
                 .execute(object : MyStringCallBack(object : MyListener {
 

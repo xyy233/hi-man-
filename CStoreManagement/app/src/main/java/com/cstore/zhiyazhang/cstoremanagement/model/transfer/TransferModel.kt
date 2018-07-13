@@ -3,15 +3,14 @@ package com.cstore.zhiyazhang.cstoremanagement.model.transfer
 import android.os.Message
 import com.cstore.zhiyazhang.cstoremanagement.R
 import com.cstore.zhiyazhang.cstoremanagement.bean.*
-import com.cstore.zhiyazhang.cstoremanagement.model.MyListener
 import com.cstore.zhiyazhang.cstoremanagement.sql.MySql
-import com.cstore.zhiyazhang.cstoremanagement.url.AppUrl
-import com.cstore.zhiyazhang.cstoremanagement.utils.*
+import com.cstore.zhiyazhang.cstoremanagement.utils.GsonUtil
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyApplication
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.ERROR
 import com.cstore.zhiyazhang.cstoremanagement.utils.MyHandler.Companion.SUCCESS
+import com.cstore.zhiyazhang.cstoremanagement.utils.MyTimeUtil
 import com.cstore.zhiyazhang.cstoremanagement.utils.socket.SocketUtil
-import com.google.gson.Gson
-import com.zhy.http.okhttp.OkHttpUtils
 
 /**
  * Created by zhiya.zhang

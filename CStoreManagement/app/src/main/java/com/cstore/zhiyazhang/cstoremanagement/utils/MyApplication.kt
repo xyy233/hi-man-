@@ -122,6 +122,20 @@ class MyApplication : Application() {
         }
 
         /**
+         * 获得安卓系统版本
+         */
+        fun getAndroidVersion(): String {
+            return android.os.Build.VERSION.RELEASE
+        }
+
+        /**
+         * 获得手机型号
+         */
+        fun getPhoneName(): String {
+            return android.os.Build.MODEL
+        }
+
+        /**
          * 判断扫描枪
          */
         fun usbGunJudgment(): Boolean {

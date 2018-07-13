@@ -31,6 +31,7 @@ object AppUrl {
     val UPDATE_APP = appIp + "order/updateAPP.do"
     val NEW_UPDATE_APP = appIp + "apk/get_version.do"
     val UPLOAD_ERROR = appIp + "asset/uploadError.do"
+    val APP_VERSION_UPLOAD = appIp + "apk/upd_app_version_data.do"
     val GET_ALL_TRANS = appIp + "trs/get.do"
     val JUDGMENT_TRANS = appIp + "trs/count.do"
     val UPDATE_TRANS = appIp + "trs/upd.do"
